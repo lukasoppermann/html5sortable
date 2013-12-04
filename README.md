@@ -147,14 +147,14 @@ Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](htt
 
 Contributors:
 
-* [rodolfospalenza](http://github.com/rodolfospalenza) 
-* [bistoco](http://github.com/bistoco) 
-* [flying-sheep](http://github.com/flying-sheep) 
-* [ssafejava](http://github.com/ssafejava) 
 * [andyburke](http://github.com/andyburke) 
+* [bistoco](http://github.com/bistoco) 
 * [daemianmack](http://github.com/daemianmack)
+* [flying-sheep](http://github.com/flying-sheep) 
 * [OscarGodson](http://github.com/OscarGodson)
 * [Parikshit N. Samant](https://github.com/samantp)
+* [rodolfospalenza](http://github.com/rodolfospalenza) 
+* [ssafejava](http://github.com/ssafejava) 
 
 License
 -------
