@@ -9,47 +9,56 @@
  * Released under the MIT license.
  */
 app.directive('htmlSortable', [
-  '$timeout', function($timeout) {
+  '$timeout', '$parse', function($timeout, $parse) {
     return {
       require: '?ngModel',
       link: function(scope, element, attrs, ngModel) {
         var opts, model;
 
         opts = angular.extend({}, scope.$eval(attrs.htmlSortable));
+        $(element).sortable(opts);
+
         if (ngModel) {
-          model = attrs.ngModel;
+          model = $parse(attrs.ngModel);
+
           ngModel.$render = function() {
             $timeout(function () {
               element.sortable('reload');
             }, 50);
           };
-          
+
           scope.$watch(model, function() {
             $timeout(function () {
               element.sortable('reload');
             }, 50);
           }, true);
-        }
 
-        // Create sortable
-        $(element).sortable(opts);
-        if (model) {
           $(element).sortable().bind('sortupdate', function(e, data) {
             var $source = data.startparent.attr('ng-model');
             var $dest   = data.endparent.attr('ng-model');
 
+            var $sourceModel = $parse($source);
+            var $destModel = $parse($dest);
+
             var $start = data.oldindex;
             var $end   = data.item.index();
-          
+
             scope.$apply(function () {
               if ($source == $dest) {
-                scope[model].splice($end, 0, scope[model].splice($start, 1)[0]);
+                var $items = $sourceModel(scope);
+                $items.splice($end, 0, $items.splice($start, 1)[0]);
+                $sourceModel.assign(scope, $items);
               }
               else {
                 var $item = scope[$source][$start];
+                var $sourceItems = $sourceModel(scope);
+                var $destItems = $destModel(scope);
 
-                scope[$source].splice($start, 1);
-                scope[$dest].splice($end, 0, $item);
+                $sourceItems.splice($start, 1);
+                $destItems.splice($end, 0, $item);
+
+                $sourceModel.assign(scope, $sourceItems);
+                $destModel.assign(scope, $destItems);
               }
             });
           });
