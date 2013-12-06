@@ -5,7 +5,7 @@
  * Original code copyright 2012 Ali Farhadi.
  * This version is mantained by Alexandru Badiu <andu@ctrlz.ro>
  *
- * Thanks to the following contributors: rodolfospalenza, bistoco, flying-sheep, ssafejava, andyburke, daemianmack, OscarGodson.
+ * Thanks to the following contributors: andyburke, bistoco, daemianmack, flying-sheep, OscarGodson, Parikshit N. Samant, rodolfospalenza, ssafejava
  *
  * Released under the MIT license.
  */
@@ -22,15 +22,6 @@
     }, options);
 
     return this.each(function() {
-      var soptions = $(this).data('opts');
-
-      if (typeof soptions === 'undefined') {
-        $(this).data('opts', options);
-      }
-      else {
-        options = soptions;
-      }
-
       if (method === 'reload') {
         $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
       }
@@ -43,6 +34,16 @@
         }
         return;
       }
+
+      var soptions = $(this).data('opts');
+
+      if (typeof soptions === 'undefined') {
+        $(this).data('opts', options);
+      }
+      else {
+        options = soptions;
+      }
+
       var isHandle, index, items = $(this).children(options.items);
       var startParent, newParent;
       var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder">') : $(options.placeholder).addClass('sortable-placeholder');
@@ -78,6 +79,10 @@
         }
         dragging = null;
       }).not('a[href], img').on('selectstart.h5s', function() {
+        if (options.handle && !isHandle) {
+         return true;
+        }
+
         if (this.dragDrop) {
           this.dragDrop();
         }

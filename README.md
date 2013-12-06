@@ -48,7 +48,7 @@ Use `sortupdate` event if you want to do something when the order changes (e.g. 
 ``` javascript
 $('.sortable').sortable().bind('sortupdate', function(e, ui) {
     /*
-    
+
     This event is triggered when the user stopped sorting and the DOM position has changed.
 
     ui.item contains the current dragged element.
@@ -56,7 +56,7 @@ $('.sortable').sortable().bind('sortupdate', function(e, ui) {
     ui.oldindex contains the old index of the dragged element
     ui.startparent contains the element that the dragged item comes from
     ui.endparent contains the element that the dragged item was added to
-    
+
     */
 });
 ```
@@ -79,7 +79,7 @@ Setting `forcePlaceholderSize` option to true, forces the placeholder to have a 
 
 ``` javascript
 $('.sortable').sortable({
-    forcePlaceholderSize: true 
+    forcePlaceholderSize: true
 });
 ```
 
@@ -94,7 +94,7 @@ $('#sortable1, #sortable2').sortable({
 Use `placeholder` option to specify the markup of the placeholder:
 
 ``` javascript
-$('.sortable').sortable({  
+$('.sortable').sortable({
 	items: 'tr' ,
 	placeholder : '<tr><td colspan="7">&nbsp;</td></tr>'
 });
@@ -145,16 +145,10 @@ Authors
 
 Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](http://ctrlz.ro).
 
-Contributors:
+Contributors
+------------
 
-* [rodolfospalenza](http://github.com/rodolfospalenza) 
-* [bistoco](http://github.com/bistoco) 
-* [flying-sheep](http://github.com/flying-sheep) 
-* [ssafejava](http://github.com/ssafejava) 
-* [andyburke](http://github.com/andyburke) 
-* [daemianmack](http://github.com/daemianmack)
-* [OscarGodson](http://github.com/OscarGodson)
-* [Parikshit N. Samant](https://github.com/samantp)
+See AUTHORS file.
 
 License
 -------
