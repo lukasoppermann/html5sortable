@@ -1,28 +1,9 @@
 HTML5 Sortable jQuery Plugin
 ============================
 
-This is a fork of the original html5sortable project with various patches added from the community.
+This is a fork of the original html5sortable project with [various patches added from the community](#differences-from-the-original-version).
 
-Examples
--------
-
-* [Examples](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/examples.html)
-* [AngularJS with a single list](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-single.html)
-* [AngularJS with connected lists](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-connected.html)
-
-Differences from the original version
--------
-
-* [Add reload method](https://github.com/farhadi/html5sortable/pull/61)
-* [Custom markup for placeholder](https://github.com/farhadi/html5sortable/pull/33)
-* [Add oldindex property to sortupdate event data](https://github.com/farhadi/html5sortable/pull/27)
-* [Support list items of variable height](https://github.com/farhadi/html5sortable/pull/56)
-* [Improved handling of handles such that sub elements can be interacted with](https://github.com/farhadi/html5sortable/pull/67)
-* [Fix false negative bug when dropping onto same index in new container.](https://github.com/farhadi/html5sortable/pull/66)
-* AngularJS directive.
-* Fix for reload method causing options to be reset to defaults.
-
-Features
+#Features
 --------
 * Less than 1KB (minified and gzipped).
 * Built using native HTML5 drag and drop API.
@@ -31,10 +12,39 @@ Features
 * Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.
 * Comes with an AngularJS directive.
 
-Usage
------
+#Installation
+---
 
-To use it with AngularJS please see the examples.
+* The recommended way, using [Bower](http://bower.io):
+
+``` 
+bower install html.sortable 
+```
+* The non-Bower way: include ```html.sortable.x.y.z.js``` or the minified version, ```html.sortable.min.x.y.z.js```.
+
+
+#Examples
+---
+
+* [Examples](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/examples.html)
+* [AngularJS with a single list](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-single.html)
+* [AngularJS with connected lists](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-connected.html)
+
+
+#Build it / Hack it
+---
+
+```
+npm install -g grunt
+npm install -g grunt-cli
+git clone https://github.com/voidberg/html5sortable
+cd html5sortable
+npm install
+grunt
+```
+
+#Usage
+---
 
 Use `sortable` method to create a sortable list:
 
@@ -139,17 +149,29 @@ yepnope({
 });
 ```
 
+#Differences from the original version
+---
 
-Authors
--------
+* [Add reload method](https://github.com/farhadi/html5sortable/pull/61)
+* [Custom markup for placeholder](https://github.com/farhadi/html5sortable/pull/33)
+* [Add oldindex property to sortupdate event data](https://github.com/farhadi/html5sortable/pull/27)
+* [Support list items of variable height](https://github.com/farhadi/html5sortable/pull/56)
+* [Improved handling of handles such that sub elements can be interacted with](https://github.com/farhadi/html5sortable/pull/67)
+* [Fix false negative bug when dropping onto same index in new container.](https://github.com/farhadi/html5sortable/pull/66)
+* AngularJS directive.
+* Fix for reload method causing options to be reset to defaults.
+
+
+#Authors
+---
 
 Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](http://ctrlz.ro).
 
-Contributors
-------------
+#Contributors
+---
 
 See AUTHORS file.
 
-License
--------
+#License
+---
 Released under the MIT license.
