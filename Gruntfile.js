@@ -7,31 +7,23 @@ module.exports = function( grunt ) {
     uglify : {
       production : {
         src: [ 'src/html.sortable.js' ],
-        dest: 'dist/html.sortable.min.js'
+        dest: 'dist/html.sortable.min.<%= pkg.version %>.js'
       },
       'production-angular' : {
         src: [ 'src/html.sortable.angular.js' ],
-        dest: 'dist/html.sortable.angular.min.js'
+        dest: 'dist/html.sortable.angular.min.<%= pkg.version %>.js'
       }
     },
     copy : {
       production : {
         files : [
-          { src: 'src/html.sortable.js', dest : 'dist/html.sortable.js' },
-          { src: 'src/html.sortable.angular.js', dest : 'dist/html.sortable.angular.js' }
+          { src: 'src/html.sortable.js', dest : 'dist/html.sortable.<%= pkg.version %>.js' },
+          { src: 'src/html.sortable.angular.js', dest : 'dist/html.sortable.angular.<%= pkg.version %>.js' }
         ]
       }
     },
     clean: {
-      dist: {
-        files: [{
-          dot: true,
-          src: [
-            'dist/*',
-            '!dist/.git*'
-          ]
-        }]
-      }
+      dist: 'dist/*'
     },
     jsvalidate: {
       options:{
@@ -60,13 +52,13 @@ module.exports = function( grunt ) {
     },
   });
 
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jsvalidate');
 
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('clean', ['clean']);
   grunt.registerTask('validate', ['jsvalidate', 'jshint']);
-  grunt.registerTask('build', ['validate', 'copy', 'uglify']);
+  grunt.registerTask('build', ['clean', 'validate', 'copy', 'uglify']);
 };
