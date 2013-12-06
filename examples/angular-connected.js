@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('Directives', []);
+var app = angular.module('Directives', ['htmlSortable']);
 
 app.controller('MainCtrl', function($scope) {
   $scope.sortableOptions = {
