@@ -80,7 +80,7 @@
         dragging = null;
       }).not('a[href], img').on('selectstart.h5s', function() {
         if (options.handle && !isHandle) {
-         return true;
+          return true;
         }
 
         if (this.dragDrop) {
