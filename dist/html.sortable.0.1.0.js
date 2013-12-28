@@ -59,6 +59,7 @@
         $(options.connectWith).add(this).data('connectWith', options.connectWith);
       }
       items.attr('draggable', 'true').on('dragstart.h5s',function (e) {
+        e.stopImmediatePropagation();
         if (options.handle && !isHandle) {
           return false;
         }
@@ -68,7 +69,6 @@
         dt.setData('Text', 'dummy');
         index = (dragging = $(this)).addClass('sortable-dragging').index();
         startParent = $(this).parent();
-        e.stopPropagation();
       }).on('dragend.h5s',function () {
           if (!dragging) {
             return;
@@ -77,7 +77,7 @@
           placeholders.detach();
           newParent = $(this).parent();
           if (index !== dragging.index() || startParent !== newParent) {
-            dragging.parent().trigger('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
+            dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
           dragging = null;
         }).not('a[href], img').on('selectstart.h5s',function () {

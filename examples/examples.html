@@ -196,10 +196,9 @@
             items: ':not(.disabled)'
         });
         $('.sort-parent').sortable({
-            handle: 'h3',
             forcePlaceholderSize: true
         });
-        $('.sort-child').sortable();
+        $('.sort-child').sortable().on('sortupdate');
     });
 </script>
 </body>
