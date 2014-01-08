@@ -1,6 +1,5 @@
 /*
  * HTML5 Sortable jQuery Plugin
- * https://github.com/PaperpixelStudio/html5sortable
  * https://github.com/voidberg/html5sortable
  *
  * Original code copyright 2012 Ali Farhadi.
