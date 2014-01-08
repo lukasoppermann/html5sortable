@@ -5,7 +5,7 @@
  * Original code copyright 2012 Ali Farhadi.
  * This version is mantained by Alexandru Badiu <andu@ctrlz.ro>
  *
- * Thanks to the following contributors: andyburke, bistoco, daemianmack, flying-sheep, OscarGodson, Parikshit N. Samant, rodolfospalenza, ssafejava
+ * Thanks to the following contributors: andyburke, bistoco, daemianmack, drskullster, flying-sheep, OscarGodson, Parikshit N. Samant, rodolfospalenza, ssafejava
  *
  * Released under the MIT license.
  */
