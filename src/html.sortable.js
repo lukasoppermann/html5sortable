@@ -12,47 +12,49 @@
 'use strict';
 
 (function ($) {
-  var dragging, placeholders = $();
+  var dragging, draggingHeight, startParent, placeholders = $();
   $.fn.sortable = function (options) {
-    var method = String(options);
+    var method = String(options),
+        $sortableLists = this;
 
     options = $.extend({
       connectWith: false,
       placeholder: null
     }, options);
 
-    return this.each(function () {
+    return $sortableLists.each(function (index, sortableList) {
+      var $sortableList = $(sortableList);
       if (method === 'reload') {
-        $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
+        $sortableList.children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
       }
       if (/^enable|disable|destroy$/.test(method)) {
-        var citems = $(this).children($(this).data('items')).attr('draggable', method === 'enable');
+        var citems = $sortableList.children($sortableList.data('items')).attr('draggable', method === 'enable');
         if (method === 'destroy') {
-          $(this).off('sortupdate');
+          $sortableList.off('sortupdate');
           citems.add(this).removeData('connectWith items')
             .off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
         }
         return;
       }
 
-      var soptions = $(this).data('opts');
+      var soptions = $sortableList.data('opts');
 
       if (typeof soptions === 'undefined') {
-        $(this).data('opts', options);
+        $sortableList.data('opts', options);
       }
       else {
         options = soptions;
       }
 
-      var isHandle, index, items = $(this).children(options.items);
-      var startParent, newParent;
+      var isHandle, index, items = $sortableList.children(options.items);
+      var newParent;
       var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder">') : $(options.placeholder).addClass('sortable-placeholder');
       items.find(options.handle).mousedown(function () {
         isHandle = true;
       }).mouseup(function () {
           isHandle = false;
         });
-      $(this).data('items', options.items);
+      $sortableList.data('items', options.items);
       placeholders = placeholders.add(placeholder);
       if (options.connectWith) {
         $(options.connectWith).add(this).data('connectWith', options.connectWith);
@@ -68,12 +70,23 @@
         dt.setData('Text', 'dummy');
         index = (dragging = $(this)).addClass('sortable-dragging').index();
         startParent = $(this).parent();
+        draggingHeight = dragging.outerHeight();
       }).on('dragend.h5s',function () {
           if (!dragging) {
             return;
           }
-          dragging.removeClass('sortable-dragging').show();
+          dragging.removeClass('sortable-dragging');
           placeholders.detach();
+          if (!$sortableLists.is(dragging.parent())) {
+            /* Reinsert dragged item at original location if drag did not end
+               on a sortable list. */
+            var currentItems = startParent.children(options.items);
+            if (index === currentItems.length) {
+              dragging.insertAfter(currentItems.last());
+            } else {
+              dragging.insertBefore(currentItems.eq(index));
+            }
+          }
           newParent = $(this).parent();
           if (index !== dragging.index() || startParent !== newParent) {
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
@@ -89,19 +102,21 @@
           }
           return false;
         }).end().add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function (e) {
-          if (!items.is(dragging) && options.connectWith !== $(dragging).parent().data('connectWith')) {
+          if (!items.is(dragging) && options.connectWith !== startParent.data('connectWith')) {
             return true;
           }
           if (e.type === 'drop') {
             e.stopPropagation();
-            placeholders.filter(':visible').after(dragging);
-            dragging.trigger('dragend.h5s');
+            if(dragging !== null) {
+              placeholders.filter(':visible').after(dragging);
+              dragging.trigger('dragend.h5s');
+            }
             return false;
           }
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
           if (items.is(this)) {
-            var draggingHeight = dragging.outerHeight(), thisHeight = $(this).outerHeight();
+            var thisHeight = $(this).outerHeight();
             if (options.forcePlaceholderSize) {
               placeholder.height(draggingHeight);
             }
@@ -118,7 +133,7 @@
               }
             }
 
-            dragging.hide();
+            dragging.detach();
             $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
             placeholders.not(placeholder).detach();
           } else if (!placeholders.is(this) && !$(this).children(options.items).length) {
