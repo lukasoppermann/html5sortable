@@ -68,7 +68,7 @@
         dt.effectAllowed = 'move';
         dt.setData('Text', 'dummy');
 
-        if (options.dragImage) {
+        if (options.dragImage && dt.setDragImage) {
           dt.setDragImage(options.dragImage, 0, 0);
         }
 
