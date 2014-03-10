@@ -65,7 +65,7 @@
         isHandle = false;
         var dt = e.originalEvent.dataTransfer;
         dt.effectAllowed = 'move';
-        dt.setData('Text', 'dummy');
+        dt.setData('text/plain', '');
         index = (dragging = $(this)).addClass('sortable-dragging').index();
         startParent = $(this).parent();
       }).on('dragend.h5s',function () {
