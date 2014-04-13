@@ -3,6 +3,8 @@ HTML5 Sortable jQuery Plugin
 
 This is a fork of the original html5sortable project with [various patches added from the community](#differences-from-the-original-version).
 
+Work is preventing me to give this attention at the moment so if you'd like to help comantain drop me a line.
+
 #Features
 --------
 * Less than 1KB (minified and gzipped).
