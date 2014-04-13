@@ -18,7 +18,8 @@
 
     options = $.extend({
       connectWith: false,
-      placeholder: null
+      placeholder: null,
+      dragImage: null
     }, options);
 
     return this.each(function () {
@@ -66,6 +67,11 @@
         var dt = e.originalEvent.dataTransfer;
         dt.effectAllowed = 'move';
         dt.setData('Text', 'dummy');
+
+        if (options.dragImage && dt.setDragImage) {
+          dt.setDragImage(options.dragImage, 0, 0);
+        }
+
         index = (dragging = $(this)).addClass('sortable-dragging').index();
         startParent = $(this).parent();
       }).on('dragend.h5s',function () {
