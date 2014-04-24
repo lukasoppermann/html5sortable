@@ -27,13 +27,13 @@
 
               ngModel.$render = function() {
                 $timeout(function () {
-                  element.sortable('reload');
+                  $(element).sortable('reload');
                 }, 50);
               };
 
               scope.$watch(model, function() {
                 $timeout(function () {
-                  element.sortable('reload');
+                  $(element).sortable('reload');
                 }, 50);
               }, true);
 
