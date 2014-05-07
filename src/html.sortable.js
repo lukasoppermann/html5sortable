@@ -66,7 +66,7 @@
         isHandle = false;
         var dt = e.originalEvent.dataTransfer;
         dt.effectAllowed = 'move';
-        dt.setData('Text', 'dummy');
+        dt.setData('text', '');
 
         if (options.dragImage && dt.setDragImage) {
           dt.setDragImage(options.dragImage, 0, 0);
