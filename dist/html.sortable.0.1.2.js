@@ -30,6 +30,7 @@
         var citems = $(this).children($(this).data('items')).attr('draggable', method === 'enable');
         if (method === 'destroy') {
           $(this).off('sortupdate');
+          $(this).removeData('opts');
           citems.add(this).removeData('connectWith items')
             .off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
         }
@@ -66,7 +67,7 @@
         isHandle = false;
         var dt = e.originalEvent.dataTransfer;
         dt.effectAllowed = 'move';
-        dt.setData('Text', 'dummy');
+        dt.setData('text', '');
 
         if (options.dragImage && dt.setDragImage) {
           dt.setDragImage(options.dragImage, 0, 0);
@@ -81,7 +82,7 @@
           dragging.removeClass('sortable-dragging').show();
           placeholders.detach();
           newParent = $(this).parent();
-          if (index !== dragging.index() || startParent !== newParent) {
+          if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
           dragging = null;
