@@ -81,7 +81,7 @@
           dragging.removeClass('sortable-dragging').show();
           placeholders.detach();
           newParent = $(this).parent();
-          if (index !== dragging.index() || startParent !== newParent) {
+          if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
           dragging = null;
