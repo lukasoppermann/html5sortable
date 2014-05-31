@@ -20,24 +20,24 @@
             var opts, model;
 
             opts = angular.extend({}, scope.$eval(attrs.htmlSortable));
-            $(element).sortable(opts);
+            element.sortable(opts);
 
             if (ngModel) {
               model = $parse(attrs.ngModel);
 
               ngModel.$render = function() {
                 $timeout(function () {
-                  $(element).sortable('reload');
+                  element.sortable('reload');
                 }, 50);
               };
 
               scope.$watch(model, function() {
                 $timeout(function () {
-                  $(element).sortable('reload');
+                  element.sortable('reload');
                 }, 50);
               }, true);
 
-              $(element).sortable().bind('sortupdate', function(e, data) {
+              element.sortable().bind('sortupdate', function(e, data) {
                 var $source = data.startparent.attr('ng-model');
                 var $dest   = data.endparent.attr('ng-model');
 
