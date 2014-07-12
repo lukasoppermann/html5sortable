@@ -12,7 +12,7 @@
 'use strict';
 
 (function ($) {
-  var dragging, placeholders = $();
+  var dragging, draggingHeight, placeholders = $();
   $.fn.sortable = function (options) {
     var method = String(options);
 
@@ -79,6 +79,7 @@
         }
 
         index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
+        draggingHeight = dragging.outerHeight();
         startParent = $(this).parent();
       }).on('dragend.h5s',function () {
           if (!dragging) {
@@ -91,6 +92,7 @@
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
           dragging = null;
+          draggingHeight = null;
         }).not('a[href], img').on('selectstart.h5s',function () {
           if (options.handle && !isHandle) {
             return true;
@@ -113,7 +115,7 @@
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
           if (items.is(this)) {
-            var draggingHeight = dragging.outerHeight(), thisHeight = $(this).outerHeight();
+            var thisHeight = $(this).outerHeight();
             if (options.forcePlaceholderSize) {
               placeholder.height(draggingHeight);
             }
