@@ -1,7 +1,7 @@
 HTML5 Sortable jQuery Plugin
 ============================
 
-This is a fork of the original html5sortable project with [various patches added from the community](#differences-from-the-original-version).
+This is a fork of the original html5sortable project with [various patches added from the community](#contributors). It also contains an AngularJS version.
 
 Work is preventing me to give this attention at the moment so if you'd like to help comantain drop me a line.
 
@@ -15,7 +15,6 @@ Work is preventing me to give this attention at the moment so if you'd like to h
 * Comes with an AngularJS directive.
 
 #Installation
----
 
 * The recommended way, using [Bower](http://bower.io):
 
@@ -26,7 +25,6 @@ bower install html.sortable
 
 
 #Examples
----
 
 * [Examples](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/examples.html)
 * [AngularJS with a single list](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-single.html)
@@ -34,7 +32,6 @@ bower install html.sortable
 
 
 #Build it / Hack it
----
 
 ```
 npm install -g grunt
@@ -46,7 +43,6 @@ grunt
 ```
 
 #Usage
----
 
 Use `sortable` method to create a sortable list:
 
@@ -151,29 +147,20 @@ yepnope({
 });
 ```
 
-#Differences from the original version
----
-
-* [Add reload method](https://github.com/farhadi/html5sortable/pull/61)
-* [Custom markup for placeholder](https://github.com/farhadi/html5sortable/pull/33)
-* [Add oldindex property to sortupdate event data](https://github.com/farhadi/html5sortable/pull/27)
-* [Support list items of variable height](https://github.com/farhadi/html5sortable/pull/56)
-* [Improved handling of handles such that sub elements can be interacted with](https://github.com/farhadi/html5sortable/pull/67)
-* [Fix false negative bug when dropping onto same index in new container.](https://github.com/farhadi/html5sortable/pull/66)
-* AngularJS directive.
-* Fix for reload method causing options to be reset to defaults.
-
-
 #Authors
----
 
 Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](http://ctrlz.ro).
 
 #Contributors
----
 
 See AUTHORS file.
 
+# Contributing
+
+In lieu of a formal styleguide, take care to maintain the existing coding style. Lint and test your code using [Grunt](http://gruntjs.com/).
+
+If you're creating a pull request, also please add yourself to the `AUTHORS` file.
+
 #License
----
+
 Released under the MIT license.
