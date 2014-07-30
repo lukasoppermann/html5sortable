@@ -12,7 +12,7 @@
 'use strict';
 
 (function ($) {
-  var dragging, placeholders = $();
+  var dragging, draggingHeight, placeholders = $();
   $.fn.sortable = function (options) {
     var method = String(options);
 
@@ -49,6 +49,7 @@
       var isHandle, index, items = $(this).children(options.items);
       var startParent, newParent;
       var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder">') : $(options.placeholder).addClass('sortable-placeholder');
+
       items.find(options.handle).mousedown(function () {
         isHandle = true;
       }).mouseup(function () {
@@ -59,6 +60,10 @@
       if (options.connectWith) {
         $(options.connectWith).add(this).data('connectWith', options.connectWith);
       }
+
+      items.attr('role', 'option');
+      items.attr('aria-grabbed', 'false');
+
       items.attr('draggable', 'true').on('dragstart.h5s',function (e) {
         e.stopImmediatePropagation();
         if (options.handle && !isHandle) {
@@ -73,19 +78,21 @@
           dt.setDragImage(options.dragImage, 0, 0);
         }
 
-        index = (dragging = $(this)).addClass('sortable-dragging').index();
+        index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
+        draggingHeight = dragging.outerHeight();
         startParent = $(this).parent();
       }).on('dragend.h5s',function () {
           if (!dragging) {
             return;
           }
-          dragging.removeClass('sortable-dragging').show();
+          dragging.removeClass('sortable-dragging').attr('aria-grabbed', 'false').show();
           placeholders.detach();
           newParent = $(this).parent();
           if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
           dragging = null;
+          draggingHeight = null;
         }).not('a[href], img').on('selectstart.h5s',function () {
           if (options.handle && !isHandle) {
             return true;
@@ -108,7 +115,7 @@
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
           if (items.is(this)) {
-            var draggingHeight = dragging.outerHeight(), thisHeight = $(this).outerHeight();
+            var thisHeight = $(this).outerHeight();
             if (options.forcePlaceholderSize) {
               placeholder.height(draggingHeight);
             }
@@ -136,4 +143,4 @@
         });
     });
   };
-})($);
+})(jQuery);
