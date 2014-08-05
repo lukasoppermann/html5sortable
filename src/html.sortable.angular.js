@@ -48,15 +48,15 @@
                 var $end   = data.item.index();
 
                 scope.$apply(function () {
-                  if ($source === $dest) {
-                    var $items = $sourceModel(scope);
+                  if (data.startparent.scope()[$source] === data.endparent.scope()[$dest]) {
+                    var $items = $sourceModel(data.startparent.scope());
                     $items.splice($end, 0, $items.splice($start, 1)[0]);
                     $sourceModel.assign(scope, $items);
                   }
                   else {
                     var $item = scope[$source][$start];
-                    var $sourceItems = $sourceModel(scope);
-                    var $destItems = $destModel(scope);
+                    var $sourceItems = $sourceModel(data.startparent.scope());
+                    var $destItems = $destModel(data.endparent.scope());
 
                     $sourceItems.splice($start, 1);
                     $destItems.splice($end, 0, $item);
