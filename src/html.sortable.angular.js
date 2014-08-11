@@ -54,7 +54,7 @@
                     $sourceModel.assign(scope, $items);
                   }
                   else {
-                    var $item = scope[$source][$start];
+                    var $item = $sourceModel(data.startparent.scope())[$start];
                     var $sourceItems = $sourceModel(data.startparent.scope());
                     var $destItems = $destModel(data.endparent.scope()) || [];
 
