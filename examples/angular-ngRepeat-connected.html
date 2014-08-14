@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="Directives">
+  <head>
+    <title>Angular example with connected lists</title>
+    <link href="http://thomasf.github.io/solarized-css/solarized-light.min.css" rel="stylesheet"></link>
+  </head>
+  <body>
+    <div ng-controller="MainCtrl">
+      <h1>Angular example with connected lists</h1>
+
+      <h2>How to use</h2>
+
+      <p>Connect two lists by passing the connectWith option to the html-sortable directive:</p>
+      <pre>
+        &lt;ul html-sortable=&quot;{ connectWith: &#x27;.connected&#x27; }&quot; class=&quot;connected&quot; ng-model=&#x27;data1&#x27;&gt;...&lt;/ul&gt;
+        &lt;ul html-sortable=&quot;{ connectWith: &#x27;.connected&#x27; }&quot; class=&quot;connected&quot; ng-model=&#x27;data2&#x27;&gt;...&lt;/ul&gt;
+      </pre>
+      <p></p>
+
+      <h2>Example</h2>
+      <div ng-repeat="set in dataSets">
+        <ul html-sortable="sortableOptions" class="connected" ng-model='set'>
+          <li ng-repeat="itm in set">
+            {{ itm }}
+          </li>
+        </ul>
+      </div>
+
+	  <div ng-repeat="set in dataSets">
+        <p>{{ set }}</p>
+      </div>
+
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <script src="../src/html.sortable.js"></script>
+    <script src="../src/html.sortable.angular.js"></script>
+    <script src="angular-ngRepeat-connected.js"></script>
+  </body>
+</html>
