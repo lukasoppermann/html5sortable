@@ -29,6 +29,7 @@ bower install html.sortable
 * [Examples](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/examples.html)
 * [AngularJS with a single list](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-single.html)
 * [AngularJS with connected lists](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-connected.html)
+* [AngularJS with connected lists and ngRepeat](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-ngRepeat-connected.html)
 
 
 #Build it / Hack it
