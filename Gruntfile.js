@@ -6,18 +6,20 @@ module.exports = function( grunt ) {
     banner : '/* \n * <%= pkg.name %> <%= pkg.version %>\n * <%= pkg.homepage %>\n * \n * Licensed under the <%= pkg.license %> license\n */',
     uglify : {
       production : {
-        src: [ 'src/html.sortable.js' ],
-        dest: 'dist/html.sortable.min.js',
-        options: [
+        options: {
           sourceMap: true
-        ]
+        },
+        files: {
+          'dist/html.sortable.min.js': ['src/html.sortable.js']
+        }
       },
       'production-angular' : {
-        src: [ 'src/html.sortable.angular.js' ],
-        dest: 'dist/html.sortable.angular.min.js',
-        options: [
+        options: {
           sourceMap: true
-        ]
+        },
+        files: {
+          'dist/html.sortable.angular.min.js': ['src/html.sortable.angular.js']
+        }
       }
     },
     copy : {
