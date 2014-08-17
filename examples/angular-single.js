@@ -13,4 +13,8 @@ app.controller('MainCtrl', function($scope) {
   $scope.add = function () {
     $scope.data1.push({id: $scope.data1.length + 1, name: 'E'});
   };
+
+  $scope.sortableCallback = function (sourceModel, destModel, start, end) {
+    console.log(start + ' -> ' + end);
+  };
 });
