@@ -138,7 +138,7 @@ The API is compatible with jquery-ui. So you can use jquery-ui as a polyfill in 
 ``` javascript
 yepnope({
     test: Modernizr.draganddrop,
-    yep: 'jquery.sortable.js',
+    yep: 'html.sortable.js',
     nope: 'jquery-ui.min.js',
     complete: function() {
         $('.sortable').sortable().bind('sortupdate', function(e, ui) {
@@ -147,6 +147,29 @@ yepnope({
     }
 });
 ```
+
+#AngularJS usage
+
+Make your app use the `htmlSortable` module. Assign html sortable options to the `html-sortable` tag, specify an ng-model and, optionally, specify a callback using `html-sortable-callback`.
+```
+$scope.sortableOptions = {
+	placeholder: '<div class="sortable-placeholder col-md-3"><div></div></div>',
+  	forcePlaceholderSize: true
+};
+
+$scope.sortableCallback = function (startModel, destModel, start, end) {
+	// ...
+};
+```
+
+```
+<ul html-sortable="sortableOptions" html-sortable-callback="sortableCallback" ng-model='data1'>
+	<li ng-repeat="itm in data1">
+   		{{itm}}
+   </li>
+</ul>
+```
+See the examples for more information.
 
 #Authors
 
