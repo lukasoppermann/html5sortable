@@ -17,7 +17,11 @@
         return {
           require: '?ngModel',
           link: function(scope, element, attrs, ngModel) {
-            var opts, model;
+            var opts, model, scallback;
+
+            if (attrs.htmlSortableCallback) {
+              scallback = attrs.htmlSortableCallback;
+            }
 
             opts = angular.extend({}, scope.$eval(attrs.htmlSortable));
             element.sortable(opts);
@@ -50,7 +54,7 @@
                 scope.$apply(function () {
                   if ($sourceModel(data.startparent.scope()) === $destModel(data.endparent.scope())) {
                     var $items = $sourceModel(data.startparent.scope());
-                    $items.splice($end, 0, $items.splice($start, 1)[0]);
+                    $items[$start] = $items.splice($end, 1, $items[$start])[0];
                     $sourceModel.assign(scope, $items);
                   }
                   else {
@@ -65,6 +69,10 @@
                     $destModel.assign(scope, $destItems);
                   }
                 });
+                
+                if (scallback) {
+                  scope[scallback]($sourceModel(data.startparent.scope()), $destModel(data.endparent.scope()), $start, $end);
+                }
               });
             }
           }
