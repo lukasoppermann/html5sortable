@@ -7,11 +7,17 @@ module.exports = function( grunt ) {
     uglify : {
       production : {
         src: [ 'src/html.sortable.js' ],
-        dest: 'dist/html.sortable.min.js'
+        dest: 'dist/html.sortable.min.js',
+        options: [
+          sourceMap: true
+        ]
       },
       'production-angular' : {
         src: [ 'src/html.sortable.angular.js' ],
-        dest: 'dist/html.sortable.angular.min.js'
+        dest: 'dist/html.sortable.angular.min.js',
+        options: [
+          sourceMap: true
+        ]
       }
     },
     copy : {
