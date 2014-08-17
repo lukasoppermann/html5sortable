@@ -48,7 +48,7 @@
 
       var isHandle, index, items = $(this).children(options.items);
       var startParent, newParent;
-      var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder">') : $(options.placeholder).addClass('sortable-placeholder');
+      var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder"/>') : $(options.placeholder).addClass('sortable-placeholder');
 
       items.find(options.handle).mousedown(function () {
         isHandle = true;
