@@ -6,7 +6,7 @@
     "Alexandru Badiu <andu@ctrlz.ro>"
   ],
   "description": "Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.",
-  "main": "dist/html.sortable.0.1.3.js",
+  "main": "dist/html.sortable.js",
   "keywords": [
     "jquery",
     "sortable",
