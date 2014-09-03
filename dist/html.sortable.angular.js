@@ -54,7 +54,7 @@
                 scope.$apply(function () {
                   if ($sourceModel(data.startparent.scope()) === $destModel(data.endparent.scope())) {
                     var $items = $sourceModel(data.startparent.scope());
-                    $items[$start] = $items.splice($end, 1, $items[$start])[0];
+                    $items.splice($end, 0, $items.splice($start, 1)[0]);
                     $sourceModel.assign(scope, $items);
                   }
                   else {
