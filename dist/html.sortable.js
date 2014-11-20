@@ -23,6 +23,9 @@
     }, options);
 
     return this.each(function () {
+
+      var index, items = $(this).children(options.items), handles = options.handle ? items.find(options.handle) : items;
+
       if (method === 'reload') {
         $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
       }
@@ -32,7 +35,8 @@
           $(this).off('sortupdate');
           $(this).removeData('opts');
           citems.add(this).removeData('connectWith items')
-            .off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
+            .off('dragstart.h5s dragend.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
+          handles.off('selectstart.h5s');
         }
         return;
       }
@@ -46,15 +50,9 @@
         options = soptions;
       }
 
-      var isHandle, index, items = $(this).children(options.items);
       var startParent, newParent;
       var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder"/>') : $(options.placeholder).addClass('sortable-placeholder');
 
-      items.find(options.handle).mousedown(function () {
-        isHandle = true;
-      }).mouseup(function () {
-          isHandle = false;
-        });
       $(this).data('items', options.items);
       placeholders = placeholders.add(placeholder);
       if (options.connectWith) {
@@ -64,12 +62,16 @@
       items.attr('role', 'option');
       items.attr('aria-grabbed', 'false');
 
-      items.attr('draggable', 'true').on('dragstart.h5s',function (e) {
-        e.stopImmediatePropagation();
-        if (options.handle && !isHandle) {
-          return false;
+      // Setup drag handles
+      handles.attr('draggable', 'true').not('a[href], img').on('selectstart.h5s', function() {
+        if (this.dragDrop) {
+          this.dragDrop();
         }
-        isHandle = false;
+        return false;
+      }).end();
+
+      // Handle drag events on draggable items
+      items.on('dragstart.h5s', function(e) {
         var dt = e.originalEvent.dataTransfer;
         dt.effectAllowed = 'move';
         dt.setData('text', '');
@@ -93,16 +95,7 @@
           }
           dragging = null;
           draggingHeight = null;
-        }).not('a[href], img').on('selectstart.h5s',function () {
-          if (options.handle && !isHandle) {
-            return true;
-          }
-
-          if (this.dragDrop) {
-            this.dragDrop();
-          }
-          return false;
-        }).end().add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function (e) {
+        }).add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
           if (!items.is(dragging) && options.connectWith !== $(dragging).parent().data('connectWith')) {
             return true;
           }
