@@ -1,9 +1,7 @@
 HTML5 Sortable jQuery Plugin
 ============================
 
-This is a fork of the original html5sortable project with [various patches added from the community](#contributors). It also contains an AngularJS version.
-
-Work is preventing me to give this attention at the moment so if you'd like to help comantain drop me a line.
+####Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.
 
 #Features
 --------
