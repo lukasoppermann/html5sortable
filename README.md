@@ -50,6 +50,21 @@ $('.sortable').sortable();
 ```
 Use `.sortable-dragging` and `.sortable-placeholder` CSS selectors to change the styles of a dragging item and its placeholder respectively.
 
+Use `sortstart` event if you want to do something when sorting starts:
+
+``` javascript
+$('.sortable').sortable().bind('sortstart', function(e, ui) {
+    /*
+
+    This event is triggered when the user starts sorting and the DOM position has not yet changed.
+
+    ui.item contains the current dragged element.
+    ui.startparent contains the element that the dragged item comes from
+
+    */
+});
+```
+
 Use `sortupdate` event if you want to do something when the order changes (e.g. storing the new order):
 
 ``` javascript
