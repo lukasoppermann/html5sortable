@@ -9,9 +9,9 @@
  *
  * Released under the MIT license.
  */
-'use strict';
-
 (function ($) {
+  'use strict';
+
   var dragging, draggingHeight, placeholders = $();
   $.fn.sortable = function (options) {
     var method = String(options);
@@ -121,7 +121,7 @@
               if (placeholder.index() < $(this).index() && e.originalEvent.pageY < offsetTop + deadZone) {
                 return false;
               }
-              else if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
+              if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
                 return false;
               }
             }
@@ -137,4 +137,4 @@
         });
     });
   };
-})(jQuery);
+}(jQuery));
