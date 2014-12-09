@@ -13,11 +13,9 @@
 
 (function ($) {
   var dragging, originaldragging, draggingHeight, placeholders = $();
-  var sortableselectors = Array();
   $.fn.sortable = function (options) {
-	sortableselectors.push(this.selector);
     var method = String(options);
-
+	
     options = $.extend({
       connectWith: false,
       placeholder: null,
@@ -26,7 +24,6 @@
     }, options);
 
     return this.each(function () {
-
       var index, items = $(this).children(options.items), handles = options.handle ? items.find(options.handle) : items;
 
       if (method === 'reload') {
@@ -84,7 +81,7 @@
         }
 		
 		originaldragging = $(this);
-		if (options.clone === true) {
+		if (options.clone === true && !$(originaldragging).hasClass('sortable-noclone')) {
 			dragging = $(this).clone(true);
 			items = $(items).add(dragging);
 		} else {
@@ -104,11 +101,13 @@
           newParent = $(this).parent();
           
 		  dragging.removeClass('sortable-dragging').attr('aria-grabbed', 'false').show();
+		  dragging.addClass('sortable-noclone');
           placeholders.detach();
 
           if (index !== originaldragging.index() || startParent.get(0) !== newParent.get(0)) {
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
+                    
           dragging = null;
           originaldragging = null;
           draggingHeight = null;
@@ -119,8 +118,8 @@
             return true;
           }
           
-          //If clone is enabled, make sure we aren't trying to drop into our original location
-		  if (options.clone === true && $(this).is(originaldragging)) {
+          //If clone is enabled, make sure we aren't trying to drop into that location; cloned lists can't accept new elements
+		  if (options.clone === true) {
 			  return false;
 		  }
 		  
