@@ -12,18 +12,18 @@
 'use strict';
 
 (function ($) {
-  var dragging, draggingHeight, placeholders = $();
+  var dragging, originaldragging, draggingHeight, placeholders = $();
   $.fn.sortable = function (options) {
     var method = String(options);
-
+	
     options = $.extend({
       connectWith: false,
       placeholder: null,
-      dragImage: null
+      dragImage: null,
+      clone: false
     }, options);
 
     return this.each(function () {
-
       var index, items = $(this).children(options.items), handles = options.handle ? items.find(options.handle) : items;
 
       if (method === 'reload') {
@@ -79,27 +79,50 @@
         if (options.dragImage && dt.setDragImage) {
           dt.setDragImage(options.dragImage, 0, 0);
         }
+		
+		originaldragging = $(this);
+		if (options.clone === true && !$(originaldragging).hasClass('sortable-noclone')) {
+			dragging = $(this).clone(true);
+			items = $(items).add(dragging);
+		} else {
+			dragging = $(this);
+		}
+		dragging.addClass('sortable-dragging').attr('aria-grabbed', 'true');
+        index = originaldragging.index();
 
-        index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
-        draggingHeight = dragging.outerHeight();
+        draggingHeight = originaldragging.outerHeight();
         startParent = $(this).parent();
         dragging.parent().triggerHandler('sortstart', {item: dragging, startparent: startParent});
       }).on('dragend.h5s',function () {
           if (!dragging) {
             return;
           }
-          dragging.removeClass('sortable-dragging').attr('aria-grabbed', 'false').show();
-          placeholders.detach();
+          
           newParent = $(this).parent();
-          if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
+          
+		  dragging.removeClass('sortable-dragging').attr('aria-grabbed', 'false').show();
+		  dragging.addClass('sortable-noclone');
+          placeholders.detach();
+
+          if (index !== originaldragging.index() || startParent.get(0) !== newParent.get(0)) {
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
+                    
           dragging = null;
+          originaldragging = null;
           draggingHeight = null;
+          $(options.sortableselector).sortable('reload');
         }).add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
-          if (!items.is(dragging) && options.connectWith !== $(dragging).parent().data('connectWith')) {
+	      
+          if (!items.is(dragging) && options.connectWith !== $(originaldragging).parent().data('connectWith')) {
             return true;
           }
+          
+          //If clone is enabled, make sure we aren't trying to drop into that location; cloned lists can't accept new elements
+		  if (options.clone === true) {
+			  return false;
+		  }
+		  
           if (e.type === 'drop') {
             e.stopPropagation();
             placeholders.filter(':visible').after(dragging);
