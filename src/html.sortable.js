@@ -67,7 +67,6 @@
         if (this.dragDrop) {
           this.dragDrop();
         }
-        return false;
       }).end();
 
       // Handle drag events on draggable items
