@@ -9,13 +9,13 @@
 		}
 		#features {
 			margin: auto;
-			width: 460px;
+			max-width: 460px;
 			font-size: 0.9em;
 		}
 		.connected, .sortable, .exclude, .handles {
 			margin: auto;
 			padding: 0;
-			width: 310px;
+			max-width: 310px;
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
 			-khtml-user-select: none;
@@ -34,7 +34,7 @@
 			color: #1C94C4;
 			margin: 5px;
 			padding: 5px;
-			height: 22px;
+			min-height: 22px;
 		}
 		.handles span {
 			cursor: move;
@@ -45,21 +45,21 @@
 		.sortable.grid li {
 			line-height: 80px;
 			float: left;
-			width: 80px;
-			height: 80px;
+			min-width: 80px;
+			min-height: 80px;
 			text-align: center;
 		}
 		li.highlight {
 			background: #FEE25F;
 		}
 		#connected {
-			width: 440px;
+			max-width: 440px;
 			overflow: hidden;
-			margin: auto;
+			margin: 0 auto;
 		}
 		.connected {
 			float: left;
-			width: 200px;
+			min-width: 200px;
 		}
 		.connected.no2 {
 			float: right;
@@ -67,6 +67,9 @@
 		li.sortable-placeholder {
 			border: 1px dashed #CCC;
 			background: none;
+		}
+		.sortable li li {
+			background-color: #FEE25F;
 		}
 	</style>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
@@ -118,6 +121,23 @@
 			<li><span>::</span> Item 4</li>
 			<li><span>::</span> Item 5</li>
 			<li><span>::</span> Item 6</li>
+		</ul>
+	</section>
+	<section>
+		<h2>Nested Sortable Lists</h2>
+		<ul class="sortable list">
+			<li>Item 1</li>
+			<li>Item 2</li>
+			<li>Item 3</li>
+			<li>
+				<ul class="sortable list">
+					<li>Item 1</li>
+					<li>Item 2</li>
+					<li>Item 3</li>
+				</ul>
+			</li>
+			<li>Item 4</li>
+			<li>Item 5</li>
 		</ul>
 	</section>
 	<section>
