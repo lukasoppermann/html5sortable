@@ -129,6 +129,7 @@
             dragging.hide();
             $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
             placeholders.not(placeholder).detach();
+            dragging.parent().triggerHandler('sortchange', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent, placeholder: placeholder});
           } else if (!placeholders.is(this) && !$(this).children(options.items).length) {
             placeholders.detach();
             $(this).append(placeholder);
