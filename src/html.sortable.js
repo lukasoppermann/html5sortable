@@ -12,7 +12,7 @@
 'use strict';
 
 (function ($) {
-  var dragging, draggingHeight, placeholders = $();
+  var dragging, draggingHeight, draggingWidth, placeholders = $();
   $.fn.sortable = function (options) {
     var method = String(options);
 
@@ -82,6 +82,7 @@
 
         index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
         draggingHeight = dragging.outerHeight();
+        draggingWidth = dragging.outerWidth();
         startParent = $(this).parent();
         dragging.parent().triggerHandler('sortstart', {item: dragging, startparent: startParent});
       }).on('dragend.h5s',function () {
@@ -110,18 +111,30 @@
           e.originalEvent.dataTransfer.dropEffect = 'move';
           if (items.is(this)) {
             var thisHeight = $(this).outerHeight();
+            var thisWidth = $(this).outerWidth();
             if (options.forcePlaceholderSize) {
               placeholder.height(draggingHeight);
+              placeholder.width(draggingWidth);
             }
 
             // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
             if (thisHeight > draggingHeight) {
               // Dead zone?
-              var deadZone = thisHeight - draggingHeight, offsetTop = $(this).offset().top;
-              if (placeholder.index() < $(this).index() && e.originalEvent.pageY < offsetTop + deadZone) {
+              var deadZoneHeight = thisHeight - draggingHeight, offsetTop = $(this).offset().top;
+              if (placeholder.index() < $(this).index() && e.originalEvent.pageY < offsetTop + deadZoneHeight) {
                 return false;
               }
-              else if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
+              else if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZoneHeight) {
+                return false;
+              }
+            }
+            if (thisWidth > draggingWidth) {
+              // Dead zone?
+              var deadZoneWidth = thisWidth - draggingWidth, offsetLeft = $(this).offset().left;
+              if (placeholder.index() < $(this).index() && e.originalEvent.pageX < offsetLeft + deadZoneWidth) {
+                return false;
+              }
+              else if (placeholder.index() > $(this).index() && e.originalEvent.pageX > offsetLeft + thisWidth - deadZoneWidth) {
                 return false;
               }
             }
