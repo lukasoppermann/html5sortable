@@ -65,6 +65,25 @@ $('.sortable').sortable().bind('sortstart', function(e, ui) {
 });
 ```
 
+Use `sortchange` event if you want to do something while an item is being moved (e.g. updating the placeholder):
+
+``` javascript
+$('.sortable').sortable().bind('sortchange', function(e, ui) {
+    /*
+
+    This event is triggered when the user stopped sorting and the DOM position has changed.
+
+    ui.item contains the current dragged element.
+    ui.oldindex contains the old index of the dragged element
+    ui.placeholder contains the placeholder element.
+    ui.newindex contains the proposed new index of the dragged element.
+    ui.startparent contains the element that the dragged item comes from
+    ui.endparent contains the element that the dragged item was added to
+
+    */
+});
+```
+
 Use `sortupdate` event if you want to do something when the order changes (e.g. storing the new order):
 
 ``` javascript
