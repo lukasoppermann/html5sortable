@@ -84,7 +84,7 @@ $('.sortable').sortable().bind('sortchange', function(e, ui) {
 });
 ```
 
-Use `sortupdate` event if you want to do something when the order changes (e.g. storing the new order):
+Use `sortupdate` event if you want to do something once the order is changed (e.g. storing the new order):
 
 ``` javascript
 $('.sortable').sortable().bind('sortupdate', function(e, ui) {
