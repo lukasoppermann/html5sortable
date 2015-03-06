@@ -94,6 +94,7 @@
           if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
             dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
+          dragging.parent().trigger('mouseup');
           dragging = null;
           draggingHeight = null;
         }).add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
