@@ -62,6 +62,13 @@
       items.attr('role', 'option');
       items.attr('aria-grabbed', 'false');
 
+      // Mouse over class
+      items.hover(function () {
+        $(this).addClass('sortable-over');
+      }, function () {
+        $(this).removeClass('sortable-over');
+      });
+
       // Setup drag handles
       handles.attr('draggable', 'true').not('a[href], img').on('selectstart.h5s', function() {
         if (this.dragDrop) {
