@@ -91,7 +91,7 @@
         index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
         draggingHeight = dragging.outerHeight();
         startParent = $(this).parent();
-        dragging.parent().triggerHandler('sortstart', {item: dragging, startparent: startParent});
+        dragging.parent().trigger('sortstart', {item: dragging, startparent: startParent});
       }).on('dragend.h5s',function () {
           if (!dragging) {
             return;
@@ -100,7 +100,7 @@
           placeholders.detach();
           newParent = $(this).parent();
           if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
-            dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
+            dragging.parent().trigger('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
           dragging = null;
           draggingHeight = null;
