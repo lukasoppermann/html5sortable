@@ -16,8 +16,8 @@ HTML5 Sortable jQuery Plugin
 
 * The recommended way, using [Bower](http://bower.io):
 
-``` 
-bower install html.sortable 
+```
+bower install html.sortable
 ```
 * The non-Bower way: include ```html.sortable.x.y.z.js``` or the minified version, ```html.sortable.min.x.y.z.js```.
 
@@ -60,6 +60,7 @@ $('.sortable').sortable().bind('sortstart', function(e, ui) {
 
     ui.item contains the current dragged element.
     ui.startparent contains the element that the dragged item comes from
+    ui.placeholder contains the placeholder element
 
     */
 });
