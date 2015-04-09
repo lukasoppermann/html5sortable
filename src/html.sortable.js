@@ -91,7 +91,7 @@
         index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
         draggingHeight = dragging.outerHeight();
         startParent = $(this).parent();
-        dragging.parent().trigger('sortstart', {item: dragging, startparent: startParent});
+        dragging.parent().trigger('sortstart', {item: dragging, startparent: startParent, placeholder: placeholder});
       }).on('dragend.h5s',function () {
           if (!dragging) {
             return;
