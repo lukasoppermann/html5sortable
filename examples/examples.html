@@ -26,7 +26,7 @@
 		.sortable.grid {
 			overflow: hidden;
 		}
-		.connected li, .sortable li, .exclude li, .handles li {
+		.connected li, .sortable li, .exclude li, .handles li, .fixed li {
 			list-style: none;
 			border: 1px solid #CCC;
 			background: #F6F6F6;
@@ -39,7 +39,7 @@
 		.handles span {
 			cursor: move;
 		}
-		li.disabled {
+		li.disabled, li.fixed {
 			opacity: 0.5;
 		}
 		.sortable.grid li {
@@ -141,6 +141,18 @@
   		</ul>
     </div>
 	</section>
+	<section>
+		<h2>Sortable List With Fixed Items</h2>
+		<ul class="fixed list">
+			<li>Item 1</li>
+			<li class="fixed">Fixed 1</li>
+			<li>Item 2</li>
+			<li class="fixed">Fixed 2</li>
+			<li>Item 3</li>
+			<li class="fixed">Fixed 3</li>
+			<li>Item 4</li>
+		</ul>
+	</section>
 	<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script> -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="../src/html.sortable.js"></script>
@@ -155,6 +167,10 @@
 			});
 			$('.exclude').sortable({
 				items: ':not(.disabled)'
+			});
+			$('.fixed.list').sortable({
+				items: ':not(.fixed)',
+				fixed: '.fixed'
 			});
 		});
 	</script>
