@@ -9,9 +9,9 @@
  *
  * Released under the MIT license.
  */
-'use strict';
 
 (function ($) {
+  'use strict';
   var dragging, draggingHeight, placeholders = $();
   $.fn.sortable = function (options) {
     var method = String(options);
@@ -24,7 +24,7 @@
 
     return this.each(function () {
 
-      var index, items = $(this).children(options.items), handles = options.handle ? items.find(options.handle) : items;
+      var index, items = $(this).children(options.items).not(options.fixed), handles = options.handle ? items.find(options.handle) : items;
 
       if (method === 'reload') {
         $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
@@ -80,10 +80,18 @@
           dt.setDragImage(options.dragImage, 0, 0);
         }
 
+        if (options.fixed) {
+          // Cache the index of each fixed item when the drag is starting
+          $(this).siblings(options.fixed).each(function() {
+            var $this = $(this);
+            $this.data('h5s-fixed-index', $this.index());
+          });
+        }
+
         index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
         draggingHeight = dragging.outerHeight();
         startParent = $(this).parent();
-        dragging.parent().triggerHandler('sortstart', {item: dragging, startparent: startParent});
+        dragging.parent().trigger('sortstart', {item: dragging, startparent: startParent, placeholder: placeholder});
       }).on('dragend.h5s',function () {
           if (!dragging) {
             return;
@@ -92,7 +100,7 @@
           placeholders.detach();
           newParent = $(this).parent();
           if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
-            dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
+            dragging.parent().trigger('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
           }
           dragging = null;
           draggingHeight = null;
@@ -133,6 +141,25 @@
             placeholders.detach();
             $(this).append(placeholder);
           }
+
+          // Ensure that fixed items stay in place
+          if (options.fixed) {
+            var list = dragging.parent(),
+                fixed = $(this).siblings(options.fixed).detach(),
+                tagName = dragging[0].tagName,
+                helper = $('<' + tagName + '/>').prependTo(list);
+            fixed.each(function() {
+              var $this = $(this),
+                  pos = $this.data('h5s-fixed-index');
+              $this.insertAfter(dragging.siblings().eq(pos));
+            });
+            helper.remove();
+          }
+
+          // Signal that the sort order has changed
+          dragging.parent().trigger('sortchange', {
+            item: dragging
+          });
           return false;
         });
     });
