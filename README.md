@@ -207,7 +207,7 @@ yepnope({
 ##AngularJS usage
 
 Make your app use the `htmlSortable` module. Assign html sortable options to the `html-sortable` tag, specify an ng-model and, optionally, specify a callback using `html-sortable-callback`.
-```
+``` javascript
 $scope.sortableOptions = {
 	placeholder: '<div class="sortable-placeholder col-md-3"><div></div></div>',
   	forcePlaceholderSize: true
@@ -218,7 +218,7 @@ $scope.sortableCallback = function (startModel, destModel, start, end) {
 };
 ```
 
-```
+``` html
 <ul html-sortable="sortableOptions" html-sortable-callback="sortableCallback" ng-model='data1'>
 	<li ng-repeat="itm in data1">
    		{{itm}}
