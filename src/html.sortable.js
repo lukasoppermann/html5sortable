@@ -35,7 +35,7 @@
         $(this).attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
 
         if (method === 'destroy') {
-          $(this).off('sortupdate');
+          $(this).off('sortstart sortupdate');
           $(this).removeData('opts');
           citems.add(this).removeData('connectWith items')
             .off('dragstart.h5s dragend.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
