@@ -7,15 +7,11 @@
 		header, section {
 			display: block;
 		}
-		#features {
-			margin: auto;
-			width: 460px;
-			font-size: 0.9em;
-		}
-		.connected, .sortable, .exclude, .handles {
+		.list, .grid {
+			min-height: 20px;
 			margin: auto;
 			padding: 0;
-			width: 310px;
+			max-width: 310px;
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
 			-khtml-user-select: none;
@@ -23,10 +19,13 @@
 			-ms-user-select: none;
 			user-select: none;
 		}
-		.sortable.grid {
+		.sortable--sublist{
+			width: 100%;
+		}
+		.grid {
 			overflow: hidden;
 		}
-		.connected li, .sortable li, .exclude li, .handles li {
+		.list li, .grid li {
 			list-style: none;
 			border: 1px solid #CCC;
 			background: #F6F6F6;
@@ -34,7 +33,6 @@
 			color: #1C94C4;
 			margin: 5px;
 			padding: 5px;
-			height: 22px;
 		}
 		.handles span {
 			cursor: move;
@@ -53,20 +51,34 @@
 			background: #FEE25F;
 		}
 		#connected {
-			width: 440px;
+			max-width: 440px;
 			overflow: hidden;
 			margin: auto;
 		}
 		.connected {
+			width: 50%;
 			float: left;
-			width: 200px;
-		}
-		.connected.no2 {
-			float: right;
 		}
 		li.sortable-placeholder {
 			border: 1px dashed #CCC;
 			background: none;
+		}
+		.button-list{
+			position: relative;
+			margin-top: 20px;
+			left: 50%;
+			text-align: center;
+			-webkit-transform: translate(-50%, 0);
+			-ms-transform: -ms-translate(-50%, 0);
+			transform: translate(-50%, 0);
+		}
+		.button{
+			display: inline-block;
+			border-radius: 2px;
+			padding: 5px;
+			border: 1px solid #ccc;
+			background-color: rgb(245,245,245);
+			box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 		}
 	</style>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
@@ -78,7 +90,7 @@
 	</header>
 	<section>
 		<h2>Sortable List</h2>
-		<ul class="sortable list">
+		<ul class="js-sortable sortable list">
 			<li>Item 1</li>
 			<li>Item 2</li>
 			<li>Item 3</li>
@@ -89,7 +101,7 @@
 	</section>
 	<section>
 		<h2>Sortable Grid</h2>
-		<ul class="sortable grid">
+		<ul class="js-sortable sortable grid">
 			<li>Item 1</li>
 			<li>Item 2</li>
 			<li>Item 3</li>
@@ -100,7 +112,7 @@
 	</section>
 	<section>
 		<h2>Exclude Items</h2>
-		<ul class="exclude list">
+		<ul class="js-exclude list">
 			<li>Item 1</li>
 			<li>Item 2</li>
 			<li>Item 3</li>
@@ -111,7 +123,7 @@
 	</section>
 	<section>
 		<h2>Sortable List With Handles</h2>
-		<ul class="handles list">
+		<ul class="handles js-handles list">
 			<li><span>::</span> Item 1</li>
 			<li><span>::</span> Item 2</li>
 			<li><span>::</span> Item 3</li>
@@ -121,9 +133,28 @@
 		</ul>
 	</section>
 	<section>
+		<h2>Sortable List with sublist</h2>
+		<ul class="js-sortable sortable list">
+			<li>Item 1</li>
+			<li>Item 2
+				<ul class="js-connected list sortable--sublist">
+					<li><span>::</span> Item 3</li>
+					<li><span>::</span> Item 4</li>
+				</ul>
+			</li>
+			<li>Item 5
+				<ul class="js-connected list sortable--sublist">
+					<li><span>::</span> Item 3</li>
+					<li><span>::</span> Item 4</li>
+				</ul>
+			</li>
+			<li>Item 6</li>
+		</ul>
+	</section>
+	<section>
 		<h2>Connected Sortable Lists</h2>
     <div id="connected">
-  		<ul class="connected list">
+  		<ul class="connected list js-connected">
   			<li>Item 1</li>
   			<li>Item 2</li>
   			<li>Item 3</li>
@@ -131,7 +162,7 @@
   			<li>Item 5</li>
   			<li>Item 6</li>
   		</ul>
-  		<ul class="connected list no2">
+  		<ul class="connected list js-connected">
   			<li class="highlight">Item 1</li>
   			<li class="highlight">Item 2</li>
   			<li class="highlight">Item 3</li>
@@ -141,20 +172,55 @@
   		</ul>
     </div>
 	</section>
+	<section>
+		<h2>Disabled sortable</h2>
+		<ul class="js-sortable js-disabled list">
+			<li>Item 1</li>
+			<li>Item 2</li>
+			<li>Item 3</li>
+		</ul>
+	</section>
+	<section>
+		<h2>Add item to sortable</h2>
+		<ul class="js-sortable list">
+			<li>Item 1</li>
+			<li>Item 2</li>
+			<li>Item 3</li>
+		</ul>
+		<div class="button-list">
+			<button class="js-add-item-button button">Add item</button>
+			<button class="js-reload button">Reload</button>
+		</div>
+	</section>
 	<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script> -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="../src/html.sortable.js"></script>
 	<script>
 		$(function() {
-			$('.sortable').sortable();
-			$('.handles').sortable({
-				handle: 'span'
+			$('.js-sortable').sortable({
+				forcePlaceholderSize: true
 			});
-			$('.connected').sortable({
-				connectWith: '.connected'
+			$('.js-handles').sortable({
+				handle: 'span',
+				forcePlaceholderSize: true
 			});
-			$('.exclude').sortable({
+			$('.js-connected').sortable({
+				forcePlaceholderSize: true,
+				connectWith: '.js-connected'
+			});
+			$('.js-exclude').sortable({
+				forcePlaceholderSize: true,
 				items: ':not(.disabled)'
+			});
+			$('.js-disabled').sortable('disable');
+
+			// buttons to add items and reload the list
+			// separatly to showcase issue without reload
+			$('.js-add-item-button').on('click', function(){
+				$(this).parents().siblings('ul').append('<li>new item</li>');
+			});
+			$('.js-reload').on('click', function(){
+				$(this).parents().siblings('ul').sortable('reload');
 			});
 		});
 	</script>
