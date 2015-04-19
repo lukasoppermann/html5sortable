@@ -9,9 +9,9 @@
  *
  * Released under the MIT license.
  */
-'use strict';
-
 (function ($) {
+  'use strict';
+
   var dragging, draggingHeight, placeholders = $();
   $.fn.sortable = function (options) {
     var method = String(options);
