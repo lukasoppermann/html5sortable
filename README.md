@@ -7,7 +7,6 @@ HTML5 Sortable jQuery Plugin
 * Less than 1KB (minified and gzipped).
 * Built using native HTML5 drag and drop API.
 * Supports both list and grid style layouts.
-* Similar API and behaviour to jquery-ui sortable plugin.
 * Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.
 * Comes with an AngularJS directive.
 
@@ -178,22 +177,6 @@ To reload a sortable:
 
 ``` javascript
 $('.sortable').sortable('reload');
-```
-
-## jquery-ui API compatibility
-The API is compatible with jquery-ui. So you can use jquery-ui as a polyfill in older browsers:
-
-``` javascript
-yepnope({
-    test: Modernizr.draganddrop,
-    yep: 'html.sortable.js',
-    nope: 'jquery-ui.min.js',
-    complete: function() {
-        $('.sortable').sortable().bind('sortupdate', function(e, ui) {
-            //Store the new order.
-        }
-    }
-});
 ```
 
 ##AngularJS usage
