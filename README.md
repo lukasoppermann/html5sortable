@@ -34,31 +34,22 @@ bower install html.sortable
 **1. Node package manager (npm)**  
 You will need `npm`, choose any way you like to [install npm](https://github.com/npm/npm#super-easy-install).
 
-**2. [Gruntjs](https://github.com/npm/npm#super-easy-install)**  
-You also need the `grunt` javascript task runner and the `grunt-cli`.
-Install it via `npm`:
-
-```
-npm install -g grunt
-npm install -g grunt-cli
-```
-
-**3. Clone and install the project**
+**2. Clone and install the project**
 ```
 git clone https://github.com/voidberg/html5sortable
 cd html5sortable
 npm install
 ```
 
-**4. Commit**
-Before every *pull request* you send run the grunt tasks.
+**3. Commit**
+Before every *pull request* you send, run the build task.
 ```
-grunt
+npm run build
 ```
 
-While working you can run the validation task.
+While working you can run the liniting & validation task.
 ```
-grunt validate
+npm test
 ```
 
 

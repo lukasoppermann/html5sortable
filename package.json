@@ -8,6 +8,13 @@
     "email": "andu@ctrlz.ro",
     "url": "http://alexandrubadiu.ro"
   },
+  "contributors": [
+    {
+      "name": "Lukas Oppermann",
+      "email": "lukas@vea.re",
+      "url": "http://vea.re"
+    }
+  ],
   "keywords": [
     "jquery",
     "sortable",
@@ -25,12 +32,21 @@
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-bump": "0.0.13",
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-uglify": "~0.5.1",
     "grunt-jsvalidate": "~0.2.2",
-    "jshint-stylish": "~0.1.4"
+    "gulp": "^3.8.11",
+    "gulp-jscs": "^1.5.2",
+    "gulp-jshint": "^1.10.0",
+    "gulp-util": "^3.0.4",
+    "jshint-stylish": "^1.0.1"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "build": "gulp test && grunt"
   }
 }
