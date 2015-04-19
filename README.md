@@ -41,8 +41,8 @@ npm install
 ```
 
 **3. Commit**  
-If your send a *pull request* which changes `html.sortable.js` or `html.sortable.angular.js` you must run the build task before committing. This will bump the version number.
-If commit a change that does not effect the plugin directly, like updating an example file or a tests, etc. you should **not** run the build task, because this has no effect on the people downloading the file via bower.
+If your send a *pull request* which changes `html.sortable.js` or `html.sortable.angular.js` you must run the build task before committing.
+If you commit a change that does not effect those files directly, like updating an example file or a tests, etc. you should **not** run the build task.
 ```
 npm run build
 ```

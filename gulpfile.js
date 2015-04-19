@@ -54,4 +54,4 @@ gulp.task('bump-version', function() {
 /* ---------- */
 /* tasks */
 gulp.task('test', ['lint']);
-gulp.task('build', ['test', 'build-version', 'bump-version']);
+gulp.task('build', ['test', 'build-version']);
