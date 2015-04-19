@@ -9,11 +9,13 @@
  *
  * Released under the MIT license.
  */
-(function ($) {
+(function($) {
   'use strict';
 
-  var dragging, draggingHeight, placeholders = $();
-  $.fn.sortable = function (options) {
+  var dragging;
+  var draggingHeight;
+  var placeholders = $();
+  $.fn.sortable = function(options) {
     var method = String(options);
 
     options = $.extend({
@@ -22,9 +24,11 @@
       dragImage: null
     }, options);
 
-    return this.each(function () {
+    return this.each(function() {
 
-      var index, items = $(this).children(options.items), handles = options.handle ? items.find(options.handle) : items;
+      var index;
+      var items = $(this).children(options.items);
+      var handles = options.handle ? items.find(options.handle) : items;
 
       if (method === 'reload') {
         $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
@@ -49,13 +53,13 @@
 
       if (typeof soptions === 'undefined') {
         $(this).data('opts', options);
-      }
-      else {
+      } else {
         options = soptions;
       }
 
-      var startParent, newParent;
-      var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder"/>') : $(options.placeholder).addClass('sortable-placeholder');
+      var startParent;
+      var newParent;
+      var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder"/>') : $(options.placeholder).addClass('sortable-placeholder');
 
       $(this).data('items', options.items);
       placeholders = placeholders.add(placeholder);
@@ -89,7 +93,7 @@
         draggingHeight = dragging.outerHeight();
         startParent = $(this).parent();
         dragging.parent().triggerHandler('sortstart', {item: dragging, startparent: startParent});
-      }).on('dragend.h5s',function () {
+      }).on('dragend.h5s', function() {
           if (!dragging) {
             return;
           }
@@ -122,11 +126,12 @@
             // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
             if (thisHeight > draggingHeight) {
               // Dead zone?
-              var deadZone = thisHeight - draggingHeight, offsetTop = $(this).offset().top;
+              var deadZone = thisHeight - draggingHeight;
+              var offsetTop = $(this).offset().top;
               if (placeholder.index() < $(this).index() && e.originalEvent.pageY < offsetTop + deadZone) {
                 return false;
               }
-              else if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
+              if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
                 return false;
               }
             }
