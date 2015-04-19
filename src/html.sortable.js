@@ -28,11 +28,15 @@
 
       if (method === 'reload') {
         $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
+        $(this).off('dragover.h5s dragenter.h5s drop.h5s');
       }
       if (/^enable|disable|destroy$/.test(method)) {
         var citems = $(this).children($(this).data('items')).attr('draggable', method === 'enable');
+
+        $(this).attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
+
         if (method === 'destroy') {
-          $(this).off('sortupdate');
+          $(this).off('sortstart sortupdate');
           $(this).removeData('opts');
           citems.add(this).removeData('connectWith items')
             .off('dragstart.h5s dragend.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
