@@ -30,6 +30,7 @@
     "email": "andu@ctrlz.ro"
   },
   "devDependencies": {
+    "del": "^1.1.1",
     "grunt": "~0.4.2",
     "grunt-bump": "0.0.13",
     "grunt-cli": "^0.1.13",
@@ -40,13 +41,17 @@
     "grunt-contrib-uglify": "~0.5.1",
     "grunt-jsvalidate": "~0.2.2",
     "gulp": "^3.8.11",
+    "gulp-bump": "^0.3.0",
     "gulp-jscs": "^1.5.2",
     "gulp-jshint": "^1.10.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.4",
     "jshint-stylish": "^1.0.1"
   },
   "scripts": {
     "test": "gulp test",
-    "build": "gulp test && grunt"
+    "build": "gulp build"
   }
 }
