@@ -90,7 +90,7 @@
         }
 
         index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
-        draggingHeight = dragging.outerHeight();
+        draggingHeight = dragging.height();
         startParent = $(this).parent();
         dragging.parent().triggerHandler('sortstart', {item: dragging, startparent: startParent});
       }).on('dragend.h5s', function() {
@@ -118,7 +118,7 @@
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
           if (items.is(this)) {
-            var thisHeight = $(this).outerHeight();
+            var thisHeight = $(this).height();
             if (options.forcePlaceholderSize) {
               placeholder.height(draggingHeight);
             }
