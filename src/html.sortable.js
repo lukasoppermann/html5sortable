@@ -31,6 +31,9 @@
       }
       if (/^enable|disable|destroy$/.test(method)) {
         var citems = $(this).children($(this).data('items')).attr('draggable', method === 'enable');
+
+        $(this).attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
+
         if (method === 'destroy') {
           $(this).off('sortupdate');
           $(this).removeData('opts');
