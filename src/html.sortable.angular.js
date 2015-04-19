@@ -17,7 +17,9 @@
         return {
           require: '?ngModel',
           link: function(scope, element, attrs, ngModel) {
-            var opts, model, scallback;
+            var opts;
+            var model;
+            var scallback;
 
             if (attrs.htmlSortableCallback) {
               scallback = attrs.htmlSortableCallback;
@@ -30,13 +32,13 @@
               model = $parse(attrs.ngModel);
 
               ngModel.$render = function() {
-                $timeout(function () {
+                $timeout(function() {
                   element.sortable('reload');
                 }, 50);
               };
 
               scope.$watch(model, function() {
-                $timeout(function () {
+                $timeout(function() {
                   element.sortable('reload');
                 }, 50);
               }, true);
@@ -51,13 +53,12 @@
                 var $start = data.oldindex;
                 var $end   = data.item.index();
 
-                scope.$apply(function () {
+                scope.$apply(function() {
                   if ($sourceModel(data.startparent.scope()) === $destModel(data.endparent.scope())) {
                     var $items = $sourceModel(data.startparent.scope());
                     $items.splice($end, 0, $items.splice($start, 1)[0]);
                     $sourceModel.assign(scope, $items);
-                  }
-                  else {
+                  } else {
                     var $item = $sourceModel(data.startparent.scope())[$start];
                     var $sourceItems = $sourceModel(data.startparent.scope());
                     var $destItems = $destModel(data.endparent.scope()) || [];
@@ -69,7 +70,7 @@
                     $destModel.assign(scope, $destItems);
                   }
                 });
-                
+
                 if (scallback) {
                   scope[scallback]($sourceModel(data.startparent.scope()), $destModel(data.endparent.scope()), $start, $end);
                 }
