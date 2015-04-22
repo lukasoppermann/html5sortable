@@ -37,7 +37,7 @@ You will need `npm`, choose any way you like to [install npm](https://github.com
 ```
 git clone https://github.com/voidberg/html5sortable
 cd html5sortable
-npm install
+npm install && bower install
 ```
 
 **3. Commit**  
