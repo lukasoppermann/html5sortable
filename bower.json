@@ -3,7 +3,11 @@
   "version": "0.1.9",
   "homepage": "https://github.com/voidberg/html5sortable",
   "authors": [
-    "Alexandru Badiu <andu@ctrlz.ro>"
+    "Alexandru Badiu <andu@ctrlz.ro>",
+    "Lukas Oppermann <lukas@vea.re>"
+  ],
+  "moduleType": [
+    "globals"
   ],
   "description": "Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.",
   "main": "dist/html.sortable.js",
@@ -15,7 +19,11 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
+    "/.*",
+    "AUTHORS",
+    "src/",
+    "package.json",
+    "gulpfile.js",
     "node_modules",
     "bower_components",
     "test",
