@@ -35,7 +35,8 @@
         $(this).off('dragover.h5s dragenter.h5s drop.h5s');
       }
       if (/^enable|disable|destroy$/.test(method)) {
-        var citems = $(this).children($(this).data('items')).attr('draggable', method === 'enable');
+        var citems = $(this).children($(this).data('items'));
+        citems.attr('draggable', method === 'enable');
 
         $(this).attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
 
@@ -43,7 +44,7 @@
           $(this).off('sortstart sortupdate');
           $(this).removeData('opts');
           citems.add(this).removeData('connectWith items')
-            .off('dragstart.h5s dragend.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
+            .off('dragstart.h5s dragend.h5s dragover.h5s dragenter.h5s drop.h5s sortupdate');
           handles.off('selectstart.h5s');
         }
         return;
@@ -71,11 +72,11 @@
       items.attr('aria-grabbed', 'false');
 
       // Setup drag handles
-      handles.attr('draggable', 'true').not('a[href], img').on('selectstart.h5s', function() {
+      handles.attr('draggable', 'true');
+      handles.not('a[href], img').on('selectstart.h5s', function() {
         if (this.dragDrop) {
           this.dragDrop();
         }
-        return false;
       }).end();
 
       // Handle drag events on draggable items
@@ -90,9 +91,12 @@
         }
 
         index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
-        draggingHeight = dragging.outerHeight();
+        draggingHeight = dragging.height();
         startParent = $(this).parent();
-        dragging.parent().triggerHandler('sortstart', {item: dragging, startparent: startParent});
+        dragging.parent().triggerHandler('sortstart', {
+          item: dragging,
+          startparent: startParent
+        });
       }).on('dragend.h5s', function() {
           if (!dragging) {
             return;
@@ -101,7 +105,12 @@
           placeholders.detach();
           newParent = $(this).parent();
           if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
-            dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
+            dragging.parent().triggerHandler('sortupdate', {
+              item: dragging,
+              oldindex: index,
+              startparent: startParent,
+              endparent: newParent
+            });
           }
           dragging = null;
           draggingHeight = null;
@@ -118,7 +127,7 @@
           e.preventDefault();
           e.originalEvent.dataTransfer.dropEffect = 'move';
           if (items.is(this)) {
-            var thisHeight = $(this).outerHeight();
+            var thisHeight = $(this).height();
             if (options.forcePlaceholderSize) {
               placeholder.height(draggingHeight);
             }
