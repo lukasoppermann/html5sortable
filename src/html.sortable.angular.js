@@ -72,7 +72,12 @@
                 });
 
                 if (scallback) {
-                  scope[scallback]($sourceModel(data.startparent.scope()), $destModel(data.endparent.scope()), $start, $end);
+                  scope[scallback](
+                    $sourceModel(data.startparent.scope()),
+                    $destModel(data.endparent.scope()),
+                    $start,
+                    $end
+                  );
                 }
               });
             }

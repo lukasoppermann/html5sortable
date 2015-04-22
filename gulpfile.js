@@ -22,7 +22,11 @@ var reportError = function(error) {
 /* ---------- */
 /* linting */
 gulp.task('lint', function() {
-  gulp.src(['gulpfile.js', 'src/html.sortable.js', 'src/html.sortable.angular.js'])
+  gulp.src([
+    'gulpfile.js',
+    'src/html.sortable.js',
+    'src/html.sortable.angular.js'
+  ])
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jscs())
