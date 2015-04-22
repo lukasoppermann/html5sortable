@@ -41,15 +41,24 @@ npm install
 ```
 
 **3. Commit**  
-If your send a *pull request* which changes `html.sortable.js` or `html.sortable.angular.js` you must run the build task before committing.
-If you commit a change that does not effect those files directly, like updating an example file or a tests, etc. you should **not** run the build task.
-```
-npm run build
-```
-
-While working you can run the liniting & validation task.
+If you send a *pull request* make sure it passes the tests & linting. Please do **NOT** bump the version number.
 ```
 npm test
+```
+
+> *Note: At the moment you will get the following warnings, if your PR does not add any other warning, it is considered to have passed:*
+- 2x This function has too many statements. (for src/html.sortable.js)
+- 1x This function has too many parameters. (4) (for src/html.sortable.angular.js)
+- 12x Line must be at most 80 characters (for src/html.sortable.js)
+- 1x Line must be at most 80 characters (for html.sortable.angular.js)
+
+> *We are going to fix those linting issues in the near future.*
+
+**4. Merging PRs and building (only if you have commit rights)**
+
+After merging a PR run the following command to build the minified versions and bump the version number.
+```
+npm run build
 ```
 
 
@@ -211,7 +220,7 @@ Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](htt
 See [AUTHORS file](/AUTHORS).
 
 ## Contributing
-When sending pull requests make sure to only include changes that directly relate to the fix/feature you are adding and also start a pull request from a freshly cloned copy of the repo to make it easy to merge. 
+When sending pull requests make sure to only include changes that directly relate to the fix/feature you are adding and also start a pull request from a freshly cloned copy of the repo to make it easy to merge.
 
 Please always rebase to a single commit with a descriptive name and an explanation of why what was changed.
 
@@ -219,12 +228,12 @@ If you’re creating a pull request, fell free to add yourself to the `AUTHORS` 
 
 ## Styleguide
 
-> *While the code does not pass the linking yet, we are working on it. Please ensure your code does pass our linting.* 
+> *While the code does not pass the linking yet, we are working on it. Please ensure your code does pass our linting.*
 
 Take care to maintain the existing coding style. Lint and test your code using `npm test`.
 
 ### Keep lines as short as possible (max. 80 characters)
-Keeping your lines short makes it much more easy to spot errors and for other developers to scan the code. 
+Keeping your lines short makes it much more easy to spot errors and for other developers to scan the code.
 
 Keeping to an 80 character limit makes you think more about how to code something and often forces you to refactor and simplify your code.
 
@@ -304,7 +313,7 @@ return …
 Never use more than 3 parameters, this will keep you from falling into bad habits. If you need complex configuration (which you should try to avoid), use an object.
 
 ### Reduce nesting depth (max. 3)
-Do not nest to deeply. This will make the code confusing, hard to read and again, make merging hard. 
+Do not nest to deeply. This will make the code confusing, hard to read and again, make merging hard.
 If your code gets to complex, try to refactor parts out into individual functions.
 
 # Roadmap
