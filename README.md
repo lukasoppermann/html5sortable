@@ -179,7 +179,7 @@ To reload a sortable:
 $('.sortable').sortable('reload');
 ```
 
-##AngularJS usage
+## AngularJS usage
 
 Make your app use the `htmlSortable` module. Assign html sortable options to the `html-sortable` tag, specify an ng-model and, optionally, specify a callback using `html-sortable-callback`.
 ``` javascript
@@ -202,22 +202,127 @@ $scope.sortableCallback = function (startModel, destModel, start, end) {
 ```
 See the [examples](#examples) for more information.
 
-##Authors
+## Authors
 
-Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](http://ctrlz.ro).
+Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](http://ctrlz.ro) & [Lukas Oppermann](http://vea.re).
 
-##Contributors
+## Contributors
 
 See [AUTHORS file](/AUTHORS).
 
-##Contributing
+## Contributing
+When sending pull requests make sure to only include changes that directly relate to the fix/feature you are adding and also start a pull request from a freshly cloned copy of the repo to make it easy to merge. 
 
-In lieu of a formal styleguide, take care to maintain the existing coding style. Lint and test your code using [Grunt](http://gruntjs.com/).
+Please always rebase to a single commit with a descriptive name and an explanation of why what was changed.
 
-When sending pull requests make sure to only include changes that directly relate to the fix/feature you are adding and also start a pull request from a freshly cloned copy of the repo to make it easy to merge.
+If you’re creating a pull request, fell free to add yourself to the `AUTHORS` file.
 
-If you're creating a pull request, also please add yourself to the `AUTHORS` file.
+## Styleguide
 
-#License
+> *While the code does not pass the linking yet, we are working on it. Please ensure your code does pass our linting.* 
+
+Take care to maintain the existing coding style. Lint and test your code using `npm test`.
+
+### Keep lines as short as possible (max. 80 characters)
+Keeping your lines short makes it much more easy to spot errors and for other developers to scan the code. 
+
+Keeping to an 80 character limit makes you think more about how to code something and often forces you to refactor and simplify your code.
+
+Lastly, less character per line, mean less potential merge conflicts.
+
+### Don’t use multiple var declaration (except for-loop)
+```javascript
+BAD:
+var $sortable = $(this), index, placeholder;
+
+Good:
+var $sortable = $(this);
+var index;
+var placeholder;
+```
+
+While a little verbose, declaring one variable per line makes the code much more easy to scan.
+Additionally this helps when merging PRs.
+
+### Don’t use chaining
+```javascript
+BAD:
+var $item = $(this).attr(‘draggable’, method === ‘enable’);
+
+Good:
+var $item = $(this);
+$item.attr(‘draggable’, method === ‘enable’);
+```
+
+jQuery makes it easy to chain things together, while this can be a nice feature it makes the code less maintainable, harder to read and harder to understand. **Don’t use chaining**.
+
+### jQuery Collections should be prefix with a $
+
+```javascript
+var $sortable = $(this);
+```
+
+The prefixing of variables that store jQuery collection ensures that developers have an easy time differentiating between jQuery collections and other variables.
+
+### Don’t use else if, try to avoid else
+```javascript
+// This:
+if( a === b){
+  …
+} else if ( a === c){
+  …
+}
+
+// Actually means this:
+if( a === b){
+  …
+} else {
+	if ( a === c){
+    …
+	}
+}
+```
+**else if** does not exists in javascript, so do not use it.
+
+If at all possible, also try to refrain from using else.
+
+```javascript
+if( a === b){
+  return …
+} else {
+  return …
+}
+
+// Could be refactor to
+if( a === b){
+  return …
+}
+return …
+```
+
+### Reduce parameters (max. 3)
+Never use more than 3 parameters, this will keep you from falling into bad habits. If you need complex configuration (which you should try to avoid), use an object.
+
+### Reduce nesting depth (max. 3)
+Do not nest to deeply. This will make the code confusing, hard to read and again, make merging hard. 
+If your code gets to complex, try to refactor parts out into individual functions.
+
+# Roadmap
+If you want to help us by working on any of the points below, please let me know and I add you and your branch to the list.
+
+- [ ] clean up & add comments
+- [ ] Refactor & break code into functions
+- [ ] Nesting via drag & drop
+- [ ] mocha/chai/zombie tests
+- [ ] refactor to have gulp create
+  - [ ] jQuery version
+  - [ ] plain js version
+- [ ] make this compatible with
+  - [ ] plain js
+  - [ ] and
+  - [ ] commonjs
+  - [ ] es6 modules
+
+# License
 
 Released under the MIT license.
