@@ -8,17 +8,20 @@ HTML5 Sortable jQuery Plugin
 * Built using native HTML5 drag and drop API.
 * Supports both list and grid style layouts.
 * Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.
-* Comes with an AngularJS directive.
+* Comes with an AngularJS directive [help wanted](#angularj-usage)
 
 # Installation
 
 * The recommended way, using [Bower](http://bower.io):
 
 ```
-bower install html.sortable
+bower install html.sortable —save
 ```
 * The non-Bower way: include `html.sortable.x.y.z.js` or the minified version, `html.sortable.min.x.y.z.js`.
-
+* NPM: You can install the packages using npm
+```
+npm install html.sortable —save
+```
 
 # Examples
 
@@ -190,6 +193,8 @@ $('.sortable').sortable('reload');
 
 ## AngularJS usage
 
+**HELP WANTED:** If you know angular and want to help get this package up to date and cleaned up, please contact me ([lukasoppermann](https://github.com/lukasoppermann)) or start submitting PRs.
+
 Make your app use the `htmlSortable` module. Assign html sortable options to the `html-sortable` tag, specify an ng-model and, optionally, specify a callback using `html-sortable-callback`.
 ``` javascript
 $scope.sortableOptions = {
@@ -320,6 +325,7 @@ If your code gets to complex, try to refactor parts out into individual function
 If you want to help us by working on any of the points below, please let me know and I add you and your branch to the list.
 
 - [ ] clean up & add comments
+- [ ] use bootstrap as css for example
 - [ ] Refactor & break code into functions
 - [ ] Nesting via drag & drop
 - [ ] mocha/chai/zombie tests
