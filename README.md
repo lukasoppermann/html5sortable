@@ -75,7 +75,13 @@ $('.sortable').sortable();
 
 ## Styling
 
-Use `.sortable-placeholder` CSS selectors to change the styles of a dragging item and its placeholder respectively.
+Use `.sortable-placeholder` CSS selectors to change the styles of the placeholder. You may change the class by setting the `sortableClass` option in the config object.
+
+``` javascript
+$('.sortable').sortable({
+  sortableClass: 'my-placeholder fade'
+});
+```
 
 ## Events
 
