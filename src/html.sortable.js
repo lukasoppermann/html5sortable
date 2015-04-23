@@ -21,7 +21,9 @@
     options = $.extend({
       connectWith: false,
       placeholder: null,
-      dragImage: null
+      dragImage: null,
+      placeholderClass: 'sortable-placeholder',
+      draggingClass: 'sortable-dragging'
     }, options);
 
     return this.each(function() {
@@ -60,7 +62,7 @@
 
       var startParent;
       var newParent;
-      var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder"/>') : $(options.placeholder).addClass('sortable-placeholder');
+      var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="'+options.placeholderClass+'"/>') : $(options.placeholder).addClass(options.placeholderClass);
 
       $(this).data('items', options.items);
       placeholders = placeholders.add(placeholder);
@@ -90,7 +92,7 @@
           dt.setDragImage(options.dragImage, 0, 0);
         }
 
-        index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
+        index = (dragging = $(this)).addClass(options.draggingClass).attr('aria-grabbed', 'true').index();
         draggingHeight = dragging.height();
         startParent = $(this).parent();
         dragging.parent().triggerHandler('sortstart', {
@@ -101,7 +103,7 @@
           if (!dragging) {
             return;
           }
-          dragging.removeClass('sortable-dragging').attr('aria-grabbed', 'false').show();
+          dragging.removeClass(options.draggingClass).attr('aria-grabbed', 'false').show();
           placeholders.detach();
           newParent = $(this).parent();
           if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
