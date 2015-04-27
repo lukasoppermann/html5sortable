@@ -191,9 +191,9 @@
 			<button class="js-reload button">Reload</button>
 		</div>
 	</section>
-  <script src="../bower_components/jQuery/dist/jquery.min.js"></script>
-	<script src="../src/html.sortable.src.js"></script>
+	<script src="../bower_components/require1k/require1k.js"></script>
 	<script>
+	R("../dist/html.sortable", function() {
 		$(function() {
 			$('.js-sortable').sortable({
 				forcePlaceholderSize: true
@@ -221,6 +221,7 @@
 				$(this).parents().siblings('ul').sortable('reload');
 			});
 		});
+	});
 	</script>
 </body>
 </html>

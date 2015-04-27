@@ -1,5 +1,8 @@
 'use strict';
 /* ---------- */
+/* variables */
+var srcFile = 'html.sortable.src.js';
+/* ---------- */
 /* setup */
 var gulp = require('gulp');
 var log = require('gulp-util').log;
@@ -10,6 +13,7 @@ var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var umd = require('gulp-umd');
 /* ---------- */
 /* error handling */
 var reportError = function(error) {
@@ -24,7 +28,7 @@ var reportError = function(error) {
 gulp.task('lint', function() {
   gulp.src([
     'gulpfile.js',
-    'src/html.sortable.js',
+    'src/' + srcFile,
     'src/html.sortable.angular.js'
   ])
     .pipe(jshint())
@@ -33,8 +37,31 @@ gulp.task('lint', function() {
       .on('error', reportError);
 });
 /* ---------- */
+/* convert to umd */
+gulp.task('umd', function() {
+  return gulp.src('src/' + srcFile)
+    .pipe(umd({
+      dependencies: function() {
+        return [{
+          name: 'jquery',
+          amd: 'jquery',
+          cjs: 'jquery',
+          global: '$',
+        }];
+      },
+      exports: function() {
+        return 'sortable';
+      },
+      namespace: function() {
+        return 'sortable';
+      }
+    }))
+    .pipe(rename('html.sortable.js'))
+    .pipe(gulp.dest('src/'));
+});
+/* ---------- */
 /* build */
-gulp.task('build-version', function() {
+gulp.task('build-version', ['umd'], function() {
   // clear dist
   del.sync('./dist/*', {force: true});
   // copy files to dist
@@ -47,7 +74,12 @@ gulp.task('build-version', function() {
       suffix: '.min'
     }))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('./dist'))
+    // remove umd
+    .on('end', function() {
+      del.sync('./src/html.sortable.js', {force: true});
+    });
+
 });
 /* bumo version */
 gulp.task('bump-version', function() {
@@ -58,4 +90,4 @@ gulp.task('bump-version', function() {
 /* ---------- */
 /* tasks */
 gulp.task('test', ['lint']);
-gulp.task('build', ['test', 'build-version', 'bump-version']);
+gulp.task('build', ['test', 'umd', 'build-version']);

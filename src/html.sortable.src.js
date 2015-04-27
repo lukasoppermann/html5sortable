@@ -9,13 +9,11 @@
  *
  * Released under the MIT license.
  */
-(function($) {
-  'use strict';
-
   var dragging;
   var draggingHeight;
   var placeholders = $();
-  $.fn.sortable = function(options) {
+  var sortable = function(options) {
+    'use strict';
     var method = String(options);
 
     options = $.extend({
@@ -158,4 +156,5 @@
         });
     });
   };
-})(jQuery);
+
+$.fn.sortable = sortable;
