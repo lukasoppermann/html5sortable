@@ -31,7 +31,7 @@ var sortable = function(options) {
     var handles = options.handle ? items.find(options.handle) : items;
 
     if (method === 'reload') {
-      $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
+      items.off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
       $(this).off('dragover.h5s dragenter.h5s drop.h5s');
     }
     if (/^enable|disable|destroy$/.test(method)) {
@@ -60,7 +60,7 @@ var sortable = function(options) {
 
     var startParent;
     var newParent;
-    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="'+options.placeholderClass+'"/>') : $(options.placeholder).addClass(options.placeholderClass);
+    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="' + options.placeholderClass + '"/>') : $(options.placeholder).addClass(options.placeholderClass);
 
     $(this).data('items', options.items);
     placeholders = placeholders.add(placeholder);
@@ -90,9 +90,15 @@ var sortable = function(options) {
         dt.setDragImage(options.dragImage, 0, 0);
       }
 
-      index = (dragging = $(this)).addClass(options.draggingClass).attr('aria-grabbed', 'true').index();
+      // cache selsection & add attr for dragging
+      dragging = $(this);
+      dragging.addClass(options.draggingClass);
+      dragging.attr('aria-grabbed', 'true');
+      // grab values
+      index = dragging.index();
       draggingHeight = dragging.height();
       startParent = $(this).parent();
+      // trigger sortstar update
       dragging.parent().triggerHandler('sortstart', {
         item: dragging,
         startparent: startParent
@@ -100,66 +106,74 @@ var sortable = function(options) {
     });
     // Handle drag events on draggable items
     items.on('dragend.h5s', function() {
-        if (!dragging) {
-          return;
-        }
-        dragging.removeClass(options.draggingClass).attr('aria-grabbed', 'false').show();
-        placeholders.detach();
-        newParent = $(this).parent();
-        if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
-          dragging.parent().triggerHandler('sortupdate', {
-            item: dragging,
-            oldindex: index,
-            startparent: startParent,
-            endparent: newParent
-          });
-        }
-        dragging = null;
-        draggingHeight = null;
-      });
-      // Handle dragover, dragenter and drop events on draggable items
-      items.add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
-        if (!items.is(dragging) && options.connectWith !== $(dragging).parent().data('connectWith')) {
-          return true;
-        }
-        if (e.type === 'drop') {
-          e.stopPropagation();
-          placeholders.filter(':visible').after(dragging);
-          dragging.trigger('dragend.h5s');
-          return false;
-        }
-        e.preventDefault();
-        e.originalEvent.dataTransfer.dropEffect = 'move';
-        if (items.is(this)) {
-          var thisHeight = $(this).height();
-          if (options.forcePlaceholderSize) {
-            placeholder.height(draggingHeight);
-          }
+      if (!dragging) {
+        return;
+      }
+      // remove dragging attributes and show item
+      dragging.removeClass(options.draggingClass);
+      dragging.attr('aria-grabbed', 'false');
+      dragging.show();
 
-          // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
-          if (thisHeight > draggingHeight) {
-            // Dead zone?
-            var deadZone = thisHeight - draggingHeight;
-            var offsetTop = $(this).offset().top;
-            if (placeholder.index() < $(this).index() && e.originalEvent.pageY < offsetTop + deadZone) {
-              return false;
-            }
-            if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
-              return false;
-            }
-          }
-
-          dragging.hide();
-          $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
-          placeholders.not(placeholder).detach();
-        } else {
-          if (!placeholders.is(this) && !$(this).children(options.items).length) {
-            placeholders.detach();
-            $(this).append(placeholder);
-          }
-        }
+      placeholders.detach();
+      newParent = $(this).parent();
+      if (index !== dragging.index() ||
+          startParent.get(0) !== newParent.get(0)) {
+        dragging.parent().triggerHandler('sortupdate', {
+          item: dragging,
+          oldindex: index,
+          startparent: startParent,
+          endparent: newParent
+        });
+      }
+      dragging = null;
+      draggingHeight = null;
+    });
+    // Handle dragover, dragenter and drop events on draggable items
+    items.add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
+      if (!items.is(dragging) &&
+          options.connectWith !== $(dragging).parent().data('connectWith')) {
+        return true;
+      }
+      if (e.type === 'drop') {
+        e.stopPropagation();
+        placeholders.filter(':visible').after(dragging);
+        dragging.trigger('dragend.h5s');
         return false;
-      });
+      }
+      e.preventDefault();
+      e.originalEvent.dataTransfer.dropEffect = 'move';
+      if (items.is(this)) {
+        var thisHeight = $(this).height();
+        if (options.forcePlaceholderSize) {
+          placeholder.height(draggingHeight);
+        }
+
+        // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
+        if (thisHeight > draggingHeight) {
+          // Dead zone?
+          var deadZone = thisHeight - draggingHeight;
+          var offsetTop = $(this).offset().top;
+          if (placeholder.index() < $(this).index() &&
+              e.originalEvent.pageY < offsetTop + deadZone) {
+            return false;
+          }
+          if (placeholder.index() > $(this).index() &&
+              e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
+            return false;
+          }
+        }
+
+        dragging.hide();
+        $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
+        placeholders.not(placeholder).detach();
+      } else {
+        if (!placeholders.is(this) && !$(this).children(options.items).length) {
+          placeholders.detach();
+          $(this).append(placeholder);
+        }
+      }
+      return false;
+    });
   });
 };
 
