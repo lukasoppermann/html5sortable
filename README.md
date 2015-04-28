@@ -332,7 +332,7 @@ If your code gets to complex, try to refactor parts out into individual function
 If you want to help us by working on any of the points below, please let me know and I add you and your branch to the list.
 
 - [ ] clean up & add comments
-- [ ] use bootstrap as css for example
+- [x] use bootstrap as css for example
 - [ ] Refactor & break code into functions
 - [ ] Nesting via drag & drop
 - [ ] mocha/chai/zombie tests
