@@ -24,14 +24,6 @@ bower install html.sortable —save
 npm install html.sortable —save
 ```
 
-# Examples
-
-* [Examples](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/examples.html)
-* [AngularJS with a single list](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-single.html)
-* [AngularJS with connected lists](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-connected.html)
-* [AngularJS with connected lists and ngRepeat](http://htmlpreview.github.io/?https://github.com/voidberg/html5sortable/blob/master/examples/angular-ngRepeat-connected.html)
-
-
 # Build it / Hack it
 
 **1. Node package manager (npm)**  
@@ -52,9 +44,7 @@ npm test
 
 > *Note: At the moment you will get the following warnings, if your PR does not add any other warning, it is considered to have passed:*
 - 2x This function has too many statements. (for src/html.sortable.js)
-- 1x This function has too many parameters. (4) (for src/html.sortable.angular.js)
-- 12x Line must be at most 80 characters (for src/html.sortable.js)
-- 1x Line must be at most 80 characters (for html.sortable.angular.js)
+- 2x Line must be at most 80 characters (for src/html.sortable.js)
 
 > *We are going to fix those linting issues in the near future.*
 
@@ -343,7 +333,6 @@ If you want to help us by working on any of the points below, please let me know
   - [ ] plain js
   - [ ] and
   - [ ] commonjs
-  - [ ] es6 modules
 
 # License
 

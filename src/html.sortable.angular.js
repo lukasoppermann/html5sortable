@@ -16,7 +16,8 @@
       '$timeout', '$parse', function($timeout, $parse) {
         return {
           require: '?ngModel',
-          link: function(scope, element, attrs, ngModel) {
+          // TODO: fix this, if you know angular
+          link: function(scope, element, attrs, ngModel) { // jshint ignore:line
             var opts;
             var model;
             var scallback;
@@ -54,7 +55,10 @@
                 var $end   = data.item.index();
 
                 scope.$apply(function() {
+                  // TODO: fix this, if you know angular
+                  //jscs:disable
                   if ($sourceModel(data.startparent.scope()) === $destModel(data.endparent.scope())) {
+                    //jscs:enable
                     var $items = $sourceModel(data.startparent.scope());
                     $items.splice($end, 0, $items.splice($start, 1)[0]);
                     $sourceModel.assign(scope, $items);
