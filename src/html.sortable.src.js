@@ -3,9 +3,8 @@
  * https://github.com/voidberg/html5sortable
  *
  * Original code copyright 2012 Ali Farhadi.
- * This version is mantained by Alexandru Badiu <andu@ctrlz.ro>
+ * This version is mantained by Alexandru Badiu <andu@ctrlz.ro> & Lukas Oppermann <lukas@vea.re>
  *
- * Thanks to the following contributors: andyburke, bistoco, daemianmack, drskullster, flying-sheep, OscarGodson, Parikshit N. Samant, rodolfospalenza, ssafejava
  *
  * Released under the MIT license.
  */
@@ -27,13 +26,24 @@ var sortable = function(options) {
   return this.each(function() {
 
     var index;
-    var items = $(this).children(options.items);
+    var $sortable = $(this);
+    var items = $sortable.children(options.items);
     var handles = options.handle ? items.find(options.handle) : items;
 
     if (method === 'reload') {
-      items.off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
-      $(this).off('dragover.h5s dragenter.h5s drop.h5s');
+      // remove event handlers from items
+      items.off('dragstart.h5s');
+      items.off('dragend.h5s');
+      items.off('selectstart.h5s');
+      items.off('dragover.h5s');
+      items.off('dragenter.h5s');
+      items.off('drop.h5s');
+      // remove event handlers from sortable
+      $sortable.off('dragover.h5s');
+      $sortable.off('dragenter.h5s');
+      $sortable.off('drop.h5s');
     }
+
     if (/^enable|disable|destroy$/.test(method)) {
       var citems = $(this).children($(this).data('items'));
       citems.attr('draggable', method === 'enable');
@@ -164,7 +174,11 @@ var sortable = function(options) {
         }
 
         dragging.hide();
-        $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
+        if (placeholder.index() < $(this).index()) {
+          $(this).after(placeholder);
+        } else {
+          $(this).before(placeholder);
+        }
         placeholders.not(placeholder).detach();
       } else {
         if (!placeholders.is(this) && !$(this).children(options.items).length) {
