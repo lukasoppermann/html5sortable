@@ -13,7 +13,7 @@ var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
-var umd = require('gulp-umd');
+var mochify = require('mochify');
 /* ---------- */
 /* error handling */
 var reportError = function(error) {
@@ -37,31 +37,15 @@ gulp.task('lint', function() {
       .on('error', reportError);
 });
 /* ---------- */
-/* convert to umd */
-gulp.task('umd', function() {
+/* Rename file */
+gulp.task('rename', function() {
   return gulp.src('src/' + srcFile)
-    .pipe(umd({
-      dependencies: function() {
-        return [{
-          name: 'jquery',
-          amd: 'jquery',
-          cjs: 'jquery',
-          global: '$',
-        }];
-      },
-      exports: function() {
-        return 'sortable';
-      },
-      namespace: function() {
-        return 'sortable';
-      }
-    }))
     .pipe(rename('html.sortable.js'))
     .pipe(gulp.dest('src/'));
 });
 /* ---------- */
 /* build */
-gulp.task('build-version', ['umd'], function() {
+gulp.task('build-version', ['rename'], function() {
   // clear dist
   del.sync('./dist/*', {force: true});
   // copy files to dist
@@ -75,13 +59,13 @@ gulp.task('build-version', ['umd'], function() {
     }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./dist'))
-    // remove umd
+    // remove previously renamed file
     .on('end', function() {
       del.sync('./src/html.sortable.js', {force: true});
     });
 
 });
-/* bumo version */
+/* bump version */
 gulp.task('bump-version', function() {
   gulp.src(['./package.json', './bower.json'])
   .pipe(bump())
@@ -89,5 +73,7 @@ gulp.task('bump-version', function() {
 });
 /* ---------- */
 /* tasks */
-gulp.task('test', ['lint']);
-gulp.task('build', ['test', 'umd', 'build-version']);
+gulp.task('test', function() {
+  return mochify('./test/*.js', {}).bundle();
+});
+gulp.task('build', ['lint', 'test', 'rename', 'build-version']);
