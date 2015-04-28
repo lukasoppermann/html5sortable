@@ -43,10 +43,10 @@ gulp.task('umd', function() {
     .pipe(umd({
       dependencies: function() {
         return [{
-          name: 'jquery',
+          name: '$',
           amd: 'jquery',
           cjs: 'jquery',
-          global: '$',
+          global: 'jquery'
         }];
       },
       exports: function() {
