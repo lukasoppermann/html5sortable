@@ -7,7 +7,7 @@ HTML5 Sortable jQuery Plugin
 * Less than 1KB (minified and gzipped).
 * Built using native HTML5 drag and drop API.
 * Supports both list and grid style layouts.
-* Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.
+* ~~Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.~~ (needs testing)
 * Supports exports as AMD, CommonJS or global
 * Comes with an AngularJS directive [help wanted](#angularjs-usage)
 
@@ -27,6 +27,14 @@ include `html.sortable.x.y.z.js` or the minified version, `html.sortable.min.x.y
 
 ```
 npm install html.sortable —save
+```
+# Examples
+You can find the **[examples online](http://lukasoppermann.github.io/html5sortable/examples/index.html)** or test locally.
+```shell
+# To get the local examples to work do the following:
+git clone https://github.com/voidberg/html5sortable
+cd html5sortable
+bower install
 ```
 
 # Build it / Hack it
@@ -335,9 +343,9 @@ If you want to help us by working on any of the points below, please let me know
   - [ ] jQuery version
   - [ ] plain js version
 - [ ] make this compatible with
-  - [ ] plain js
-  - [ ] and
-  - [ ] commonjs
+  - [x] plain js
+  - [ ] amd
+  - [x] commonjs
 
 # License
 
