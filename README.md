@@ -11,15 +11,20 @@ HTML5 Sortable jQuery Plugin
 * Supports exports as AMD, CommonJS or global
 * Comes with an AngularJS directive [help wanted](#angularjs-usage)
 
+**Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/examples/index.html)**
+
 # Installation
 
-* The recommended way, using [Bower](http://bower.io):
+### The recommended way, using [Bower](http://bower.io):
 
 ```
 bower install html.sortable —save
 ```
-* The non-Bower way: include `html.sortable.x.y.z.js` or the minified version, `html.sortable.min.x.y.z.js`.
-* NPM: You can install the packages using npm
+### The non-Bower way:
+include `html.sortable.x.y.z.js` or the minified version, `html.sortable.min.x.y.z.js`.
+
+### Install via [NPM](https://github.com/npm/npm#super-easy-install):
+
 ```
 npm install html.sortable —save
 ```
