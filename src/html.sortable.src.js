@@ -22,7 +22,8 @@ var sortable = function(options) {
     placeholderClass: 'sortable-placeholder',
     draggingClass: 'sortable-dragging'
   }, options);
-
+  /* TODO: maxstatements should be 25, fix and remove line below */
+  /*jshint maxstatements:false */
   return this.each(function() {
 
     var index;
