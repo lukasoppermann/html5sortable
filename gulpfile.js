@@ -31,10 +31,12 @@ gulp.task('lint', function() {
     'src/' + srcFile,
     'src/html.sortable.angular.js'
   ])
+    .pipe(jscs())
+      .on('error', reportError)
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jscs())
-      .on('error', reportError);
+    .pipe(jshint.reporter('fail'))
+    ;
 });
 /* ---------- */
 /* convert to umd */

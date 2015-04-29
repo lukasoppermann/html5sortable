@@ -1,6 +1,8 @@
 HTML5 Sortable jQuery Plugin
 ============================
 
+[![Build Status](https://travis-ci.org/voidberg/html5sortable.svg?branch=master)](https://travis-ci.org/voidberg/html5sortable) [![Coverage Status](https://coveralls.io/repos/voidberg/html5sortable/badge.svg)](https://coveralls.io/r/voidberg/html5sortable)
+
 > **Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.**
 
 ## Features

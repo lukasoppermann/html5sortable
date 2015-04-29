@@ -46,7 +46,7 @@
     "phantomjs": "^1.9.16"
   },
   "scripts": {
-    "test": "gulp test && node_modules/.bin/mochify --phantomjs node_modules/.bin/phantomjs",
+    "test": "node_modules/.bin/mochify --phantomjs node_modules/.bin/phantomjs && gulp test",
     "build": "gulp build"
   }
 }
