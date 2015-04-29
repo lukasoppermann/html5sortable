@@ -48,5 +48,8 @@
   "scripts": {
     "test": "node_modules/.bin/mochify --phantomjs node_modules/.bin/phantomjs && gulp test",
     "build": "gulp build"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4"
   }
 }
