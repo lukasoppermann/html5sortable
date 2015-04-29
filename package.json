@@ -1,6 +1,6 @@
 {
   "name": "html5sortable",
-  "main": "dist/html.sortable.min.js",
+  "main": "dist/html.sortable.js",
   "version": "0.2.3",
   "license": "MIT",
   "description": "Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.",
@@ -48,5 +48,8 @@
   "scripts": {
     "test": "node_modules/.bin/mochify --phantomjs node_modules/.bin/phantomjs && gulp test",
     "build": "gulp build"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4"
   }
 }

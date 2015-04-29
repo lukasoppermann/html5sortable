@@ -92,4 +92,4 @@ gulp.task('bump-version', function() {
 /* ---------- */
 /* tasks */
 gulp.task('test', ['lint']);
-gulp.task('build', ['test', 'umd', 'build-version']);
+gulp.task('build', ['umd', 'build-version', 'test']);
