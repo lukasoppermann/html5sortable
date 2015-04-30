@@ -193,3 +193,9 @@ var sortable = function(options) {
 };
 
 $.fn.sortable = sortable;
+/* start-testing */
+sortable.__testing = {
+  // add internal methods here for testing purposes
+};
+module.exports = sortable;
+/* end-testing */

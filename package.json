@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "chai": "^2.3.0",
+    "coveralls": "^2.11.2",
     "del": "^1.1.1",
     "gulp": "^3.8.11",
     "gulp-bump": "^0.3.0",
@@ -39,12 +40,16 @@
     "gulp-jshint": "^1.10.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.5.2",
+    "gulp-strip-code": "^0.1.2",
     "gulp-uglify": "^1.2.0",
     "gulp-umd": "^0.1.3",
     "gulp-util": "^3.0.4",
+    "istanbul": "^0.3.13",
     "jsdom": "^3.x",
     "jshint-stylish": "^1.0.1",
     "mocha": "^2.2.4",
+    "mocha-istanbul": "^0.2.0",
+    "mocha-lcov-reporter": "0.0.2",
     "mocha-phantomjs": "^3.5.3",
     "mochify": "^2.8.1",
     "phantomjs": "^1.9.16",
@@ -52,9 +57,11 @@
   },
   "scripts": {
     "test": "npm run test-mocha && npm run test-phantom && npm run test-require && gulp test",
+    "travis": "npm run cover && npm run test-phantom && npm run test-require && gulp test",
     "test-mocha": "./node_modules/.bin/mocha test/api.js test/angular.js",
     "test-require": "./node_modules/.bin/mochify --phantomjs ./node_modules/.bin/phantomjs ./test/test_browserify.js -R spec",
     "test-phantom": "./node_modules/.bin/mocha-phantomjs -p ./node_modules/.bin/phantomjs ./test/html/*.html",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/api.js test/angular.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "build": "gulp build"
   },
   "dependencies": {
