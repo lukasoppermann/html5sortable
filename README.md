@@ -243,6 +243,22 @@ Please always rebase to a single commit with a descriptive name and an explanati
 
 If you’re creating a pull request, fell free to add yourself to the `AUTHORS` file.
 
+## Comment your code
+Your code should be as self-documenting as possible, but because this is an open source project with multiple contributors please add comments whenever possible.
+
+### Docblocks for functions
+
+Every function should have a docblock above stating what the function does and what parameters it is supposed to get.
+```javascript
+/*
+* remove event handlers from sortable
+* @param: {jQuery collection} sortable
+*/
+```
+
+### Comment on individual lines
+You do not need to comment on everything you do, but if you make a decision that could be confusion or something could be potentially seen as an error (e.g. because it is not the default way or not the most obvious way) please comment on why you did this. This prevents people from “fixing” stuff that is not broken and maybe breaking things because of this.
+
 ## Styleguide
 
 > *While the code does not pass the linking yet, we are working on it. Please ensure your code does pass our linting.*
