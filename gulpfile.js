@@ -48,7 +48,7 @@ gulp.task('umd', function() {
           name: '$',
           amd: 'jquery',
           cjs: 'jquery',
-          global: 'jquery'
+          global: 'jQuery'
         }];
       },
       exports: function() {
