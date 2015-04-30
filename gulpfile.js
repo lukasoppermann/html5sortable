@@ -14,6 +14,7 @@ var jscs = require('gulp-jscs');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var umd = require('gulp-umd');
+var strip = require('gulp-strip-code');
 /* ---------- */
 /* error handling */
 var reportError = function(error) {
@@ -42,6 +43,12 @@ gulp.task('lint', function() {
 /* convert to umd */
 gulp.task('umd', function() {
   return gulp.src('src/' + srcFile)
+    .pipe(strip({
+      //jscs:disable
+      start_comment: 'start-testing',
+      end_comment: 'end-testing'
+      //jscs:enable
+    }))
     .pipe(umd({
       dependencies: function() {
         return [{
