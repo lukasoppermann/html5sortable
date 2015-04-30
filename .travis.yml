@@ -4,4 +4,4 @@ node_js:
   - "iojs"
 before_install: npm install
 before_script: npm run build
-script: npm test
+script: npm run travis
