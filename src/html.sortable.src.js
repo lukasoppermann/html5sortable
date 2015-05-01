@@ -22,6 +22,28 @@ var sortable = function(options) {
     placeholderClass: 'sortable-placeholder',
     draggingClass: 'sortable-dragging'
   }, options);
+
+  /*
+   * remove event handlers from items
+   * @param: {jQuery collection} items
+   */
+  var _removeItemEvents = function(items) {
+    items.off('dragstart.h5s');
+    items.off('dragend.h5s');
+    items.off('selectstart.h5s');
+    items.off('dragover.h5s');
+    items.off('dragenter.h5s');
+    items.off('drop.h5s');
+  };
+  /*
+   * remove event handlers from sortable
+   * @param: {jQuery collection} sortable
+   */
+  var _removeSortableEvents = function(sortable) {
+    sortable.off('dragover.h5s');
+    sortable.off('dragenter.h5s');
+    sortable.off('drop.h5s');
+  };
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
   return this.each(function() {
@@ -33,16 +55,9 @@ var sortable = function(options) {
 
     if (method === 'reload') {
       // remove event handlers from items
-      items.off('dragstart.h5s');
-      items.off('dragend.h5s');
-      items.off('selectstart.h5s');
-      items.off('dragover.h5s');
-      items.off('dragenter.h5s');
-      items.off('drop.h5s');
+      _removeItemEvents(items);
       // remove event handlers from sortable
-      $sortable.off('dragover.h5s');
-      $sortable.off('dragenter.h5s');
-      $sortable.off('drop.h5s');
+      _removeSortableEvents($sortable);
     }
 
     if (/^enable|disable|destroy$/.test(method)) {
@@ -57,6 +72,10 @@ var sortable = function(options) {
         citems.add(this).removeData('connectWith items')
           .off('dragstart.h5s dragend.h5s dragover.h5s dragenter.h5s drop.h5s sortupdate');
         handles.off('selectstart.h5s');
+
+        citems.removeAttr('aria-grabbed');
+        citems.removeAttr('draggable');
+        citems.removeAttr('role', 'option');
       }
       return;
     }
