@@ -33,22 +33,42 @@ describe('Initialization ', function(){
       '</ul>');
     $ul = $body.find('.sortable');
     $lis = $ul.find('li');
-    $ul.sortable();
-  });
-
-  it('sortable should have a data-opts object', function(){
-    assert.typeOf($ul.data('opts'),"object");
-  });
-
-  it('list items should have aria-grabbed attribute', function(){
-    $lis.each(function(){
-      assert.equal(this.getAttribute('aria-grabbed'), "false");
+    $ul.sortable({
+      'items': 'li',
+      'connectWith': '.test'
     });
   });
 
-  it('list items should have draggable attribute', function(){
-    $lis.each(function(){
-      assert.equal(this.getAttribute('draggable'), "true");
+  describe('sortable', function(){
+    it('should have a data-opts object', function(){
+      assert.typeOf($ul.data('opts'),"object");
+    });
+
+    it('should have a aria-dropeffect attribute', function(){
+      assert.equal($ul[0].getAttribute('aria-dropeffect'),"move");
+    });
+
+    it('should have a data-items object', function(){
+      assert.typeOf($ul.data('items'),"string");
+    });
+
+    it('should have a data-connectWith object', function(){
+      assert.typeOf($ul.data('connectWith'),"string");
+    });
+
+  });
+
+  describe('sortable item', function(){
+    it('should have aria-grabbed attributes', function(){
+      $lis.each(function(){
+        assert.equal(this.getAttribute('aria-grabbed'), "false");
+      });
+    });
+
+    it('should have draggable attribute', function(){
+      $lis.each(function(){
+        assert.equal(this.getAttribute('draggable'), "true");
+      });
     });
   });
 
@@ -68,24 +88,45 @@ describe('Destruction', function(){
       '</ul>');
     $ul = $body.find('.sortable');
     $lis = $ul.find('li');
-    $ul.sortable();
+    $ul.sortable({
+      'items': 'li',
+      'connectWith': '.test'
+    });
     $ul.sortable('destroy');
   });
 
-  it('sortable should not have a data-opts object', function(){
-    assert.typeOf($ul.data('opts'),"undefined");
+  describe('sortable', function(){
+    it('should not have a data-opts object', function(){
+      assert.typeOf($ul.data('opts'),"undefined");
+    });
+
+    it('should not have a aria-dropeffect attribute', function(){
+      assert.isNull($ul[0].getAttribute('aria-dropeffect'));
+    });
+
+    it('should not have a data-items object', function(){
+      assert.isUndefined($ul.data('items'));
+    });
+
+    it('should not have a data-connectWith object', function(){
+      assert.isUndefined($ul.data('connectWith'));
+    });
+
   });
 
-  it('list items should not have an aria-grabbed attribute', function(){
-    $lis.each(function(){
-      assert.isNull(this.getAttribute('aria-grabbed'));
+  describe('sortable item', function(){
+    it('should not have an aria-grabbed attribute', function(){
+      $lis.each(function(){
+        assert.isNull(this.getAttribute('aria-grabbed'));
+      });
     });
-  });
 
-  it('list items should have draggable attribute set to false', function(){
-    $lis.each(function(){
-      assert.isNull(this.getAttribute('draggable'));
+    it('should not have draggable attribute', function(){
+      $lis.each(function(){
+        assert.isNull(this.getAttribute('draggable'));
+      });
     });
+
   });
 
 });

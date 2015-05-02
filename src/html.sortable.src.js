@@ -60,22 +60,25 @@ var sortable = function(options) {
       _removeSortableEvents($sortable);
     }
 
+    $sortable.attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
+
     if (/^enable|disable|destroy$/.test(method)) {
-      var citems = $(this).children($(this).data('items'));
+      var citems = $sortable.children($(this).data('items'));
       citems.attr('draggable', method === 'enable');
 
-      $(this).attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
-
       if (method === 'destroy') {
-        $(this).off('sortstart sortupdate');
-        $(this).removeData('opts');
-        citems.add(this).removeData('connectWith items')
-          .off('dragstart.h5s dragend.h5s dragover.h5s dragenter.h5s drop.h5s sortupdate');
-        handles.off('selectstart.h5s');
-
+        // remove event handlers & data from sortable
+        _removeSortableEvents($sortable);
+        $sortable.removeData('opts');
+        $sortable.removeData('connectWith');
+        $sortable.removeData('items');
+        $sortable.removeAttr('aria-dropeffect');
+        // remove event handlers & data from items
+        _removeItemEvents(citems);
         citems.removeAttr('aria-grabbed');
         citems.removeAttr('draggable');
         citems.removeAttr('role', 'option');
+        handles.off('selectstart.h5s');
       }
       return;
     }
