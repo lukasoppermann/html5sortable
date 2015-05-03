@@ -225,30 +225,16 @@
 				items: ':not(.disabled)',
 				placeholderClass: 'border border-maroon mb1'
 			});
-			$('.js-list-handle').sortable({
-				handle: '.js-handle',
-				forcePlaceholderSize: true,
-				placeholderClass: 'border border-maroon mb1'
-			});
-			$('.js-handles').sortable({
-				handle: 'span',
-				forcePlaceholderSize: true
-			});
 			$('.js-sortable-connected').sortable({
 				forcePlaceholderSize: true,
 				connectWith: '.js-connected',
 				handle: '.js-handle',
 				placeholderClass: 'border border-white bg-orange mb1'
 			});
-			$('.js-exclude').sortable({
-				forcePlaceholderSize: true,
-				items: ':not(.disabled)'
-			});
 			$('.js-sortable-buttons').sortable({
 				forcePlaceholderSize: true,
 				placeholderClass: 'border border-white mb1'
 			});
-
 			// buttons to add items and reload the list
 			// separatly to showcase issue without reload
 			$('.js-add-item-button').on('click', function(){
@@ -262,7 +248,6 @@
 				var $list = $('[data-disabled]');
 				var text = $(this).data('text');
 				$(this).data('text', $(this).text()).text(text);
-				console.log($list.data('disabled'));
 				if( $list.data('disabled') === false )
 				{
 					$list.sortable('disable');
