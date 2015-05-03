@@ -8,11 +8,34 @@
  *
  * Released under the MIT license.
  */
+'use strict';
+/*
+ * remove event handlers from items
+ * @param: {jQuery collection} items
+ */
+var _removeItemEvents = function(items) {
+  items.off('dragstart.h5s');
+  items.off('dragend.h5s');
+  items.off('selectstart.h5s');
+  items.off('dragover.h5s');
+  items.off('dragenter.h5s');
+  items.off('drop.h5s');
+};
+/*
+ * remove event handlers from sortable
+ * @param: {jQuery collection} sortable
+ */
+var _removeSortableEvents = function(sortable) {
+  sortable.off('dragover.h5s');
+  sortable.off('dragenter.h5s');
+  sortable.off('drop.h5s');
+};
+
 var dragging;
 var draggingHeight;
 var placeholders = $();
 var sortable = function(options) {
-  'use strict';
+
   var method = String(options);
 
   options = $.extend({
@@ -23,27 +46,6 @@ var sortable = function(options) {
     draggingClass: 'sortable-dragging'
   }, options);
 
-  /*
-   * remove event handlers from items
-   * @param: {jQuery collection} items
-   */
-  var _removeItemEvents = function(items) {
-    items.off('dragstart.h5s');
-    items.off('dragend.h5s');
-    items.off('selectstart.h5s');
-    items.off('dragover.h5s');
-    items.off('dragenter.h5s');
-    items.off('drop.h5s');
-  };
-  /*
-   * remove event handlers from sortable
-   * @param: {jQuery collection} sortable
-   */
-  var _removeSortableEvents = function(sortable) {
-    sortable.off('dragover.h5s');
-    sortable.off('dragenter.h5s');
-    sortable.off('drop.h5s');
-  };
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
   return this.each(function() {
@@ -83,10 +85,10 @@ var sortable = function(options) {
       return;
     }
 
-    var soptions = $(this).data('opts');
+    var soptions = $sortable.data('opts');
 
     if (typeof soptions === 'undefined') {
-      $(this).data('opts', options);
+      $sortable.data('opts', options);
     } else {
       options = soptions;
     }
@@ -95,7 +97,7 @@ var sortable = function(options) {
     var newParent;
     var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="' + options.placeholderClass + '"/>') : $(options.placeholder).addClass(options.placeholderClass);
 
-    $(this).data('items', options.items);
+    $sortable.data('items', options.items);
     placeholders = placeholders.add(placeholder);
     if (options.connectWith) {
       $(options.connectWith).add(this).data('connectWith', options.connectWith);
@@ -218,6 +220,8 @@ $.fn.sortable = sortable;
 /* start-testing */
 sortable.__testing = {
   // add internal methods here for testing purposes
+  _removeSortableEvents: _removeSortableEvents,
+  _removeItemEvents: _removeItemEvents
 };
 module.exports = sortable;
 /* end-testing */

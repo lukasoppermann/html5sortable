@@ -58,7 +58,7 @@
   "scripts": {
     "test": "npm run test-mocha && npm run test-phantom && npm run test-browserify && gulp test",
     "travis": "npm run cover && npm run test-phantom && npm run test-browserify && gulp test",
-    "test-mocha": "./node_modules/.bin/mocha test/api.js test/angular.js",
+    "test-mocha": "./node_modules/.bin/mocha test/api.js test/internal.js test/angular.js",
     "test-browserify": "./node_modules/.bin/mochify --phantomjs ./node_modules/.bin/phantomjs ./test/test_browserify.js -R spec",
     "test-phantom": "./node_modules/.bin/mocha-phantomjs -p ./node_modules/.bin/phantomjs ./test/html/amd.html && ./node_modules/.bin/mocha-phantomjs -p ./node_modules/.bin/phantomjs ./test/html/global.html",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/api.js test/angular.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
