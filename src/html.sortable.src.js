@@ -30,6 +30,17 @@ var _removeSortableEvents = function(sortable) {
   sortable.off('dragenter.h5s');
   sortable.off('drop.h5s');
 };
+/*
+ * return options if not set on sortable already
+ * @param: {obj} soptions
+ * @param: {obj} options
+ */
+var _getOptions = function(soptions, options) {
+  if (typeof soptions === 'undefined') {
+    return options;
+  }
+  return soptions;
+};
 
 var dragging;
 var draggingHeight;
@@ -84,14 +95,9 @@ var sortable = function(options) {
       }
       return;
     }
-
-    var soptions = $sortable.data('opts');
-
-    if (typeof soptions === 'undefined') {
-      $sortable.data('opts', options);
-    } else {
-      options = soptions;
-    }
+    // get options & set options on sortable
+    options = _getOptions($sortable.data('opts'), options);
+    $sortable.data('opts', options);
 
     var startParent;
     var newParent;
@@ -164,6 +170,7 @@ var sortable = function(options) {
       draggingHeight = null;
     });
     // Handle dragover, dragenter and drop events on draggable items
+    // TODO: REMOVE placeholder?????
     items.add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
       if (!items.is(dragging) &&
           options.connectWith !== $(dragging).parent().data('connectWith')) {
@@ -221,7 +228,8 @@ $.fn.sortable = sortable;
 sortable.__testing = {
   // add internal methods here for testing purposes
   _removeSortableEvents: _removeSortableEvents,
-  _removeItemEvents: _removeItemEvents
+  _removeItemEvents: _removeItemEvents,
+  _getOptions: _getOptions
 };
 module.exports = sortable;
 /* end-testing */

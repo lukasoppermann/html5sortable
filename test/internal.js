@@ -39,6 +39,23 @@ describe('events', function(){
       assert.isDefined(jQuery._data($li[0], 'events').hasOwnProperty('selectstart'));
     });
 
+    it('sortable return the correct options', function(){
+      options = {
+        'setting': 'test'
+      };
+      // soptions is not set
+      var opts = sortable.__testing._getOptions(undefined, options);
+      assert.isDefined(opts);
+      assert.equal(opts.setting,'test');
+      // soptions is set
+      var opts = undefined;
+      soptions = {
+        'setting': 'test2'
+      };
+      var opts = sortable.__testing._getOptions(soptions, options);
+      assert.isDefined(opts);
+      assert.equal(opts.setting,'test2');
+    });
   });
 
   describe('destruction', function(){
