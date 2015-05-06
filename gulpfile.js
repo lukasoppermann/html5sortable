@@ -9,6 +9,10 @@ var log = require('gulp-util').log;
 var rename = require('gulp-rename');
 var del = require('del');
 var bump = require('gulp-bump');
+var semver = require('semver');
+var shell = require('gulp-shell');
+var minimist = require('minimist');
+var prompt = require('gulp-prompt');
 var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 var uglify = require('gulp-uglify');
@@ -90,13 +94,47 @@ gulp.task('build-version', ['umd'], function() {
     });
 
 });
-/* bumo version */
+/* bump version */
 gulp.task('bump-version', function() {
-  gulp.src(['./package.json', './bower.json'])
-  .pipe(bump())
-  .pipe(gulp.dest('./'));
+  var msg = 'Are you sure you want to bump the version to ';
+  if (process.argv.slice(2) === 'publish') {
+    msg = 'Are you sure you want to publish the version ';
+  }
+
+  var args = minimist(process.argv.slice(3));
+  var v = args.v || args.version;
+  if (v === undefined) {
+    v = semver.inc(require('./package.json').version, 'patch');
+  }
+  return gulp.src(['./package.json', './bower.json'])
+    .pipe(prompt.confirm(msg + v))
+    .pipe(bump({version: v}))
+    .pipe(gulp.dest('./'));
+});
+/* tag version */
+gulp.task('tag-version', ['bump-version'], function() {
+  var args = minimist(process.argv.slice(3));
+  var v = args.v || args.version;
+  if (v === undefined) {
+    v = require('./package.json').version;
+  }
+
+  return gulp.src('')
+    .pipe(shell([
+      'git tag v' + v
+    ]));
+});
+/* publish version */
+gulp.task('publish-version', ['tag-version'], function() {
+  return gulp.src('')
+    .pipe(shell([
+      'git push --tags',
+      'npm publish'
+    ])
+  );
 });
 /* ---------- */
 /* tasks */
 gulp.task('test', ['lint']);
 gulp.task('build', ['umd', 'build-version', 'test']);
+gulp.task('publish', ['bump-version', 'tag-version', 'publish-version']);
