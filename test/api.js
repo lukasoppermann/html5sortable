@@ -35,13 +35,23 @@ describe('Initialization ', function(){
     $lis = $ul.find('li');
     $ul.sortable({
       'items': 'li',
-      'connectWith': '.test'
+      'connectWith': '.test',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
     });
   });
 
   describe('sortable', function(){
     it('should have a data-opts object', function(){
       assert.typeOf($ul.data('opts'),"object");
+    });
+
+    it('should have correct options set on options object', function(){
+      var opts = $ul.data('opts');
+      assert.equal(opts.items,"li");
+      assert.equal(opts.connectWith,".test");
+      assert.equal(opts.placeholderClass,"test-placeholder");
+      assert.equal(opts.draggingClass,"test-dragging");
     });
 
     it('should have a aria-dropeffect attribute', function(){
