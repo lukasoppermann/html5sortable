@@ -1,20 +1,15 @@
 // testing basic api
 var assert = require('chai').assert;
-// var sinon = require('sinon');
-// var EventEmitter = require('events').EventEmitter;
-var sortable;
+GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
+GLOBAL.window = GLOBAL.document.defaultView;
+GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
+var sortable = require("../src/html.sortable.src.js");
 
 describe('events', function(){
-  before(function(){
-    GLOBAL.document = require("jsdom").jsdom('<html lang="en-US"></html>');
-    GLOBAL.window = document.defaultView;
-    GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
-    sortable = require("../src/html.sortable.src.js");
-    $body = $(GLOBAL.window.document.body);
-    $body.append('<ul class="sortable"><li></li></ul>');
-    $ul = $body.find('.sortable');
+  beforeEach(function(){
+    $('body').html('').append('<ul class="sortable"><li>item</li></ul>');
+    $ul = $('.sortable').sortable();
     $li = $ul.find('li').first();
-    $ul.sortable();
   });
 
   describe('initilization', function(){

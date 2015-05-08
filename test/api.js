@@ -1,38 +1,23 @@
+describe('Testing api', function(){
 // testing basic api
 var assert = require("chai").assert;
-var sortable;
-
-describe('Basics', function(){
-  before(function(){
-    GLOBAL.document = require("jsdom").jsdom('<html lang="en-US"></html>');
-    GLOBAL.window = document.defaultView;
-    GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
-    sortable = require("../src/html.sortable.src.js");
-  });
-
-  it('sortable should be a function', function(){
-    assert.typeOf(sortable,"function");
-  });
-
-  it('$().sortable should be a function', function(){
-    assert.typeOf($().sortable,"function");
-  });
-});
+GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
+GLOBAL.window = GLOBAL.document.defaultView;
+GLOBAL.$ = require('jquery');
+var sortable = require("../src/html.sortable.src.js");
+var resetSortable = function(){
+  $('body').html('').append('<ul class="sortable">'+
+    '<li class="item">Item 1</li>'+
+    '<li class="item">Item 2</li>'+
+    '<li class="item">Item 3</li>'+
+    '</ul>');
+  $ul = $('.sortable');
+  $lis = $ul.find('li');
+};
 
 describe('Initialization ', function(){
   beforeEach(function(){
-    GLOBAL.document = require("jsdom").jsdom('<html lang="en-US"></html>');
-    GLOBAL.window = document.defaultView;
-    GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
-    sortable = require("../src/html.sortable.src.js");
-    $body = $(GLOBAL.window.document.body);
-    $body.append('<ul class="sortable">'+
-      '<li class="item">Item 1</li>'+
-      '<li class="item">Item 2</li>'+
-      '<li class="item">Item 3</li>'+
-      '</ul>');
-    $ul = $body.find('.sortable');
-    $lis = $ul.find('li');
+    resetSortable();
     $ul.sortable({
       'items': 'li',
       'connectWith': '.test',
@@ -86,18 +71,7 @@ describe('Initialization ', function(){
 
 describe('Destruction', function(){
   beforeEach(function(){
-    GLOBAL.document = require("jsdom").jsdom('<html lang="en-US"></html>');
-    GLOBAL.window = document.defaultView;
-    GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
-    sortable = require("../src/html.sortable.src.js");
-    $body = $(GLOBAL.window.document.body);
-    $body.append('<ul class="sortable">'+
-      '<li class="item">Item 1</li>'+
-      '<li class="item">Item 2</li>'+
-      '<li class="item">Item 3</li>'+
-      '</ul>');
-    $ul = $body.find('.sortable');
-    $lis = $ul.find('li');
+    resetSortable();
     $ul.sortable({
       'items': 'li',
       'connectWith': '.test'
@@ -139,4 +113,5 @@ describe('Destruction', function(){
 
   });
 
+});
 });
