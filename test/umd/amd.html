@@ -1,0 +1,19 @@
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<html>
+  <body>
+    <script src="../../node_modules/requirejs/require.js"></script>
+    <script>
+      window.require = require;
+      require.config({
+      	baseUrl: "./",
+      	paths: {
+          "jquery": "../../node_modules/jquery/dist/jquery"
+        }
+      });
+      require(["window", "../../dist/html.sortable.js"], function(win, sortable) {
+        win.sortable = sortable;
+        win.$ = $;
+      });
+    </script>
+  </body>
+</html>
