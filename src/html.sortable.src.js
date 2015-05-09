@@ -10,6 +10,12 @@
  */
 'use strict';
 /*
+ * variables global to the plugin
+ */
+var dragging;
+var draggingHeight;
+var placeholders = $();
+/*
  * remove event handlers from items
  * @param: {jQuery collection} items
  */
@@ -31,6 +37,60 @@ var _removeSortableEvents = function(sortable) {
   sortable.off('drop.h5s');
 };
 /*
+ * attache ghost to dataTransfer object
+ * @param: original event
+ * @param: object with ghost item, x and y coordinates
+ */
+var _attachGhost = function(event, ghost) {
+  // this needs to be set for HTML5 drag & drop to work
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text', '');
+
+  // check if setDragImage method is available
+  if (event.dataTransfer.setDragImage) {
+    event.dataTransfer.setDragImage(ghost.item, ghost.x, ghost.y);
+  }
+};
+/**
+ * _addGhostPos clones the dragged item and adds it as a Ghost item
+ * @param [object] event - the event fired when dragstart is triggered
+ * @param [object] ghost - .item = node, draggedItem = jQuery collection
+ */
+var _addGhostPos = function(e, ghost) {
+  if (!ghost.x) {
+    ghost.x = parseInt(e.pageX - ghost.draggedItem.offset().left);
+  }
+  if (!ghost.y) {
+    ghost.y = parseInt(e.pageY - ghost.draggedItem.offset().top);
+  }
+  return ghost;
+};
+/**
+ * _makeGhost decides which way to make a ghost and passes it to attachGhost
+ * @param [jQuery selection] $draggedItem - the item that the user drags
+ */
+var _makeGhost = function($draggedItem) {
+  return {
+    item: $draggedItem[0],
+    draggedItem: $draggedItem
+  };
+};
+/**
+ * _getGhost constructs ghost and attaches it to dataTransfer
+ * @param [event] event - the original drag event object
+ * @param [jQuery selection] $draggedItem - the item that the user drags
+ * @param [object] ghostOpt - the ghost options
+ */
+// TODO: could $draggedItem be replaced by event.target in all instances
+var _getGhost = function(event, $draggedItem) {
+  // add ghost item & draggedItem to ghost object
+  var ghost = _makeGhost($draggedItem);
+  // attach ghost position
+  ghost = _addGhostPos(event, ghost);
+  // attach ghost to dataTransfer
+  _attachGhost(event, ghost);
+};
+/*
  * return options if not set on sortable already
  * @param: {obj} soptions
  * @param: {obj} options
@@ -42,9 +102,6 @@ var _getOptions = function(soptions, options) {
   return soptions;
 };
 
-var dragging;
-var draggingHeight;
-var placeholders = $();
 var sortable = function(options) {
 
   var method = String(options);
@@ -52,6 +109,7 @@ var sortable = function(options) {
   options = $.extend({
     connectWith: false,
     placeholder: null,
+    // dragImage can be null or a jQuery element
     dragImage: null,
     placeholderClass: 'sortable-placeholder',
     draggingClass: 'sortable-dragging'
@@ -114,23 +172,32 @@ var sortable = function(options) {
 
     // Setup drag handles
     handles.attr('draggable', 'true');
-    handles.not('a[href], img').on('selectstart.h5s', function() {
-      if (this.dragDrop) {
-        this.dragDrop();
-      }
-    }).end();
-
+    // IE FIX for ghost
+    if (typeof document.createElement('span').dragDrop === 'function') {
+      handles.on('mousedown', function() {
+        if (items.index(this) !== -1) {
+          this.dragDrop();
+        } else {
+          $(this).parents(options.items)[0].dragDrop();
+        }
+      });
+    }
     // Handle drag events on draggable items
     items.on('dragstart.h5s', function(e) {
       e.stopImmediatePropagation();
-      var dt = e.originalEvent.dataTransfer;
-      dt.effectAllowed = 'move';
-      dt.setData('text', '');
 
-      if (options.dragImage && dt.setDragImage) {
-        dt.setDragImage(options.dragImage, 0, 0);
+      if (options.dragImage) {
+        _attachGhost(e.originalEvent, {
+          item: options.dragImage,
+          x: 0,
+          y: 0
+        });
+        console.log('WARNING: dragImage option is deprecated' +
+        ' and will be removed in the future!');
+      } else {
+        // add transparent clone or other ghost to cursor
+        _getGhost(e.originalEvent, $(this), options.dragImage);
       }
-
       // cache selsection & add attr for dragging
       dragging = $(this);
       dragging.addClass(options.draggingClass);
@@ -229,7 +296,11 @@ sortable.__testing = {
   // add internal methods here for testing purposes
   _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
-  _getOptions: _getOptions
+  _getOptions: _getOptions,
+  _attachGhost: _attachGhost,
+  _addGhostPos: _addGhostPos,
+  _getGhost: _getGhost,
+  _makeGhost: _makeGhost,
 };
 module.exports = sortable;
 /* end-testing */

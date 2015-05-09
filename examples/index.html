@@ -56,12 +56,13 @@
 		    </div>
 				<div class="col col-6">
 					<ul class="ml4 js-sortable sortable list flex flex-column list-reset">
-						<li class="p1 mb1 navy bg-yellow">Item 1</li>
-						<li class="p1 mb1 navy bg-yellow">Item 2</li>
-						<li class="p1 mb1 navy bg-yellow">Item 3</li>
-						<li class="p1 mb1 navy bg-yellow">Item 4</li>
-						<li class="p1 mb1 navy bg-yellow">Item 5</li>
-						<li class="p1 mb1 navy bg-yellow">Item 6</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 1</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 2</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 3</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 4</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 5</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 6</li>
+						<li class="mb1 bg-navy ghost border border-yellow" style="position: relative; z-index: 1; margin-top: -49px; height: 40px; display: block;">Ghost test</li>
 					</ul>
 		    </div>
 			</div>
@@ -209,11 +210,13 @@
 		$(function() {
 			$('.js-sortable').sortable({
 				forcePlaceholderSize: true,
-				placeholderClass: 'p1 mb1 bg-navy border border-yellow'
+				placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+				dragImage: $('.ghost')[0]
 			});
 			$('.js-grid').sortable({
 				forcePlaceholderSize: true,
-				placeholderClass: 'col col-4 border border-maroon'
+				placeholderClass: 'col col-4 border border-maroon',
+				dragImage: null
 			});
 			$('.js-sortable-disabled').sortable({
 				forcePlaceholderSize: true,
