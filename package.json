@@ -56,7 +56,7 @@
     "semver": "^4.3.4"
   },
   "scripts": {
-    "test": "npm run test-plugin && npm run test-umd && gulp test",
+    "test": "npm run test-plugin && gulp test",
     "travis": "npm run cover && ./node_modules/.bin/mocha test/umd/module.js && gulp test",
     "test-plugin": "./node_modules/.bin/mocha test/umd/module.js && ./node_modules/.bin/mocha test/*.js",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/*.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
