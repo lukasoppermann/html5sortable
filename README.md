@@ -234,7 +234,7 @@ Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](htt
 
 ## Contributors
 
-See [AUTHORS file](/AUTHORS).
+Thanks to all the people who contributed fixed and improvments. To get a full list of contributors, check out the [AUTHORS file](/AUTHORS).
 
 ## Contributing
 When sending pull requests make sure to only include changes that directly relate to the fix/feature you are adding and also start a pull request from a freshly cloned copy of the repo to make it easy to merge.
@@ -258,6 +258,14 @@ Every function should have a docblock above stating what the function does and w
 
 ### Comment on individual lines
 You do not need to comment on everything you do, but if you make a decision that could be confusion or something could be potentially seen as an error (e.g. because it is not the default way or not the most obvious way) please comment on why you did this. This prevents people from “fixing” stuff that is not broken and maybe breaking things because of this.
+
+## Add tests
+Please add tests using mocha and jsdom, to verify & test your changes. Make sure to make your test fail first, so you are sure they work.
+Since tests are very important, your PR is going to be failed by coveralls, if you do not include tests.
+
+If something is hard to test, you probably need to refactor it into multiple small functions. This is one of the good effects of testing, it improves your code quality.
+
+Just add a new `.js` file to the `test` folder, or add a test to one of the files that already exist.
 
 ## Styleguide
 
