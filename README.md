@@ -361,17 +361,17 @@ If your code gets to complex, try to refactor parts out into individual function
 If you want to help us by working on any of the points below, please let me know and I add you and your branch to the list.
 
 - [ ] clean up & add comments
-- [x] use bootstrap as css for example
+- [ ] mocha tests
 - [ ] Refactor & break code into functions
 - [ ] Nesting via drag & drop
-- [ ] mocha/chai/zombie tests
 - [ ] refactor to have gulp create
   - [ ] jQuery version
   - [ ] plain js version
-- [ ] make this compatible with
-  - [x] plain js
-  - [ ] amd
-  - [x] commonjs
+- [x] ~~use css framework for examples~~
+- [x] ~~make this compatible with~~
+  - [x] ~~plain js~~
+  - [x] ~~amd~~
+  - [x] ~~commonjs~~
 
 # License
 
