@@ -111,7 +111,7 @@ gulp.task('bump-version', function() {
     .pipe(bump({version: v}))
     .pipe(shell([
       "git shortlog -ns master | awk '$1 >= 1 {print $0}' | cut -d' ' -f2- > AUTHORS",
-      "git add AUTHORS ./package.json ./bower.json && git commit -m'bump to version v"+v+"'"
+      "git add AUTHORS ./package.json ./bower.json && git commit -m 'bump to version v"+v+"'"
     ]))
     .pipe(gulp.dest('./'));
 });
