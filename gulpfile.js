@@ -32,7 +32,6 @@ var reportError = function(error) {
 /* linting */
 gulp.task('lint', function() {
   gulp.src([
-    'gulpfile.js',
     'src/' + srcFile,
     'src/html.sortable.angular.js'
   ])
@@ -109,6 +108,10 @@ gulp.task('bump-version', function() {
   return gulp.src(['./package.json', './bower.json'])
     .pipe(prompt.confirm(msg + v))
     .pipe(bump({version: v}))
+    .pipe(shell([
+      "git shortlog -ns master | awk '$1 >= 1 {print $0}' | cut -d' ' -f2- > AUTHORS",
+      "git add AUTHORS ./package.json ./bower.json"
+    ]))
     .pipe(gulp.dest('./'));
 });
 /* tag version */
