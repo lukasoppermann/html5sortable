@@ -119,8 +119,13 @@ var sortable = function(options) {
   /*jshint maxstatements:false */
   return this.each(function() {
 
-    var index;
     var $sortable = $(this);
+
+    // get options & set options on sortable
+    options = _getOptions($sortable.data('opts'), options);
+    $sortable.data('opts', options);
+
+    var index;
     var items = $sortable.children(options.items);
     var handles = options.handle ? items.find(options.handle) : items;
 
@@ -153,9 +158,6 @@ var sortable = function(options) {
       }
       return;
     }
-    // get options & set options on sortable
-    options = _getOptions($sortable.data('opts'), options);
-    $sortable.data('opts', options);
 
     var startParent;
     var newParent;
