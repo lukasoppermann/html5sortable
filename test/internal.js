@@ -1,11 +1,11 @@
-// testing basic api
-var assert = require('chai').assert;
-GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
-GLOBAL.window = GLOBAL.document.defaultView;
-GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
-var sortable = require("../src/html.sortable.src.js");
+describe('internal function tests', function(){
+  // testing basic api
+  var assert = require('chai').assert;
+  GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
+  GLOBAL.window = GLOBAL.document.defaultView;
+  GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
+  var sortable = require("../src/html.sortable.src.js");
 
-describe('events', function(){
   beforeEach(function(){
     $('body').html('').append('<ul class="sortable"><li>item</li></ul>');
     $ul = $('.sortable').sortable();
@@ -86,6 +86,35 @@ describe('events', function(){
       assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragstart'));
       assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragend'));
       assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('selectstart'));
+    });
+
+    it('should remove data from sortable', function(){
+      // destroy, so it does not use old values
+      $ul.sortable('destroy');
+      $ul.sortable({
+        items: 'li',
+        connectWith: '.test'
+      });
+      sortable.__testing._removeSortableData($ul);
+
+      assert.isUndefined($ul.data('opts'));
+      assert.isUndefined($ul.data('connectWith'));
+      assert.isUndefined($ul.data('items'));
+      assert.isUndefined($ul.attr('aria-dropeffect'));
+    });
+
+    it('should remove data from items', function(){
+      // destroy, so it does not use old values
+      $ul.sortable('destroy');
+      $ul.sortable({
+        items: 'li',
+        connectWith: '.test'
+      });
+      sortable.__testing._removeItemData($ul);
+
+      assert.isUndefined($ul.attr('role'));
+      assert.isUndefined($ul.attr('draggable'));
+      assert.isUndefined($ul.attr('aria-grabbed'));
     });
 
   });

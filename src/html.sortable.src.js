@@ -17,7 +17,7 @@ var draggingHeight;
 var placeholders = $();
 /*
  * remove event handlers from items
- * @param: {jQuery collection} items
+ * @param [jquery Collection] items
  */
 var _removeItemEvents = function(items) {
   items.off('dragstart.h5s');
@@ -29,7 +29,7 @@ var _removeItemEvents = function(items) {
 };
 /*
  * remove event handlers from sortable
- * @param: {jQuery collection} sortable
+ * @param [jquery Collection] sortable
  */
 var _removeSortableEvents = function(sortable) {
   sortable.off('dragover.h5s');
@@ -38,8 +38,8 @@ var _removeSortableEvents = function(sortable) {
 };
 /*
  * attache ghost to dataTransfer object
- * @param: original event
- * @param: object with ghost item, x and y coordinates
+ * @param [event] original event
+ * @param [object] ghost-object with item, x and y coordinates
  */
 var _attachGhost = function(event, ghost) {
   // this needs to be set for HTML5 drag & drop to work
@@ -92,8 +92,8 @@ var _getGhost = function(event, $draggedItem) {
 };
 /*
  * return options if not set on sortable already
- * @param: {obj} soptions
- * @param: {obj} options
+ * @param [object] soptions
+ * @param [object] options
  */
 var _getOptions = function(soptions, options) {
   if (typeof soptions === 'undefined') {
@@ -101,7 +101,45 @@ var _getOptions = function(soptions, options) {
   }
   return soptions;
 };
-
+/*
+ * remove data from sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _removeSortableData = function(sortable) {
+  sortable.removeData('opts');
+  sortable.removeData('connectWith');
+  sortable.removeData('items');
+  sortable.removeAttr('aria-dropeffect');
+};
+/*
+ * remove data from items
+ * @param [jquery Collection] items
+ */
+var _removeItemData = function(items) {
+  items.removeAttr('aria-grabbed');
+  items.removeAttr('draggable');
+  items.removeAttr('role');
+};
+/*
+ * destroy the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _destroySortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  // remove event handlers & data from sortable
+  _removeSortableEvents(sortable);
+  _removeSortableData(sortable);
+  // remove event handlers & data from items
+  _removeItemEvents(items);
+  handles.off('selectstart.h5s');
+  _removeItemData(items);
+};
+/*
+ * public sortable object
+ * @param [object|string] options|method
+ */
 var sortable = function(options) {
 
   var method = String(options);
@@ -136,26 +174,22 @@ var sortable = function(options) {
       _removeSortableEvents($sortable);
     }
 
-    $sortable.attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
-
-    if (/^enable|disable|destroy$/.test(method)) {
-      var citems = $sortable.children($(this).data('items'));
-      citems.attr('draggable', method === 'enable');
-
-      if (method === 'destroy') {
-        // remove event handlers & data from sortable
-        _removeSortableEvents($sortable);
-        $sortable.removeData('opts');
-        $sortable.removeData('connectWith');
-        $sortable.removeData('items');
-        $sortable.removeAttr('aria-dropeffect');
-        // remove event handlers & data from items
-        _removeItemEvents(citems);
-        citems.removeAttr('aria-grabbed');
-        citems.removeAttr('draggable');
-        citems.removeAttr('role', 'option');
-        handles.off('selectstart.h5s');
-      }
+    // enable sortable when method is called
+    // TODO: move into function (currently not inside if because it needs to run for init)
+    items.attr('draggable', true);
+    $sortable.attr('aria-dropeffect', 'move');
+    if (method === 'enable') {
+      return;
+    }
+    // disable sortable when method is called
+    if (method === 'disable') {
+      items.attr('draggable', false);
+      $sortable.attr('aria-dropeffect', 'none');
+      return;
+    }
+    // destroy sortable when method is called
+    if (method === 'destroy') {
+      _destroySortable($sortable);
       return;
     }
 
@@ -298,11 +332,13 @@ sortable.__testing = {
   // add internal methods here for testing purposes
   _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
+  _removeItemData: _removeItemData,
+  _removeSortableData: _removeSortableData,
   _getOptions: _getOptions,
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
-  _makeGhost: _makeGhost,
+  _makeGhost: _makeGhost
 };
 module.exports = sortable;
 /* end-testing */
