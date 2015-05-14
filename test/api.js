@@ -4,6 +4,7 @@ describe('Testing api', function(){
   GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
   GLOBAL.window = GLOBAL.document.defaultView;
   GLOBAL.$ = require('jquery');
+  var $ul;
   var sortable = require("../src/html.sortable.src.js");
   var resetSortable = function(){
     $('body').html('').append('<ul class="sortable">'+

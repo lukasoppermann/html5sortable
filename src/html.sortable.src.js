@@ -15,9 +15,11 @@
 var dragging;
 var draggingHeight;
 var placeholders = $();
+var sortables = [];
 /*
  * remove event handlers from items
  * @param [jquery Collection] items
+ * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeItemEvents = function(items) {
   items.off('dragstart.h5s');
@@ -30,6 +32,7 @@ var _removeItemEvents = function(items) {
 /*
  * remove event handlers from sortable
  * @param [jquery Collection] sortable
+ * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeSortableEvents = function(sortable) {
   sortable.off('dragover.h5s');
@@ -125,7 +128,7 @@ var _removeItemData = function(items) {
  * @param [jquery Collection] a single sortable
  */
 var _destroySortable = function(sortable) {
-  var opts = sortable.data('opts');
+  var opts = sortable.data('opts') || {};
   var items = sortable.children(opts.items);
   var handles = opts.handle ? items.find(opts.handle) : items;
   // remove event handlers & data from sortable
@@ -158,6 +161,18 @@ var _enableSortable = function(sortable) {
   }
 };
 /*
+ * disable the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _disableSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  sortable.attr('aria-dropeffect', 'none');
+  handles.attr('draggable', false);
+  handles.off('mousedown.h5s');
+};
+/*
  * public sortable object
  * @param [object|string] options|method
  */
@@ -179,7 +194,6 @@ var sortable = function(options) {
   return this.each(function() {
 
     var $sortable = $(this);
-
     // get options & set options on sortable
     options = _getOptions($sortable.data('opts'), options);
     $sortable.data('opts', options);
@@ -187,29 +201,23 @@ var sortable = function(options) {
     var index;
     var items = $sortable.children(options.items);
 
+    // setup sortable ids
+    if (!$sortable.attr('data-sortable-id')) {
+      var id = sortables.length;
+      sortables[id] = $sortable;
+      $sortable.attr('data-sortable-id', id);
+      items.attr('data-item-sortable-id', id);
+    }
+
+    if (/enable|disable|destroy/.test(method)) {
+      sortable[method]($sortable);
+      return;
+    }
     if (method === 'reload') {
       // remove event handlers from items
       _removeItemEvents(items);
       // remove event handlers from sortable
       _removeSortableEvents($sortable);
-    }
-
-    // enable sortable when method is called
-    // TODO: move into function (currently not inside if because it needs to run for init)
-    if (method === 'enable') {
-      _enableSortable($sortable);
-      return;
-    }
-    // disable sortable when method is called
-    if (method === 'disable') {
-      items.attr('draggable', false);
-      $sortable.attr('aria-dropeffect', 'none');
-      return;
-    }
-    // destroy sortable when method is called
-    if (method === 'destroy') {
-      _destroySortable($sortable);
-      return;
     }
 
     var startParent;
@@ -332,6 +340,18 @@ var sortable = function(options) {
       return false;
     });
   });
+};
+
+sortable.destroy = function(sortable) {
+  _destroySortable(sortable);
+};
+
+sortable.enable = function(sortable) {
+  _enableSortable(sortable);
+};
+
+sortable.disable = function(sortable) {
+  _disableSortable(sortable);
 };
 
 $.fn.sortable = sortable;
