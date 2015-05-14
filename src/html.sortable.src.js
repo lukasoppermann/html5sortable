@@ -132,9 +132,19 @@ var _destroySortable = function(sortable) {
   _removeSortableEvents(sortable);
   _removeSortableData(sortable);
   // remove event handlers & data from items
-  _removeItemEvents(items);
   handles.off('selectstart.h5s');
+  _removeItemEvents(items);
   _removeItemData(items);
+};
+/*
+ * enable the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _enableSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  sortable.attr('aria-dropeffect', 'move');
+  items.attr('draggable', true);
 };
 /*
  * public sortable object
@@ -176,9 +186,8 @@ var sortable = function(options) {
 
     // enable sortable when method is called
     // TODO: move into function (currently not inside if because it needs to run for init)
-    items.attr('draggable', true);
-    $sortable.attr('aria-dropeffect', 'move');
     if (method === 'enable') {
+      _enableSortable($sortable);
       return;
     }
     // disable sortable when method is called
@@ -203,6 +212,7 @@ var sortable = function(options) {
       $(options.connectWith).add(this).data('connectWith', options.connectWith);
     }
 
+    _enableSortable($sortable);
     items.attr('role', 'option');
     items.attr('aria-grabbed', 'false');
 
@@ -338,7 +348,8 @@ sortable.__testing = {
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
-  _makeGhost: _makeGhost
+  _makeGhost: _makeGhost,
+  _enableSortable:_enableSortable
 };
 module.exports = sortable;
 /* end-testing */
