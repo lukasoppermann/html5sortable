@@ -200,11 +200,16 @@
 						<button class="js-add-item-button button blue bg-white">Add item</button>
 						<button class="js-reload button button-outline white">Reload</button>
 					</div>
+					<div class="center py1 ml4">
+						<button class="js-destroy button blue bg-white">Destroy</button>
+						<button class="js-init button blue bg-white">Init</button>
+					</div>
 		    </div>
 			</div>
 		</section>
 	</div>
   <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="../dist/html.sortable.js"></script>
 	<script src="../src/html.sortable.src.js"></script>
 	<script>
 		$(function() {
@@ -236,6 +241,7 @@
 			});
 			$('.js-sortable-buttons').sortable({
 				forcePlaceholderSize: true,
+				items: 'li',
 				placeholderClass: 'border border-white mb1'
 			});
 			// buttons to add items and reload the list
@@ -261,6 +267,17 @@
 					$list.data('disabled', false);
 					$list.find('li').removeClass('muted');
 				}
+			});
+			// Destroy & Init
+			$('.js-destroy').on('click', function(){
+				$(this).parents().siblings('ul').sortable('destroy');
+			});
+			$('.js-init').on('click', function(){
+				$(this).parents().siblings('ul').sortable({
+					forcePlaceholderSize: true,
+					items: 'li',
+					placeholderClass: 'border border-white mb1'
+				});
 			});
 		});
 	</script>
