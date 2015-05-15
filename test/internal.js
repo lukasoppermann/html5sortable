@@ -93,7 +93,7 @@ describe('internal function tests', function(){
       assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('drop'));
       assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragstart'));
       assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragend'));
-      assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('selectstart'));
+      assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('mousedown'));
     });
 
     it('should remove data from sortable', function(){
@@ -118,11 +118,11 @@ describe('internal function tests', function(){
         items: 'li',
         connectWith: '.test'
       });
-      sortable.__testing._removeItemData($ul);
-
-      assert.isUndefined($ul.attr('role'));
-      assert.isUndefined($ul.attr('draggable'));
-      assert.isUndefined($ul.attr('aria-grabbed'));
+      sortable.__testing._removeItemData($ul.find('li'));
+      var li = $ul.find('li').first();
+      assert.isUndefined(li.attr('role'));
+      assert.isUndefined(li.attr('draggable'));
+      assert.isUndefined(li.attr('aria-grabbed'));
     });
 
   });
