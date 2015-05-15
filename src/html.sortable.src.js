@@ -132,7 +132,7 @@ var _destroySortable = function(sortable) {
   _removeSortableEvents(sortable);
   _removeSortableData(sortable);
   // remove event handlers & data from items
-  handles.off('selectstart.h5s');
+  handles.off('mousedown.h5s');
   _removeItemEvents(items);
   _removeItemData(items);
 };
@@ -143,8 +143,19 @@ var _destroySortable = function(sortable) {
 var _enableSortable = function(sortable) {
   var opts = sortable.data('opts');
   var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
   sortable.attr('aria-dropeffect', 'move');
-  items.attr('draggable', true);
+  handles.attr('draggable', 'true');
+  // IE FIX for ghost
+  if (typeof document.createElement('span').dragDrop === 'function') {
+    handles.on('mousedown.h5s', function() {
+      if (items.index(this) !== -1) {
+        this.dragDrop();
+      } else {
+        $(this).parents(opts.items)[0].dragDrop();
+      }
+    });
+  }
 };
 /*
  * public sortable object
@@ -175,7 +186,6 @@ var sortable = function(options) {
 
     var index;
     var items = $sortable.children(options.items);
-    var handles = options.handle ? items.find(options.handle) : items;
 
     if (method === 'reload') {
       // remove event handlers from items
@@ -216,18 +226,6 @@ var sortable = function(options) {
     items.attr('role', 'option');
     items.attr('aria-grabbed', 'false');
 
-    // Setup drag handles
-    handles.attr('draggable', 'true');
-    // IE FIX for ghost
-    if (typeof document.createElement('span').dragDrop === 'function') {
-      handles.on('mousedown', function() {
-        if (items.index(this) !== -1) {
-          this.dragDrop();
-        } else {
-          $(this).parents(options.items)[0].dragDrop();
-        }
-      });
-    }
     // Handle drag events on draggable items
     items.on('dragstart.h5s', function(e) {
       e.stopImmediatePropagation();
