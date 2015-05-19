@@ -385,8 +385,7 @@ sortable.__testing = {
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
-  _makeGhost: _makeGhost,
-  _enableSortable:_enableSortable
+  _makeGhost: _makeGhost
 };
 module.exports = sortable;
 /* end-testing */
