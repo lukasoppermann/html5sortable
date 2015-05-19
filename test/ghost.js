@@ -34,7 +34,7 @@ describe('Testing ghost creation methods', function(){
     }
   };
 
-  it('sets the dataTransfer options correctly', function(){
+  it('sets the dataTransfer options correctly (_attachGhost)', function(){
     sortable.__testing._attachGhost(e, {
       item: 'test-item',
       x: 10,
@@ -48,12 +48,12 @@ describe('Testing ghost creation methods', function(){
     assert.equal(e.dataTransfer.y, 20);
   });
 
-  it('sets item correctly from dragged item', function(){
+  it('sets item correctly from dragged item (_makeGhost)', function(){
     var ghost = sortable.__testing._makeGhost(dItem);
     assert.equal(dItem[0].innerHTML, 'dItem Test');
   });
 
-  it('sets x & y correctly', function(){
+  it('sets x & y correctly (_addGhostPos)', function(){
     var ghost = sortable.__testing._addGhostPos(e, {
       item: 'test-item',
       draggedItem: dItem
@@ -63,7 +63,7 @@ describe('Testing ghost creation methods', function(){
     assert.equal(ghost.y, 195);
   });
 
-  it('uses provided x & y correctly', function(){
+  it('uses provided x & y correctly (_addGhostPos)', function(){
     var ghost = sortable.__testing._addGhostPos(e, {
       item: 'test-item',
       draggedItem: dItem,
@@ -75,7 +75,7 @@ describe('Testing ghost creation methods', function(){
     assert.equal(ghost.y, 20);
   });
 
-  it('attaches ghost completly', function(){
+  it('attaches ghost completly (_getGhost)', function(){
     sortable.__testing._getGhost(e, dItem);
 
     assert.equal(e.dataTransfer.effectAllowed, 'move');
