@@ -176,8 +176,9 @@ var _disableSortable = function(sortable) {
  * public sortable object
  * @param [object|string] options|method
  */
-var sortable = function(options) {
+var sortable = function(selector, options) {
 
+  var $sortables = $(selector);
   var method = String(options);
 
   options = $.extend({
@@ -191,7 +192,7 @@ var sortable = function(options) {
 
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
-  return this.each(function() {
+  return $sortables.each(function() {
 
     var $sortable = $(this);
     // get options & set options on sortable
@@ -354,7 +355,9 @@ sortable.disable = function(sortable) {
   _disableSortable(sortable);
 };
 
-$.fn.sortable = sortable;
+$.fn.sortable = function(options) {
+  return sortable(this, options);
+};
 /* start-testing */
 sortable.__testing = {
   // add internal methods here for testing purposes
