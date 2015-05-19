@@ -173,6 +173,21 @@ var _disableSortable = function(sortable) {
   handles.off('mousedown.h5s');
 };
 /*
+ * reload the sortable
+ * @param [jquery Collection] a single sortable
+ * @description events need to be removed to not be double bound
+ */
+var _reloadSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  // remove event handlers from items
+  _removeItemEvents(items);
+  handles.off('mousedown.h5s');
+  // remove event handlers from sortable
+  _removeSortableEvents(sortable);
+};
+/*
  * public sortable object
  * @param [object|string] options|method
  */
@@ -195,12 +210,24 @@ var sortable = function(selector, options) {
   return $sortables.each(function() {
 
     var $sortable = $(this);
-    // get options & set options on sortable
-    options = _getOptions($sortable.data('opts'), options);
-    $sortable.data('opts', options);
 
-    var index;
+    if (/enable|disable|destroy/.test(method)) {
+      sortable[method]($sortable);
+      return;
+    }
+    if (method === 'reload') {
+      sortable[method]($sortable);
+    }
+
+    // get options & set options on sortable
+    var opts = _getOptions($sortable.data('opts'), options);
+    $sortable.data('opts', opts);
+    // initialize
     var items = $sortable.children(options.items);
+    var index;
+    var startParent;
+    var newParent;
+    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="' + options.placeholderClass + '"/>') : $(options.placeholder).addClass(options.placeholderClass);
 
     // setup sortable ids
     if (!$sortable.attr('data-sortable-id')) {
@@ -209,21 +236,6 @@ var sortable = function(selector, options) {
       $sortable.attr('data-sortable-id', id);
       items.attr('data-item-sortable-id', id);
     }
-
-    if (/enable|disable|destroy/.test(method)) {
-      sortable[method]($sortable);
-      return;
-    }
-    if (method === 'reload') {
-      // remove event handlers from items
-      _removeItemEvents(items);
-      // remove event handlers from sortable
-      _removeSortableEvents($sortable);
-    }
-
-    var startParent;
-    var newParent;
-    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="' + options.placeholderClass + '"/>') : $(options.placeholder).addClass(options.placeholderClass);
 
     $sortable.data('items', options.items);
     placeholders = placeholders.add(placeholder);
@@ -353,6 +365,10 @@ sortable.enable = function(sortable) {
 
 sortable.disable = function(sortable) {
   _disableSortable(sortable);
+};
+
+sortable.reload = function(sortable) {
+  _reloadSortable(sortable);
 };
 
 $.fn.sortable = function(options) {
