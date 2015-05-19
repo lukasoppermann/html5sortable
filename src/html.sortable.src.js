@@ -124,6 +124,13 @@ var _removeItemData = function(items) {
   items.removeAttr('role');
 };
 /*
+ * check if two lists are connected
+ * @param [jquery Collection] items
+ */
+var _listsConnected = function(curList, destList) {
+  return curList.data('connectWith') === destList.data('connectWith');
+};
+/*
  * destroy the sortable
  * @param [jquery Collection] a single sortable
  */
@@ -220,8 +227,8 @@ var sortable = function(selector, options) {
     }
 
     // get options & set options on sortable
-    var opts = _getOptions($sortable.data('opts'), options);
-    $sortable.data('opts', opts);
+    options = _getOptions($sortable.data('opts'), options);
+    $sortable.data('opts', options);
     // initialize
     var items = $sortable.children(options.items);
     var index;
@@ -301,19 +308,26 @@ var sortable = function(selector, options) {
       dragging = null;
       draggingHeight = null;
     });
-    // Handle dragover, dragenter and drop events on draggable items
+    // Handle drop event on sortable & placeholder
     // TODO: REMOVE placeholder?????
-    items.add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
-      if (!items.is(dragging) &&
-          options.connectWith !== $(dragging).parent().data('connectWith')) {
-        return true;
+    $(this).add([placeholder]).on('drop.h5s', function(e) {
+      if (!_listsConnected($sortable, $(dragging).parent())) {
+        return;
       }
-      if (e.type === 'drop') {
-        e.stopPropagation();
-        placeholders.filter(':visible').after(dragging);
-        dragging.trigger('dragend.h5s');
-        return false;
+
+      e.stopPropagation();
+      placeholders.filter(':visible').after(dragging);
+      dragging.trigger('dragend.h5s');
+      return false;
+    });
+
+    // Handle dragover and dragenter events on draggable items
+    // TODO: REMOVE placeholder?????
+    items.add([this, placeholder]).on('dragover.h5s dragenter.h5s', function(e) {
+      if (!_listsConnected($sortable, $(dragging).parent())) {
+        return;
       }
+
       e.preventDefault();
       e.originalEvent.dataTransfer.dropEffect = 'move';
       if (items.is(this)) {
