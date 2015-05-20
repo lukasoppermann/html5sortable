@@ -222,13 +222,12 @@ var sortable = function(selector, options) {
       sortable[method]($sortable);
       return;
     }
-    if (method === 'reload') {
-      sortable[method]($sortable);
-    }
 
     // get options & set options on sortable
     options = _getOptions($sortable.data('opts'), options);
     $sortable.data('opts', options);
+    // reset sortable
+    sortable.reload($sortable);
     // initialize
     var items = $sortable.children(options.items);
     var index;
