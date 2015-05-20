@@ -241,7 +241,7 @@ When sending pull requests make sure to only include changes that directly relat
 
 Please always rebase to a single commit with a descriptive name and an explanation of why what was changed.
 
-If you’re creating a pull request, fell free to add yourself to the `AUTHORS` file.
+If you sent a pull request and it got merged, your name will automatically be added to the `AUTHORS` file with the next release.
 
 ## Comment your code
 Your code should be as self-documenting as possible, but because this is an open source project with multiple contributors please add comments whenever possible.
