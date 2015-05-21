@@ -128,7 +128,13 @@ var _removeItemData = function(items) {
  * @param [jquery Collection] items
  */
 var _listsConnected = function(curList, destList) {
-  return curList.data('connectWith') === destList.data('connectWith');
+  if (curList[0] === destList[0]) {
+    return true;
+  }
+  if (curList.data('connectWith') !== undefined) {
+    return curList.data('connectWith') === destList.data('connectWith');
+  }
+  return false;
 };
 /*
  * destroy the sortable
@@ -246,7 +252,7 @@ var sortable = function(selector, options) {
     $sortable.data('items', options.items);
     placeholders = placeholders.add(placeholder);
     if (options.connectWith) {
-      $(options.connectWith).add(this).data('connectWith', options.connectWith);
+      $sortable.data('connectWith', options.connectWith);
     }
 
     _enableSortable($sortable);
@@ -398,6 +404,7 @@ sortable.__testing = {
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
   _removeSortableData: _removeSortableData,
+  _listsConnected: _listsConnected,
   _getOptions: _getOptions,
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
