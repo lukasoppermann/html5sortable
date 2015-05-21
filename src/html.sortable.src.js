@@ -296,6 +296,10 @@ var sortable = function(selector, options) {
 
       placeholders.detach();
       newParent = $(this).parent();
+      dragging.parent().triggerHandler('sortstop', {
+        item: dragging,
+        startparent: startParent,
+      });
       if (index !== dragging.index() ||
           startParent.get(0) !== newParent.get(0)) {
         dragging.parent().triggerHandler('sortupdate', {
