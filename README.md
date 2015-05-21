@@ -107,6 +107,22 @@ $('.sortable').sortable().bind('sortstart', function(e, ui) {
 });
 ```
 
+### sortstop
+Use the `sortstop` event if you want to do something when sorting stops:
+
+``` javascript
+$('.sortable').sortable().bind('sortstop', function(e, ui) {
+    /*
+
+    This event is triggered when the user stops sorting. The DOM position may have changed.
+
+    ui.item contains the element that was dragged.
+    ui.startparent contains the element that the dragged item came from.
+
+    */
+});
+```
+
 ### sortupdate
 
 Use `sortupdate` event if you want to do something when the order changes (e.g. storing the new order):
