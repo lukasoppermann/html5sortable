@@ -259,6 +259,8 @@ Please always rebase to a single commit with a descriptive name and an explanati
 
 If you sent a pull request and it got merged, your name will automatically be added to the `AUTHORS` file with the next release.
 
+**NOTE:** Please do **NOT** add your name to the `AUTHORS` file and **do NOT bump the version** as this will be done automatically.
+
 ## Comment your code
 Your code should be as self-documenting as possible, but because this is an open source project with multiple contributors please add comments whenever possible.
 
