@@ -132,8 +132,7 @@ gulp.task('tag-version', ['bump-version'], function() {
 gulp.task('publish-version', ['tag-version'], function() {
   return gulp.src('')
     .pipe(shell([
-      'git push --tags',
-      'npm publish'
+      'git push --tags'
     ])
   );
 });
