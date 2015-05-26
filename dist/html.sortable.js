@@ -24,9 +24,11 @@
 var dragging;
 var draggingHeight;
 var placeholders = $();
+var sortables = [];
 /*
  * remove event handlers from items
- * @param: {jQuery collection} items
+ * @param [jquery Collection] items
+ * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeItemEvents = function(items) {
   items.off('dragstart.h5s');
@@ -38,7 +40,8 @@ var _removeItemEvents = function(items) {
 };
 /*
  * remove event handlers from sortable
- * @param: {jQuery collection} sortable
+ * @param [jquery Collection] sortable
+ * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeSortableEvents = function(sortable) {
   sortable.off('dragover.h5s');
@@ -47,8 +50,8 @@ var _removeSortableEvents = function(sortable) {
 };
 /*
  * attache ghost to dataTransfer object
- * @param: original event
- * @param: object with ghost item, x and y coordinates
+ * @param [event] original event
+ * @param [object] ghost-object with item, x and y coordinates
  */
 var _attachGhost = function(event, ghost) {
   // this needs to be set for HTML5 drag & drop to work
@@ -101,8 +104,8 @@ var _getGhost = function(event, $draggedItem) {
 };
 /*
  * return options if not set on sortable already
- * @param: {obj} soptions
- * @param: {obj} options
+ * @param [object] soptions
+ * @param [object] options
  */
 var _getOptions = function(soptions, options) {
   if (typeof soptions === 'undefined') {
@@ -110,9 +113,109 @@ var _getOptions = function(soptions, options) {
   }
   return soptions;
 };
+/*
+ * remove data from sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _removeSortableData = function(sortable) {
+  sortable.removeData('opts');
+  sortable.removeData('connectWith');
+  sortable.removeData('items');
+  sortable.removeAttr('aria-dropeffect');
+};
+/*
+ * remove data from items
+ * @param [jquery Collection] items
+ */
+var _removeItemData = function(items) {
+  items.removeAttr('aria-grabbed');
+  items.removeAttr('draggable');
+  items.removeAttr('role');
+};
+/*
+ * check if two lists are connected
+ * @param [jquery Collection] items
+ */
+var _listsConnected = function(curList, destList) {
+  if (curList[0] === destList[0]) {
+    return true;
+  }
+  if (curList.data('connectWith') !== undefined) {
+    return curList.data('connectWith') === destList.data('connectWith');
+  }
+  return false;
+};
+/*
+ * destroy the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _destroySortable = function(sortable) {
+  var opts = sortable.data('opts') || {};
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  // remove event handlers & data from sortable
+  _removeSortableEvents(sortable);
+  _removeSortableData(sortable);
+  // remove event handlers & data from items
+  handles.off('mousedown.h5s');
+  _removeItemEvents(items);
+  _removeItemData(items);
+};
+/*
+ * enable the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _enableSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  sortable.attr('aria-dropeffect', 'move');
+  handles.attr('draggable', 'true');
+  // IE FIX for ghost
+  if (typeof document.createElement('span').dragDrop === 'function') {
+    handles.on('mousedown.h5s', function() {
+      if (items.index(this) !== -1) {
+        this.dragDrop();
+      } else {
+        $(this).parents(opts.items)[0].dragDrop();
+      }
+    });
+  }
+};
+/*
+ * disable the sortable
+ * @param [jquery Collection] a single sortable
+ */
+var _disableSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  sortable.attr('aria-dropeffect', 'none');
+  handles.attr('draggable', false);
+  handles.off('mousedown.h5s');
+};
+/*
+ * reload the sortable
+ * @param [jquery Collection] a single sortable
+ * @description events need to be removed to not be double bound
+ */
+var _reloadSortable = function(sortable) {
+  var opts = sortable.data('opts');
+  var items = sortable.children(opts.items);
+  var handles = opts.handle ? items.find(opts.handle) : items;
+  // remove event handlers from items
+  _removeItemEvents(items);
+  handles.off('mousedown.h5s');
+  // remove event handlers from sortable
+  _removeSortableEvents(sortable);
+};
+/*
+ * public sortable object
+ * @param [object|string] options|method
+ */
+var sortable = function(selector, options) {
 
-var sortable = function(options) {
-
+  var $sortables = $(selector);
   var method = String(options);
 
   options = $.extend({
@@ -126,73 +229,45 @@ var sortable = function(options) {
 
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
-  return this.each(function() {
+  return $sortables.each(function() {
 
     var $sortable = $(this);
+
+    if (/enable|disable|destroy/.test(method)) {
+      sortable[method]($sortable);
+      return;
+    }
 
     // get options & set options on sortable
     options = _getOptions($sortable.data('opts'), options);
     $sortable.data('opts', options);
-
-    var index;
+    // reset sortable
+    sortable.reload($sortable);
+    // initialize
     var items = $sortable.children(options.items);
-    var handles = options.handle ? items.find(options.handle) : items;
-
-    if (method === 'reload') {
-      // remove event handlers from items
-      _removeItemEvents(items);
-      // remove event handlers from sortable
-      _removeSortableEvents($sortable);
-    }
-
-    $sortable.attr('aria-dropeffect', (/^disable|destroy$/.test(method) ? 'none' : 'move'));
-
-    if (/^enable|disable|destroy$/.test(method)) {
-      var citems = $sortable.children($(this).data('items'));
-      citems.attr('draggable', method === 'enable');
-
-      if (method === 'destroy') {
-        // remove event handlers & data from sortable
-        _removeSortableEvents($sortable);
-        $sortable.removeData('opts');
-        $sortable.removeData('connectWith');
-        $sortable.removeData('items');
-        $sortable.removeAttr('aria-dropeffect');
-        // remove event handlers & data from items
-        _removeItemEvents(citems);
-        citems.removeAttr('aria-grabbed');
-        citems.removeAttr('draggable');
-        citems.removeAttr('role', 'option');
-        handles.off('selectstart.h5s');
-      }
-      return;
-    }
-
+    var index;
     var startParent;
     var newParent;
     var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="' + options.placeholderClass + '"/>') : $(options.placeholder).addClass(options.placeholderClass);
 
+    // setup sortable ids
+    if (!$sortable.attr('data-sortable-id')) {
+      var id = sortables.length;
+      sortables[id] = $sortable;
+      $sortable.attr('data-sortable-id', id);
+      items.attr('data-item-sortable-id', id);
+    }
+
     $sortable.data('items', options.items);
     placeholders = placeholders.add(placeholder);
     if (options.connectWith) {
-      $(options.connectWith).add(this).data('connectWith', options.connectWith);
+      $sortable.data('connectWith', options.connectWith);
     }
 
+    _enableSortable($sortable);
     items.attr('role', 'option');
     items.attr('aria-grabbed', 'false');
 
-    // Setup drag handles
-    handles.attr('draggable', 'true');
-    // IE FIX for ghost
-    if (typeof document.createElement('span').dragDrop === 'function') {
-      handles.on('mousedown', function() {
-        if (items.index(this) !== -1) {
-          this.dragDrop();
-        } else {
-          $(this).parents(options.items)[0].dragDrop();
-        }
-      });
-    }
     // Handle drag events on draggable items
     items.on('dragstart.h5s', function(e) {
       e.stopImmediatePropagation();
@@ -235,6 +310,10 @@ var sortable = function(options) {
 
       placeholders.detach();
       newParent = $(this).parent();
+      dragging.parent().triggerHandler('sortstop', {
+        item: dragging,
+        startparent: startParent,
+      });
       if (index !== dragging.index() ||
           startParent.get(0) !== newParent.get(0)) {
         dragging.parent().triggerHandler('sortupdate', {
@@ -247,19 +326,26 @@ var sortable = function(options) {
       dragging = null;
       draggingHeight = null;
     });
-    // Handle dragover, dragenter and drop events on draggable items
+    // Handle drop event on sortable & placeholder
     // TODO: REMOVE placeholder?????
-    items.add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
-      if (!items.is(dragging) &&
-          options.connectWith !== $(dragging).parent().data('connectWith')) {
-        return true;
+    $(this).add([placeholder]).on('drop.h5s', function(e) {
+      if (!_listsConnected($sortable, $(dragging).parent())) {
+        return;
       }
-      if (e.type === 'drop') {
-        e.stopPropagation();
-        placeholders.filter(':visible').after(dragging);
-        dragging.trigger('dragend.h5s');
-        return false;
+
+      e.stopPropagation();
+      placeholders.filter(':visible').after(dragging);
+      dragging.trigger('dragend.h5s');
+      return false;
+    });
+
+    // Handle dragover and dragenter events on draggable items
+    // TODO: REMOVE placeholder?????
+    items.add([this, placeholder]).on('dragover.h5s dragenter.h5s', function(e) {
+      if (!_listsConnected($sortable, $(dragging).parent())) {
+        return;
       }
+
       e.preventDefault();
       e.originalEvent.dataTransfer.dropEffect = 'move';
       if (items.is(this)) {
@@ -301,7 +387,25 @@ var sortable = function(options) {
   });
 };
 
-$.fn.sortable = sortable;
+sortable.destroy = function(sortable) {
+  _destroySortable(sortable);
+};
+
+sortable.enable = function(sortable) {
+  _enableSortable(sortable);
+};
+
+sortable.disable = function(sortable) {
+  _disableSortable(sortable);
+};
+
+sortable.reload = function(sortable) {
+  _reloadSortable(sortable);
+};
+
+$.fn.sortable = function(options) {
+  return sortable(this, options);
+};
 
 return sortable;
 }));
