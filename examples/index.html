@@ -144,6 +144,9 @@
 				<p>Connected: This means an item can be draged into another (connected) list.</p>
 				<p class="mb3">Handles: Elements, e.g. || an item can be dragged with.</p>
 				<ul class="js-sortable-connected list flex flex-column list-reset">
+					<script>// scripts are needed for a test for indexes in sortupdate</script>
+					<script></script>
+					<script></script>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 1</li>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 2</li>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 3</li>
@@ -237,7 +240,16 @@
 				forcePlaceholderSize: true,
 				connectWith: '.js-connected',
 				handle: '.js-handle',
+				items: 'li',
 				placeholderClass: 'border border-white bg-orange mb1'
+			});
+			$('.js-sortable-connected').on('sortupdate', function(e, obj){
+				console.log('Parent old: ');
+				console.log(obj.startparent);
+				console.log('Parent new: ');
+				console.log(obj.endparent);
+				console.log('Index: '+obj.oldindex+' -> '+obj.index);
+				console.log('elementIndex: '+obj.oldElementIndex+' -> '+obj.elementIndex);
 			});
 			$('.js-sortable-buttons').sortable({
 				forcePlaceholderSize: true,

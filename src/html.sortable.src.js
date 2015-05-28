@@ -309,7 +309,10 @@ var sortable = function(selector, options) {
           startParent.get(0) !== newParent.get(0)) {
         dragging.parent().triggerHandler('sortupdate', {
           item: dragging,
-          oldindex: index,
+          index: newParent.children(newParent.data('items')).index(dragging),
+          oldindex: items.index(dragging),
+          elementIndex: dragging.index(),
+          oldElementIndex: index,
           startparent: startParent,
           endparent: newParent
         });
