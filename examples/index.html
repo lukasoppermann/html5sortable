@@ -201,7 +201,7 @@
 					<div class="center py2 ml4">
 						<button class="js-disable button blue bg-white" data-text="Enable">Disable</button>
 						<button class="js-add-item-button button blue bg-white">Add item</button>
-						<button class="js-reload button button-outline white">Reload</button>
+						<button class="js-reload button button-outline white">Re-init</button>
 					</div>
 					<div class="center py1 ml4">
 						<button class="js-destroy button blue bg-white">Destroy</button>
@@ -262,7 +262,11 @@
 				$(this).parents().siblings('ul').append('<li class="p1 mb1 blue bg-white">new item</li>');
 			});
 			$('.js-reload').on('click', function(){
-				$(this).parents().siblings('ul').sortable('reload');
+				console.log('Options before re-init:');
+				console.log($(this).parents().siblings('ul').data('opts'));
+				$(this).parents().siblings('ul').sortable();
+				console.log('Options after re-init:');
+				console.log($(this).parents().siblings('ul').data('opts'));
 			});
 			// JS DISABLEFD
 			$('.js-disable').on('click', function(){

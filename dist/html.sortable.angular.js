@@ -8,7 +8,7 @@
  *
  * Released under the MIT license.
  */
-(function(angular) {
+;(function(angular) {
   'use strict';
 
   angular.module('htmlSortable', [])

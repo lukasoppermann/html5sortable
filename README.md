@@ -215,10 +215,10 @@ $('.sortable').sortable('enable');
 ```
 
 ### reload
-To reload a sortable:
+When you add a new item to a sortable, it will not automatically be a draggable item, so you will need to reinit the sortable. Your previously added options will be preserved.
 
 ``` javascript
-$('.sortable').sortable('reload');
+$('.sortable').sortable();
 ```
 
 ## AngularJS usage
@@ -380,9 +380,9 @@ If your code gets to complex, try to refactor parts out into individual function
 # Roadmap
 If you want to help us by working on any of the points below, please let me know and I add you and your branch to the list.
 
-- [ ] clean up & add comments
-- [ ] mocha tests
-- [ ] Refactor & break code into functions
+- [ ] clean up & add comments (wip)
+- [ ] mocha tests (wip)
+- [ ] Refactor & break code into functions (wip)
 - [ ] Nesting via drag & drop
 - [ ] refactor to have gulp create
   - [ ] jQuery version
