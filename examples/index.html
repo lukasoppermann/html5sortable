@@ -142,13 +142,19 @@
 					Connected lists
 		    </h2>
 				<p>Connected: This means an item can be draged into another (connected) list.</p>
-				<p class="mb3">Handles: Elements, e.g. || an item can be dragged with.</p>
+				<p class="mb2">Handles: Elements, e.g. || an item can be dragged with.</p>
 				<ul class="js-sortable-connected list flex flex-column list-reset">
 					<script>// scripts are needed for a test for indexes in sortupdate</script>
 					<script></script>
 					<script></script>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 1</li>
-					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 2</li>
+					<li class="p1 mb1 border border-white white bg-orange">
+						<div class="mb1"><span class="js-handle px1">||</span>Item 2</div>
+					<ul class="js-sortable-inner-connected list flex flex-column list-reset m0">
+						<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 1</li>
+						<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 2</li>
+					</ul>
+					</li>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 3</li>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 4</li>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 5</li>
@@ -156,10 +162,15 @@
 				</ul>
 			</div>
 			<div class="p3 bg-orange white col col-6">
-				<div class="p3 border border-white mb1">
+				<div class="px3 py2 border border-white mb1">
 					<code class="mb0">
+						<div class="muted">// white & orange items</div>
 						<div>$('.o-sortable').sortable({</div>
-						<div class="px2">connectWith: '.js-connected'</div>
+						<div class="px2">connectWith: 'js-connected'</div>
+						<div>});</div>
+						<div class="muted">// blue items</div>
+						<div>$('.o-sortable-inner').sortable({</div>
+						<div class="px2">connectWith: 'js-inner-connected'</div>
 						<div>});</div>
 					</code>
 				</div>
@@ -167,9 +178,13 @@
 					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 1</li>
 					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 2</li>
 					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 3</li>
-					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 4</li>
-					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 5</li>
-					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 6</li>
+					<li class="p1 mb1 border border-orange orange bg-white">
+						<div class="mb1"><span class="js-handle px1">||</span>Item 4</div>
+						<ul class="js-sortable-inner-connected list flex flex-column list-reset mb0">
+							<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 3</li>
+							<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 4</li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</section>
@@ -243,6 +258,13 @@
 				items: 'li',
 				placeholderClass: 'border border-white bg-orange mb1'
 			});
+			$('.js-sortable-inner-connected').sortable({
+				forcePlaceholderSize: true,
+				connectWith: 'js-inner-connected',
+				handle: '.js-inner-handle',
+				items: 'li',
+				placeholderClass: 'border border-white bg-orange mb1'
+			})
 			$('.js-sortable-connected').on('sortupdate', function(e, obj){
 				console.log('Parent old: ');
 				console.log(obj.startparent);
@@ -251,6 +273,7 @@
 				console.log('Index: '+obj.oldindex+' -> '+obj.index);
 				console.log('elementIndex: '+obj.oldElementIndex+' -> '+obj.elementIndex);
 			});
+
 			$('.js-sortable-buttons').sortable({
 				forcePlaceholderSize: true,
 				items: 'li',
