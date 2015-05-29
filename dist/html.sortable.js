@@ -1,4 +1,4 @@
-(function(root, factory) {
+;(function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(['jquery'], factory);
   } else if (typeof exports === 'object') {
@@ -242,7 +242,7 @@ var sortable = function(selector, options) {
     options = _getOptions($sortable.data('opts'), options);
     $sortable.data('opts', options);
     // reset sortable
-    sortable.reload($sortable);
+    _reloadSortable($sortable);
     // initialize
     var items = $sortable.children(options.items);
     var index;
@@ -400,10 +400,6 @@ sortable.enable = function(sortable) {
 
 sortable.disable = function(sortable) {
   _disableSortable(sortable);
-};
-
-sortable.reload = function(sortable) {
-  _reloadSortable(sortable);
 };
 
 $.fn.sortable = function(options) {
