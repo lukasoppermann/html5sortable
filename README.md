@@ -176,8 +176,8 @@ $('.sortable').sortable({
 Use `connectWith` option to create connected lists:
 
 ``` javascript
-$('#sortable1, #sortable2').sortable({
-    connectWith: '.connected'
+$('.js-sortable, .js-second-sortable').sortable({
+    connectWith: 'connected' // unique string, which is not used for other connectWith sortables
 });
 ```
 
