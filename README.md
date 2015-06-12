@@ -238,7 +238,7 @@ $scope.sortableCallback = function (startModel, destModel, start, end) {
 ```
 
 ``` html
-<ul html-sortable="sortableOptions" html-sortable-callback="sortableCallback" ng-model='data1'>
+<ul html-sortable="sortableOptions" html-sortable-callback="sortableCallback(startModel, destModel, start, end)" ng-model='data1'>
 	<li ng-repeat="itm in data1">
    		{{itm}}
    </li>
