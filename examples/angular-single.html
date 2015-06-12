@@ -34,7 +34,7 @@
   		    </div>
   		    <div class="sm-flex flex-top mxn2">
             <div class="col col-6">
-              <ul class="m2 flex flex-column list-reset" html-sortable="" html-sortable-callback="sortableCallback" ng-model='data1'>
+              <ul class="m2 flex flex-column list-reset" html-sortable="" html-sortable-callback="sortableCallback(sourceModel, destModel, start, end)" ng-model='data1'>
                 <li ng-repeat="itm in data1" class="p1 mb1 yellow border border-navy bg-navy" >
                   {{itm}}
                 </li>
