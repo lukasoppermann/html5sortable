@@ -9,7 +9,7 @@ HTML5 Sortable jQuery Plugin
 * Less than 1KB (minified and gzipped).
 * Built using native HTML5 drag and drop API.
 * Supports both list and grid style layouts.
-* ~~Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.~~ (needs testing)
+* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera), IE9+ 
 * Supports exports as AMD, CommonJS or global
 * Comes with an AngularJS directive [help wanted](#angularjs-usage)
 
