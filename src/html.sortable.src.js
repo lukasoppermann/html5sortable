@@ -163,7 +163,9 @@ var _enableSortable = function(sortable) {
   sortable.attr('aria-dropeffect', 'move');
   handles.attr('draggable', 'true');
   // IE FIX for ghost
-  if (typeof document.createElement('span').dragDrop === 'function') {
+  // can be disabled as it has the side effect that other events
+  // (e.g. click) will be ignored
+  if (typeof document.createElement('span').dragDrop === 'function' && !opts.disableIEFix) {
     handles.on('mousedown.h5s', function() {
       if (items.index(this) !== -1) {
         this.dragDrop();
@@ -214,6 +216,7 @@ var sortable = function(selector, options) {
     placeholder: null,
     // dragImage can be null or a jQuery element
     dragImage: null,
+    disableIEFix: false,
     placeholderClass: 'sortable-placeholder',
     draggingClass: 'sortable-dragging'
   }, options);
