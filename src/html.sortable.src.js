@@ -286,6 +286,7 @@ var sortable = function(selector, options) {
       // trigger sortstar update
       dragging.parent().triggerHandler('sortstart', {
         item: dragging,
+        placeholder: placeholder,
         startparent: startParent
       });
     });
