@@ -20,10 +20,10 @@
           link: function(scope, element, attrs, ngModel) { // jshint ignore:line
             var opts;
             var model;
-            var scallback;
+            var scallback = angular.noop;
 
             if (attrs.htmlSortableCallback) {
-              scallback = attrs.htmlSortableCallback;
+              scallback = $parse(attrs.htmlSortableCallback);
             }
 
             opts = angular.extend({}, scope.$eval(attrs.htmlSortable));
@@ -75,14 +75,12 @@
                   }
                 });
 
-                if (scallback) {
-                  scope[scallback](
-                    $sourceModel(data.startparent.scope()),
-                    $destModel(data.endparent.scope()),
-                    $start,
-                    $end
-                  );
-                }
+                scallback(scope, {
+                  startModel: $sourceModel(data.startparent.scope()),
+                  destModel: $destModel(data.endparent.scope()),
+                  start: $start,
+                  end: $end
+                });
               });
             }
           }
