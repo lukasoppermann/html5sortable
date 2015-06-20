@@ -100,7 +100,8 @@ $('.sortable').sortable().bind('sortstart', function(e, ui) {
 
     This event is triggered when the user starts sorting and the DOM position has not yet changed.
 
-    ui.item contains the current dragged element.
+    ui.item contains the current dragged element
+    ui.placeholder contains the placeholder element
     ui.startparent contains the element that the dragged item comes from
 
     */
