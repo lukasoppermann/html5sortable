@@ -109,14 +109,19 @@ gulp.task('bump-version', function() {
   return gulp.src(['./package.json', './bower.json'])
     .pipe(prompt.confirm(msg + v))
     .pipe(bump({version: v}))
-    .pipe(shell([
-      "git shortlog -ns master | awk '$1 >= 1 {print $0}' | cut -d' ' -f2- > AUTHORS",
-      "git add AUTHORS ./package.json ./bower.json && git commit -m 'bump to version v"+v+"'"
-    ]))
     .pipe(gulp.dest('./'));
 });
+
+gulp.task('add-files', ['bump-version'], function() {
+  var v = require('./package.json').version;
+  return gulp.src([])
+    .pipe(shell([
+      "git shortlog -ns master | awk '$1 >= 1 {print $0}' | cut -d' ' -f2- > AUTHORS",
+      "git add AUTHORS ./package.json ./bower.json ./dist/* && git commit -m 'bump to version v"+v+"'"
+    ]))
+});
 /* tag version */
-gulp.task('tag-version', ['bump-version'], function() {
+gulp.task('tag-version', ['add-files'], function() {
   var args = minimist(process.argv.slice(3));
   var v = args.v || args.version;
   if (v === undefined) {
@@ -140,4 +145,4 @@ gulp.task('publish-version', ['tag-version'], function() {
 /* tasks */
 gulp.task('test', ['lint']);
 gulp.task('build', ['umd', 'build-version', 'test']);
-gulp.task('publish', ['bump-version', 'tag-version', 'publish-version']);
+gulp.task('publish', ['bump-version', 'add-files', 'tag-version', 'publish-version']);
