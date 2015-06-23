@@ -367,7 +367,10 @@ var sortable = function(selector, options) {
           }
         }
 
-        dragging.hide();
+        if(dragging.is(':visible')){
+          dragging.appendTo($(dragging).parent());
+          dragging.hide();
+        }
         if (placeholder.index() < $(this).index()) {
           $(this).after(placeholder);
         } else {
