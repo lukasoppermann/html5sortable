@@ -366,10 +366,8 @@ var sortable = function(selector, options) {
             return false;
           }
         }
-        if(dragging.is(':visible')){
-          dragging.appendTo($(dragging).parent());
-          dragging.hide();
-        }
+
+        dragging.hide();
         if (placeholder.index() < $(this).index()) {
           $(this).after(placeholder);
         } else {
