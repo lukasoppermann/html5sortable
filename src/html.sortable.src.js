@@ -368,8 +368,13 @@ var sortable = function(selector, options) {
         }
 
         if(dragging.is(':visible')){
+<<<<<<< Updated upstream
           dragging.appendTo($(dragging).parent());
           dragging.hide();
+=======
+          dragging.hide();
+          dragging.appendTo($(dragging).parent());
+>>>>>>> Stashed changes
         }
         if (placeholder.index() < $(this).index()) {
           $(this).after(placeholder);
