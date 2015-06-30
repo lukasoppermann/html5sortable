@@ -315,7 +315,7 @@ var sortable = function(selector, options) {
         return;
       }
       if (!moved) {
-        if (originalIndex !== 0) {
+        if (originalIndex === 0) {
           originalParent.prepend(dragging);
         } else {
           dragging.insertAfter(originalPrevious);
@@ -391,7 +391,7 @@ var sortable = function(selector, options) {
           }
         }
 
-        if(dragging.is(':visible')){
+        if (dragging.is(':visible')) {
           dragging.hide();
           dragging.appendTo($(dragging).parent());
         }
