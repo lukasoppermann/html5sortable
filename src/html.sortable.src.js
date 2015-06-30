@@ -17,7 +17,7 @@ var draggingHeight;
 var originalIndex;
 var originalParent;
 var originalPrevious;
-var moved = false;
+var moved;
 var placeholders = $();
 var sortables = [];
 /*
@@ -290,6 +290,7 @@ var sortable = function(selector, options) {
       originalIndex = dragging.index();
       originalParent = dragging.parent();
       originalPrevious = dragging.prev();
+      moved = false;
       index = dragging.index();
       draggingHeight = dragging.height();
       startParent = $(this).parent();
