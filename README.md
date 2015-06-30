@@ -9,7 +9,7 @@ HTML5 Sortable jQuery Plugin
 * Less than 1KB (minified and gzipped).
 * Built using native HTML5 drag and drop API.
 * Supports both list and grid style layouts.
-* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera), IE9+ 
+* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera), IE9+
 * Supports exports as AMD, CommonJS or global
 * Comes with an AngularJS directive [help wanted](#angularjs-usage)
 
@@ -41,7 +41,7 @@ bower install
 
 # Build it / Hack it
 
-**1. Node package manager (npm)**  
+**1. Node package manager (npm)**
 You will need `npm`, choose any way you like to [install npm](https://github.com/npm/npm#super-easy-install).
 
 **2. Clone and install the project**
@@ -51,7 +51,7 @@ cd html5sortable
 npm install && bower install
 ```
 
-**3. Commit**  
+**3. Commit**
 If you send a *pull request* make sure it passes the tests & linting. Please do **NOT** bump the version number.
 ```
 npm test
@@ -140,7 +140,7 @@ $('.sortable').sortable().bind('sortupdate', function(e, ui) {
     ui.elementIndex contains the new index of the dragged element (considering all items within sortable)
     ui.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
     ui.startparent contains the element that the dragged item comes from
-    ui.parent contains the element that the dragged item was added to (new parent)
+    ui.endparent contains the element that the dragged item was added to (new parent)
 
     */
 });
@@ -188,7 +188,7 @@ Use `placeholder` option to specify the markup of the placeholder:
 ``` javascript
 $('.sortable').sortable({
 	items: 'tr' ,
-	placeholder : '<tr><td colspan="7">&nbsp;</td></tr>'
+	placeholder: '<tr><td colspan="7">&nbsp;</td></tr>'
 });
 ```
 
