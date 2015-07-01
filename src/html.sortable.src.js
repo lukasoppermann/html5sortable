@@ -83,6 +83,13 @@ var _makeGhost = function($draggedItem) {
   };
 };
 /**
+ * _clearPlaceholders sets the placeholders global variable to 0 to
+ * fix is('visible') issue with jsdom
+ */
+var _clearPlaceholders = function() {
+  placeholders = $();
+};
+/**
  * _getGhost constructs ghost and attaches it to dataTransfer
  * @param [event] event - the original drag event object
  * @param [jQuery selection] $draggedItem - the item that the user drags
@@ -434,7 +441,8 @@ sortable.__testing = {
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
-  _makeGhost: _makeGhost
+  _makeGhost: _makeGhost,
+  _clearPlaceholders: _clearPlaceholders
 };
 module.exports = sortable;
 /* end-testing */
