@@ -20,7 +20,7 @@ HTML5 Sortable jQuery Plugin
 ### The recommended way, using [Bower](http://bower.io):
 
 ```
-bower install html.sortable —save
+bower install html.sortable --save
 ```
 ### The non-Bower way:
 include `html.sortable.x.y.z.js` or the minified version, `html.sortable.min.x.y.z.js`.
@@ -28,7 +28,7 @@ include `html.sortable.x.y.z.js` or the minified version, `html.sortable.min.x.y
 ### Install via [NPM](https://github.com/npm/npm#super-easy-install):
 
 ```
-npm install html.sortable —save
+npm install html5sortable --save
 ```
 # Examples
 You can find the **[examples online](http://lukasoppermann.github.io/html5sortable/examples/index.html)** or test locally.
