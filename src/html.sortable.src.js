@@ -14,6 +14,10 @@
  */
 var dragging;
 var draggingHeight;
+var originalIndex;
+var originalParent;
+var originalPrevious;
+var moved;
 var placeholders = $();
 var sortables = [];
 /*
@@ -77,6 +81,13 @@ var _makeGhost = function($draggedItem) {
     item: $draggedItem[0],
     draggedItem: $draggedItem
   };
+};
+/**
+ * _clearPlaceholders sets the placeholders global variable to 0 to
+ * fix is('visible') issue with jsdom
+ */
+var _clearPlaceholders = function() {
+  placeholders = $();
 };
 /**
  * _getGhost constructs ghost and attaches it to dataTransfer
@@ -284,6 +295,10 @@ var sortable = function(selector, options) {
       dragging.addClass(options.draggingClass);
       dragging.attr('aria-grabbed', 'true');
       // grab values
+      originalIndex = dragging.index();
+      originalParent = dragging.parent();
+      originalPrevious = dragging.prev();
+      moved = false;
       index = dragging.index();
       draggingHeight = dragging.height();
       startParent = $(this).parent();
@@ -298,6 +313,13 @@ var sortable = function(selector, options) {
     items.on('dragend.h5s', function() {
       if (!dragging) {
         return;
+      }
+      if (!moved) {
+        if (originalIndex === 0) {
+          originalParent.prepend(dragging);
+        } else {
+          dragging.insertAfter(originalPrevious);
+        }
       }
       // remove dragging attributes and show item
       dragging.removeClass(options.draggingClass);
@@ -324,6 +346,9 @@ var sortable = function(selector, options) {
       }
       dragging = null;
       draggingHeight = null;
+      originalIndex = null;
+      originalParent = null;
+      originalPrevious = null;
     });
     // Handle drop event on sortable & placeholder
     // TODO: REMOVE placeholder?????
@@ -334,6 +359,7 @@ var sortable = function(selector, options) {
 
       e.stopPropagation();
       placeholders.filter(':visible').after(dragging);
+      moved = true;
       dragging.trigger('dragend.h5s');
       return false;
     });
@@ -368,7 +394,10 @@ var sortable = function(selector, options) {
           }
         }
 
-        dragging.hide();
+        if (dragging.is(':visible')) {
+          dragging.hide();
+          dragging.appendTo($(dragging).parent());
+        }
         if (placeholder.index() < $(this).index()) {
           $(this).after(placeholder);
         } else {
@@ -413,7 +442,8 @@ sortable.__testing = {
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
-  _makeGhost: _makeGhost
+  _makeGhost: _makeGhost,
+  _clearPlaceholders: _clearPlaceholders
 };
 module.exports = sortable;
 /* end-testing */

@@ -27,6 +27,10 @@ describe('Testing events', function(){
     $li = $ul.find('li').first();
   });
 
+  afterEach(function(){
+    sortable.__testing._clearPlaceholders();
+  });
+
   it('should correctly run dragstart event', function(){
     $li.trigger(jQuery.Event( 'dragstart', {
       originalEvent: {
@@ -45,4 +49,63 @@ describe('Testing events', function(){
 
   });
 
+  it('should correctly place moved item into correct index', function(){
+    originalIndex = $li.index();
+    $li.trigger(jQuery.Event( 'dragstart', {
+      originalEvent: {
+        pageX: 100,
+        pageY: 100,
+        dataTransfer: {
+          setData: function(val){
+            this.data = val;
+          }
+        }
+      }
+    }));
+    $('.test-placeholder').appendTo($ul);
+    $li.trigger(jQuery.Event( 'dragover', {
+      originalEvent: {
+        pageX: 100,
+        pageY: 200,
+        dataTransfer: {
+          setData: function(val){
+            this.data = val;
+          }
+        }
+      }
+    }));
+    $li.trigger(jQuery.Event('drop'));
+    assert.notEqual($li.index(), originalIndex);
+    assert.equal($li.index(), 2);
+  });
+
+  it('should correctly place non-moved item into correct index', function(){
+    originalIndex = $li.index();
+    $li.trigger(jQuery.Event( 'dragstart', {
+      originalEvent: {
+        pageX: 100,
+        pageY: 100,
+        dataTransfer: {
+          setData: function(val){
+            this.data = val;
+          }
+        }
+      }
+    }));
+    $('.test-placeholder').appendTo($ul);
+    $li.trigger(jQuery.Event( 'dragover', {
+      originalEvent: {
+        pageX: 100,
+        pageY: 200,
+        dataTransfer: {
+          setData: function(val){
+            this.data = val;
+          }
+        }
+      }
+    }));
+    assert.notEqual($li.index(), originalIndex);
+    $li.trigger(jQuery.Event('dragend'));
+    assert.equal($li.index(), originalIndex);
+  });
 });
