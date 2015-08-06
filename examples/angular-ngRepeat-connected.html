@@ -2,38 +2,61 @@
 <html ng-app="Directives">
   <head>
     <title>Angular example with connected lists</title>
-    <link href="http://thomasf.github.io/solarized-css/solarized-light.min.css" rel="stylesheet"></link>
+    <link rel="stylesheet" href="../bower_components/basscss/css/basscss.css">
   </head>
   <body>
-    <div ng-controller="MainCtrl">
-      <h1>Angular example with connected lists</h1>
-
-      <h2>How to use</h2>
-
-      <p>Connect two lists by passing the connectWith option to the html-sortable directive:</p>
-      <pre>
-        &lt;ul html-sortable=&quot;{ connectWith: &#x27;.connected&#x27; }&quot; class=&quot;connected&quot; ng-model=&#x27;data1&#x27;&gt;...&lt;/ul&gt;
-        &lt;ul html-sortable=&quot;{ connectWith: &#x27;.connected&#x27; }&quot; class=&quot;connected&quot; ng-model=&#x27;data2&#x27;&gt;...&lt;/ul&gt;
-      </pre>
-      <p></p>
-
-      <h2>Example</h2>
-      <div ng-repeat="set in dataSets">
-        <ul html-sortable="sortableOptions" class="connected" ng-model='set'>
-          <li ng-repeat="itm in set">
-            {{ itm }}
-          </li>
-        </ul>
-      </div>
-
-	  <div ng-repeat="set in dataSets">
-        <p>{{ set }}</p>
-      </div>
-
+  	<div class="clearfix mb2 white bg-navy">
+  		<div class="left">
+  		  <a href="index.html" class="button py2 m0 button-transparent">HTML5 Sortable</a>
+  		  <a href="angular-single.html" class="button button-narrow py2 m0 button-transparent">Angular single</a>
+  			<a href="angular-connected.html" class="button button-narrow py2 m0 button-transparent">Angular connected</a>
+  			<a href="angular-ngRepeat-connected.html" class="button button-narrow py2 m0 button-transparent is-active">Angular ngRepeat</a>
+  		</div>
+  		<div class="right">
+  			<a href="#!" class="button py2 m0 button-transparent">Fork on GitHub</a>
+  		</div>
+  	</div>
+    <div class="px2 sm-px3 py2 mb3 col-8 mx-auto" ng-controller="MainCtrl">
+  		<section class="mb3 mx-auto col col-12">
+  		  <div class="p3 navy bg-yellow">
+  		    <div class="flex flex-column">
+  		      <h1 class="h1 m0 flex-auto">
+  		        Angular example with connected lists
+  		      </h1>
+            <div class="col col-12">
+    					<div class="mt2 p2 bg-yellow border navy border-navy">
+    				    <code class="mb0">
+                  <div class="muted">// Connect lists by passing the connectWith option to the html-sortable directive:</div>
+                  <div>&lt;ul html-sortable=&quot;{ connectWith: &#x27;.connected&#x27; }&quot; class=&quot;connected&quot; ng-model=&#x27;data1&#x27;&gt;...&lt;/ul&gt;</div>
+                  <div>&lt;ul html-sortable=&quot;{ connectWith: &#x27;.connected&#x27; }&quot; class=&quot;connected&quot; ng-model=&#x27;data2&#x27;&gt;...&lt;/ul&gt;</div>
+    						</code>
+      				</div>
+            </div>
+  		    </div>
+  		    <div class="sm-flex flex-center mxn2">
+            <div ng-repeat="set in dataSets" class="col col-4">
+              <ul html-sortable="sortableOptions" class="m2 flex flex-column list-reset connected" ng-model='set'>
+                <li ng-repeat="itm in set" class="p1 mb1 yellow border border-navy bg-navy">
+                  {{ itm }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="sm-flex flex-center mxn2">
+            <div class="col col-12 m2">
+      	      <div ng-repeat="set in dataSets">
+                <p>{{ set }}</p>
+              </div>
+            </div>
+  		    </div>
+  		  </div>
+  		</section>
     </div>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-    <script src="../src/html.sortable.js"></script>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../dist/html.sortable.js"></script>
+    <script src="../dist/html.sortable.angular.js"></script>
+    <script src="../src/html.sortable.src.js"></script>
     <script src="../src/html.sortable.angular.js"></script>
     <script src="angular-ngRepeat-connected.js"></script>
   </body>

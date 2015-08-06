@@ -1,12 +1,3 @@
-;(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['jquery'], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('jquery'));
-  } else {
-    root.sortable = factory(root.jQuery);
-  }
-}(this, function($) {
 /*
  * HTML5 Sortable jQuery Plugin
  * https://github.com/voidberg/html5sortable
@@ -174,7 +165,8 @@ var _enableSortable = function(sortable) {
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
   // (e.g. click) will be ignored
-  if (typeof document.createElement('span').dragDrop === 'function' && !opts.disableIEFix) {
+  var spanEl = (document || window.document).createElement('span');
+  if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
     handles.on('mousedown.h5s', function() {
       if (items.index(this) !== -1) {
         this.dragDrop();
@@ -298,6 +290,7 @@ var sortable = function(selector, options) {
       // trigger sortstar update
       dragging.parent().triggerHandler('sortstart', {
         item: dragging,
+        placeholder: placeholder,
         startparent: startParent
       });
     });
@@ -408,6 +401,19 @@ sortable.disable = function(sortable) {
 $.fn.sortable = function(options) {
   return sortable(this, options);
 };
-
-return sortable;
-}));
+/* start-testing */
+sortable.__testing = {
+  // add internal methods here for testing purposes
+  _removeSortableEvents: _removeSortableEvents,
+  _removeItemEvents: _removeItemEvents,
+  _removeItemData: _removeItemData,
+  _removeSortableData: _removeSortableData,
+  _listsConnected: _listsConnected,
+  _getOptions: _getOptions,
+  _attachGhost: _attachGhost,
+  _addGhostPos: _addGhostPos,
+  _getGhost: _getGhost,
+  _makeGhost: _makeGhost
+};
+module.exports = sortable;
+/* end-testing */

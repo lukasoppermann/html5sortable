@@ -1,0 +1,324 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8">
+	<title>HTML5 Sortable jQuery Plugin</title>
+  <link rel="stylesheet" href="../bower_components/basscss/css/basscss.css">
+</head>
+<body>
+	<div class="clearfix mb2 white bg-navy">
+		<div class="left">
+		  <a href="index.html" class="button py2 m0 button-transparent">HTML5 Sortable</a>
+		  <a href="angular-single.html" class="button button-narrow py2 m0 button-transparent">Angular single</a>
+			<a href="angular-connected.html" class="button button-narrow py2 m0 button-transparent">Angular connected</a>
+			<a href="angular-ngRepeat-connected.html" class="button button-narrow py2 m0 button-transparent">Angular ngRepeat</a>
+		</div>
+		<div class="right">
+			<a href="#!" class="button py2 m0 button-transparent">Fork on GitHub</a>
+		</div>
+	</div>
+	<div class="px2 sm-px3 py2 mb3 col-8 mx-auto">
+		<section class="mb3 mx-auto col col-12">
+		  <div class="p3 navy bg-yellow">
+		    <div class="flex flex-column">
+		      <h1 class="h1 m0 flex-auto">
+		        HTML5 Sortable
+		      </h1>
+			    <h2 class="h3 m0">
+						A lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.
+			    </h2>
+		    </div>
+		    <div class="sm-flex flex-center mxn2">
+		      <div class="flex-auto px0 py2">
+						<ul>
+							<li>Less than 1KB (minified and gzipped).</li>
+							<li>Built using native HTML5 drag and drop API.</li>
+							<li>Supports both list and grid style layouts.</li>
+							<li>Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.</li>
+							<li>Comes with an AngularJS directive.</li>
+						</ul>
+		      </div>
+		    </div>
+		  </div>
+		</section>
+		<section class="mb3 mx-auto col col-12">
+  		<div class="p3 clearfix bg-navy yellow">
+				<div class="col col-6">
+			    <h2 class="h3 m0">
+						Sortable List
+			    </h2>
+					<div class="mt2 p2 bg-navy border yellow border-yellow">
+				    <code class="mb0">
+							<div>$('.o-sortable').sortable({</div>
+							<div class="px2 muted">// options</div>
+							<div>});</div>
+						</code>
+  				</div>
+		    </div>
+				<div class="col col-6">
+					<ul class="ml4 js-sortable sortable list flex flex-column list-reset">
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 1</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 2</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 3</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 4</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 5</li>
+						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 6</li>
+						<li class="mb1 bg-navy ghost border border-yellow" style="position: relative; z-index: 1; margin-top: -49px; height: 40px; display: block;">Ghost test</li>
+					</ul>
+		    </div>
+			</div>
+		</section>
+		<section class="mb3 mx-auto col col-12">
+  		<div class="p3 clearfix bg-yellow maroon">
+				<div class="col col-12 mb1">
+			    <h2 class="h3 m0">
+						Sortable Grid
+			    </h2>
+				</div>
+				<div class="col col-6">
+					<div class="p2 bg-yellow border maroon border-maroon mt1">
+				    <code class="mb0">
+							<div>$('.o-sortable').sortable({</div>
+							<div class="px2 muted">// options</div>
+							<div>});</div>
+						</code>
+  				</div>
+		    </div>
+				<div class="col col-6">
+					<div class="js-grid sortable grid clearfix ml4 myn1">
+						<div class="col col-4 px2 py1">
+							<div class="bg-maroon py3 yellow center">1</div>
+						</div>
+						<div class="col col-4 px2 py1">
+							<div class="bg-maroon py3 yellow center">2</div>
+						</div>
+						<div class="col col-4 px2 py1">
+							<div class="bg-maroon py3 yellow center">3</div>
+						</div>
+						<div class="col col-4 px2 py1">
+							<div class="bg-maroon py3 yellow center">4</div>
+						</div>
+						<div class="col col-4 px2 py1">
+							<div class="bg-maroon py3 yellow center">5</div>
+						</div>
+					</div>
+		    </div>
+			</div>
+		</section>
+		<section class="mb3 mx-auto col col-12">
+  		<div class="p3 clearfix bg-maroon orange">
+				<div class="col col-6">
+			    <h2 class="h3 m0">
+						Exclude items & nested list
+			    </h2>
+					<div class="mt2 p2 bg-maroon border border-orange">
+				    <code class="mb0">
+							<div>$('.o-sortable').sortable({</div>
+							<div class="px2">items: ':not(.disabled)'</div>
+							<div>});</div>
+						</code>
+  				</div>
+		    </div>
+				<div class="col col-6">
+					<ul class="ml4 js-sortable-disabled list flex flex-column list-reset">
+						<li class="p1 mb1 maroon bg-orange">Item 1</li>
+						<li class="p1 mb1 maroon bg-orange">Item 2</li>
+						<li class="p1 mb1 maroon bg-orange">Item 3</li>
+						<li class="disabled px1 mb1 maroon bg-orange muted">
+							<div class="mb2 mt1">disabled 3</div>
+							<ul class="list-reset m0 js-sortable-disabled-inner">
+								<li class="p1 mb1 bg-maroon orange">Item 3.1</li>
+								<li class="p1 mb1 bg-maroon orange">Item 3.2</li>
+							</ul>
+						</li>
+						<li class="disabled p1 mb1 maroon bg-orange muted">disabled 5</li>
+						<li class="p1 mb1 maroon bg-orange">Item 6</li>
+					</ul>
+		    </div>
+			</div>
+		</section>
+		<section class="mb3 mx-auto col col-12">
+  		<div class="p3 bg-white orange col col-6">
+		    <h2 class="h3 m0">
+					Connected lists
+		    </h2>
+				<p>Connected: This means an item can be draged into another (connected) list.</p>
+				<p class="mb2">Handles: Elements, e.g. || an item can be dragged with.</p>
+				<ul class="js-sortable-connected list flex flex-column list-reset">
+					<script>// scripts are needed for a test for indexes in sortupdate</script>
+					<script></script>
+					<script></script>
+					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 1</li>
+					<li class="p1 mb1 border border-white white bg-orange">
+						<div class="mb1"><span class="js-handle px1">||</span>Item 2</div>
+					<ul class="js-sortable-inner-connected list flex flex-column list-reset m0">
+						<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 1</li>
+						<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 2</li>
+					</ul>
+					</li>
+					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 3</li>
+					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 4</li>
+					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 5</li>
+					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 6</li>
+				</ul>
+			</div>
+			<div class="p3 bg-orange white col col-6">
+				<div class="px3 py2 border border-white mb1">
+					<code class="mb0">
+						<div class="muted">// white & orange items</div>
+						<div>$('.o-sortable').sortable({</div>
+						<div class="px2">connectWith: 'js-connected'</div>
+						<div>});</div>
+						<div class="muted">// blue items</div>
+						<div>$('.o-sortable-inner').sortable({</div>
+						<div class="px2">connectWith: 'js-inner-connected'</div>
+						<div>});</div>
+					</code>
+				</div>
+				<ul class="js-sortable-connected list flex flex-column list-reset">
+					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 1</li>
+					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 2</li>
+					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 3</li>
+					<li class="p1 mb1 border border-orange orange bg-white">
+						<div class="mb1"><span class="js-handle px1">||</span>Item 4</div>
+						<ul class="js-sortable-inner-connected list flex flex-column list-reset mb0">
+							<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 3</li>
+							<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 4</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</section>
+		<section class="mb3 mx-auto col col-12">
+  		<div class="p3 clearfix bg-blue white">
+				<div class="col col-6">
+			    <h2 class="h3 m0">
+						Exclude items & nested list
+			    </h2>
+					<div class="mt2 p2 bg-blue border border-white">
+				    <code class="mb0">
+							<div class="muted">// disabled / enable list</div>
+							<div>$('.o-sortable').sortable('disable');</div>
+							<div>$('.o-sortable').sortable('enable');</div>
+							<div class="muted mt2">// reload list after adding items</div>
+							<div>$('.o-sortable').sortable('reload');</div>
+						</code>
+  				</div>
+		    </div>
+				<div class="col col-6">
+					<ul class="ml4 js-sortable-buttons list flex flex-column list-reset" data-disabled=false>
+						<li class="p1 mb1 blue bg-white">Item 1</li>
+						<li class="p1 mb1 blue bg-white">Item 2</li>
+						<li class="p1 mb1 blue bg-white">Item 3</li>
+						<li class="p1 mb1 blue bg-white">Item 4</li>
+						<li class="p1 mb1 blue bg-white">Item 6</li>
+						<li class="p1 mb1 blue bg-white">Item 6</li>
+					</ul>
+					<div class="center py2 ml4">
+						<button class="js-disable button blue bg-white" data-text="Enable">Disable</button>
+						<button class="js-add-item-button button blue bg-white">Add item</button>
+						<button class="js-reload button button-outline white">Re-init</button>
+					</div>
+					<div class="center py1 ml4">
+						<button class="js-destroy button blue bg-white">Destroy</button>
+						<button class="js-init button blue bg-white">Init</button>
+					</div>
+		    </div>
+			</div>
+		</section>
+	</div>
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="../dist/html.sortable.js"></script>
+	<script src="../src/html.sortable.src.js"></script>
+	<script>
+		$(function() {
+			$('.js-sortable').sortable({
+				forcePlaceholderSize: true,
+				placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+				dragImage: $('.ghost')[0]
+			});
+			$('.js-grid').sortable({
+				forcePlaceholderSize: true,
+				placeholderClass: 'col col-4 border border-maroon',
+				dragImage: null
+			});
+			$('.js-sortable-disabled').sortable({
+				forcePlaceholderSize: true,
+				items: ':not(.disabled)',
+				placeholderClass: 'border border-orange mb1'
+			});
+			$('.js-sortable-disabled-inner').sortable({
+				forcePlaceholderSize: true,
+				items: ':not(.disabled)',
+				placeholderClass: 'border border-maroon mb1'
+			});
+			$('.js-sortable-connected').sortable({
+				forcePlaceholderSize: true,
+				connectWith: '.js-connected',
+				handle: '.js-handle',
+				items: 'li',
+				placeholderClass: 'border border-white bg-orange mb1'
+			});
+			$('.js-sortable-inner-connected').sortable({
+				forcePlaceholderSize: true,
+				connectWith: 'js-inner-connected',
+				handle: '.js-inner-handle',
+				items: 'li',
+				placeholderClass: 'border border-white bg-orange mb1'
+			})
+			$('.js-sortable-connected').on('sortupdate', function(e, obj){
+				console.log('Parent old: ');
+				console.log(obj.startparent);
+				console.log('Parent new: ');
+				console.log(obj.endparent);
+				console.log('Index: '+obj.oldindex+' -> '+obj.index);
+				console.log('elementIndex: '+obj.oldElementIndex+' -> '+obj.elementIndex);
+			});
+
+			$('.js-sortable-buttons').sortable({
+				forcePlaceholderSize: true,
+				items: 'li',
+				placeholderClass: 'border border-white mb1'
+			});
+			// buttons to add items and reload the list
+			// separatly to showcase issue without reload
+			$('.js-add-item-button').on('click', function(){
+				$(this).parents().siblings('ul').append('<li class="p1 mb1 blue bg-white">new item</li>');
+			});
+			$('.js-reload').on('click', function(){
+				console.log('Options before re-init:');
+				console.log($(this).parents().siblings('ul').data('opts'));
+				$(this).parents().siblings('ul').sortable();
+				console.log('Options after re-init:');
+				console.log($(this).parents().siblings('ul').data('opts'));
+			});
+			// JS DISABLEFD
+			$('.js-disable').on('click', function(){
+				var $list = $('[data-disabled]');
+				var text = $(this).data('text');
+				$(this).data('text', $(this).text()).text(text);
+				if( $list.data('disabled') === false )
+				{
+					$list.sortable('disable');
+					$list.data('disabled', true);
+					$list.find('li').addClass('muted');
+				} else {
+					$list.sortable('enable');
+					$list.data('disabled', false);
+					$list.find('li').removeClass('muted');
+				}
+			});
+			// Destroy & Init
+			$('.js-destroy').on('click', function(){
+				$(this).parents().siblings('ul').sortable('destroy');
+			});
+			$('.js-init').on('click', function(){
+				$(this).parents().siblings('ul').sortable({
+					forcePlaceholderSize: true,
+					items: 'li',
+					placeholderClass: 'border border-white mb1'
+				});
+			});
+		});
+	</script>
+</body>
+</html>

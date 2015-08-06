@@ -1,6 +1,7 @@
 {
   "name": "html5sortable",
-  "version": "0.1.8",
+  "main": "dist/html.sortable.js",
+  "version": "0.2.9",
   "license": "MIT",
   "description": "Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.",
   "author": {
@@ -8,6 +9,13 @@
     "email": "andu@ctrlz.ro",
     "url": "http://alexandrubadiu.ro"
   },
+  "contributors": [
+    {
+      "name": "Lukas Oppermann",
+      "email": "lukas@vea.re",
+      "url": "http://vea.re"
+    }
+  ],
   "keywords": [
     "jquery",
     "sortable",
@@ -23,14 +31,38 @@
     "email": "andu@ctrlz.ro"
   },
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-bump": "0.0.13",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-jshint": "~0.7.2",
-    "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt-contrib-uglify": "~0.5.1",
-    "grunt-jsvalidate": "~0.2.2",
-    "jshint-stylish": "~0.1.4"
+    "chai": "^2.3.0",
+    "coveralls": "^2.11.2",
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-bump": "^0.3.0",
+    "gulp-jscs": "^1.5.2",
+    "gulp-jshint": "^1.10.0",
+    "gulp-prompt": "^0.1.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-shell": "^0.4.1",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-strip-code": "^0.1.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-umd": "^0.2.0",
+    "gulp-util": "^3.0.4",
+    "istanbul": "^0.3.13",
+    "jsdom": "^3.1.2",
+    "jshint-stylish": "^1.0.1",
+    "minimist": "^1.1.1",
+    "mocha": "^2.2.4",
+    "mocha-istanbul": "^0.2.0",
+    "requirejs": "^2.1.17",
+    "semver": "^4.3.4"
+  },
+  "scripts": {
+    "test": "npm run test-plugin && gulp test",
+    "travis": "npm run cover && ./node_modules/.bin/mocha test/umd/module.js && gulp test",
+    "test-plugin": "./node_modules/.bin/mocha test/umd/module.js && ./node_modules/.bin/mocha test/*.js",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/*.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4"
   }
 }
