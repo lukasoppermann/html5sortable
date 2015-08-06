@@ -165,7 +165,8 @@ var _enableSortable = function(sortable) {
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
   // (e.g. click) will be ignored
-  if (typeof document.createElement('span').dragDrop === 'function' && !opts.disableIEFix) {
+  var spanEl = (document || window.document).createElement('span');
+  if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
     handles.on('mousedown.h5s', function() {
       if (items.index(this) !== -1) {
         this.dragDrop();
