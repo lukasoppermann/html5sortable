@@ -219,7 +219,8 @@ var sortable = function(selector, options) {
     dragImage: null,
     disableIEFix: false,
     placeholderClass: 'sortable-placeholder',
-    draggingClass: 'sortable-dragging'
+    draggingClass: 'sortable-dragging',
+    hoverClass: false
   }, options);
 
   /* TODO: maxstatements should be 25, fix and remove line below */
@@ -262,6 +263,15 @@ var sortable = function(selector, options) {
     _enableSortable($sortable);
     items.attr('role', 'option');
     items.attr('aria-grabbed', 'false');
+
+    // Mouse over class
+    if (options.hoverClass) {
+      items.hover(function () {
+        $(this).addClass('sortable-over');
+      }, function () {
+        $(this).removeClass('sortable-over');
+      });
+    }
 
     // Handle drag events on draggable items
     items.on('dragstart.h5s', function(e) {
