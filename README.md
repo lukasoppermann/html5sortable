@@ -187,8 +187,17 @@ Use `placeholder` option to specify the markup of the placeholder:
 
 ``` javascript
 $('.sortable').sortable({
-	items: 'tr' ,
-	placeholder: '<tr><td colspan="7">&nbsp;</td></tr>'
+  items: 'tr' ,
+  placeholder: '<tr><td colspan="7">&nbsp;</td></tr>'
+});
+```
+
+### hoverClass
+Use `hoverClass` option to specify applying the css class `.sortable-over` to the hovered element rather than relying on `:hover`. This can eliminate some potential drag and drop issues where another element thinks it is being hovered over.
+
+``` javascript
+$('.sortable').sortable({
+  hoverClass: true // Defaults to false
 });
 ```
 
@@ -229,19 +238,19 @@ $('.sortable').sortable();
 Make your app use the `htmlSortable` module. Assign html sortable options to the `html-sortable` tag, specify an ng-model and, optionally, specify a callback using `html-sortable-callback`.
 ``` javascript
 $scope.sortableOptions = {
-	placeholder: '<div class="sortable-placeholder col-md-3"><div></div></div>',
-  	forcePlaceholderSize: true
+  placeholder: '<div class="sortable-placeholder col-md-3"><div></div></div>',
+    forcePlaceholderSize: true
 };
 
 $scope.sortableCallback = function (startModel, destModel, start, end) {
-	// ...
+  // ...
 };
 ```
 
 ``` html
 <ul html-sortable="sortableOptions" html-sortable-callback="sortableCallback(startModel, destModel, start, end)" ng-model='data1'>
-	<li ng-repeat="itm in data1">
-   		{{itm}}
+  <li ng-repeat="itm in data1">
+      {{itm}}
    </li>
 </ul>
 ```
@@ -348,9 +357,9 @@ if( a === b){
 if( a === b){
   …
 } else {
-	if ( a === c){
+  if ( a === c){
     …
-	}
+  }
 }
 ```
 **else if** does not exists in javascript, so do not use it.
