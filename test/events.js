@@ -18,16 +18,17 @@ describe('Testing events', function(){
 
   beforeEach(function(){
     resetSortable();
+    $li = $ul.find('li').first();
+  });
+
+  it('should correctly run dragstart event', function(){
     $ul.sortable({
       'items': 'li',
       'connectWith': '.test',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     });
-    $li = $ul.find('li').first();
-  });
 
-  it('should correctly run dragstart event', function(){
     $li.trigger(jQuery.Event( 'dragstart', {
       originalEvent: {
         pageX: 100,
@@ -43,6 +44,33 @@ describe('Testing events', function(){
     assert.equal($li.attr('aria-grabbed'),'true');
     assert.isTrue($li.hasClass('test-dragging'));
 
+  });
+
+  it('should not add class on hover event', function(){
+    $ul.sortable({
+      'items': 'li',
+      hoverClass: false,
+    });
+    $li.trigger( 'mouseover' );
+    assert.isFalse($li.hasClass('sortable-over'));
+  });
+
+  it('should correctly add class on hover event', function(){
+    $ul.sortable({
+      'items': 'li',
+      hoverClass: true,
+    });
+    $li.trigger( 'mouseover' );
+    assert.isTrue($li.hasClass('sortable-over'));
+  });
+
+  it('should correctly add class on hover event', function(){
+    $ul.sortable({
+      'items': 'li',
+      hoverClass: 'sortable-item-over',
+    });
+    $li.trigger( 'mouseover' );
+    assert.isTrue($li.hasClass('sortable-item-over'));
   });
 
 });

@@ -193,11 +193,11 @@ $('.sortable').sortable({
 ```
 
 ### hoverClass
-Use `hoverClass` option to specify applying the css class `.sortable-over` to the hovered element rather than relying on `:hover`. This can eliminate some potential drag and drop issues where another element thinks it is being hovered over.
+Use `hoverClass` option to specify applying a css class to the hovered element rather than relying on `:hover`. This can eliminate some potential drag and drop issues where another element thinks it is being hovered over.
 
 ``` javascript
 $('.sortable').sortable({
-  hoverClass: true // Defaults to false
+  hoverClass: 'is-hovered' // Defaults to false
 });
 ```
 
