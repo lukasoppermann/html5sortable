@@ -36,7 +36,7 @@ gulp.task('lint', function() {
     'src/html.sortable.angular.js'
   ])
     .pipe(jscs())
-      .on('error', reportError)
+      // .on('error', reportError)
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jshint.reporter('fail'))
