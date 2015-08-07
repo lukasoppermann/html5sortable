@@ -266,10 +266,15 @@ var sortable = function(selector, options) {
 
     // Mouse over class
     if (options.hoverClass) {
-      items.hover(function () {
-        $(this).addClass('sortable-over');
-      }, function () {
-        $(this).removeClass('sortable-over');
+      var hoverClass = 'sortable-over';
+      if (typeof options.hoverClass === 'string') {
+        hoverClass = options.hoverClass;
+      }
+
+      items.hover(function() {
+        $(this).addClass(hoverClass);
+      }, function() {
+        $(this).removeClass(hoverClass);
       });
     }
 
