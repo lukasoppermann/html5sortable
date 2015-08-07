@@ -116,8 +116,7 @@ gulp.task('add-files', ['bump-version'], function() {
   var v = require('./package.json').version;
   return gulp.src([])
     .pipe(shell([
-      "git shortlog -ns master | awk '$1 >= 1 {print $0}' | cut -d' ' -f2- > AUTHORS",
-      "git add AUTHORS ./package.json ./bower.json ./dist/* && git commit -m 'bump to version v"+v+"'"
+      "git add ./package.json ./bower.json ./dist/* && git commit -m 'bump to version v"+v+"'"
     ]))
 });
 /* tag version */
