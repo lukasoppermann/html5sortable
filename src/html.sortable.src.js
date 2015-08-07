@@ -354,8 +354,7 @@ var sortable = function(selector, options) {
     });
 
     // Handle dragover and dragenter events on draggable items
-    // TODO: REMOVE placeholder?????
-    items.add([this, placeholder]).on('dragover.h5s dragenter.h5s', function(e) {
+    items.add([this]).on('dragover.h5s dragenter.h5s', function(e) {
       if (!_listsConnected($sortable, $(dragging).parent())) {
         return;
       }
