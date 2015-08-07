@@ -174,7 +174,8 @@ var _enableSortable = function(sortable) {
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
   // (e.g. click) will be ignored
-  if (typeof document.createElement('span').dragDrop === 'function' && !opts.disableIEFix) {
+  var spanEl = (document || window.document).createElement('span');
+  if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
     handles.on('mousedown.h5s', function() {
       if (items.index(this) !== -1) {
         this.dragDrop();
@@ -227,7 +228,8 @@ var sortable = function(selector, options) {
     dragImage: null,
     disableIEFix: false,
     placeholderClass: 'sortable-placeholder',
-    draggingClass: 'sortable-dragging'
+    draggingClass: 'sortable-dragging',
+    hoverClass: false
   }, options);
 
   /* TODO: maxstatements should be 25, fix and remove line below */
@@ -271,6 +273,20 @@ var sortable = function(selector, options) {
     items.attr('role', 'option');
     items.attr('aria-grabbed', 'false');
 
+    // Mouse over class
+    if (options.hoverClass) {
+      var hoverClass = 'sortable-over';
+      if (typeof options.hoverClass === 'string') {
+        hoverClass = options.hoverClass;
+      }
+
+      items.hover(function() {
+        $(this).addClass(hoverClass);
+      }, function() {
+        $(this).removeClass(hoverClass);
+      });
+    }
+
     // Handle drag events on draggable items
     items.on('dragstart.h5s', function(e) {
       e.stopImmediatePropagation();
@@ -298,6 +314,7 @@ var sortable = function(selector, options) {
       // trigger sortstar update
       dragging.parent().triggerHandler('sortstart', {
         item: dragging,
+        placeholder: placeholder,
         startparent: startParent
       });
     });
@@ -346,8 +363,7 @@ var sortable = function(selector, options) {
     });
 
     // Handle dragover and dragenter events on draggable items
-    // TODO: REMOVE placeholder?????
-    items.add([this, placeholder]).on('dragover.h5s dragenter.h5s', function(e) {
+    items.add([this]).on('dragover.h5s dragenter.h5s', function(e) {
       if (!_listsConnected($sortable, $(dragging).parent())) {
         return;
       }
