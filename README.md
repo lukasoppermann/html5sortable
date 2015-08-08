@@ -1,7 +1,7 @@
 HTML5 Sortable jQuery Plugin
 ============================
 
-![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square) ![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square) ![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square) ![Bower](https://img.shields.io/bower/v/html.sortable.svg?style=flat-square) ![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)
+[![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/voidberg/html5sortable) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases) ![Bower](https://img.shields.io/bower/v/html.sortable.svg?style=flat-square) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 
 > **Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.**
 
@@ -40,34 +40,18 @@ bower install
 ```
 
 # Build it / Hack it
-
-**1. Node package manager (npm)**
+**1. Clone and install the project**
 You will need `npm`, choose any way you like to [install npm](https://github.com/npm/npm#super-easy-install).
-
-**2. Clone and install the project**
 ```
 git clone https://github.com/voidberg/html5sortable
 cd html5sortable
 npm install && bower install
 ```
 
-**3. Commit**
-If you send a *pull request* make sure it passes the tests & linting. Please do **NOT** bump the version number.
+**2. Send a PR**
+If you send a *pull request* make sure it passes the tests & linting. Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ```
 npm test
-```
-
-> *Note: At the moment you will get the following warnings, if your PR does not add any other warning, it is considered to have passed:*
-- 2x This function has too many statements. (for src/html.sortable.js)
-- 2x Line must be at most 80 characters (for src/html.sortable.js)
-
-> *We are going to fix those linting issues in the near future.*
-
-**4. Merging PRs and building (only if you have commit rights)**
-
-After merging a PR run the following command to build the minified versions and bump the version number.
-```
-npm run build
 ```
 
 
@@ -256,22 +240,15 @@ $scope.sortableCallback = function (startModel, destModel, start, end) {
 ```
 See the [examples](#examples) for more information.
 
-## Authors
+## Authors & Contributors
 
-Original code by Ali Farhadi. This version is mantained by [Alexandru Badiu](http://ctrlz.ro) & [Lukas Oppermann](http://vea.re).
+This version is mantained by [Alexandru Badiu](http://ctrlz.ro) & [Lukas Oppermann](http://vea.re).
 
-## Contributors
-
-Thanks to all the people who contributed fixed and improvments. To get a full list of contributors, check out the [AUTHORS file](/AUTHORS).
+Thanks to [all contributors](../../contributors) who contributed fixes and improvements.
 
 ## Contributing
-When sending pull requests make sure to only include changes that directly relate to the fix/feature you are adding and also start a pull request from a freshly cloned copy of the repo to make it easy to merge.
 
-Please always rebase to a single commit with a descriptive name and an explanation of why what was changed.
-
-If you sent a pull request and it got merged, your name will automatically be added to the `AUTHORS` file with the next release.
-
-**NOTE:** Please do **NOT** add your name to the `AUTHORS` file and **do NOT bump the version** as this will be done automatically.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Comment your code
 Your code should be as self-documenting as possible, but because this is an open source project with multiple contributors please add comments whenever possible.
