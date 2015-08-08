@@ -1,7 +1,7 @@
 HTML5 Sortable jQuery Plugin
 ============================
 
-[![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/voidberg/html5sortable) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases) ![Bower](https://img.shields.io/bower/v/html.sortable.svg?style=flat-square) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
+[![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/voidberg/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases) ![Bower](https://img.shields.io/bower/v/html.sortable.svg?style=flat-square) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 
 > **Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.**
 
@@ -242,7 +242,7 @@ See the [examples](#examples) for more information.
 
 ## Authors & Contributors
 
-This version is mantained by [Alexandru Badiu](http://ctrlz.ro) & [Lukas Oppermann](http://vea.re).
+This version is mantained by [Alexandru Badiu](https://github.com/voidberg) & [Lukas Oppermann](https://github.com/lukasoppermann).
 
 Thanks to [all contributors](../../contributors) who contributed fixes and improvements.
 
@@ -379,7 +379,3 @@ If you want to help us by working on any of the points below, please let me know
   - [x] ~~plain js~~
   - [x] ~~amd~~
   - [x] ~~commonjs~~
-
-# License
-
-Released under the MIT license.
