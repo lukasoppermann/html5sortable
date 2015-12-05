@@ -65,11 +65,11 @@ $('.sortable').sortable();
 
 ## Styling
 
-Use `.sortable-placeholder` CSS selectors to change the styles of the placeholder. You may change the class by setting the `sortableClass` option in the config object.
+Use `.sortable-placeholder` CSS selectors to change the styles of the placeholder. You may change the class by setting the `placeholderClass` option in the config object.
 
 ``` javascript
 $('.sortable').sortable({
-  sortableClass: 'my-placeholder fade'
+  placeholderClass: 'my-placeholder fade'
 });
 ```
 
