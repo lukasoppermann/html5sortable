@@ -5,7 +5,6 @@ var srcFile = 'html.sortable.src.js';
 /* ---------- */
 /* setup */
 var gulp = require('gulp');
-var log = require('gulp-util').log;
 var rename = require('gulp-rename');
 var del = require('del');
 var bump = require('gulp-bump');
@@ -20,15 +19,6 @@ var sourcemaps = require('gulp-sourcemaps');
 var umd = require('gulp-umd');
 var strip = require('gulp-strip-code');
 /* ---------- */
-/* error handling */
-var reportError = function(error) {
-  if (error.message !== undefined) {
-    log(error.message);
-  } else {
-    log(error);
-  }
-};
-/* ---------- */
 /* linting */
 gulp.task('lint', function() {
   gulp.src([
@@ -36,7 +26,6 @@ gulp.task('lint', function() {
     'src/html.sortable.angular.js'
   ])
     .pipe(jscs())
-      // .on('error', reportError)
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jshint.reporter('fail'))
