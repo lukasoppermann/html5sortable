@@ -215,6 +215,13 @@ When you add a new item to a sortable, it will not automatically be a draggable 
 $('.sortable').sortable();
 ```
 
+## Sorting table rows
+
+The plugin has limited support for sorting table rows. To sort table rows:
+
+ * Initialize plugin on `tbody` element
+ * Keep in mind that different browsers may display different ghost image of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`. This may or may not be fixed by setting the `td` to be `position: relative;`
+
 ## AngularJS usage
 
 **HELP WANTED:** If you know angular and want to help get this package up to date and cleaned up, please contact me ([lukasoppermann](https://github.com/lukasoppermann)) or start submitting PRs.
