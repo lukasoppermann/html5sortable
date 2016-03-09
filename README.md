@@ -220,7 +220,7 @@ $('.sortable').sortable();
 The plugin has limited support for sorting table rows. To sort table rows:
 
  * Initialize plugin on `tbody` element
- * Keep in mind that different browsers may display different ghost image of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`.
+ * Keep in mind that different browsers may display different ghost image of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`. This may or may not be fixed by setting the `td` to be `position: relative;`
 
 ## AngularJS usage
 
