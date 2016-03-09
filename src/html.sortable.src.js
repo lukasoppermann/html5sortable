@@ -323,7 +323,7 @@ var sortable = function(selector, options) {
       newParent = $(this).parent();
       dragging.parent().triggerHandler('sortstop', {
         item: dragging,
-        startparent: startParent,
+        startparent: startParent
       });
       if (index !== dragging.index() ||
           startParent.get(0) !== newParent.get(0)) {
