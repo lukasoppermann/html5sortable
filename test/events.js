@@ -11,6 +11,8 @@ describe('Testing events', function(){
       '<li class="item">Item 1</li>'+
       '<li class="item">Item 2</li>'+
       '<li class="item">Item 3</li>'+
+      '<li class="item"><a href="#" class="handle">Item 4</a></li>'+
+      '<li class="item"><a href="#" class="notHandle">a clever ruse</a></li>'+
       '</ul>');
     $ul = $('.sortable');
     $lis = $ul.find('li');
@@ -20,7 +22,59 @@ describe('Testing events', function(){
     resetSortable();
     $li = $ul.find('li').first();
   });
+  
+  it('should drag with the handle', function() {
+	$ul.sortable({
+      'items': 'li',
+      'connectWith': '.test',
+	  'handle': '.handle',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
+    });
+    var event = document.createEvent('CustomEvent');
+    event.initEvent('dragstart', true, true);
+    event.pageX = 100;
+    event.pageY = 100;
+    event.dataTransfer = {
+      setData: function(val) {
+        this.data = val;
+      }
+    };
+	
+	var $grabTarget = $ul.find('.handle').first();
 
+	$grabTarget.trigger(jQuery.Event(event));
+	
+    assert.equal($grabTarget.parent().attr('aria-grabbed'),'true');
+    assert.isTrue($grabTarget.parent().hasClass('test-dragging'));
+  });
+  
+  it('should not let non-handle draggables initiate a dragstart event', function() {
+	$ul.sortable({
+      'items': 'li',
+      'connectWith': '.test',
+	  'handle': '.handle',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
+    });
+    var event = document.createEvent('CustomEvent');
+    event.initEvent('dragstart', true, true);
+    event.pageX = 100;
+    event.pageY = 100;
+    event.dataTransfer = {
+      setData: function(val) {
+        this.data = val;
+      }
+    };
+	
+	var $grabTarget = $($ul).find('.notHandle').first();
+
+	$grabTarget.trigger(jQuery.Event(event));
+	
+    assert.equal($grabTarget.parent().attr('aria-grabbed'),'false');
+    assert.isFalse($grabTarget.parent().hasClass('test-dragging'));
+  });
+  
   it('should correctly run dragstart event', function(){
     $ul.sortable({
       'items': 'li',

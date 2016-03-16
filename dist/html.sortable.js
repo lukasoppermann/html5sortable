@@ -290,7 +290,10 @@ var sortable = function(selector, options) {
     // Handle drag events on draggable items
     items.on('dragstart.h5s', function(e) {
       e.stopImmediatePropagation();
-
+      if(options.handle && !$(e.target).is(options.handle)) {
+        return;
+	  }
+        
       if (options.dragImage) {
         _attachGhost(e.originalEvent, {
           item: options.dragImage,
@@ -332,7 +335,7 @@ var sortable = function(selector, options) {
       newParent = $(this).parent();
       dragging.parent().triggerHandler('sortstop', {
         item: dragging,
-        startparent: startParent,
+        startparent: startParent
       });
       if (index !== dragging.index() ||
           startParent.get(0) !== newParent.get(0)) {
@@ -424,6 +427,7 @@ sortable.disable = function(sortable) {
 $.fn.sortable = function(options) {
   return sortable(this, options);
 };
+
 
 return sortable;
 }));

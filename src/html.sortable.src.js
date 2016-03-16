@@ -281,7 +281,10 @@ var sortable = function(selector, options) {
     // Handle drag events on draggable items
     items.on('dragstart.h5s', function(e) {
       e.stopImmediatePropagation();
-
+      if(options.handle && !$(e.target).is(options.handle)) {
+        return;
+	  }
+        
       if (options.dragImage) {
         _attachGhost(e.originalEvent, {
           item: options.dragImage,
