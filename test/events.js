@@ -11,6 +11,8 @@ describe('Testing events', function(){
       '<li class="item">Item 1</li>'+
       '<li class="item">Item 2</li>'+
       '<li class="item">Item 3</li>'+
+      '<li class="item"><span class="handle">Item 4</span></li>'+
+      '<li class="item"><span class="notHandle" dragable="true">a clever ruse</span></li>'+
       '</ul>');
     $ul = $('.sortable');
     $lis = $ul.find('li');
@@ -20,7 +22,57 @@ describe('Testing events', function(){
     resetSortable();
     $li = $ul.find('li').first();
   });
+  
+  it('should drag with the handle', function() {
+	$ul.sortable({
+      'items': 'li',
+      'connectWith': '.test',
+	  handle: '.handle',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
+    });
+    var event = document.createEvent('CustomEvent');
+    event.initEvent('dragstart', true, true);
+    event.pageX = 100;
+    event.pageY = 100;
+    event.dataTransfer = {
+      setData: function(val) {
+        this.data = val;
+      }
+    };
+	
+	var $target = $ul.find('.handle');
+    $target.trigger(jQuery.Event(event));
 
+    assert.equal($target.attr('aria-grabbed'),'true');
+    assert.isTrue($target.hasClass('test-dragging'));
+  });
+  
+  it('should not let non-handle draggables initiate a dragstart event', function() {
+	$ul.sortable({
+      'items': 'li',
+      'connectWith': '.test',
+	  handle: '.handle',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
+    });
+    var event = document.createEvent('CustomEvent');
+    event.initEvent('dragstart', true, true);
+    event.pageX = 100;
+    event.pageY = 100;
+    event.dataTransfer = {
+      setData: function(val) {
+        this.data = val;
+      }
+    };
+	
+	var $target = $ul.find('.notHandle');
+    $target.trigger(jQuery.Event(event));
+	
+    assert.equal($target.attr('aria-grabbed'),'false');
+    assert.isFalse($target.hasClass('test-dragging'));
+  });
+  
   it('should correctly run dragstart event', function(){
     $ul.sortable({
       'items': 'li',
