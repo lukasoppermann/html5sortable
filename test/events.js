@@ -11,8 +11,8 @@ describe('Testing events', function(){
       '<li class="item">Item 1</li>'+
       '<li class="item">Item 2</li>'+
       '<li class="item">Item 3</li>'+
-      '<li class="item"><span class="handle">Item 4</span></li>'+
-      '<li class="item"><span class="notHandle" dragable="true">a clever ruse</span></li>'+
+      '<li class="item"><a href="#" class="handle">Item 4</a></li>'+
+      '<li class="item"><a href="#" class="notHandle">a clever ruse</a></li>'+
       '</ul>');
     $ul = $('.sortable');
     $lis = $ul.find('li');
@@ -27,7 +27,7 @@ describe('Testing events', function(){
 	$ul.sortable({
       'items': 'li',
       'connectWith': '.test',
-	  handle: '.handle',
+	  'handle': '.handle',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     });
@@ -41,18 +41,19 @@ describe('Testing events', function(){
       }
     };
 	
-	var $target = $ul.find('.handle').first();
-    $target.trigger(jQuery.Event(event));
+	var $grabTarget = $ul.find('.handle').first();
 
-    assert.equal($target.attr('aria-grabbed'),'true');
-    assert.isTrue($target.hasClass('test-dragging'));
+	$grabTarget.trigger(jQuery.Event(event));
+	
+    assert.equal($grabTarget.parent().attr('aria-grabbed'),'true');
+    assert.isTrue($grabTarget.parent().hasClass('test-dragging'));
   });
   
   it('should not let non-handle draggables initiate a dragstart event', function() {
 	$ul.sortable({
       'items': 'li',
       'connectWith': '.test',
-	  handle: '.handle',
+	  'handle': '.handle',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     });
@@ -66,11 +67,12 @@ describe('Testing events', function(){
       }
     };
 	
-	var $target = $ul.find('.notHandle').first();
-    $target.trigger(jQuery.Event(event));
+	var $grabTarget = $($ul).find('.notHandle').first();
+
+	$grabTarget.trigger(jQuery.Event(event));
 	
-    assert.equal($target.attr('aria-grabbed'),'false');
-    assert.isFalse($target.hasClass('test-dragging'));
+    assert.equal($grabTarget.parent().attr('aria-grabbed'),'true');
+    assert.isFalse($grabTarget.parent().hasClass('test-dragging'));
   });
   
   it('should correctly run dragstart event', function(){
