@@ -71,7 +71,7 @@ describe('Testing events', function(){
 
 	$grabTarget.trigger(jQuery.Event(event));
 	
-    assert.equal($grabTarget.parent().attr('aria-grabbed'),'true');
+    assert.equal($grabTarget.parent().attr('aria-grabbed'),'false');
     assert.isFalse($grabTarget.parent().hasClass('test-dragging'));
   });
   
