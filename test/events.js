@@ -41,7 +41,7 @@ describe('Testing events', function(){
       }
     };
 	
-	var $target = $ul.find('.handle');
+	var $target = $ul.find('.handle').first();
     $target.trigger(jQuery.Event(event));
 
     assert.equal($target.attr('aria-grabbed'),'true');
@@ -66,7 +66,7 @@ describe('Testing events', function(){
       }
     };
 	
-	var $target = $ul.find('.notHandle');
+	var $target = $ul.find('.notHandle').first();
     $target.trigger(jQuery.Event(event));
 	
     assert.equal($target.attr('aria-grabbed'),'false');
