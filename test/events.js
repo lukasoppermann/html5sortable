@@ -28,16 +28,19 @@ describe('Testing events', function(){
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     });
-    var event = document.createEvent('CustomEvent');
-    event.initEvent('dragstart', true, true);
-    event.pageX = 100;
-    event.pageY = 100;
-    event.dataTransfer = {
-      setData: function(val) {
-        this.data = val;
-      }
-    };
-    $li.trigger(jQuery.Event(event));
+
+    $li.trigger(jQuery.Event( 'dragstart', {
+      originalEvent: {
+        pageX: 100,
+        pageY: 100,
+        dataTransfer: {
+          setData: function(val){
+            this.data = val;
+          }
+        }
+      },
+      isSimulated: true
+    }));
 
     assert.equal($li.attr('aria-grabbed'),'true');
     assert.isTrue($li.hasClass('test-dragging'));

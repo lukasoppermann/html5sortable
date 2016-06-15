@@ -94,17 +94,6 @@ var _getGhost = function(event, $draggedItem) {
   _attachGhost(event, ghost);
 };
 /*
- * return options if not set on sortable already
- * @param [object] soptions
- * @param [object] options
- */
-var _getOptions = function(soptions, options) {
-  if (typeof soptions === 'undefined') {
-    return options;
-  }
-  return soptions;
-};
-/*
  * remove data from sortable
  * @param [jquery Collection] a single sortable
  */
@@ -235,7 +224,7 @@ var sortable = function(selector, options) {
     }
 
     // get options & set options on sortable
-    options = _getOptions($sortable.data('opts'), options);
+    options = $sortable.data('opts') || options;
     $sortable.data('opts', options);
     // reset sortable
     _reloadSortable($sortable);
@@ -243,8 +232,8 @@ var sortable = function(selector, options) {
     var items = $sortable.children(options.items);
     var index;
     var startParent;
-    var newParent;
-    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="' + options.placeholderClass + '"/>') : $(options.placeholder).addClass(options.placeholderClass);
+    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + '/>') : $(options.placeholder);
+    placeholder.get(0).classList.add(options.placeholderClass);
 
     // setup sortable ids
     if (!$sortable.attr('data-sortable-id')) {
@@ -272,9 +261,9 @@ var sortable = function(selector, options) {
       }
 
       items.hover(function() {
-        $(this).addClass(hoverClass);
+        this.classList.add(hoverClass);
       }, function() {
-        $(this).removeClass(hoverClass);
+        this.classList.remove(hoverClass);
       });
     }
 
@@ -295,22 +284,23 @@ var sortable = function(selector, options) {
         _getGhost(e.originalEvent, $(this), options.dragImage);
       }
       // cache selsection & add attr for dragging
+      this.classList.add(options.draggingClass);
       dragging = $(this);
-      dragging.addClass(options.draggingClass);
       dragging.attr('aria-grabbed', 'true');
       // grab values
       index = dragging.index();
       draggingHeight = dragging.height();
-      startParent = $(this).parent();
+      startParent = this.parentElement;
       // trigger sortstar update
       dragging.parent().triggerHandler('sortstart', {
         item: dragging,
         placeholder: placeholder,
-        startparent: startParent
+        startparent: $(startParent)
       });
     });
     // Handle drag events on draggable items
     items.on('dragend.h5s', function() {
+      var newParent;
       if (!dragging) {
         return;
       }
@@ -320,20 +310,19 @@ var sortable = function(selector, options) {
       dragging.show();
 
       placeholders.detach();
-      newParent = $(this).parent();
+      newParent = $(this.parentElement);
       dragging.parent().triggerHandler('sortstop', {
         item: dragging,
-        startparent: startParent
+        startparent: $(startParent)
       });
-      if (index !== dragging.index() ||
-          startParent.get(0) !== newParent.get(0)) {
+      if (index !== dragging.index() || startParent !== newParent.get(0)) {
         dragging.parent().triggerHandler('sortupdate', {
           item: dragging,
           index: newParent.children(newParent.data('items')).index(dragging),
           oldindex: items.index(dragging),
           elementIndex: dragging.index(),
           oldElementIndex: index,
-          startparent: startParent,
+          startparent: $(startParent),
           endparent: newParent
         });
       }
@@ -423,7 +412,6 @@ sortable.__testing = {
   _removeItemData: _removeItemData,
   _removeSortableData: _removeSortableData,
   _listsConnected: _listsConnected,
-  _getOptions: _getOptions,
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,

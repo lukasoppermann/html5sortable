@@ -13,24 +13,6 @@ describe('Internal function tests', function(){
     $li = $ul.find('li').first();
   });
 
-  it('_getOptions', function(){
-    options = {
-      'setting': 'test'
-    };
-    // soptions is not set
-    var opts = sortable.__testing._getOptions(undefined, options);
-    assert.isDefined(opts);
-    assert.equal(opts.setting,'test');
-    // soptions is set
-    var opts = undefined;
-    soptions = {
-      'setting': 'test2'
-    };
-    var opts = sortable.__testing._getOptions(soptions, options);
-    assert.isDefined(opts);
-    assert.equal(opts.setting,'test2');
-  });
-
   it('_removeSortableEvents', function(){
     // remove general jQuery event object
     sortable.__testing._removeSortableEvents($ul);

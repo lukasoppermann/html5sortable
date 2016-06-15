@@ -48,7 +48,7 @@
     "gulp-umd": "^0.2.0",
     "gulp-util": "^3.0.4",
     "istanbul": "0.4.x",
-    "jsdom": "7.x.x",
+    "jsdom": "^9.2.1",
     "jshint-stylish": "2.x.x",
     "minimist": "^1.1.1",
     "mocha": "^2.2.4",
