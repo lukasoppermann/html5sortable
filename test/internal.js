@@ -103,4 +103,17 @@ describe('Internal function tests', function(){
     assert.equal(sortable.__testing._listsConnected($ul, $ul2), true);
   });
 
+  it('_index', function(){
+    var div = document.createElement('div');
+    var child1 = document.createElement('div');
+    var child2 = document.createElement('div');
+    var child3 = document.createElement('div');
+    div.appendChild(child1);
+    div.appendChild(child2);
+    div.appendChild(child3);
+    assert.equal(sortable.__testing._index(child1), 0);
+    assert.equal(sortable.__testing._index(child2), 1);
+    assert.equal(sortable.__testing._index(child3), 2);
+  });
+
 });

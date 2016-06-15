@@ -192,6 +192,14 @@ var _reloadSortable = function(sortable) {
   // remove event handlers from sortable
   _removeSortableEvents(sortable);
 };
+/**
+ * Get position of the element relatively to its sibling elements
+ * @param {Element} element
+ * @returns {number}
+ */
+var _index = function(element) {
+  return [].indexOf.call(element.parentElement.children, element);
+};
 /*
  * public sortable object
  * @param [object|string] options|method
@@ -232,8 +240,8 @@ var sortable = function(selector, options) {
     var items = $sortable.children(options.items);
     var index;
     var startParent;
-    var placeholder = (options.placeholder === null) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + '/>') : $(options.placeholder);
-    placeholder.get(0).classList.add(options.placeholderClass);
+    var placeholder = options.placeholder === null ? document.createElement(/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') : options.placeholder;
+    placeholder.classList.add(options.placeholderClass);
 
     // setup sortable ids
     if (!$sortable.attr('data-sortable-id')) {
@@ -351,9 +359,11 @@ var sortable = function(selector, options) {
       e.preventDefault();
       e.originalEvent.dataTransfer.dropEffect = 'move';
       if (items.is(this)) {
-        var thisHeight = $(this).height();
+        var thisHeight = parseInt(getComputedStyle(this).height);
+        var placeholderIndex = _index(placeholder);
+        var thisIndex = _index(this);
         if (options.forcePlaceholderSize) {
-          placeholder.height(draggingHeight);
+          placeholder.style.height = draggingHeight + 'px';
         }
 
         // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
@@ -361,18 +371,18 @@ var sortable = function(selector, options) {
           // Dead zone?
           var deadZone = thisHeight - draggingHeight;
           var offsetTop = $(this).offset().top;
-          if (placeholder.index() < $(this).index() &&
+          if (placeholderIndex < thisIndex &&
               e.originalEvent.pageY < offsetTop + deadZone) {
             return false;
           }
-          if (placeholder.index() > $(this).index() &&
+          if (placeholderIndex > thisIndex &&
               e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
             return false;
           }
         }
 
         dragging.hide();
-        if (placeholder.index() < $(this).index()) {
+        if (placeholderIndex < thisIndex) {
           $(this).after(placeholder);
         } else {
           $(this).before(placeholder);
@@ -415,7 +425,8 @@ sortable.__testing = {
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
-  _makeGhost: _makeGhost
+  _makeGhost: _makeGhost,
+  _index: _index
 };
 module.exports = sortable;
 /* end-testing */
