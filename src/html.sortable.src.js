@@ -266,8 +266,10 @@ var _detach = function(element) {
  */
 var _makeEvent = function(name, detail) {
   var e = document.createEvent('Event');
-  e.detail = detail;
-  e.initEvent(name, true, true);
+  if (detail) {
+    e.detail = detail;
+  }
+  e.initEvent(name, false, true);
   return e;
 };
 /*
@@ -369,14 +371,14 @@ var sortable = function(selector, options) {
       }
       // cache selsection & add attr for dragging
       this.classList.add(options.draggingClass);
-      dragging = $(this);
-      dragging.attr('aria-grabbed', 'true');
+      dragging = this;
+      dragging.setAttribute('aria-grabbed', 'true');
       // grab values
-      index = dragging.index();
-      draggingHeight = dragging.height();
+      index = _index(dragging);
+      draggingHeight = parseInt(window.getComputedStyle(dragging).height);
       startParent = this.parentElement;
       // trigger sortstar update
-      dragging.parent()[0].dispatchEvent(
+      dragging.parentElement.dispatchEvent(
         _makeEvent('sortstart', {
           item: dragging,
           placeholder: placeholder,
@@ -391,25 +393,25 @@ var sortable = function(selector, options) {
         return;
       }
       // remove dragging attributes and show item
-      dragging.removeClass(options.draggingClass);
-      dragging.attr('aria-grabbed', 'false');
-      dragging.show();
+      dragging.classList.remove(options.draggingClass);
+      dragging.setAttribute('aria-grabbed', 'false');
+      dragging.style.display = '';
 
       placeholders.map(_detach);
       newParent = $(this.parentElement);
-      dragging.parent()[0].dispatchEvent(
+      dragging.parentElement.dispatchEvent(
         _makeEvent('sortstop', {
           item: dragging,
           startparent: $(startParent)
         })
       );
-      if (index !== dragging.index() || startParent !== newParent.get(0)) {
-        dragging.parent()[0].dispatchEvent(
+      if (index !== _index(dragging) || startParent !== newParent.get(0)) {
+        dragging.parentElement.dispatchEvent(
           _makeEvent('sortupdate', {
             item: dragging,
             index: newParent.children(newParent.data('items')).index(dragging),
             oldindex: items.index(dragging),
-            elementIndex: dragging.index(),
+            elementIndex: _index(dragging),
             oldElementIndex: index,
             startparent: $(startParent),
             endparent: newParent
@@ -429,8 +431,8 @@ var sortable = function(selector, options) {
 
       e.stopPropagation();
       visiblePlaceholder = placeholders.filter(_attached)[0];
-      _after(visiblePlaceholder, dragging.get(0));
-      dragging.trigger('dragend.h5s');
+      _after(visiblePlaceholder, dragging);
+      dragging.dispatchEvent(_makeEvent('dragend'));
       return false;
     });
 
@@ -443,7 +445,7 @@ var sortable = function(selector, options) {
       e.preventDefault();
       e.originalEvent.dataTransfer.dropEffect = 'move';
       if (items.is(this)) {
-        var thisHeight = parseInt(getComputedStyle(this).height);
+        var thisHeight = parseInt(window.getComputedStyle(this).height);
         var placeholderIndex = _index(placeholder);
         var thisIndex = _index(this);
         if (options.forcePlaceholderSize) {
@@ -465,7 +467,7 @@ var sortable = function(selector, options) {
           }
         }
 
-        dragging.hide();
+        dragging.style.display = 'none';
         if (placeholderIndex < thisIndex) {
           _after(this, placeholder);
         } else {
