@@ -54,12 +54,12 @@ describe('Internal function tests', function(){
       items: 'li',
       connectWith: '.test'
     });
-    sortable.__testing._removeSortableData($ul);
+    sortable.__testing._removeSortableData($ul.get(0));
 
-    assert.isUndefined($ul.data('opts'));
-    assert.isUndefined($ul.data('connectWith'));
-    assert.isUndefined($ul.data('items'));
-    assert.isUndefined($ul.attr('aria-dropeffect'));
+    assert.isUndefined(sortable.__testing._data($ul.get(0), 'opts'));
+    assert.isUndefined(sortable.__testing._data($ul.get(0), 'connectWith'));
+    assert.isUndefined(sortable.__testing._data($ul.get(0), 'items'));
+    assert.isUndefined(sortable.__testing._data($ul.get(0), 'aria-dropeffect'));
   });
 
   it('_removeItemData', function(){
