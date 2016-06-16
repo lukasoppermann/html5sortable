@@ -417,16 +417,22 @@ var sortable = function(selector, options) {
 
   var method = String(options);
 
-  options = $.extend({
-    connectWith: false,
-    placeholder: null,
-    // dragImage can be null or a jQuery element
-    dragImage: null,
-    disableIEFix: false,
-    placeholderClass: 'sortable-placeholder',
-    draggingClass: 'sortable-dragging',
-    hoverClass: false
-  }, options);
+  options = (function(options) {
+    var result = {
+      connectWith: false,
+      placeholder: null,
+      // dragImage can be null or a Element
+      dragImage: null,
+      disableIEFix: false,
+      placeholderClass: 'sortable-placeholder',
+      draggingClass: 'sortable-dragging',
+      hoverClass: false
+    };
+    for (var option in options) {
+      result[option] = options[option];
+    }
+    return result;
+  })(options);
 
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
