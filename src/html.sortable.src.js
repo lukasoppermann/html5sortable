@@ -63,6 +63,11 @@ var _filter = function(nodes, wanted) {
   }
   return result;
 };
+/**
+ * @param {Array|Element} element
+ * @param {Array|string} event
+ * @param {Function} callback
+ */
 var _on = function(element, event, callback) {
   if (element instanceof Array) {
     element.forEach(function(element) {
@@ -81,6 +86,10 @@ var _on = function(element, event, callback) {
   element.h5s.events = element.h5s.events || {};
   element.h5s.events[event] = callback;
 };
+/**
+ * @param {Array|Element} element
+ * @param {Array|string} event
+ */
 var _off = function(element, event) {
   if (element instanceof Array) {
     element.forEach(function(element) {
@@ -99,6 +108,38 @@ var _off = function(element, event) {
     delete element.h5s.events[event];
   }
 };
+/**
+ * @param {Array|Element} element
+ * @param {string} attribute
+ * @param {*} value
+ */
+var _attr = function(element, attribute, value) {
+  if (element instanceof Array) {
+    element.forEach(function(element) {
+      _attr(element, attribute, value);
+    });
+    return;
+  }
+  element.setAttribute(attribute, value);
+};
+/**
+ * @param {Array|Element} element
+ * @param {string} attribute
+ */
+var _removeAttr = function(element, attribute) {
+  if (element instanceof Array) {
+    element.forEach(function(element) {
+      _removeAttr(element, attribute);
+    });
+    return;
+  }
+  element.removeAttribute(attribute);
+};
+/**
+ * @param {Element} element
+ * @returns {{left: *, top: *}}
+ * @private
+ */
 var _offset = function(element) {
   var rect = element.getClientRects()[0];
   return {
@@ -180,18 +221,16 @@ var _getGhost = function(event, draggedItem) {
  */
 var _removeSortableData = function(sortable) {
   _removeData(sortable);
-  sortable.removeAttribute('aria-dropeffect');
+  _removeAttr(sortable, 'aria-dropeffect');
 };
 /*
  * remove data from items
  * @param {Array|Element} items
  */
 var _removeItemData = function(items) {
-  items.forEach(function(item) {
-    item.removeAttribute('aria-grabbed');
-    item.removeAttribute('draggable');
-    item.removeAttribute('role');
-  });
+  _removeAttr(items, 'aria-grabbed');
+  _removeAttr(items, 'draggable');
+  _removeAttr(items, 'role');
 };
 /*
  * check if two lists are connected
@@ -243,10 +282,8 @@ var _enableSortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts');
   var items = _filter(sortableElement.children, opts.items);
   var handles = _getHandles(items, opts.handle);
-  sortableElement.setAttribute('aria-dropeffect', 'move');
-  handles.forEach(function(handle) {
-    handle.setAttribute('draggable', 'true');
-  });
+  _attr(sortableElement, 'aria-dropeffect', 'move');
+  _attr(handles, 'draggable', 'true');
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
   // (e.g. click) will be ignored
@@ -273,10 +310,8 @@ var _disableSortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts');
   var items = _filter(sortableElement.children, opts.items);
   var handles = _getHandles(items, opts.handle);
-  sortableElement.setAttribute('aria-dropeffect', 'none');
-  handles.forEach(function(handle) {
-    handle.setAttribute('draggable', 'false');
-  });
+  _attr(sortableElement, 'aria-dropeffect', 'none');
+  _attr(handles, 'draggable', 'false');
   _off(handles, 'mousedown');
 };
 /*
@@ -426,10 +461,8 @@ var sortable = function(selector, options) {
     if (!sortableElement.getAttribute('data-sortable-id')) {
       var id = sortables.length;
       sortables[id] = sortableElement;
-      sortableElement.setAttribute('data-sortable-id', id);
-      items.forEach(function(item) {
-        item.setAttribute('data-item-sortable-id', id);
-      });
+      _attr(sortableElement, 'data-sortable-id', id);
+      _attr(items, 'data-item-sortable-id', id);
     }
 
     _data(sortableElement, 'items', options.items);
@@ -439,10 +472,8 @@ var sortable = function(selector, options) {
     }
 
     _enableSortable(sortableElement);
-    items.forEach(function(item) {
-      item.setAttribute('role', 'option');
-      item.setAttribute('aria-grabbed', 'false');
-    });
+    _attr(items, 'role', 'option');
+    _attr(items, 'aria-grabbed', 'false');
 
     // Mouse over class
     if (options.hoverClass) {
@@ -478,7 +509,7 @@ var sortable = function(selector, options) {
       // cache selsection & add attr for dragging
       this.classList.add(options.draggingClass);
       dragging = this;
-      dragging.setAttribute('aria-grabbed', 'true');
+      _attr(dragging, 'aria-grabbed', 'true');
       // grab values
       index = _index(dragging);
       draggingHeight = parseInt(window.getComputedStyle(dragging).height);
@@ -500,7 +531,7 @@ var sortable = function(selector, options) {
       }
       // remove dragging attributes and show item
       dragging.classList.remove(options.draggingClass);
-      dragging.setAttribute('aria-grabbed', 'false');
+      _attr(dragging, 'aria-grabbed', 'false');
       dragging.style.display = '';
 
       placeholders.forEach(_detach);
