@@ -108,12 +108,14 @@ describe('Internal function tests', function(){
     var child1 = document.createElement('div');
     var child2 = document.createElement('div');
     var child3 = document.createElement('div');
+    var child4 = document.createElement('div');
     div.appendChild(child1);
     div.appendChild(child2);
     div.appendChild(child3);
     assert.equal(sortable.__testing._index(child1), 0);
     assert.equal(sortable.__testing._index(child2), 1);
     assert.equal(sortable.__testing._index(child3), 2);
+    assert.equal(sortable.__testing._index(child4), 0);
   });
 
 });

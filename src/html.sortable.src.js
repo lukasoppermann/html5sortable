@@ -198,6 +198,9 @@ var _reloadSortable = function(sortable) {
  * @returns {number}
  */
 var _index = function(element) {
+  if (!element.parentElement) {
+    return 0;
+  }
   return [].indexOf.call(element.parentElement.children, element);
 };
 /**
