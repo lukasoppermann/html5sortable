@@ -575,7 +575,8 @@ var sortable = function(sortableElements, options) {
       // remove dragging attributes and show item
       dragging.classList.remove(options.draggingClass);
       _attr(dragging, 'aria-grabbed', 'false');
-      dragging.style.display = '';
+      dragging.style.display = dragging.oldDisplay;
+      delete dragging.oldDisplay;
 
       placeholders.forEach(_detach);
       newParent = this.parentElement;
@@ -645,6 +646,9 @@ var sortable = function(sortableElements, options) {
           }
         }
 
+        if (dragging.oldDisplay === undefined) {
+          dragging.oldDisplay = dragging.style.display;
+        }
         dragging.style.display = 'none';
         if (placeholderIndex < thisIndex) {
           _after(this, placeholder);
