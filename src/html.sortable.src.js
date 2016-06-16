@@ -200,6 +200,32 @@ var _reloadSortable = function(sortable) {
 var _index = function(element) {
   return [].indexOf.call(element.parentElement.children, element);
 };
+/**
+ * Taken from jQuery source: https://github.com/jquery/jquery/blob/305f193aa57014dc7d8fa0739a3fefd47166cd44/src/css/hiddenVisibleSelectors.js#L11
+ * @param {Element} element
+ * @returns {boolean}
+ */
+var _visible = function(element) {
+  return !!(
+    element.offsetWidth ||
+    element.offsetHeight ||
+    element.getClientRects().length
+  );
+};
+/**
+ *
+ * @param {Element|string} html
+ * @returns {Element}
+ * @private
+ */
+var _html2element = function(html) {
+  if (typeof html !== 'string') {
+    return html;
+  }
+  var div = document.createElement('div');
+  div.innerHTML	= html;
+  return div.firstChild;
+};
 /*
  * public sortable object
  * @param [object|string] options|method
@@ -240,7 +266,13 @@ var sortable = function(selector, options) {
     var items = $sortable.children(options.items);
     var index;
     var startParent;
-    var placeholder = options.placeholder === null ? document.createElement(/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') : options.placeholder;
+    var placeholder = options.placeholder;
+    if (!placeholder) {
+      placeholder = document.createElement(
+        /^ul|ol$/i.test(this.tagName) ? 'li' : 'div'
+      );
+    }
+    placeholder = _html2element(placeholder);
     placeholder.classList.add(options.placeholderClass);
 
     // setup sortable ids
@@ -340,12 +372,17 @@ var sortable = function(selector, options) {
     // Handle drop event on sortable & placeholder
     // TODO: REMOVE placeholder?????
     $(this).add([placeholder]).on('drop.h5s', function(e) {
+      var visiblePlaceholder;
       if (!_listsConnected($sortable, $(dragging).parent())) {
         return;
       }
 
       e.stopPropagation();
-      placeholders.filter(':visible').after(dragging);
+      visiblePlaceholder = placeholders.filter(_visible)[0];
+      visiblePlaceholder.parentElement.insertBefore(
+        dragging.get(0),
+        visiblePlaceholder.nextElementSibling
+      );
       dragging.trigger('dragend.h5s');
       return false;
     });
@@ -362,11 +399,12 @@ var sortable = function(selector, options) {
         var thisHeight = parseInt(getComputedStyle(this).height);
         var placeholderIndex = _index(placeholder);
         var thisIndex = _index(this);
+        var targetAfter;
         if (options.forcePlaceholderSize) {
           placeholder.style.height = draggingHeight + 'px';
         }
 
-        // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
+        // Check if `this` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight) {
           // Dead zone?
           var deadZone = thisHeight - draggingHeight;
@@ -383,15 +421,16 @@ var sortable = function(selector, options) {
 
         dragging.hide();
         if (placeholderIndex < thisIndex) {
-          $(this).after(placeholder);
+          targetAfter = this.nextElementSibling;
         } else {
-          $(this).before(placeholder);
+          targetAfter = this;
         }
+        this.parentNode.insertBefore(placeholder, targetAfter);
         placeholders.not(placeholder).detach();
       } else {
         if (!placeholders.is(this) && !$(this).children(options.items).length) {
           placeholders.detach();
-          $(this).append(placeholder);
+          this.appendChild(placeholder);
         }
       }
       return false;

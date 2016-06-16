@@ -85,6 +85,18 @@ describe('Testing api', function(){
       assert.isDefined($._data($li[0], 'events').hasOwnProperty('selectstart'));
     });
 
+    it('string placehodler', function() {
+      resetSortable();
+      $ul.sortable({
+        'items': 'li',
+        'connectWith': '.test',
+        placeholderClass: 'test-placeholder',
+        draggingClass: 'test-dragging',
+        placeholder: '<div/>'
+      });
+      $li = $ul.find('li').first();
+    })
+
   });
 
   describe('Destroy', function(){
