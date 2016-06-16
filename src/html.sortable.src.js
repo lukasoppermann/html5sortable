@@ -120,9 +120,7 @@ var _getGhost = function(event, $draggedItem) {
  * @param [jquery Collection] a single sortable
  */
 var _removeSortableData = function(sortable) {
-  sortable.removeData('opts');
   sortable.get().map(_removeData);
-  sortable.removeData('items');
   sortable.removeAttr('aria-dropeffect');
 };
 /*
@@ -153,7 +151,7 @@ var _listsConnected = function(curList, destList) {
  * @param [jquery Collection] a single sortable
  */
 var _destroySortable = function(sortable) {
-  var opts = sortable.data('opts') || {};
+  var opts = _data(sortable.get(0), 'opts') || {};
   var items = sortable.children(opts.items);
   var handles = opts.handle ? items.find(opts.handle) : items;
   // remove event handlers & data from sortable
@@ -169,7 +167,7 @@ var _destroySortable = function(sortable) {
  * @param [jquery Collection] a single sortable
  */
 var _enableSortable = function(sortable) {
-  var opts = sortable.data('opts');
+  var opts = _data(sortable.get(0), 'opts');
   var items = sortable.children(opts.items);
   var handles = opts.handle ? items.find(opts.handle) : items;
   sortable.attr('aria-dropeffect', 'move');
@@ -193,7 +191,7 @@ var _enableSortable = function(sortable) {
  * @param [jquery Collection] a single sortable
  */
 var _disableSortable = function(sortable) {
-  var opts = sortable.data('opts');
+  var opts = _data(sortable.get(0), 'opts');
   var items = sortable.children(opts.items);
   var handles = opts.handle ? items.find(opts.handle) : items;
   sortable.attr('aria-dropeffect', 'none');
@@ -206,7 +204,7 @@ var _disableSortable = function(sortable) {
  * @description events need to be removed to not be double bound
  */
 var _reloadSortable = function(sortable) {
-  var opts = sortable.data('opts');
+  var opts = _data(sortable.get(0), 'opts');
   var items = sortable.children(opts.items);
   var handles = opts.handle ? items.find(opts.handle) : items;
   // remove event handlers from items
@@ -326,8 +324,8 @@ var sortable = function(selector, options) {
     }
 
     // get options & set options on sortable
-    options = $sortable.data('opts') || options;
-    $sortable.data('opts', options);
+    options = _data($sortable.get(0), 'opts') || options;
+    _data($sortable.get(0), 'opts', options);
     // reset sortable
     _reloadSortable($sortable);
     // initialize
@@ -344,14 +342,14 @@ var sortable = function(selector, options) {
     placeholder.classList.add(options.placeholderClass);
 
     // setup sortable ids
-    if (!$sortable.attr('data-sortable-id')) {
+    if (!$sortable.get(0).getAttribute('data-sortable-id')) {
       var id = sortables.length;
       sortables[id] = $sortable;
-      $sortable.attr('data-sortable-id', id);
+      $sortable.get(0).setAttribute('data-sortable-id', id);
       items.attr('data-item-sortable-id', id);
     }
 
-    $sortable.data('items', options.items);
+    _data($sortable.get(0), 'items', options.items);
     placeholders.push(placeholder);
     if (options.connectWith) {
       _data(this, 'connectWith', options.connectWith);
@@ -404,7 +402,7 @@ var sortable = function(selector, options) {
         _makeEvent('sortstart', {
           item: dragging,
           placeholder: placeholder,
-          startparent: $(startParent)
+          startparent: startParent
         })
       );
     });
@@ -420,22 +418,24 @@ var sortable = function(selector, options) {
       dragging.style.display = '';
 
       placeholders.map(_detach);
-      newParent = $(this.parentElement);
+      newParent = this.parentElement;
       dragging.parentElement.dispatchEvent(
         _makeEvent('sortstop', {
           item: dragging,
-          startparent: $(startParent)
+          startparent: startParent
         })
       );
-      if (index !== _index(dragging) || startParent !== newParent.get(0)) {
+      if (index !== _index(dragging) || startParent !== newParent) {
         dragging.parentElement.dispatchEvent(
           _makeEvent('sortupdate', {
             item: dragging,
-            index: newParent.children(newParent.data('items')).index(dragging),
+            index: $(newParent)
+              .children(_data(newParent, 'items'))
+              .index(dragging),
             oldindex: items.index(dragging),
             elementIndex: _index(dragging),
             oldElementIndex: index,
-            startparent: $(startParent),
+            startparent: startParent,
             endparent: newParent
           })
         );
@@ -528,6 +528,7 @@ $.fn.sortable = function(options) {
 /* start-testing */
 sortable.__testing = {
   // add internal methods here for testing purposes
+  _data: _data,
   _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,

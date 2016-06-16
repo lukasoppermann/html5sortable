@@ -29,11 +29,11 @@ describe('Testing api', function(){
     });
 
     it('should have a data-opts object', function(){
-      assert.typeOf($ul.data('opts'),"object");
+      assert.typeOf(sortable.__testing._data($ul.get(0), 'opts'),"object");
     });
 
     it('should have correct options set on options object', function(){
-      var opts = $ul.data('opts');
+      var opts = sortable.__testing._data($ul.get(0), 'opts');
       assert.equal(opts.items,"li");
       assert.equal(opts.connectWith,".test");
       assert.equal(opts.placeholderClass,"test-placeholder");
@@ -45,11 +45,11 @@ describe('Testing api', function(){
     });
 
     it('should have a data-items object', function(){
-      assert.typeOf($ul.data('items'),"string");
+      assert.typeOf(sortable.__testing._data($ul.get(0), 'items'),"string");
     });
 
     it('should have a h5s.connectWith object', function(){
-      assert.typeOf($ul.get(0).h5s.connectWith,"string");
+      assert.typeOf(sortable.__testing._data($ul.get(0), 'connectWith'),"string");
     });
 
     it('should have aria-grabbed attributes', function(){
@@ -110,7 +110,7 @@ describe('Testing api', function(){
     });
 
     it('should not have a data-opts object', function(){
-      assert.typeOf($ul.data('opts'),"undefined");
+      assert.typeOf(sortable.__testing._data($ul.get(0), 'opts'),"undefined");
     });
 
     it('should not have a aria-dropeffect attribute', function(){
@@ -118,11 +118,11 @@ describe('Testing api', function(){
     });
 
     it('should not have a data-items object', function(){
-      assert.isUndefined($ul.data('items'));
+      assert.isUndefined(sortable.__testing._data($ul.get(0), 'items'));
     });
 
     it('should not have a h5s.connectWith object', function(){
-      assert.isUndefined($ul.get(0).h5s && $ul.get(0).h5s.connectWith);
+      assert.isUndefined(sortable.__testing._data($ul.get(0), 'connectWith'));
     });
 
     it('should not have an aria-grabbed attribute', function(){
@@ -151,19 +151,19 @@ describe('Testing api', function(){
     });
 
     it('should keep the options of the sortable', function(){
-      var opts = $ul.data('opts');
+      var opts = sortable.__testing._data($ul.get(0), 'opts');
       assert.equal(opts.items,'li:not(.disabled)');
       assert.equal(opts.connectWith,'.test');
       assert.equal(opts.placeholderClass,'test-placeholder');
     });
 
     it('should keep items attribute of the sortable', function(){
-      var items = $ul.data('items');
+      var items = sortable.__testing._data($ul.get(0), 'items');
       assert.equal(items,'li:not(.disabled)');
     });
 
     it('should keep connectWith attribute of the sortable', function(){
-      var connectWith = $ul.get(0).h5s.connectWith;
+      var connectWith = sortable.__testing._data($ul.get(0), 'connectWith');
       assert.equal(connectWith,'.test');
     });
 
@@ -181,17 +181,17 @@ describe('Testing api', function(){
     });
 
     it('should remove attributes from sortable', function(){
-      var opts = $ul.data('opts');
+      var opts = sortable.__testing._data($ul.get(0), 'opts');
       assert.equal($ul.attr('aria-dropeffect'), 'none');
     });
 
     it('should set handles to draggable = false', function(){
-      var handle = $ul.find($ul.data('items')).first();
+      var handle = $ul.find(sortable.__testing._data($ul.get(0), 'items')).first();
       assert.equal(handle.attr('draggable'), 'false');
     });
 
     it('should remove mousedown event', function(){
-      var handle = $ul.find($ul.data('items')).first();
+      var handle = $ul.find(sortable.__testing._data($ul.get(0), 'items')).first();
       assert.isDefined($._data(handle[0], 'events'));
       assert.isFalse($._data(handle[0], 'events').hasOwnProperty('mousedown'));
       assert.isFalse($._data(handle[0], 'events').hasOwnProperty('mousedown.h5s'));
@@ -212,17 +212,17 @@ describe('Testing api', function(){
     });
 
     it('should readd attributes to sortable', function(){
-      var opts = $ul.data('opts');
+      var opts = sortable.__testing._data($ul.get(0), 'opts');
       assert.equal($ul.attr('aria-dropeffect'), 'move');
     });
 
     it('should set handles to draggable = true', function(){
-      var handle = $ul.find($ul.data('items')).first();
+      var handle = $ul.find(sortable.__testing._data($ul.get(0), 'items')).first();
       assert.equal(handle.attr('draggable'), 'true');
     });
 
     it('should remove mousedown event', function(){
-      var handle = $ul.find($ul.data('items')).first();
+      var handle = $ul.find(sortable.__testing._data($ul.get(0), 'items')).first();
       assert.isDefined($._data(handle[0], 'events'));
       assert.isDefined($._data(handle[0], 'events').hasOwnProperty('mousedown'));
       assert.isDefined($._data(handle[0], 'events').hasOwnProperty('mousedown.h5s'));
