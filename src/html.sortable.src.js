@@ -41,6 +41,18 @@ var _removeData = function(element) {
     delete element.h5s.data;
   }
 };
+var matches;
+switch (true) {
+  case 'matches' in window.Element.prototype:
+    matches = 'matches';
+    break;
+  case 'msMatchesSelector' in window.Element.prototype:
+    matches = 'msMatchesSelector';
+    break;
+  case 'webkitMatchesSelector' in window.Element.prototype:
+    matches = 'webkitMatchesSelector';
+    break;
+}
 /**
  * Filter only wanted nodes
  * @param {Array|NodeList} nodes
@@ -54,7 +66,7 @@ var _filter = function(nodes, wanted) {
   }
   var result = [];
   for (var i = 0; i < nodes.length; ++i) {
-    if (typeof wanted === 'string' && nodes[i].matches(wanted)) {
+    if (typeof wanted === 'string' && nodes[i][matches](wanted)) {
       result.push(nodes[i]);
     }
     if (wanted.indexOf(nodes[i]) !== -1) {
