@@ -256,7 +256,11 @@ var _enableSortable = function(sortableElement) {
       if (items.indexOf(this) !== -1) {
         this.dragDrop();
       } else {
-        $(this).parents(opts.items)[0].dragDrop();
+        var parent = this.parentElement;
+        while (opts.items.indexOf(parent) === -1) {
+          parent = parent.parentElement;
+        }
+        parent.dragDrop();
       }
     });
   }
