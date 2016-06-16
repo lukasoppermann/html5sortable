@@ -207,6 +207,18 @@ var _listsConnected = function(curList, destList) {
   }
   return false;
 };
+var _getHandles = function(items, handle) {
+  var result = [];
+  var handles;
+  if (!handle) {
+    return items;
+  }
+  for (var i = 0; i < items.length; ++i) {
+    handles = items[i].querySelectorAll(handle);
+    result = result.concat([].splice.call(handles));
+  }
+  return result;
+};
 /*
  * destroy the sortable
  * @param {Element} sortableElement a single sortable
@@ -214,7 +226,7 @@ var _listsConnected = function(curList, destList) {
 var _destroySortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts') || {};
   var items = _filter(sortableElement.children, opts.items);
-  var handles = opts.handle ? $(items).find(opts.handle).get() : items;
+  var handles = _getHandles(items, opts.handle);
   // remove event handlers & data from sortable
   _removeSortableEvents(sortableElement);
   _removeSortableData(sortableElement);
@@ -230,15 +242,17 @@ var _destroySortable = function(sortableElement) {
 var _enableSortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts');
   var items = _filter(sortableElement.children, opts.items);
-  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
+  var handles = _getHandles(items, opts.handle);
   sortableElement.setAttribute('aria-dropeffect', 'move');
-  handles.attr('draggable', 'true');
+  handles.forEach(function(handle) {
+    handle.setAttribute('draggable', 'true');
+  });
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
   // (e.g. click) will be ignored
   var spanEl = (document || window.document).createElement('span');
   if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
-    _on(handles.get(), 'mousedown', function() {
+    _on(handles, 'mousedown', function() {
       if (items.indexOf(this) !== -1) {
         this.dragDrop();
       } else {
@@ -254,7 +268,7 @@ var _enableSortable = function(sortableElement) {
 var _disableSortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts');
   var items = _filter(sortableElement.children, opts.items);
-  var handles = opts.handle ? $(items).find(opts.handle).get() : items;
+  var handles = _getHandles(items, opts.handle);
   sortableElement.setAttribute('aria-dropeffect', 'none');
   handles.forEach(function(handle) {
     handle.setAttribute('draggable', 'false');
@@ -269,7 +283,7 @@ var _disableSortable = function(sortableElement) {
 var _reloadSortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts');
   var items = _filter(sortableElement.children, opts.items);
-  var handles = opts.handle ? $(items).find(opts.handle).get() : items;
+  var handles = _getHandles(items, opts.handle);
   // remove event handlers from items
   _removeItemEvents(items);
   _off(handles, 'mousedown');
