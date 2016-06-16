@@ -14,7 +14,7 @@
  */
 var dragging;
 var draggingHeight;
-var placeholders = $();
+var placeholders = [];
 var sortables = [];
 /*
  * remove event handlers from items
@@ -247,6 +247,11 @@ var _after = function(target, element) {
     target.nextElementSibling
   );
 };
+var _detach = function(element) {
+  if (element.parentNode) {
+    element.parentNode.removeChild(element);
+  }
+};
 /*
  * public sortable object
  * @param [object|string] options|method
@@ -305,7 +310,7 @@ var sortable = function(selector, options) {
     }
 
     $sortable.data('items', options.items);
-    placeholders = placeholders.add(placeholder);
+    placeholders.push(placeholder);
     if (options.connectWith) {
       $sortable.data('connectWith', options.connectWith);
     }
@@ -370,7 +375,7 @@ var sortable = function(selector, options) {
       dragging.attr('aria-grabbed', 'false');
       dragging.show();
 
-      placeholders.detach();
+      placeholders.map(_detach);
       newParent = $(this.parentElement);
       dragging.parent().triggerHandler('sortstop', {
         item: dragging,
@@ -399,7 +404,7 @@ var sortable = function(selector, options) {
       }
 
       e.stopPropagation();
-      visiblePlaceholder = placeholders.get().filter(_attached)[0];
+      visiblePlaceholder = placeholders.filter(_attached)[0];
       _after(visiblePlaceholder, dragging.get(0));
       dragging.trigger('dragend.h5s');
       return false;
@@ -442,10 +447,13 @@ var sortable = function(selector, options) {
         } else {
           _before(this, placeholder);
         }
-        placeholders.not(placeholder).detach();
+        placeholders
+          .filter(function(element) {return element !== placeholder;})
+          .map(_detach);
       } else {
-        if (!placeholders.is(this) && !$(this).children(options.items).length) {
-          placeholders.detach();
+        if (placeholders.indexOf(this) === -1 &&
+          !$(this).children(options.items).length) {
+          placeholders.map(_detach);
           this.appendChild(placeholder);
         }
       }
