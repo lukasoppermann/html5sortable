@@ -378,7 +378,7 @@ var sortable = function(selector, options) {
       }
 
       e.stopPropagation();
-      visiblePlaceholder = placeholders.filter(_visible)[0];
+      visiblePlaceholder = placeholders.get().filter(_visible)[0];
       visiblePlaceholder.parentElement.insertBefore(
         dragging.get(0),
         visiblePlaceholder.nextElementSibling
