@@ -38,12 +38,35 @@ var _data = function(element, key, value) {
 var _removeData = function(element) {
   delete element.h5s;
 };
+/**
+ * Filter only wanted nodes
+ * @param {Array|NodeList} nodes
+ * @param {Array/string} wanted
+ * @returns {Array}
+ * @private
+ */
+var _filter = function(nodes, wanted) {
+  if (!wanted) {
+    return [].slice.call(nodes);
+  }
+  var result = [];
+  for (var i = 0; i < nodes.length; ++i) {
+    if (typeof wanted === 'string' && nodes[i].matches(wanted)) {
+      result.push(nodes[i]);
+    }
+    if (wanted.indexOf(nodes[i]) !== -1) {
+      result.push(nodes[i]);
+    }
+  }
+  return result;
+};
 /*
  * remove event handlers from items
  * @param [jquery Collection] items
  * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeItemEvents = function(items) {
+  items = $(items);
   items.off('dragstart.h5s');
   items.off('dragend.h5s');
   items.off('selectstart.h5s');
@@ -120,7 +143,7 @@ var _getGhost = function(event, $draggedItem) {
  * @param [jquery Collection] a single sortable
  */
 var _removeSortableData = function(sortable) {
-  sortable.get().map(_removeData);
+  sortable.get().forEach(_removeData);
   sortable.removeAttr('aria-dropeffect');
 };
 /*
@@ -128,6 +151,7 @@ var _removeSortableData = function(sortable) {
  * @param [jquery Collection] items
  */
 var _removeItemData = function(items) {
+  items = $(items);
   items.removeAttr('aria-grabbed');
   items.removeAttr('draggable');
   items.removeAttr('role');
@@ -152,8 +176,8 @@ var _listsConnected = function(curList, destList) {
  */
 var _destroySortable = function(sortable) {
   var opts = _data(sortable.get(0), 'opts') || {};
-  var items = sortable.children(opts.items);
-  var handles = opts.handle ? items.find(opts.handle) : items;
+  var items = _filter(sortable.get(0).children, opts.items);
+  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
   // remove event handlers & data from sortable
   _removeSortableEvents(sortable);
   _removeSortableData(sortable);
@@ -168,8 +192,8 @@ var _destroySortable = function(sortable) {
  */
 var _enableSortable = function(sortable) {
   var opts = _data(sortable.get(0), 'opts');
-  var items = sortable.children(opts.items);
-  var handles = opts.handle ? items.find(opts.handle) : items;
+  var items = _filter(sortable.get(0).children, opts.items);
+  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
   sortable.attr('aria-dropeffect', 'move');
   handles.attr('draggable', 'true');
   // IE FIX for ghost
@@ -178,7 +202,7 @@ var _enableSortable = function(sortable) {
   var spanEl = (document || window.document).createElement('span');
   if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
     handles.on('mousedown.h5s', function() {
-      if (items.index(this) !== -1) {
+      if (items.indexOf(this) !== -1) {
         this.dragDrop();
       } else {
         $(this).parents(opts.items)[0].dragDrop();
@@ -192,8 +216,8 @@ var _enableSortable = function(sortable) {
  */
 var _disableSortable = function(sortable) {
   var opts = _data(sortable.get(0), 'opts');
-  var items = sortable.children(opts.items);
-  var handles = opts.handle ? items.find(opts.handle) : items;
+  var items = _filter(sortable.get(0).children, opts.items);
+  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
   sortable.attr('aria-dropeffect', 'none');
   handles.attr('draggable', false);
   handles.off('mousedown.h5s');
@@ -205,8 +229,8 @@ var _disableSortable = function(sortable) {
  */
 var _reloadSortable = function(sortable) {
   var opts = _data(sortable.get(0), 'opts');
-  var items = sortable.children(opts.items);
-  var handles = opts.handle ? items.find(opts.handle) : items;
+  var items = _filter(sortable.get(0).children, opts.items);
+  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
   // remove event handlers from items
   _removeItemEvents(items);
   handles.off('mousedown.h5s');
@@ -329,7 +353,7 @@ var sortable = function(selector, options) {
     // reset sortable
     _reloadSortable($sortable);
     // initialize
-    var items = $sortable.children(options.items);
+    var items = _filter($sortable.get(0).children, options.items);
     var index;
     var startParent;
     var placeholder = options.placeholder;
@@ -346,7 +370,9 @@ var sortable = function(selector, options) {
       var id = sortables.length;
       sortables[id] = $sortable;
       $sortable.get(0).setAttribute('data-sortable-id', id);
-      items.attr('data-item-sortable-id', id);
+      items.forEach(function(i) {
+        i.setAttribute('data-item-sortable-id', id);
+      });
     }
 
     _data($sortable.get(0), 'items', options.items);
@@ -356,8 +382,10 @@ var sortable = function(selector, options) {
     }
 
     _enableSortable($sortable);
-    items.attr('role', 'option');
-    items.attr('aria-grabbed', 'false');
+    items.forEach(function(i) {
+      i.setAttribute('role', 'option');
+      i.setAttribute('aria-grabbed', 'false');
+    });
 
     // Mouse over class
     if (options.hoverClass) {
@@ -366,7 +394,7 @@ var sortable = function(selector, options) {
         hoverClass = options.hoverClass;
       }
 
-      items.hover(function() {
+      $(items).hover(function() {
         this.classList.add(hoverClass);
       }, function() {
         this.classList.remove(hoverClass);
@@ -374,7 +402,7 @@ var sortable = function(selector, options) {
     }
 
     // Handle drag events on draggable items
-    items.on('dragstart.h5s', function(e) {
+    $(items).on('dragstart.h5s', function(e) {
       e.stopImmediatePropagation();
 
       if (options.dragImage) {
@@ -407,7 +435,7 @@ var sortable = function(selector, options) {
       );
     });
     // Handle drag events on draggable items
-    items.on('dragend.h5s', function() {
+    $(items).on('dragend.h5s', function() {
       var newParent;
       if (!dragging) {
         return;
@@ -417,7 +445,7 @@ var sortable = function(selector, options) {
       dragging.setAttribute('aria-grabbed', 'false');
       dragging.style.display = '';
 
-      placeholders.map(_detach);
+      placeholders.forEach(_detach);
       newParent = this.parentElement;
       dragging.parentElement.dispatchEvent(
         _makeEvent('sortstop', {
@@ -429,10 +457,9 @@ var sortable = function(selector, options) {
         dragging.parentElement.dispatchEvent(
           _makeEvent('sortupdate', {
             item: dragging,
-            index: $(newParent)
-              .children(_data(newParent, 'items'))
-              .index(dragging),
-            oldindex: items.index(dragging),
+            index: _filter(newParent.children, _data(newParent, 'items'))
+              .indexOf(dragging),
+            oldindex: items.indexOf(dragging),
             elementIndex: _index(dragging),
             oldElementIndex: index,
             startparent: startParent,
@@ -459,14 +486,14 @@ var sortable = function(selector, options) {
     });
 
     // Handle dragover and dragenter events on draggable items
-    items.add([this]).on('dragover.h5s dragenter.h5s', function(e) {
+    $(items).add([this]).on('dragover.h5s dragenter.h5s', function(e) {
       if (!_listsConnected($sortable.get(0), dragging.parentElement)) {
         return;
       }
 
       e.preventDefault();
       e.originalEvent.dataTransfer.dropEffect = 'move';
-      if (items.is(this)) {
+      if (items.indexOf(this) !== -1) {
         var thisHeight = parseInt(window.getComputedStyle(this).height);
         var placeholderIndex = _index(placeholder);
         var thisIndex = _index(this);
@@ -497,11 +524,11 @@ var sortable = function(selector, options) {
         }
         placeholders
           .filter(function(element) {return element !== placeholder;})
-          .map(_detach);
+          .forEach(_detach);
       } else {
         if (placeholders.indexOf(this) === -1 &&
-          !$(this).children(options.items).length) {
-          placeholders.map(_detach);
+          !_filter(this.children, options.items).length) {
+          placeholders.forEach(_detach);
           this.appendChild(placeholder);
         }
       }
