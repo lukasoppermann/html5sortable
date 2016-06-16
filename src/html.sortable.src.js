@@ -204,16 +204,12 @@ var _index = function(element) {
   return [].indexOf.call(element.parentElement.children, element);
 };
 /**
- * Taken from jQuery source: https://github.com/jquery/jquery/blob/305f193aa57014dc7d8fa0739a3fefd47166cd44/src/css/hiddenVisibleSelectors.js#L11
+ * Whether element is in DOM
  * @param {Element} element
  * @returns {boolean}
  */
-var _visible = function(element) {
-  return !!(
-    element.offsetWidth ||
-    element.offsetHeight ||
-    element.getClientRects().length
-  );
+var _attached = function(element) {
+  return !!element.parentNode;
 };
 /**
  *
@@ -381,7 +377,7 @@ var sortable = function(selector, options) {
       }
 
       e.stopPropagation();
-      visiblePlaceholder = placeholders.get().filter(_visible)[0];
+      visiblePlaceholder = placeholders.get().filter(_attached)[0];
       visiblePlaceholder.parentElement.insertBefore(
         dragging.get(0),
         visiblePlaceholder.nextElementSibling
