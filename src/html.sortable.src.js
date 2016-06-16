@@ -225,6 +225,28 @@ var _html2element = function(html) {
   div.innerHTML	= html;
   return div.firstChild;
 };
+/**
+ * Insert before target
+ * @param {Element} target
+ * @param {Element} element
+ */
+var _before = function(target, element) {
+  target.parentElement.insertBefore(
+    element,
+    target
+  );
+};
+/**
+ * Insert after target
+ * @param {Element} target
+ * @param {Element} element
+ */
+var _after = function(target, element) {
+  target.parentElement.insertBefore(
+    element,
+    target.nextElementSibling
+  );
+};
 /*
  * public sortable object
  * @param [object|string] options|method
@@ -378,10 +400,7 @@ var sortable = function(selector, options) {
 
       e.stopPropagation();
       visiblePlaceholder = placeholders.get().filter(_attached)[0];
-      visiblePlaceholder.parentElement.insertBefore(
-        dragging.get(0),
-        visiblePlaceholder.nextElementSibling
-      );
+      _after(visiblePlaceholder, dragging.get(0));
       dragging.trigger('dragend.h5s');
       return false;
     });
@@ -398,7 +417,6 @@ var sortable = function(selector, options) {
         var thisHeight = parseInt(getComputedStyle(this).height);
         var placeholderIndex = _index(placeholder);
         var thisIndex = _index(this);
-        var targetAfter;
         if (options.forcePlaceholderSize) {
           placeholder.style.height = draggingHeight + 'px';
         }
@@ -420,11 +438,10 @@ var sortable = function(selector, options) {
 
         dragging.hide();
         if (placeholderIndex < thisIndex) {
-          targetAfter = this.nextElementSibling;
+          _after(this, placeholder);
         } else {
-          targetAfter = this;
+          _before(this, placeholder);
         }
-        this.parentNode.insertBefore(placeholder, targetAfter);
         placeholders.not(placeholder).detach();
       } else {
         if (!placeholders.is(this) && !$(this).children(options.items).length) {
