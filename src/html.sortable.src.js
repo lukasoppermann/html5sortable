@@ -99,6 +99,13 @@ var _off = function(element, event) {
     delete element.h5s.events[event];
   }
 };
+var _offset = function(element) {
+  var rect = element.getClientRects()[0];
+  return {
+    left: rect.left + window.scrollX,
+    top: rect.top + window.scrollY
+  };
+};
 /*
  * remove event handlers from items
  * @param [jquery Collection] items
@@ -127,43 +134,41 @@ var _attachGhost = function(event, ghost) {
 
   // check if setDragImage method is available
   if (event.dataTransfer.setDragImage) {
-    event.dataTransfer.setDragImage(ghost.item, ghost.x, ghost.y);
+    event.dataTransfer.setDragImage(ghost.draggedItem, ghost.x, ghost.y);
   }
 };
 /**
  * _addGhostPos clones the dragged item and adds it as a Ghost item
- * @param [object] event - the event fired when dragstart is triggered
- * @param [object] ghost - .item = node, draggedItem = jQuery collection
+ * @param {CustomEvent} event - the event fired when dragstart is triggered
+ * @param {object} ghost - .draggedItem = Element
  */
-var _addGhostPos = function(e, ghost) {
+var _addGhostPos = function(event, ghost) {
   if (!ghost.x) {
-    ghost.x = parseInt(e.pageX - ghost.draggedItem.offset().left);
+    ghost.x = parseInt(event.pageX - _offset(ghost.draggedItem).left);
   }
   if (!ghost.y) {
-    ghost.y = parseInt(e.pageY - ghost.draggedItem.offset().top);
+    ghost.y = parseInt(event.pageY - _offset(ghost.draggedItem).top);
   }
   return ghost;
 };
 /**
  * _makeGhost decides which way to make a ghost and passes it to attachGhost
- * @param [jQuery selection] $draggedItem - the item that the user drags
+ * @param {Element} draggedItem - the item that the user drags
  */
-var _makeGhost = function($draggedItem) {
+var _makeGhost = function(draggedItem) {
   return {
-    item: $draggedItem[0],
-    draggedItem: $draggedItem
+    draggedItem: draggedItem
   };
 };
 /**
  * _getGhost constructs ghost and attaches it to dataTransfer
- * @param [event] event - the original drag event object
- * @param [jQuery selection] $draggedItem - the item that the user drags
- * @param [object] ghostOpt - the ghost options
+ * @param {Element} draggedItem - the item that the user drags
+ * @param {CustomEvent} event - the original drag event object
  */
-// TODO: could $draggedItem be replaced by event.target in all instances
-var _getGhost = function(event, $draggedItem) {
+// TODO: could draggedItem be replaced by event.target in all instances
+var _getGhost = function(event, draggedItem) {
   // add ghost item & draggedItem to ghost object
-  var ghost = _makeGhost($draggedItem);
+  var ghost = _makeGhost(draggedItem);
   // attach ghost position
   ghost = _addGhostPos(event, ghost);
   // attach ghost to dataTransfer
@@ -450,7 +455,7 @@ var sortable = function(selector, options) {
         ' and will be removed in the future!');
       } else {
         // add transparent clone or other ghost to cursor
-        _getGhost(e, $(this), options.dragImage);
+        _getGhost(e, this);
       }
       // cache selsection & add attr for dragging
       this.classList.add(options.draggingClass);
@@ -541,7 +546,7 @@ var sortable = function(selector, options) {
         if (thisHeight > draggingHeight) {
           // Dead zone?
           var deadZone = thisHeight - draggingHeight;
-          var offsetTop = $(this).offset().top;
+          var offsetTop = _offset(this).top;
           if (placeholderIndex < thisIndex &&
               e.pageY < offsetTop + deadZone) {
             return;
