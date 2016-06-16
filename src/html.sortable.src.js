@@ -247,10 +247,28 @@ var _after = function(target, element) {
     target.nextElementSibling
   );
 };
+/**
+ * Detach element from DOM
+ * @param {Element} element
+ * @private
+ */
 var _detach = function(element) {
   if (element.parentNode) {
     element.parentNode.removeChild(element);
   }
+};
+/**
+ * Make native event that can be dispatched afterwards
+ * @param {string} name
+ * @param {object} detail
+ * @returns {CustomEvent}
+ * @private
+ */
+var _makeEvent = function(name, detail) {
+  var e = document.createEvent('Event');
+  e.detail = detail;
+  e.initEvent(name, true, true);
+  return e;
 };
 /*
  * public sortable object
@@ -358,11 +376,13 @@ var sortable = function(selector, options) {
       draggingHeight = dragging.height();
       startParent = this.parentElement;
       // trigger sortstar update
-      dragging.parent().triggerHandler('sortstart', {
-        item: dragging,
-        placeholder: placeholder,
-        startparent: $(startParent)
-      });
+      dragging.parent()[0].dispatchEvent(
+        _makeEvent('sortstart', {
+          item: dragging,
+          placeholder: placeholder,
+          startparent: $(startParent)
+        })
+      );
     });
     // Handle drag events on draggable items
     items.on('dragend.h5s', function() {
@@ -377,20 +397,24 @@ var sortable = function(selector, options) {
 
       placeholders.map(_detach);
       newParent = $(this.parentElement);
-      dragging.parent().triggerHandler('sortstop', {
-        item: dragging,
-        startparent: $(startParent)
-      });
-      if (index !== dragging.index() || startParent !== newParent.get(0)) {
-        dragging.parent().triggerHandler('sortupdate', {
+      dragging.parent()[0].dispatchEvent(
+        _makeEvent('sortstop', {
           item: dragging,
-          index: newParent.children(newParent.data('items')).index(dragging),
-          oldindex: items.index(dragging),
-          elementIndex: dragging.index(),
-          oldElementIndex: index,
-          startparent: $(startParent),
-          endparent: newParent
-        });
+          startparent: $(startParent)
+        })
+      );
+      if (index !== dragging.index() || startParent !== newParent.get(0)) {
+        dragging.parent()[0].dispatchEvent(
+          _makeEvent('sortupdate', {
+            item: dragging,
+            index: newParent.children(newParent.data('items')).index(dragging),
+            oldindex: items.index(dragging),
+            elementIndex: dragging.index(),
+            oldElementIndex: index,
+            startparent: $(startParent),
+            endparent: newParent
+          })
+        );
       }
       dragging = null;
       draggingHeight = null;
