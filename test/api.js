@@ -48,8 +48,8 @@ describe('Testing api', function(){
       assert.typeOf($ul.data('items'),"string");
     });
 
-    it('should have a data-connectWith object', function(){
-      assert.typeOf($ul.data('connectWith'),"string");
+    it('should have a h5s.connectWith object', function(){
+      assert.typeOf($ul.get(0).h5s.connectWith,"string");
     });
 
     it('should have aria-grabbed attributes', function(){
@@ -121,8 +121,8 @@ describe('Testing api', function(){
       assert.isUndefined($ul.data('items'));
     });
 
-    it('should not have a data-connectWith object', function(){
-      assert.isUndefined($ul.data('connectWith'));
+    it('should not have a h5s.connectWith object', function(){
+      assert.isUndefined($ul.get(0).h5s && $ul.get(0).h5s.connectWith);
     });
 
     it('should not have an aria-grabbed attribute', function(){
@@ -163,7 +163,7 @@ describe('Testing api', function(){
     });
 
     it('should keep connectWith attribute of the sortable', function(){
-      var connectWith = $ul.data('connectWith');
+      var connectWith = $ul.get(0).h5s.connectWith;
       assert.equal(connectWith,'.test');
     });
 

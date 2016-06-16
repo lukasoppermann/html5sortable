@@ -16,6 +16,28 @@ var dragging;
 var draggingHeight;
 var placeholders = [];
 var sortables = [];
+/**
+ * Get or set data on element
+ * @param {Element} element
+ * @param {string} key
+ * @param {*} value
+ * @return {*}
+ */
+var _data = function(element, key, value) {
+  if (value === undefined) {
+    return element && element.h5s && element.h5s[key];
+  } else {
+    element.h5s = element.h5s || {};
+    element.h5s[key] = value;
+  }
+};
+/**
+ * Remove data from element
+ * @param {Element} element
+ */
+var _removeData = function(element) {
+  delete element.h5s;
+};
 /*
  * remove event handlers from items
  * @param [jquery Collection] items
@@ -99,7 +121,7 @@ var _getGhost = function(event, $draggedItem) {
  */
 var _removeSortableData = function(sortable) {
   sortable.removeData('opts');
-  sortable.removeData('connectWith');
+  sortable.get().map(_removeData);
   sortable.removeData('items');
   sortable.removeAttr('aria-dropeffect');
 };
@@ -114,14 +136,15 @@ var _removeItemData = function(items) {
 };
 /*
  * check if two lists are connected
- * @param [jquery Collection] items
+ * @param {Element} curList
+ * @param {Element} destList
  */
 var _listsConnected = function(curList, destList) {
-  if (curList[0] === destList[0]) {
+  if (curList === destList) {
     return true;
   }
-  if (curList.data('connectWith') !== undefined) {
-    return curList.data('connectWith') === destList.data('connectWith');
+  if (_data(curList, 'connectWith') !== undefined) {
+    return _data(curList, 'connectWith') === _data(destList, 'connectWith');
   }
   return false;
 };
@@ -278,7 +301,6 @@ var _makeEvent = function(name, detail) {
  */
 var sortable = function(selector, options) {
 
-  var $sortables = $(selector);
   var method = String(options);
 
   options = $.extend({
@@ -294,7 +316,7 @@ var sortable = function(selector, options) {
 
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
-  return $sortables.each(function() {
+  return $(selector).each(function() {
 
     var $sortable = $(this);
 
@@ -332,7 +354,7 @@ var sortable = function(selector, options) {
     $sortable.data('items', options.items);
     placeholders.push(placeholder);
     if (options.connectWith) {
-      $sortable.data('connectWith', options.connectWith);
+      _data(this, 'connectWith', options.connectWith);
     }
 
     _enableSortable($sortable);
@@ -425,7 +447,7 @@ var sortable = function(selector, options) {
     // TODO: REMOVE placeholder?????
     $(this).add([placeholder]).on('drop.h5s', function(e) {
       var visiblePlaceholder;
-      if (!_listsConnected($sortable, $(dragging).parent())) {
+      if (!_listsConnected($sortable.get(0), dragging.parentElement)) {
         return;
       }
 
@@ -438,7 +460,7 @@ var sortable = function(selector, options) {
 
     // Handle dragover and dragenter events on draggable items
     items.add([this]).on('dragover.h5s dragenter.h5s', function(e) {
-      if (!_listsConnected($sortable, $(dragging).parent())) {
+      if (!_listsConnected($sortable.get(0), dragging.parentElement)) {
         return;
       }
 

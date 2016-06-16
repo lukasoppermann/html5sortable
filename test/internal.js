@@ -80,27 +80,27 @@ describe('Internal function tests', function(){
     $('body').append('<ul class="sortable2"><li>item</li></ul>');
     $ul2 = $('.sortable2').sortable();
     // test same sortable
-    assert.equal(sortable.__testing._listsConnected($ul, $ul), true);
+    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul.get(0)), true);
     // test different sortables without connect with
-    assert.equal(sortable.__testing._listsConnected($ul, $ul2), false);
+    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false);
     // test one list with connectWith & one without
     $ul.sortable('destroy');
     $ul.sortable({
       connectWith: '.test'
     });
-    assert.equal(sortable.__testing._listsConnected($ul, $ul2), false);
+    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false);
     // test not matching connectWith
     $ul2.sortable('destroy');
     $ul2.sortable({
       connectWith: '.test2'
     });
-    assert.equal(sortable.__testing._listsConnected($ul, $ul2), false);
+    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false);
     // test matching connectWith
     $ul2.sortable('destroy');
     $ul2.sortable({
       connectWith: '.test'
     });
-    assert.equal(sortable.__testing._listsConnected($ul, $ul2), true);
+    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), true);
   });
 
   it('_index', function(){
