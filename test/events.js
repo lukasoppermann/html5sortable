@@ -22,25 +22,22 @@ describe('Testing events', function(){
   });
 
   it('should correctly run dragstart event', function(){
+    var event;
     $ul.sortable({
       'items': 'li',
       'connectWith': '.test',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     });
-
-    $li.trigger(jQuery.Event( 'dragstart', {
-      originalEvent: {
-        pageX: 100,
-        pageY: 100,
-        dataTransfer: {
-          setData: function(val){
-            this.data = val;
-          }
-        }
-      },
-      isSimulated: true
-    }));
+    event = sortable.__testing._makeEvent('dragstart');
+    event.pageX = 100;
+    event.pageY = 100;
+    event.dataTransfer = {
+      setData: function(val){
+        this.data = val;
+      }
+    };
+    $li.get(0).dispatchEvent(event);
 
     assert.equal($li.attr('aria-grabbed'),'true');
     assert.isTrue($li.hasClass('test-dragging'));
@@ -61,7 +58,7 @@ describe('Testing events', function(){
       'items': 'li',
       hoverClass: true,
     });
-    $li.trigger( 'mouseover' );
+    $li.get(0).dispatchEvent(sortable.__testing._makeEvent('mouseenter'));
     assert.isTrue($li.hasClass('sortable-over'));
   });
 
@@ -70,7 +67,7 @@ describe('Testing events', function(){
       'items': 'li',
       hoverClass: 'sortable-item-over',
     });
-    $li.trigger( 'mouseover' );
+    $li.get(0).dispatchEvent(sortable.__testing._makeEvent('mouseenter'));
     assert.isTrue($li.hasClass('sortable-item-over'));
   });
 

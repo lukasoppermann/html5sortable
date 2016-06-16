@@ -69,7 +69,7 @@ describe('Internal function tests', function(){
       items: 'li',
       connectWith: '.test'
     });
-    sortable.__testing._removeItemData($ul.find('li'));
+    sortable.__testing._removeItemData($ul.find('li').get());
     var li = $ul.find('li').first();
     assert.isUndefined(li.attr('role'));
     assert.isUndefined(li.attr('draggable'));

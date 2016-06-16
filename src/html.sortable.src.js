@@ -25,10 +25,11 @@ var sortables = [];
  */
 var _data = function(element, key, value) {
   if (value === undefined) {
-    return element && element.h5s && element.h5s[key];
+    return element && element.h5s && element.h5s.data && element.h5s.data[key];
   } else {
     element.h5s = element.h5s || {};
-    element.h5s[key] = value;
+    element.h5s.data = element.h5s.data || {};
+    element.h5s.data[key] = value;
   }
 };
 /**
@@ -36,7 +37,9 @@ var _data = function(element, key, value) {
  * @param {Element} element
  */
 var _removeData = function(element) {
-  delete element.h5s;
+  if (element.h5s) {
+    delete element.h5s.data;
+  }
 };
 /**
  * Filter only wanted nodes
@@ -60,19 +63,49 @@ var _filter = function(nodes, wanted) {
   }
   return result;
 };
+var _on = function(element, event, callback) {
+  if (element instanceof Array) {
+    element.forEach(function(element) {
+      _on(element, event, callback);
+    });
+    return;
+  }
+  if (event.indexOf(' ') !== -1) {
+    event.split(' ').forEach(function(event) {
+      _on(element, event, callback);
+    });
+    return;
+  }
+  element.addEventListener(event, callback);
+  element.h5s = element.h5s || {};
+  element.h5s.events = element.h5s.events || {};
+  element.h5s.events[event] = callback;
+};
+var _off = function(element, event) {
+  if (element instanceof Array) {
+    element.forEach(function(element) {
+      _off(element, event);
+    });
+    return;
+  }
+  if (event.indexOf(' ') !== -1) {
+    event.split(' ').forEach(function(event) {
+      _off(element, event);
+    });
+    return;
+  }
+  if (element.h5s && element.h5s.events && element.h5s.events[event]) {
+    element.removeEventListener(event, element.h5s.events[event]);
+    delete element.h5s.events[event];
+  }
+};
 /*
  * remove event handlers from items
  * @param [jquery Collection] items
  * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeItemEvents = function(items) {
-  items = $(items);
-  items.off('dragstart.h5s');
-  items.off('dragend.h5s');
-  items.off('selectstart.h5s');
-  items.off('dragover.h5s');
-  items.off('dragenter.h5s');
-  items.off('drop.h5s');
+  _off(items, 'dragstart dragend selectstart dragover dragenter drop');
 };
 /*
  * remove event handlers from sortable
@@ -80,10 +113,7 @@ var _removeItemEvents = function(items) {
  * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeSortableEvents = function(sortable) {
-  $(sortable)
-    .off('dragover.h5s')
-    .off('dragenter.h5s')
-    .off('drop.h5s');
+  _off(sortable, 'dragover dragenter drop');
 };
 /*
  * attache ghost to dataTransfer object
@@ -152,10 +182,11 @@ var _removeSortableData = function(sortable) {
  * @param {Array|Element} items
  */
 var _removeItemData = function(items) {
-  items = $(items);
-  items.removeAttr('aria-grabbed');
-  items.removeAttr('draggable');
-  items.removeAttr('role');
+  items.forEach(function(item) {
+    item.removeAttribute('aria-grabbed');
+    item.removeAttribute('draggable');
+    item.removeAttribute('role');
+  });
 };
 /*
  * check if two lists are connected
@@ -178,12 +209,12 @@ var _listsConnected = function(curList, destList) {
 var _destroySortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts') || {};
   var items = _filter(sortableElement.children, opts.items);
-  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
+  var handles = opts.handle ? $(items).find(opts.handle).get() : items;
   // remove event handlers & data from sortable
   _removeSortableEvents(sortableElement);
   _removeSortableData(sortableElement);
   // remove event handlers & data from items
-  handles.off('mousedown.h5s');
+  _off(handles, 'mousedown');
   _removeItemEvents(items);
   _removeItemData(items);
 };
@@ -202,7 +233,7 @@ var _enableSortable = function(sortableElement) {
   // (e.g. click) will be ignored
   var spanEl = (document || window.document).createElement('span');
   if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
-    handles.on('mousedown.h5s', function() {
+    _on(handles.get(), 'mousedown', function() {
       if (items.indexOf(this) !== -1) {
         this.dragDrop();
       } else {
@@ -218,10 +249,12 @@ var _enableSortable = function(sortableElement) {
 var _disableSortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts');
   var items = _filter(sortableElement.children, opts.items);
-  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
+  var handles = opts.handle ? $(items).find(opts.handle).get() : items;
   sortableElement.setAttribute('aria-dropeffect', 'none');
-  handles.attr('draggable', false);
-  handles.off('mousedown.h5s');
+  handles.forEach(function(handle) {
+    handle.setAttribute('draggable', 'false');
+  });
+  _off(handles, 'mousedown');
 };
 /*
  * reload the sortable
@@ -231,10 +264,10 @@ var _disableSortable = function(sortableElement) {
 var _reloadSortable = function(sortableElement) {
   var opts = _data(sortableElement, 'opts');
   var items = _filter(sortableElement.children, opts.items);
-  var handles = opts.handle ? $(items).find(opts.handle) : $(items);
+  var handles = opts.handle ? $(items).find(opts.handle).get() : items;
   // remove event handlers from items
   _removeItemEvents(items);
-  handles.off('mousedown.h5s');
+  _off(handles, 'mousedown');
   // remove event handlers from sortable
   _removeSortableEvents(sortableElement);
 };
@@ -371,8 +404,8 @@ var sortable = function(selector, options) {
       var id = sortables.length;
       sortables[id] = sortableElement;
       sortableElement.setAttribute('data-sortable-id', id);
-      items.forEach(function(i) {
-        i.setAttribute('data-item-sortable-id', id);
+      items.forEach(function(item) {
+        item.setAttribute('data-item-sortable-id', id);
       });
     }
 
@@ -383,9 +416,9 @@ var sortable = function(selector, options) {
     }
 
     _enableSortable(sortableElement);
-    items.forEach(function(i) {
-      i.setAttribute('role', 'option');
-      i.setAttribute('aria-grabbed', 'false');
+    items.forEach(function(item) {
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-grabbed', 'false');
     });
 
     // Mouse over class
@@ -395,19 +428,20 @@ var sortable = function(selector, options) {
         hoverClass = options.hoverClass;
       }
 
-      $(items).hover(function() {
+      _on(items, 'mouseenter', function() {
         this.classList.add(hoverClass);
-      }, function() {
+      });
+      _on(items, 'mouseleave', function() {
         this.classList.remove(hoverClass);
       });
     }
 
     // Handle drag events on draggable items
-    $(items).on('dragstart.h5s', function(e) {
+    _on(items, 'dragstart', function(e) {
       e.stopImmediatePropagation();
 
       if (options.dragImage) {
-        _attachGhost(e.originalEvent, {
+        _attachGhost(e, {
           item: options.dragImage,
           x: 0,
           y: 0
@@ -416,7 +450,7 @@ var sortable = function(selector, options) {
         ' and will be removed in the future!');
       } else {
         // add transparent clone or other ghost to cursor
-        _getGhost(e.originalEvent, $(this), options.dragImage);
+        _getGhost(e, $(this), options.dragImage);
       }
       // cache selsection & add attr for dragging
       this.classList.add(options.draggingClass);
@@ -436,7 +470,7 @@ var sortable = function(selector, options) {
       );
     });
     // Handle drag events on draggable items
-    $(items).on('dragend.h5s', function() {
+    _on(items, 'dragend', function() {
       var newParent;
       if (!dragging) {
         return;
@@ -473,70 +507,68 @@ var sortable = function(selector, options) {
     });
     // Handle drop event on sortable & placeholder
     // TODO: REMOVE placeholder?????
-    $(sortableElement).add([placeholder]).on('drop.h5s', function(e) {
+    _on([sortableElement, placeholder], 'drop', function(e) {
       var visiblePlaceholder;
       if (!_listsConnected(sortableElement, dragging.parentElement)) {
         return;
       }
 
+      e.preventDefault();
       e.stopPropagation();
       visiblePlaceholder = placeholders.filter(_attached)[0];
       _after(visiblePlaceholder, dragging);
       dragging.dispatchEvent(_makeEvent('dragend'));
-      return false;
     });
 
     // Handle dragover and dragenter events on draggable items
-    $(items)
-      .add([sortableElement])
-      .on('dragover.h5s dragenter.h5s', function(e) {
-        if (!_listsConnected(sortableElement, dragging.parentElement)) {
-          return;
+    _on(items.concat(sortableElement), 'dragover dragenter', function(e) {
+      if (!_listsConnected(sortableElement, dragging.parentElement)) {
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = 'move';
+      if (items.indexOf(this) !== -1) {
+        var thisHeight = parseInt(window.getComputedStyle(this).height);
+        var placeholderIndex = _index(placeholder);
+        var thisIndex = _index(this);
+        if (options.forcePlaceholderSize) {
+          placeholder.style.height = draggingHeight + 'px';
         }
 
-        e.preventDefault();
-        e.originalEvent.dataTransfer.dropEffect = 'move';
-        if (items.indexOf(this) !== -1) {
-          var thisHeight = parseInt(window.getComputedStyle(this).height);
-          var placeholderIndex = _index(placeholder);
-          var thisIndex = _index(this);
-          if (options.forcePlaceholderSize) {
-            placeholder.style.height = draggingHeight + 'px';
+        // Check if `this` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
+        if (thisHeight > draggingHeight) {
+          // Dead zone?
+          var deadZone = thisHeight - draggingHeight;
+          var offsetTop = $(this).offset().top;
+          if (placeholderIndex < thisIndex &&
+              e.pageY < offsetTop + deadZone) {
+            return;
           }
+          if (placeholderIndex > thisIndex &&
+              e.pageY > offsetTop + thisHeight - deadZone) {
+            return;
+          }
+        }
 
-          // Check if `this` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
-          if (thisHeight > draggingHeight) {
-            // Dead zone?
-            var deadZone = thisHeight - draggingHeight;
-            var offsetTop = $(this).offset().top;
-            if (placeholderIndex < thisIndex &&
-                e.originalEvent.pageY < offsetTop + deadZone) {
-              return false;
-            }
-            if (placeholderIndex > thisIndex &&
-                e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
-              return false;
-            }
-          }
-
-          dragging.style.display = 'none';
-          if (placeholderIndex < thisIndex) {
-            _after(this, placeholder);
-          } else {
-            _before(this, placeholder);
-          }
-          placeholders
-            .filter(function(element) {return element !== placeholder;})
-            .forEach(_detach);
+        dragging.style.display = 'none';
+        if (placeholderIndex < thisIndex) {
+          _after(this, placeholder);
         } else {
-          if (placeholders.indexOf(this) === -1 &&
-            !_filter(this.children, options.items).length) {
-            placeholders.forEach(_detach);
-            this.appendChild(placeholder);
-          }
+          _before(this, placeholder);
         }
-        return false;
-      });
+        placeholders
+          .filter(function(element) {return element !== placeholder;})
+          .forEach(_detach);
+      } else {
+        if (placeholders.indexOf(this) === -1 &&
+          !_filter(this.children, options.items).length) {
+          placeholders.forEach(_detach);
+          this.appendChild(placeholder);
+        }
+      }
+    });
   });
 };
 
@@ -568,7 +600,8 @@ sortable.__testing = {
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
   _makeGhost: _makeGhost,
-  _index: _index
+  _index: _index,
+  _makeEvent: _makeEvent
 };
 module.exports = sortable;
 /* end-testing */

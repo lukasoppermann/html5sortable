@@ -66,23 +66,23 @@ describe('Testing api', function(){
 
     it('sortable should have correct event attached', function(){
       // general jQuery event object
-      assert.isDefined(jQuery._data($ul[0], 'events'));
+      assert.isDefined($ul[0].h5s.events);
       // individual events
-      assert.isDefined(jQuery._data($ul[0], 'events').hasOwnProperty('dragover'));
-      assert.isDefined(jQuery._data($ul[0], 'events').hasOwnProperty('dragenter'));
-      assert.isDefined(jQuery._data($ul[0], 'events').hasOwnProperty('drop'));
+      assert.isDefined($ul[0].h5s.events.hasOwnProperty('dragover'));
+      assert.isDefined($ul[0].h5s.events.hasOwnProperty('dragenter'));
+      assert.isDefined($ul[0].h5s.events.hasOwnProperty('drop'));
     });
 
     it('sortable item should have correct event attached', function(){
       // general jQuery event object
-      assert.isDefined($._data($li[0], 'events'));
+      assert.isDefined($li[0].h5s.events);
       // individual events
-      assert.isDefined($._data($li[0], 'events').hasOwnProperty('dragover'));
-      assert.isDefined($._data($li[0], 'events').hasOwnProperty('dragenter'));
-      assert.isDefined($._data($li[0], 'events').hasOwnProperty('drop'));
-      assert.isDefined($._data($li[0], 'events').hasOwnProperty('dragstart'));
-      assert.isDefined($._data($li[0], 'events').hasOwnProperty('dragend'));
-      assert.isDefined($._data($li[0], 'events').hasOwnProperty('selectstart'));
+      assert.isDefined($li[0].h5s.events.hasOwnProperty('dragover'));
+      assert.isDefined($li[0].h5s.events.hasOwnProperty('dragenter'));
+      assert.isDefined($li[0].h5s.events.hasOwnProperty('drop'));
+      assert.isDefined($li[0].h5s.events.hasOwnProperty('dragstart'));
+      assert.isDefined($li[0].h5s.events.hasOwnProperty('dragend'));
+      assert.isDefined($li[0].h5s.events.hasOwnProperty('selectstart'));
     });
 
     it('string placehodler', function() {
@@ -192,9 +192,9 @@ describe('Testing api', function(){
 
     it('should remove mousedown event', function(){
       var handle = $ul.find(sortable.__testing._data($ul.get(0), 'items')).first();
-      assert.isDefined($._data(handle[0], 'events'));
-      assert.isFalse($._data(handle[0], 'events').hasOwnProperty('mousedown'));
-      assert.isFalse($._data(handle[0], 'events').hasOwnProperty('mousedown.h5s'));
+      assert.isDefined(handle[0].h5s.events);
+      assert.isFalse(handle[0].h5s.events.hasOwnProperty('mousedown'));
+      assert.isFalse(handle[0].h5s.events.hasOwnProperty('mousedown.h5s'));
     });
 
   });
@@ -223,9 +223,9 @@ describe('Testing api', function(){
 
     it('should remove mousedown event', function(){
       var handle = $ul.find(sortable.__testing._data($ul.get(0), 'items')).first();
-      assert.isDefined($._data(handle[0], 'events'));
-      assert.isDefined($._data(handle[0], 'events').hasOwnProperty('mousedown'));
-      assert.isDefined($._data(handle[0], 'events').hasOwnProperty('mousedown.h5s'));
+      assert.isDefined(handle[0].h5s.events);
+      assert.isDefined(handle[0].h5s.events.hasOwnProperty('mousedown'));
+      assert.isDefined(handle[0].h5s.events.hasOwnProperty('mousedown.h5s'));
     });
 
   });
