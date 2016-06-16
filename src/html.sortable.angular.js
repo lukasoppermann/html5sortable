@@ -48,8 +48,10 @@
 
               nativeElements[0].addEventListener('sortupdate', function(e) {
                 var data = e.detail;
-                var $source = data.startparent.attr('ng-model') || data.startparent.attr('data-ng-model');
-                var $dest   = data.endparent.attr('ng-model') || data.endparent.attr('data-ng-model');
+                var $source = data.startparent.attr('ng-model') ||
+                    data.startparent.attr('data-ng-model');
+                var $dest   = data.endparent.attr('ng-model') ||
+                    data.endparent.attr('data-ng-model');
 
                 var $sourceModel = $parse($source);
                 var $destModel = $parse($dest);
