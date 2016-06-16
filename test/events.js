@@ -5,6 +5,7 @@ describe('Testing events', function(){
   GLOBAL.window = GLOBAL.document.defaultView;
   GLOBAL.$ = require('jquery');
   var $ul;
+  var ul;
   var sortable = require("../src/html.sortable.src.js");
   var resetSortable = function(){
     $('body').html('').append('<ul class="sortable">'+
@@ -13,6 +14,7 @@ describe('Testing events', function(){
       '<li class="item">Item 3</li>'+
       '</ul>');
     $ul = $('.sortable');
+    ul = $ul.get();
     $lis = $ul.find('li');
   };
 
@@ -23,7 +25,7 @@ describe('Testing events', function(){
 
   it('should correctly run dragstart event', function(){
     var event;
-    $ul.sortable({
+    sortable(ul, {
       'items': 'li',
       'connectWith': '.test',
       placeholderClass: 'test-placeholder',
@@ -45,7 +47,7 @@ describe('Testing events', function(){
   });
 
   it('should not add class on hover event', function(){
-    $ul.sortable({
+    sortable(ul, {
       'items': 'li',
       hoverClass: false,
     });
@@ -54,7 +56,7 @@ describe('Testing events', function(){
   });
 
   it('should correctly add class on hover event', function(){
-    $ul.sortable({
+    sortable(ul, {
       'items': 'li',
       hoverClass: true,
     });
@@ -63,7 +65,7 @@ describe('Testing events', function(){
   });
 
   it('should correctly add class on hover event', function(){
-    $ul.sortable({
+    sortable(ul, {
       'items': 'li',
       hoverClass: 'sortable-item-over',
     });

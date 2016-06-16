@@ -1,15 +1,15 @@
-HTML5 Sortable jQuery Plugin
+HTML5 Sortable library
 ============================
 
 [![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/voidberg/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases) ![Bower](https://img.shields.io/bower/v/html.sortable.svg?style=flat-square) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 
-> **Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.**
+> **Lightweight standalone library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
 ## Features
 * Less than 1KB (minified and gzipped).
 * Built using native HTML5 drag and drop API.
 * Supports both list and grid style layouts.
-* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera), IE9+
+* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera), IE10+
 * Supports exports as AMD, CommonJS or global
 * Comes with an AngularJS directive [help wanted](#angularjs-usage)
 
@@ -60,7 +60,7 @@ npm test
 Use `sortable` method to create a sortable list:
 
 ``` javascript
-$('.sortable').sortable();
+sortable('.sortable');
 ```
 
 ## Styling
@@ -68,25 +68,26 @@ $('.sortable').sortable();
 Use `.sortable-placeholder` CSS selectors to change the styles of the placeholder. You may change the class by setting the `placeholderClass` option in the config object.
 
 ``` javascript
-$('.sortable').sortable({
+sortable('.sortable', {
   placeholderClass: 'my-placeholder fade'
 });
 ```
 
 ## Events
+NOTE: Events can be listened on any element from the group (when using `connectWith`), since the same event will be dispatched on all of them.
 
 ### sortstart
 Use `sortstart` event if you want to do something when sorting starts:
 
 ``` javascript
-$('.sortable').sortable().bind('sortstart', function(e, ui) {
+sortable('.sortable')[0].addEventListener('sortstart', function(e) {
     /*
 
     This event is triggered when the user starts sorting and the DOM position has not yet changed.
 
-    ui.item contains the current dragged element
-    ui.placeholder contains the placeholder element
-    ui.startparent contains the element that the dragged item comes from
+    e.detail.item contains the current dragged element
+    e.detail.placeholder contains the placeholder element
+    e.detail.startparent contains the element that the dragged item comes from
 
     */
 });
@@ -96,13 +97,13 @@ $('.sortable').sortable().bind('sortstart', function(e, ui) {
 Use the `sortstop` event if you want to do something when sorting stops:
 
 ``` javascript
-$('.sortable').sortable().bind('sortstop', function(e, ui) {
+sortable('.sortable')[0].addEventListener('sortstop', function(e) {
     /*
 
     This event is triggered when the user stops sorting. The DOM position may have changed.
 
-    ui.item contains the element that was dragged.
-    ui.startparent contains the element that the dragged item came from.
+    e.detail.item contains the element that was dragged.
+    e.detail.startparent contains the element that the dragged item came from.
 
     */
 });
@@ -113,18 +114,18 @@ $('.sortable').sortable().bind('sortstop', function(e, ui) {
 Use `sortupdate` event if you want to do something when the order changes (e.g. storing the new order):
 
 ``` javascript
-$('.sortable').sortable().bind('sortupdate', function(e, ui) {
+sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
     /*
 
     This event is triggered when the user stopped sorting and the DOM position has changed.
 
-    ui.item contains the current dragged element.
-    ui.index contains the new index of the dragged element (considering only list items)
-    ui.oldindex contains the old index of the dragged element (considering only list items)
-    ui.elementIndex contains the new index of the dragged element (considering all items within sortable)
-    ui.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
-    ui.startparent contains the element that the dragged item comes from
-    ui.endparent contains the element that the dragged item was added to (new parent)
+    e.detail.item contains the current dragged element.
+    e.detail.index contains the new index of the dragged element (considering only list items)
+    e.detail.oldindex contains the old index of the dragged element (considering only list items)
+    e.detail.elementIndex contains the new index of the dragged element (considering all items within sortable)
+    e.detail.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
+    e.detail.startparent contains the element that the dragged item comes from
+    e.detail.endparent contains the element that the dragged item was added to (new parent)
 
     */
 });
@@ -133,10 +134,10 @@ $('.sortable').sortable().bind('sortupdate', function(e, ui) {
 ## Options
 
 ### items
-Use `items` option to specifiy which items inside the element should be sortable:
+Use `items` option to specify which items inside the element should be sortable:
 
 ``` javascript
-$('.sortable').sortable({
+sortable('.sortable', {
     items: ':not(.disabled)'
 });
 ```
@@ -144,7 +145,7 @@ $('.sortable').sortable({
 Use `handle` option to restrict drag start to the specified element:
 
 ``` javascript
-$('.sortable').sortable({
+sortable('.sortable', {
     handle: 'h2'
 });
 ```
@@ -152,7 +153,7 @@ $('.sortable').sortable({
 Setting `forcePlaceholderSize` option to true, forces the placeholder to have a height:
 
 ``` javascript
-$('.sortable').sortable({
+sortable('.sortable', {
     forcePlaceholderSize: true
 });
 ```
@@ -161,7 +162,7 @@ $('.sortable').sortable({
 Use `connectWith` option to create connected lists:
 
 ``` javascript
-$('.js-sortable, .js-second-sortable').sortable({
+sortable('.js-sortable, .js-second-sortable', {
     connectWith: 'connected' // unique string, which is not used for other connectWith sortables
 });
 ```
@@ -170,7 +171,7 @@ $('.js-sortable, .js-second-sortable').sortable({
 Use `placeholder` option to specify the markup of the placeholder:
 
 ``` javascript
-$('.sortable').sortable({
+sortable('.sortable', {
   items: 'tr' ,
   placeholder: '<tr><td colspan="7">&nbsp;</td></tr>'
 });
@@ -180,7 +181,7 @@ $('.sortable').sortable({
 Use `hoverClass` option to specify applying a css class to the hovered element rather than relying on `:hover`. This can eliminate some potential drag and drop issues where another element thinks it is being hovered over.
 
 ``` javascript
-$('.sortable').sortable({
+sortable('.sortable', {
   hoverClass: 'is-hovered' // Defaults to false
 });
 ```
@@ -191,28 +192,28 @@ $('.sortable').sortable({
 To remove the sortable functionality completely:
 
 ``` javascript
-$('.sortable').sortable('destroy');
+sortable('.sortable', 'destroy');
 ```
 
 ### disable
 To disable the sortable temporarily:
 
 ``` javascript
-$('.sortable').sortable('disable');
+sortable('.sortable', 'disable');
 ```
 
 ### enable
 To enable a disabled sortable:
 
 ``` javascript
-$('.sortable').sortable('enable');
+sortable('.sortable', 'enable');
 ```
 
 ### reload
 When you add a new item to a sortable, it will not automatically be a draggable item, so you will need to reinit the sortable. Your previously added options will be preserved.
 
 ``` javascript
-$('.sortable').sortable();
+sortable('.sortable');
 ```
 
 ## Sorting table rows
@@ -266,7 +267,7 @@ Every function should have a docblock above stating what the function does and w
 ```javascript
 /*
 * remove event handlers from sortable
-* @param: {jQuery collection} sortable
+* @param: {Element} sortable
 */
 ```
 
@@ -297,10 +298,10 @@ Lastly, less character per line, mean less potential merge conflicts.
 ### Don’t use multiple var declaration (except for-loop)
 ```javascript
 BAD:
-var $sortable = $(this), index, placeholder;
+var sortableElement = this, index, placeholder;
 
 Good:
-var $sortable = $(this);
+var sortableElement = this;
 var index;
 var placeholder;
 ```
@@ -311,22 +312,14 @@ Additionally this helps when merging PRs.
 ### Don’t use chaining
 ```javascript
 BAD:
-var $item = $(this).attr(‘draggable’, method === ‘enable’);
+var foo = bar.filter(placeholders).map(baz);
 
 Good:
-var $item = $(this);
-$item.attr(‘draggable’, method === ‘enable’);
+var foo = bar.filter(placeholders);
+foo = foo.map(baz);
 ```
 
-jQuery makes it easy to chain things together, while this can be a nice feature it makes the code less maintainable, harder to read and harder to understand. **Don’t use chaining**.
-
-### jQuery Collections should be prefix with a $
-
-```javascript
-var $sortable = $(this);
-```
-
-The prefixing of variables that store jQuery collection ensures that developers have an easy time differentiating between jQuery collections and other variables.
+While this can be a nice feature it makes the code less maintainable, harder to read and harder to understand. **Don’t use chaining**.
 
 ### Don’t use else if, try to avoid else
 ```javascript

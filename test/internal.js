@@ -5,52 +5,59 @@ describe('Internal function tests', function(){
   GLOBAL.window = GLOBAL.document.defaultView;
   GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
   var sortable = require("../src/html.sortable.src.js");
+  var $ul;
+  var ul;
+  var $li;
+  var li;
 
   beforeEach(function(){
     $('body').html('').append('<ul class="sortable"><li>item</li></ul>');
-    $('.sortable').sortable('destroy');
-    $ul = $('.sortable').sortable();
+    $ul = $('.sortable');
+    ul = $ul.get();
+    sortable(ul, 'destroy');
+    sortable(ul);
     $li = $ul.find('li').first();
+    li = $li.get(0);
   });
 
   it('_removeSortableEvents', function(){
     // remove general jQuery event object
-    sortable.__testing._removeSortableEvents($ul);
-    assert.isUndefined(jQuery._data($ul[0], 'events'));
+    sortable.__testing._removeSortableEvents(ul);
+    assert.isUndefined(ul.h5s && ul.h5s.events);
     // remove individual events
     // need to add on click so that event object is not removed
     // when all sortable events are removed
-    $ul.sortable();
+    sortable(ul);
     $ul.on('click', 'console.log');
-    sortable.__testing._removeSortableEvents($ul);
-    assert.isFalse(jQuery._data($ul[0], 'events').hasOwnProperty('dragover'));
-    assert.isFalse(jQuery._data($ul[0], 'events').hasOwnProperty('dragenter'));
-    assert.isFalse(jQuery._data($ul[0], 'events').hasOwnProperty('drop'));
+    sortable.__testing._removeSortableEvents(ul);
+    assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('dragover'));
+    assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('dragenter'));
+    assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('drop'));
   });
 
   it('_removeItemEvents', function(){
     // remove general jQuery event object
-    sortable.__testing._removeItemEvents($li);
-    assert.isUndefined(jQuery._data($li[0], 'events'));
+    sortable.__testing._removeItemEvents(li);
+    assert.deepEqual(li.h5s.events, {});
     // remove individual events
     // need to add on click so that event object is not removed
     // when all sortable events are removed
-    $ul.sortable();
+    sortable(ul);
     $li.on('click', 'console.log');
-    sortable.__testing._removeItemEvents($li);
+    sortable.__testing._removeItemEvents(li);
     // test individual events
-    assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragover'));
-    assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragenter'));
-    assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('drop'));
-    assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragstart'));
-    assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('dragend'));
-    assert.isFalse(jQuery._data($li[0], 'events').hasOwnProperty('mousedown'));
+    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragover'));
+    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragenter'));
+    assert.isFalse((li.h5s.events || {}).hasOwnProperty('drop'));
+    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragstart'));
+    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragend'));
+    assert.isFalse((li.h5s.events || {}).hasOwnProperty('mousedown'));
   });
 
   it('_removeSortableData', function(){
     // destroy, so it does not use old values
-    $ul.sortable('destroy');
-    $ul.sortable({
+    sortable(ul, 'destroy');
+    sortable(ul, {
       items: 'li',
       connectWith: '.test'
     });
@@ -64,8 +71,8 @@ describe('Internal function tests', function(){
 
   it('_removeItemData', function(){
     // destroy, so it does not use old values
-    $ul.sortable('destroy');
-    $ul.sortable({
+    sortable(ul, 'destroy');
+    sortable(ul, {
       items: 'li',
       connectWith: '.test'
     });
@@ -78,26 +85,27 @@ describe('Internal function tests', function(){
 
   it('_listsConnected', function(){
     $('body').append('<ul class="sortable2"><li>item</li></ul>');
-    $ul2 = $('.sortable2').sortable();
+    $ul2 = $('.sortable2');
+    sortable($ul2.get());
     // test same sortable
     assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul.get(0)), true);
     // test different sortables without connect with
     assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false);
     // test one list with connectWith & one without
-    $ul.sortable('destroy');
-    $ul.sortable({
+    sortable(ul, 'destroy');
+    sortable(ul, {
       connectWith: '.test'
     });
     assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false);
     // test not matching connectWith
-    $ul2.sortable('destroy');
-    $ul2.sortable({
+    sortable($ul2.get(), 'destroy');
+    sortable($ul2.get(), {
       connectWith: '.test2'
     });
     assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false);
     // test matching connectWith
-    $ul2.sortable('destroy');
-    $ul2.sortable({
+    sortable($ul2.get(), 'destroy');
+    sortable($ul2.get(), {
       connectWith: '.test'
     });
     assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), true);

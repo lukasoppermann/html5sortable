@@ -1,10 +1,10 @@
 /*
- * HTML5 Sortable jQuery Plugin
+ * HTML5 Sortable library
  * https://github.com/voidberg/html5sortable
  *
  * Original code copyright 2012 Ali Farhadi.
  * This version is mantained by Alexandru Badiu <andu@ctrlz.ro> & Lukas Oppermann <lukas@vea.re>
- *
+ * jQuery-independent implementation by Nazar Mokrynskyi <nazar@mokrynskyi.com>
  *
  * Released under the MIT license.
  */
@@ -81,16 +81,19 @@ var _filter = function(nodes, wanted) {
  * @param {Function} callback
  */
 var _on = function(element, event, callback) {
+  var i;
+  var events;
+
   if (element instanceof Array) {
-    element.forEach(function(element) {
-      _on(element, event, callback);
-    });
+    for (i = 0; i < element.length; ++i) {
+      _on(element[i], event, callback);
+    }
     return;
   }
   if (event.indexOf(' ') !== -1) {
-    event.split(' ').forEach(function(event) {
-      _on(element, event, callback);
-    });
+    for (i = 0, events = event.split(' '); i < events.length; ++i) {
+      _on(element, events[i], callback);
+    }
     return;
   }
   element.addEventListener(event, callback);
@@ -103,16 +106,19 @@ var _on = function(element, event, callback) {
  * @param {Array|string} event
  */
 var _off = function(element, event) {
+  var i;
+  var events;
+
   if (element instanceof Array) {
-    element.forEach(function(element) {
-      _off(element, event);
-    });
+    for (i = 0; i < element.length; ++i) {
+      _off(element[i], event);
+    }
     return;
   }
   if (event.indexOf(' ') !== -1) {
-    event.split(' ').forEach(function(event) {
-      _off(element, event);
-    });
+    for (i = 0, events = event.split(' '); i < events.length; ++i) {
+      _off(element, events[i]);
+    }
     return;
   }
   if (element.h5s && element.h5s.events && element.h5s.events[event]) {
@@ -127,9 +133,9 @@ var _off = function(element, event) {
  */
 var _attr = function(element, attribute, value) {
   if (element instanceof Array) {
-    element.forEach(function(element) {
-      _attr(element, attribute, value);
-    });
+    for (var i = 0; i < element.length; ++i) {
+      _attr(element[i], attribute, value);
+    }
     return;
   }
   element.setAttribute(attribute, value);
@@ -140,9 +146,9 @@ var _attr = function(element, attribute, value) {
  */
 var _removeAttr = function(element, attribute) {
   if (element instanceof Array) {
-    element.forEach(function(element) {
-      _removeAttr(element, attribute);
-    });
+    for (var i = 0; i < element.length; ++i) {
+      _removeAttr(element[i], attribute);
+    }
     return;
   }
   element.removeAttribute(attribute);
@@ -161,8 +167,7 @@ var _offset = function(element) {
 };
 /*
  * remove event handlers from items
- * @param [jquery Collection] items
- * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
+ * @param {Array|NodeList} items
  */
 var _removeItemEvents = function(items) {
   _off(items, 'dragstart dragend selectstart dragover dragenter drop');
@@ -170,7 +175,6 @@ var _removeItemEvents = function(items) {
 /*
  * remove event handlers from sortable
  * @param {Element} sortable a single sortable
- * @info event.h5s (jquery way of namespacing events, to bind multiple handlers to the event)
  */
 var _removeSortableEvents = function(sortable) {
   _off(sortable, 'dragover dragenter drop');
@@ -266,7 +270,7 @@ var _getHandles = function(items, handle) {
   }
   for (var i = 0; i < items.length; ++i) {
     handles = items[i].querySelectorAll(handle);
-    result = result.concat([].splice.call(handles));
+    result = result.concat([].slice.call(handles));
   }
   return result;
 };
@@ -421,11 +425,23 @@ var _makeEvent = function(name, detail) {
   e.initEvent(name, false, true);
   return e;
 };
+/**
+ * @param {Element} sortableElement
+ * @param {CustomEvent} event
+ */
+var _dispatchEventOnConnected = function(sortableElement, event) {
+  sortables.forEach(function(target) {
+    if (_listsConnected(sortableElement, target)) {
+      target.dispatchEvent(event);
+    }
+  });
+};
 /*
  * public sortable object
- * @param [object|string] options|method
+ * @param {Array|NodeList} sortableElements
+ * @param {object|string} options|method
  */
-var sortable = function(selector, options) {
+var sortable = function(sortableElements, options) {
 
   var method = String(options);
 
@@ -446,11 +462,19 @@ var sortable = function(selector, options) {
     return result;
   })(options);
 
+  if (typeof sortableElements === 'string') {
+    sortableElements = document.querySelectorAll(sortableElements);
+  }
+
+  if (sortableElements instanceof window.Element) {
+    sortableElements = [sortableElements];
+  }
+
+  sortableElements = [].slice.call(sortableElements);
+
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
-  return $(selector).each(function() {
-
-    var sortableElement = this;
+  sortableElements.forEach(function(sortableElement) {
 
     if (/enable|disable|destroy/.test(method)) {
       sortable[method](sortableElement);
@@ -473,7 +497,10 @@ var sortable = function(selector, options) {
       );
     }
     placeholder = _html2element(placeholder);
-    placeholder.classList.add(options.placeholderClass);
+    placeholder.classList.add.apply(
+      placeholder.classList,
+      options.placeholderClass.split(' ')
+    );
 
     // setup sortable ids
     if (!sortableElement.getAttribute('data-sortable-id')) {
@@ -514,7 +541,7 @@ var sortable = function(selector, options) {
 
       if (options.dragImage) {
         _attachGhost(e, {
-          item: options.dragImage,
+          draggedItem: options.dragImage,
           x: 0,
           y: 0
         });
@@ -532,14 +559,12 @@ var sortable = function(selector, options) {
       index = _index(dragging);
       draggingHeight = parseInt(window.getComputedStyle(dragging).height);
       startParent = this.parentElement;
-      // trigger sortstar update
-      dragging.parentElement.dispatchEvent(
-        _makeEvent('sortstart', {
-          item: dragging,
-          placeholder: placeholder,
-          startparent: startParent
-        })
-      );
+      // dispatch sortstart event on each element in group
+      _dispatchEventOnConnected(sortableElement, _makeEvent('sortstart', {
+        item: dragging,
+        placeholder: placeholder,
+        startparent: startParent
+      }));
     });
     // Handle drag events on draggable items
     _on(items, 'dragend', function() {
@@ -554,25 +579,21 @@ var sortable = function(selector, options) {
 
       placeholders.forEach(_detach);
       newParent = this.parentElement;
-      dragging.parentElement.dispatchEvent(
-        _makeEvent('sortstop', {
-          item: dragging,
-          startparent: startParent
-        })
-      );
+      _dispatchEventOnConnected(sortableElement, _makeEvent('sortstop', {
+        item: dragging,
+        startparent: startParent
+      }));
       if (index !== _index(dragging) || startParent !== newParent) {
-        dragging.parentElement.dispatchEvent(
-          _makeEvent('sortupdate', {
-            item: dragging,
-            index: _filter(newParent.children, _data(newParent, 'items'))
-              .indexOf(dragging),
-            oldindex: items.indexOf(dragging),
-            elementIndex: _index(dragging),
-            oldElementIndex: index,
-            startparent: startParent,
-            endparent: newParent
-          })
-        );
+        _dispatchEventOnConnected(sortableElement, _makeEvent('sortupdate', {
+          item: dragging,
+          index: _filter(newParent.children, _data(newParent, 'items'))
+            .indexOf(dragging),
+          oldindex: items.indexOf(dragging),
+          elementIndex: _index(dragging),
+          oldElementIndex: index,
+          startparent: startParent,
+          endparent: newParent
+        }));
       }
       dragging = null;
       draggingHeight = null;
@@ -630,6 +651,7 @@ var sortable = function(selector, options) {
         } else {
           _before(this, placeholder);
         }
+        // Intentionally violated chaining, it is more complex otherwise
         placeholders
           .filter(function(element) {return element !== placeholder;})
           .forEach(_detach);
@@ -642,6 +664,8 @@ var sortable = function(selector, options) {
       }
     });
   });
+
+  return sortableElements;
 };
 
 sortable.destroy = function(sortableElement) {
@@ -656,9 +680,6 @@ sortable.disable = function(sortableElement) {
   _disableSortable(sortableElement);
 };
 
-$.fn.sortable = function(options) {
-  return sortable(this, options);
-};
 /* start-testing */
 sortable.__testing = {
   // add internal methods here for testing purposes

@@ -1,8 +1,9 @@
 /*
- * AngularJS integration with the HTML5 Sortable jQuery Plugin
+ * AngularJS integration with the HTML5 Sortable library
  * https://github.com/voidberg/html5sortable
  *
  * Copyright 2013, Alexandru Badiu <andu@ctrlz.ro>
+ * jQuery-independent implementation by Nazar Mokrynskyi <nazar@mokrynskyi.com>
  *
  * Thanks to the following contributors: samantp.
  *
@@ -21,30 +22,32 @@
             var opts;
             var model;
             var scallback = angular.noop;
+            var nativeElements = [].slice.call(element);
 
             if (attrs.htmlSortableCallback) {
               scallback = $parse(attrs.htmlSortableCallback);
             }
 
             opts = angular.extend({}, scope.$eval(attrs.htmlSortable));
-            element.sortable(opts);
+            sortable(nativeElements, opts); // jshint ignore:line
 
             if (ngModel) {
               model = $parse(attrs.ngModel);
 
               ngModel.$render = function() {
                 $timeout(function() {
-                  element.sortable('reload');
+                  sortable(nativeElements, 'reload'); // jshint ignore:line
                 }, 50);
               };
 
               scope.$watch(model, function() {
                 $timeout(function() {
-                  element.sortable('reload');
+                  sortable(nativeElements, 'reload'); // jshint ignore:line
                 }, 50);
               }, true);
 
-              element.sortable().bind('sortupdate', function(e, data) {
+              nativeElements[0].addEventListener('sortupdate', function(e) {
+                var data = e.detail;
                 var $source = data.startparent.attr('ng-model') || data.startparent.attr('data-ng-model');
                 var $dest   = data.endparent.attr('ng-model') || data.endparent.attr('data-ng-model');
 

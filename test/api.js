@@ -5,6 +5,7 @@ describe('Testing api', function(){
   GLOBAL.window = GLOBAL.document.defaultView;
   GLOBAL.$ = require('jquery');
   var $ul;
+  var ul;
   var sortable = require("../src/html.sortable.src.js");
   var resetSortable = function(){
     $('body').html('').append('<ul class="sortable">'+
@@ -13,13 +14,14 @@ describe('Testing api', function(){
       '<li class="item">Item 3</li>'+
       '</ul>');
     $ul = $('.sortable');
+    ul = $ul.get();
     $lis = $ul.find('li');
   };
 
   describe('Initialization ', function(){
     beforeEach(function(){
       resetSortable();
-      $ul.sortable({
+      sortable(ul, {
         'items': 'li',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder',
@@ -87,7 +89,7 @@ describe('Testing api', function(){
 
     it('string placehodler', function() {
       resetSortable();
-      $ul.sortable({
+      sortable(ul, {
         'items': 'li',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder',
@@ -102,11 +104,11 @@ describe('Testing api', function(){
   describe('Destroy', function(){
     beforeEach(function(){
       resetSortable();
-      $ul.sortable({
+      sortable(ul, {
         'items': 'li',
         'connectWith': '.test'
       });
-      $ul.sortable('destroy');
+      sortable(ul, 'destroy');
     });
 
     it('should not have a data-opts object', function(){
@@ -142,12 +144,12 @@ describe('Testing api', function(){
   describe('Reload', function(){
     before(function(){
       resetSortable();
-      $ul.sortable({
+      sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       });
-      $ul.sortable('reload');
+      sortable(ul, 'reload');
     });
 
     it('should keep the options of the sortable', function(){
@@ -172,12 +174,12 @@ describe('Testing api', function(){
   describe('Disable', function(){
     before(function(){
       resetSortable();
-      $ul.sortable({
+      sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       });
-      $ul.sortable('disable');
+      sortable(ul, 'disable');
     });
 
     it('should remove attributes from sortable', function(){
@@ -202,13 +204,13 @@ describe('Testing api', function(){
   describe('Enable', function(){
     before(function(){
       resetSortable();
-      $ul.sortable({
+      sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       });
-      $ul.sortable('disable');
-      $ul.sortable('enable');
+      sortable(ul, 'disable');
+      sortable(ul, 'enable');
     });
 
     it('should readd attributes to sortable', function(){
