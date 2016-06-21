@@ -62,7 +62,7 @@ switch (true) {
  */
 var _filter = function(nodes, wanted) {
   if (!wanted) {
-    return [].slice.call(nodes);
+    return Array.prototype.slice.call(nodes);
   }
   var result = [];
   for (var i = 0; i < nodes.length; ++i) {
@@ -270,7 +270,7 @@ var _getHandles = function(items, handle) {
   }
   for (var i = 0; i < items.length; ++i) {
     handles = items[i].querySelectorAll(handle);
-    result = result.concat([].slice.call(handles));
+    result = result.concat(Array.prototype.slice.call(handles));
   }
   return result;
 };
@@ -354,7 +354,7 @@ var _index = function(element) {
   if (!element.parentElement) {
     return 0;
   }
-  return [].indexOf.call(element.parentElement.children, element);
+  return Array.prototype.indexOf.call(element.parentElement.children, element);
 };
 /**
  * Whether element is in DOM
@@ -470,7 +470,7 @@ var sortable = function(sortableElements, options) {
     sortableElements = [sortableElements];
   }
 
-  sortableElements = [].slice.call(sortableElements);
+  sortableElements = Array.prototype.slice.call(sortableElements);
 
   /* TODO: maxstatements should be 25, fix and remove line below */
   /*jshint maxstatements:false */
