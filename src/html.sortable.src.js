@@ -41,6 +41,10 @@ var _removeData = function(element) {
     delete element.h5s.data;
   }
 };
+/**
+ * Cross-browser shortcut for actual `Element.matches` method,
+ * which has vendor prefix in older browsers
+ */
 var matches;
 switch (true) {
   case 'matches' in window.Element.prototype:
