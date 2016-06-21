@@ -85,18 +85,9 @@ var _filter = function(nodes, wanted) {
  * @param {Function} callback
  */
 var _on = function(element, event, callback) {
-  var i;
-  var events;
-
   if (element instanceof Array) {
-    for (i = 0; i < element.length; ++i) {
+    for (var i = 0; i < element.length; ++i) {
       _on(element[i], event, callback);
-    }
-    return;
-  }
-  if (event.indexOf(' ') !== -1) {
-    for (i = 0, events = event.split(' '); i < events.length; ++i) {
-      _on(element, events[i], callback);
     }
     return;
   }
@@ -110,18 +101,9 @@ var _on = function(element, event, callback) {
  * @param {Array|string} event
  */
 var _off = function(element, event) {
-  var i;
-  var events;
-
   if (element instanceof Array) {
-    for (i = 0; i < element.length; ++i) {
+    for (var i = 0; i < element.length; ++i) {
       _off(element[i], event);
-    }
-    return;
-  }
-  if (event.indexOf(' ') !== -1) {
-    for (i = 0, events = event.split(' '); i < events.length; ++i) {
-      _off(element, events[i]);
     }
     return;
   }
@@ -174,14 +156,21 @@ var _offset = function(element) {
  * @param {Array|NodeList} items
  */
 var _removeItemEvents = function(items) {
-  _off(items, 'dragstart dragend selectstart dragover dragenter drop');
+  _off(items, 'dragstart');
+  _off(items, 'dragend');
+  _off(items, 'selectstart');
+  _off(items, 'dragover');
+  _off(items, 'dragenter');
+  _off(items, 'drop');
 };
 /*
  * remove event handlers from sortable
  * @param {Element} sortable a single sortable
  */
 var _removeSortableEvents = function(sortable) {
-  _off(sortable, 'dragover dragenter drop');
+  _off(sortable, 'dragover');
+  _off(sortable, 'dragenter');
+  _off(sortable, 'drop');
 };
 /*
  * attache ghost to dataTransfer object
@@ -619,7 +608,7 @@ var sortable = function(sortableElements, options) {
     });
 
     // Handle dragover and dragenter events on draggable items
-    _on(items.concat(sortableElement), 'dragover dragenter', function(e) {
+    var onDragOverEnter = function(e) {
       if (!_listsConnected(sortableElement, dragging.parentElement)) {
         return;
       }
@@ -665,12 +654,14 @@ var sortable = function(sortableElements, options) {
           .forEach(_detach);
       } else {
         if (placeholders.indexOf(this) === -1 &&
-          !_filter(this.children, options.items).length) {
+            !_filter(this.children, options.items).length) {
           placeholders.forEach(_detach);
           this.appendChild(placeholder);
         }
       }
-    });
+    };
+    _on(items.concat(sortableElement), 'dragover', onDragOverEnter);
+    _on(items.concat(sortableElement), 'dragenter', onDragOverEnter);
   });
 
   return sortableElements;
