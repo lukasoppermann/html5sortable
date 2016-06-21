@@ -141,7 +141,7 @@
 		    <h2 class="h3 m0">
 					Connected lists
 		    </h2>
-				<p>Connected: This means an item can be draged into another (connected) list.</p>
+				<p>Connected: This means an item can be dragged into another (connected) list.</p>
 				<p class="mb2">Handles: Elements, e.g. || an item can be dragged with.</p>
 				<ul class="js-sortable-connected list flex flex-column list-reset">
 					<script>// scripts are needed for a test for indexes in sortupdate</script>
@@ -263,14 +263,14 @@
 				handle: '.js-inner-handle',
 				items: 'li',
 				placeholderClass: 'border border-white bg-orange mb1'
-			})
+			});
 			$('.js-sortable-connected').on('sortupdate', function(e){
 				console.log('Parent old: ');
-				console.log(e.detail.startparent);
+				console.log(e.originalEvent.detail.startparent);
 				console.log('Parent new: ');
-				console.log(e.detail.endparent);
-				console.log('Index: '+e.detail.oldindex+' -> '+e.detail.index);
-				console.log('elementIndex: '+e.detail.oldElementIndex+' -> '+e.detail.elementIndex);
+				console.log(e.originalEvent.detail.endparent);
+				console.log('Index: '+e.originalEvent.detail.oldindex+' -> '+e.originalEvent.detail.index);
+				console.log('elementIndex: '+e.originalEvent.detail.oldElementIndex+' -> '+e.originalEvent.detail.elementIndex);
 			});
 
 			sortable('.js-sortable-buttons', {
@@ -279,7 +279,7 @@
 				placeholderClass: 'border border-white mb1'
 			});
 			// buttons to add items and reload the list
-			// separatly to showcase issue without reload
+			// separately to showcase issue without reload
 			$('.js-add-item-button').on('click', function(){
 				$(this).parents().siblings('ul').append('<li class="p1 mb1 blue bg-white">new item</li>');
 			});
@@ -290,7 +290,7 @@
 				console.log('Options after re-init:');
 				console.log($(this).parents().siblings('ul').get(0).h5s.data.opts);
 			});
-			// JS DISABLEFD
+			// JS DISABLED
 			$('.js-disable').on('click', function(){
 				var $list = $('[data-disabled]');
 				var text = $(this).data('text');
@@ -320,4 +320,3 @@
 		});
 	</script>
 </body>
-</html>
