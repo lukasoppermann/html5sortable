@@ -62,7 +62,6 @@ switch (true) {
  * @param {Array|NodeList} nodes
  * @param {Array/string} wanted
  * @returns {Array}
- * @private
  */
 var _filter = function(nodes, wanted) {
   if (!wanted) {
@@ -142,7 +141,6 @@ var _removeAttr = function(element, attribute) {
 /**
  * @param {Element} element
  * @returns {{left: *, top: *}}
- * @private
  */
 var _offset = function(element) {
   var rect = element.getClientRects()[0];
@@ -164,7 +162,7 @@ var _removeItemEvents = function(items) {
   _off(items, 'drop');
 };
 /*
- * remove event handlers from sortable
+ * Remove event handlers from sortable
  * @param {Element} sortable a single sortable
  */
 var _removeSortableEvents = function(sortable) {
@@ -173,9 +171,9 @@ var _removeSortableEvents = function(sortable) {
   _off(sortable, 'drop');
 };
 /*
- * attache ghost to dataTransfer object
- * @param [event] original event
- * @param [object] ghost-object with item, x and y coordinates
+ * Attach ghost to dataTransfer object
+ * @param {Event} original event
+ * @param {object} ghost-object with item, x and y coordinates
  */
 var _attachGhost = function(event, ghost) {
   // this needs to be set for HTML5 drag & drop to work
@@ -189,7 +187,7 @@ var _attachGhost = function(event, ghost) {
 };
 /**
  * _addGhostPos clones the dragged item and adds it as a Ghost item
- * @param {CustomEvent} event - the event fired when dragstart is triggered
+ * @param {Event} event - the event fired when dragstart is triggered
  * @param {object} ghost - .draggedItem = Element
  */
 var _addGhostPos = function(event, ghost) {
@@ -212,8 +210,8 @@ var _makeGhost = function(draggedItem) {
 };
 /**
  * _getGhost constructs ghost and attaches it to dataTransfer
+ * @param {Event} event - the original drag event object
  * @param {Element} draggedItem - the item that the user drags
- * @param {CustomEvent} event - the original drag event object
  */
 // TODO: could draggedItem be replaced by event.target in all instances
 var _getGhost = function(event, draggedItem) {
@@ -225,7 +223,7 @@ var _getGhost = function(event, draggedItem) {
   _attachGhost(event, ghost);
 };
 /*
- * remove data from sortable
+ * Remove data from sortable
  * @param {Element} sortable a single sortable
  */
 var _removeSortableData = function(sortable) {
@@ -233,7 +231,7 @@ var _removeSortableData = function(sortable) {
   _removeAttr(sortable, 'aria-dropeffect');
 };
 /*
- * remove data from items
+ * Remove data from items
  * @param {Array|Element} items
  */
 var _removeItemData = function(items) {
@@ -242,7 +240,7 @@ var _removeItemData = function(items) {
   _removeAttr(items, 'role');
 };
 /*
- * check if two lists are connected
+ * Check if two lists are connected
  * @param {Element} curList
  * @param {Element} destList
  */
@@ -268,7 +266,7 @@ var _getHandles = function(items, handle) {
   return result;
 };
 /*
- * destroy the sortable
+ * Destroy the sortable
  * @param {Element} sortableElement a single sortable
  */
 var _destroySortable = function(sortableElement) {
@@ -284,7 +282,7 @@ var _destroySortable = function(sortableElement) {
   _removeItemData(items);
 };
 /*
- * enable the sortable
+ * Enable the sortable
  * @param {Element} sortableElement a single sortable
  */
 var _enableSortable = function(sortableElement) {
@@ -312,7 +310,7 @@ var _enableSortable = function(sortableElement) {
   }
 };
 /*
- * disable the sortable
+ * Disable the sortable
  * @param {Element} sortableElement a single sortable
  */
 var _disableSortable = function(sortableElement) {
@@ -324,7 +322,7 @@ var _disableSortable = function(sortableElement) {
   _off(handles, 'mousedown');
 };
 /*
- * reload the sortable
+ * Reload the sortable
  * @param {Element} sortableElement a single sortable
  * @description events need to be removed to not be double bound
  */
@@ -358,10 +356,9 @@ var _attached = function(element) {
   return !!element.parentNode;
 };
 /**
- *
+ * Convert HTML string into DOM element
  * @param {Element|string} html
  * @returns {Element}
- * @private
  */
 var _html2element = function(html) {
   if (typeof html !== 'string') {
@@ -396,7 +393,6 @@ var _after = function(target, element) {
 /**
  * Detach element from DOM
  * @param {Element} element
- * @private
  */
 var _detach = function(element) {
   if (element.parentNode) {
@@ -408,7 +404,6 @@ var _detach = function(element) {
  * @param {string} name
  * @param {object} detail
  * @returns {CustomEvent}
- * @private
  */
 var _makeEvent = function(name, detail) {
   var e = document.createEvent('Event');
@@ -430,7 +425,7 @@ var _dispatchEventOnConnected = function(sortableElement, event) {
   });
 };
 /*
- * public sortable object
+ * Public sortable object
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
  */
