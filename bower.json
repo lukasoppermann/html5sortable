@@ -16,7 +16,6 @@
   "description": "Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.",
   "main": "dist/html.sortable.js",
   "keywords": [
-    "jquery",
     "sortable",
     "html5",
     "drag and drop"
@@ -35,10 +34,8 @@
   ],
   "devDependencies": {
     "angular": "~1.3.15",
-    "requirejs": "~2.1.17",
-    "basscss": "~6.0.2"
-  },
-  "dependencies": {
-    "jquery": "~2.1.3"
+    "basscss": "~6.0.2",
+    "jquery": "~2.1.3",
+    "requirejs": "~2.1.17"
   }
 }
