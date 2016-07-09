@@ -339,7 +339,7 @@ if( a === b){
   }
 }
 ```
-**else if** does not exists in javascript, so do not use it.
+**else if** does not exist in javascript, so do not use it.
 
 If at all possible, also try to refrain from using else.
 
@@ -361,8 +361,8 @@ return …
 Never use more than 3 parameters, this will keep you from falling into bad habits. If you need complex configuration (which you should try to avoid), use an object.
 
 ### Reduce nesting depth (max. 3)
-Do not nest to deeply. This will make the code confusing, hard to read and again, make merging hard.
-If your code gets to complex, try to refactor parts out into individual functions.
+Do not nest too deeply. This will make the code confusing, hard to read, and again, makes merging hard.
+If your code gets too complex, try to refactor parts out into individual functions.
 
 # Roadmap
 If you want to help us by working on any of the points below, please let me know and I add you and your branch to the list.
