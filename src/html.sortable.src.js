@@ -649,7 +649,7 @@ var sortable = function(sortableElements, options) {
           .forEach(_detach);
       } else {
         if (placeholders.indexOf(this) === -1 && 
-          (!_filter(this.children, options.items).length || e.toElement.className != options.placeholderClass)) {
+          (!_filter(this.children, options.items).length || e.toElement.className !== options.placeholderClass)) {
           placeholders.forEach(_detach);
           this.appendChild(placeholder);
         }
