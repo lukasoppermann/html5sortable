@@ -50,6 +50,9 @@ switch (true) {
   case 'matches' in window.Element.prototype:
     matches = 'matches';
     break;
+  case 'mozMatchesSelector' in window.Element.prototype:
+    matches = 'mozMatchesSelector';
+    break;
   case 'msMatchesSelector' in window.Element.prototype:
     matches = 'msMatchesSelector';
     break;
