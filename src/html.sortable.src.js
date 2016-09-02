@@ -304,7 +304,7 @@ var _enableSortable = function(sortableElement) {
         this.dragDrop();
       } else {
         var parent = this.parentElement;
-        while (opts.items.indexOf(parent) === -1) {
+        while (items.indexOf(parent) === -1) {
           parent = parent.parentElement;
         }
         parent.dragDrop();
