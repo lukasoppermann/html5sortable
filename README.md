@@ -321,27 +321,8 @@ foo = foo.map(baz);
 
 While this can be a nice feature it makes the code less maintainable, harder to read and harder to understand. **Don’t use chaining**.
 
-### Don’t use else if, try to avoid else
-```javascript
-// This:
-if( a === b){
-  …
-} else if ( a === c){
-  …
-}
-
-// Actually means this:
-if( a === b){
-  …
-} else {
-  if ( a === c){
-    …
-  }
-}
-```
-**else if** does not exist in javascript, so do not use it.
-
-If at all possible, also try to refrain from using else.
+### Try to avoid else if and else
+Try to refrain from using any `else`/`else if` statements and instead opt for simple `if`-statments with `return`s. This makes the code much easier to ready and refactor.
 
 ```javascript
 if( a === b){
