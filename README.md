@@ -17,21 +17,21 @@ HTML5 Sortable library
 
 # Installation
 
-### The recommended way, using [Bower](http://bower.io):
+You need to install the package using `bower`, `npm` or downloading it manually. Afterwards you need to load `dist/html.sortable.js` or the minified version, `dist/html.sortable.min.js`. **Make sure to grab the file from the `dist/` directory.**
 
+### Using [Bower](http://bower.io):
 ```
 bower install html.sortable --save
 ```
-### The non-Bower way:
-include `html.sortable.x.y.z.js` or the minified version, `html.sortable.min.x.y.z.js`.
 
-### Install via [NPM](https://github.com/npm/npm#super-easy-install):
-
+### Using [NPM](https://github.com/npm/npm#super-easy-install):
 ```
 npm install html5sortable --save
 ```
+
 # Examples
-You can find the **[examples online](http://lukasoppermann.github.io/html5sortable/examples/index.html)** or test locally.
+You can find the **[examples online](http://lukasoppermann.github.io/html5sortable/examples/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
+
 ```shell
 # To get the local examples to work do the following:
 git clone https://github.com/voidberg/html5sortable
