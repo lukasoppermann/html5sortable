@@ -359,17 +359,18 @@ var _attached = function(element) {
   return !!element.parentNode;
 };
 /**
- * Convert HTML string into DOM element
+ * Convert HTML string into DOM element.
  * @param {Element|string} html
+ * @param {string} tagname
  * @returns {Element}
  */
-var _html2element = function(html) {
+var _html2element = function(html, tagName) {
   if (typeof html !== 'string') {
     return html;
   }
-  var div = document.createElement('div');
-  div.innerHTML	= html;
-  return div.firstChild;
+  var parentElement = document.createElement(tagName);
+  parentElement.innerHTML	= html;
+  return parentElement.firstChild;
 };
 /**
  * Insert before target
@@ -498,7 +499,7 @@ var sortable = function(sortableElements, options) {
         /^ul|ol$/i.test(sortableElement.tagName) ? 'li' : 'div'
       );
     }
-    placeholder = _html2element(placeholder);
+    placeholder = _html2element(placeholder, sortableElement.tagName);
     placeholder.classList.add.apply(
       placeholder.classList,
       options.placeholderClass.split(' ')
