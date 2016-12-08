@@ -1,7 +1,7 @@
 {
   "name": "html5sortable",
   "main": "dist/html.sortable.js",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "license": "MIT",
   "description": "Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.",
   "author": {
