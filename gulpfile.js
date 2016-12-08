@@ -42,14 +42,6 @@ gulp.task('umd', function() {
       //jscs:enable
     }))
     .pipe(umd({
-      dependencies: function() {
-        return [{
-          name: '$',
-          amd: 'jquery',
-          cjs: 'jquery',
-          global: 'jQuery'
-        }];
-      },
       exports: function() {
         return 'sortable';
       },

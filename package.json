@@ -1,7 +1,7 @@
 {
   "name": "html5sortable",
   "main": "dist/html.sortable.js",
-  "version": "0.3.1",
+  "version": "0.4.2",
   "license": "MIT",
   "description": "Lightweight jQuery plugin to create sortable lists and grids using native HTML5 drag and drop API.",
   "author": {
@@ -17,7 +17,6 @@
     }
   ],
   "keywords": [
-    "jquery",
     "sortable",
     "html5",
     "drag and drop"
@@ -48,7 +47,8 @@
     "gulp-umd": "^0.2.0",
     "gulp-util": "^3.0.4",
     "istanbul": "0.4.x",
-    "jsdom": "7.x.x",
+    "jquery": "^2.1.4",
+    "jsdom": "^9.2.1",
     "jshint-stylish": "2.x.x",
     "minimist": "^1.1.1",
     "mocha": "^2.2.4",
@@ -62,8 +62,5 @@
     "test-plugin": "./node_modules/.bin/mocha test/umd/module.js && ./node_modules/.bin/mocha test/*.js",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/*.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "build": "gulp build"
-  },
-  "dependencies": {
-    "jquery": "^2.1.4"
   }
 }
