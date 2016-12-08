@@ -12,6 +12,8 @@ describe('Testing events', function(){
       '<li class="item">Item 1</li>'+
       '<li class="item">Item 2</li>'+
       '<li class="item">Item 3</li>'+
+      '<li class="item"><a href="#" class="handle">Item 4</a></li>'+
+      '<li class="item"><a href="#" class="notHandle">a clever ruse</a></li>'+
       '</ul>');
     $ul = $('.sortable');
     ul = $ul.get();
@@ -22,7 +24,7 @@ describe('Testing events', function(){
     resetSortable();
     $li = $ul.find('li').first();
   });
-
+  
   it('should correctly run dragstart event', function(){
     var event;
     sortable(ul, {

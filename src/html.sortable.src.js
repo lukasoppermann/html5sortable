@@ -427,6 +427,17 @@ var _dispatchEventOnConnected = function(sortableElement, event) {
     }
   });
 };
+
+/**
+ * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
+ * @param {el} DOM element
+ * @param {selector} selector test against the element
+ * @retirms {boolean}
+ */
+var _matches = function(el, selector) {
+  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
+};
+
 /*
  * Public sortable object
  * @param {Array|NodeList} sortableElements
@@ -529,7 +540,10 @@ var sortable = function(sortableElements, options) {
     // Handle drag events on draggable items
     _on(items, 'dragstart', function(e) {
       e.stopImmediatePropagation();
-
+      if(options.handle && !_matches(e.target, options.handle)){
+        return;
+      }
+      
       if (options.dragImage) {
         _attachGhost(e, {
           draggedItem: options.dragImage,
