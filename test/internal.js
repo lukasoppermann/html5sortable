@@ -126,4 +126,24 @@ describe('Internal function tests', function(){
     assert.equal(sortable.__testing._index(child4), 0);
   });
 
+  it('_debounce returns given function, then 0 debounce', function(){
+      
+      var funct = function() {};
+      var debounced = sortable.__testing._debounce(funct, 0);
+
+      assert.equal(debounced, funct);
+  });
+  
+  it('_debounce', function(done){
+      
+      var funct = function() {
+          done();
+      };
+      var debounced = sortable.__testing._debounce(funct, 5);
+      
+      debounced();
+      debounced();
+  });
+  
+  
 });

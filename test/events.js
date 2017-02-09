@@ -23,6 +23,14 @@ describe('Testing events', function(){
   beforeEach(function(){
     resetSortable();
     $li = $ul.find('li').first();
+    
+    $li.get(0).getClientRects = function(){
+    return [{
+      left: 5,
+      top: 5
+    }]
+  };
+    
   });
   
   it('should correctly run dragstart event', function(){
