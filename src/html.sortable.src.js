@@ -438,6 +438,28 @@ var _matches = function(el, selector) {
   return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
 };
 
+/**
+ * Creates and returns a new debounced version of the passed function which will postpone its execution until after wait milliseconds have elapsed
+ * @param {fn} Function to debounce
+ * @param {delay} time to wait before calling function with latest arguments, 0 - no debounce
+ * @param {context} time to wait before calling function with latest arguments, 0 - no debounce
+ * @returns {function} - debounced function
+ */
+function _debounce(fn, delay, context) {
+  var timer = null;
+  
+  if (delay === 0) {
+      return fn;
+  }
+  return function () {
+    var eContext = context || this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(eContext, args);
+    }, delay);
+  };
+}
+
 /*
  * Public sortable object
  * @param {Array|NodeList} sortableElements
@@ -456,7 +478,8 @@ var sortable = function(sortableElements, options) {
       disableIEFix: false,
       placeholderClass: 'sortable-placeholder',
       draggingClass: 'sortable-dragging',
-      hoverClass: false
+      hoverClass: false,
+      debounce: 0
     };
     for (var option in options) {
       result[option] = options[option];
@@ -619,6 +642,56 @@ var sortable = function(sortableElements, options) {
       dragging.dispatchEvent(_makeEvent('dragend'));
     });
 
+    var debouncedDragOverEnter = _debounce( function(element, pageY) {
+      if (!dragging) {
+        return;
+      }
+         
+      if (items.indexOf(element) !== -1) {
+        var thisHeight = parseInt(window.getComputedStyle(element).height);
+        var placeholderIndex = _index(placeholder);
+        var thisIndex = _index(element);
+        if (options.forcePlaceholderSize) {
+          placeholder.style.height = draggingHeight + 'px';
+        }
+      
+        // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
+        if (thisHeight > draggingHeight) {
+          // Dead zone?
+          var deadZone = thisHeight - draggingHeight;
+          var offsetTop = _offset(element).top;
+          if (placeholderIndex < thisIndex &&
+              pageY < offsetTop + deadZone) {
+            return;
+          }
+          if (placeholderIndex > thisIndex &&
+              pageY > offsetTop + thisHeight - deadZone) {
+            return;
+          }
+        }
+      
+        if (dragging.oldDisplay === undefined) {
+          dragging.oldDisplay = dragging.style.display;
+        }
+        dragging.style.display = 'none';
+        if (placeholderIndex < thisIndex) {
+          _after(element, placeholder);
+        } else {
+          _before(element, placeholder);
+        }
+        // Intentionally violated chaining, it is more complex otherwise
+        placeholders
+          .filter(function(element) {return element !== placeholder;})
+          .forEach(_detach);
+      } else {
+        if (placeholders.indexOf(element) === -1 &&
+            !_filter(element.children, options.items).length) {
+          placeholders.forEach(_detach);
+          element.appendChild(placeholder);
+        }
+      }
+    }, options.debounce);
+    
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function(e) {
       if (!_listsConnected(sortableElement, dragging.parentElement)) {
@@ -628,50 +701,9 @@ var sortable = function(sortableElements, options) {
       e.preventDefault();
       e.stopPropagation();
       e.dataTransfer.dropEffect = 'move';
-      if (items.indexOf(this) !== -1) {
-        var thisHeight = parseInt(window.getComputedStyle(this).height);
-        var placeholderIndex = _index(placeholder);
-        var thisIndex = _index(this);
-        if (options.forcePlaceholderSize) {
-          placeholder.style.height = draggingHeight + 'px';
-        }
-
-        // Check if `this` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
-        if (thisHeight > draggingHeight) {
-          // Dead zone?
-          var deadZone = thisHeight - draggingHeight;
-          var offsetTop = _offset(this).top;
-          if (placeholderIndex < thisIndex &&
-              e.pageY < offsetTop + deadZone) {
-            return;
-          }
-          if (placeholderIndex > thisIndex &&
-              e.pageY > offsetTop + thisHeight - deadZone) {
-            return;
-          }
-        }
-
-        if (dragging.oldDisplay === undefined) {
-          dragging.oldDisplay = dragging.style.display;
-        }
-        dragging.style.display = 'none';
-        if (placeholderIndex < thisIndex) {
-          _after(this, placeholder);
-        } else {
-          _before(this, placeholder);
-        }
-        // Intentionally violated chaining, it is more complex otherwise
-        placeholders
-          .filter(function(element) {return element !== placeholder;})
-          .forEach(_detach);
-      } else {
-        if (placeholders.indexOf(this) === -1 &&
-            !_filter(this.children, options.items).length) {
-          placeholders.forEach(_detach);
-          this.appendChild(placeholder);
-        }
-      }
+      debouncedDragOverEnter(this, e.pageY);
     };
+    
     _on(items.concat(sortableElement), 'dragover', onDragOverEnter);
     _on(items.concat(sortableElement), 'dragenter', onDragOverEnter);
   });
@@ -705,7 +737,8 @@ sortable.__testing = {
   _getGhost: _getGhost,
   _makeGhost: _makeGhost,
   _index: _index,
-  _makeEvent: _makeEvent
+  _makeEvent: _makeEvent,
+  _debounce: _debounce
 };
 module.exports = sortable;
 /* end-testing */
