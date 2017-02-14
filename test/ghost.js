@@ -1,9 +1,9 @@
 describe('Testing ghost creation methods', function(){
 // testing ghost creation functions
   var assert = require('chai').assert;
-  GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
-  GLOBAL.window = GLOBAL.document.defaultView;
-  GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
+  global.document = require('jsdom').jsdom('<html lang="en-US"></html>');
+  global.window = global.document.defaultView;
+  global.$ = global.jQuery = require('../node_modules/jquery/dist/jquery.js');
   var sortable = require("../src/html.sortable.src.js");
   $('body').html('').append('<ul class="sortable"><li>item</li></ul>');
   // moch dragged item

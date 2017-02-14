@@ -7,7 +7,7 @@ var path = require("path");
   describe('Assignment to global variable', function(){
     var test = {};
     before(function(done){
-      GLOBAL.sortable = undefined;
+      global.sortable = undefined;
       require('jsdom').env({
         html: '<html><body></body></html>',
         scripts: [
@@ -28,9 +28,9 @@ var path = require("path");
 
   describe('CommonJS Module', function(){
     before(function(){
-      GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
-      GLOBAL.window = GLOBAL.document.defaultView;
-      GLOBAL.sortable = undefined;
+      global.document = require('jsdom').jsdom('<html lang="en-US"></html>');
+      global.window = global.document.defaultView;
+      global.sortable = undefined;
     });
 
     it('should be able to require html.sortable', function() {
@@ -44,7 +44,7 @@ var path = require("path");
   describe('AMD (Asynchronous module definition)', function(){
     var test = {};
     before(function(done){
-      GLOBAL.sortable = undefined;
+      global.sortable = undefined;
       require('jsdom').env({
         file: path.resolve(__dirname, 'amd.html'),
         features: {

@@ -1,9 +1,9 @@
 describe('Testing events', function(){
   // testing basic api
   var assert = require("chai").assert;
-  GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
-  GLOBAL.window = GLOBAL.document.defaultView;
-  GLOBAL.$ = require('jquery');
+  global.document = require('jsdom').jsdom('<html lang="en-US"></html>');
+  global.window = global.document.defaultView;
+  global.$ = require('jquery');
   var $ul;
   var ul;
   var sortable = require("../src/html.sortable.src.js");

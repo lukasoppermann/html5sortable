@@ -1,9 +1,9 @@
 describe('Internal function tests', function(){
   // testing basic api
   var assert = require('chai').assert;
-  GLOBAL.document = require('jsdom').jsdom('<html lang="en-US"></html>');
-  GLOBAL.window = GLOBAL.document.defaultView;
-  GLOBAL.$ = GLOBAL.jQuery = require('../node_modules/jquery/dist/jquery.js');
+  global.document = require('jsdom').jsdom('<html lang="en-US"></html>');
+  global.window = global.document.defaultView;
+  global.$ = global.jQuery = require('../node_modules/jquery/dist/jquery.js');
   var sortable = require("../src/html.sortable.src.js");
   var $ul;
   var ul;
