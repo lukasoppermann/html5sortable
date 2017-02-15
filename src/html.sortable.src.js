@@ -42,24 +42,14 @@ var _removeData = function(element) {
   }
 };
 /**
- * Cross-browser shortcut for actual `Element.matches` method,
- * which has vendor prefix in older browsers
+ * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
+ * @param {el} DOM element
+ * @param {selector} selector test against the element
+ * @retirms {boolean}
  */
-var matches;
-switch (true) {
-  case 'matches' in window.Element.prototype:
-    matches = 'matches';
-    break;
-  case 'mozMatchesSelector' in window.Element.prototype:
-    matches = 'mozMatchesSelector';
-    break;
-  case 'msMatchesSelector' in window.Element.prototype:
-    matches = 'msMatchesSelector';
-    break;
-  case 'webkitMatchesSelector' in window.Element.prototype:
-    matches = 'webkitMatchesSelector';
-    break;
-}
+var _matches = function(el, selector) {
+  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
+};
 /**
  * Filter only wanted nodes
  * @param {Array|NodeList} nodes
@@ -72,7 +62,7 @@ var _filter = function(nodes, wanted) {
   }
   var result = [];
   for (var i = 0; i < nodes.length; ++i) {
-    if (typeof wanted === 'string' && nodes[i][matches](wanted)) {
+    if (typeof wanted === 'string' && _matches(nodes[i], wanted)) {
       result.push(nodes[i]);
     }
     if (wanted.indexOf(nodes[i]) !== -1) {
@@ -429,16 +419,6 @@ var _dispatchEventOnConnected = function(sortableElement, event) {
 };
 
 /**
- * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
- * @param {el} DOM element
- * @param {selector} selector test against the element
- * @retirms {boolean}
- */
-var _matches = function(el, selector) {
-  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
-};
-
-/**
  * Creates and returns a new debounced version of the passed function which will postpone its execution until after wait milliseconds have elapsed
  * @param {fn} Function to debounce
  * @param {delay} time to wait before calling function with latest arguments, 0 - no debounce
@@ -447,7 +427,7 @@ var _matches = function(el, selector) {
  */
 function _debounce(fn, delay, context) {
   var timer = null;
-  
+
   if (delay === 0) {
       return fn;
   }
@@ -566,7 +546,7 @@ var sortable = function(sortableElements, options) {
       if(options.handle && !_matches(e.target, options.handle)){
         return;
       }
-      
+
       if (options.dragImage) {
         _attachGhost(e, {
           draggedItem: options.dragImage,
@@ -646,7 +626,7 @@ var sortable = function(sortableElements, options) {
       if (!dragging) {
         return;
       }
-         
+
       if (items.indexOf(element) !== -1) {
         var thisHeight = parseInt(window.getComputedStyle(element).height);
         var placeholderIndex = _index(placeholder);
@@ -654,7 +634,7 @@ var sortable = function(sortableElements, options) {
         if (options.forcePlaceholderSize) {
           placeholder.style.height = draggingHeight + 'px';
         }
-      
+
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight) {
           // Dead zone?
@@ -669,7 +649,7 @@ var sortable = function(sortableElements, options) {
             return;
           }
         }
-      
+
         if (dragging.oldDisplay === undefined) {
           dragging.oldDisplay = dragging.style.display;
         }
@@ -691,7 +671,7 @@ var sortable = function(sortableElements, options) {
         }
       }
     }, options.debounce);
-    
+
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function(e) {
       if (!_listsConnected(sortableElement, dragging.parentElement)) {
@@ -703,7 +683,7 @@ var sortable = function(sortableElements, options) {
       e.dataTransfer.dropEffect = 'move';
       debouncedDragOverEnter(this, e.pageY);
     };
-    
+
     _on(items.concat(sortableElement), 'dragover', onDragOverEnter);
     _on(items.concat(sortableElement), 'dragenter', onDragOverEnter);
   });
