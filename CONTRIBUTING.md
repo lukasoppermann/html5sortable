@@ -2,7 +2,7 @@
 
 Contributions are **welcome** and will be fully **credited**.
 
-We accept contributions via Pull Requests on [Github](https://github.com/voidberg/html5sortable).
+We accept contributions via Pull Requests on [Github](https://github.com/lukasoppermann/html5sortable).
 
 
 ## Pull Requests
@@ -27,4 +27,4 @@ $ npm test
 ```
 
 
-**Happy coding**!
+**Happy coding!**

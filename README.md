@@ -1,7 +1,6 @@
-HTML5 Sortable library
-============================
+# HTML5 Sortable
 
-[![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/voidberg/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
+[![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 
 > **Lightweight standalone library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
@@ -213,7 +212,7 @@ The plugin has limited support for sorting table rows. To sort table rows:
 
 ## Authors & Contributors
 
-This version is mantained by [Alexandru Badiu](https://github.com/voidberg) & [Lukas Oppermann](https://github.com/lukasoppermann).
+This version is maintained by [Lukas Oppermann](https://github.com/lukasoppermann).
 
 Thanks to [all contributors](../../contributors) who contributed fixes and improvements.
 
@@ -221,7 +220,7 @@ Thanks to [all contributors](../../contributors) who contributed fixes and impro
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## Comment your code
+### Comment your code
 Your code should be as self-documenting as possible, but because this is an open source project with multiple contributors please add comments whenever possible.
 
 ### Docblocks for functions
