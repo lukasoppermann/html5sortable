@@ -2,7 +2,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>HTML5 Sortable library</title>
-  <link rel="stylesheet" href="basscss/css/basscss.css">
+  <link rel="stylesheet" href="basscss.css">
 </head>
 <body>
 	<div class="clearfix mb2 white bg-navy">
@@ -226,14 +226,12 @@
 			</div>
 		</section>
 	</div>
-  <script src="jquery/dist/jquery.min.js"></script>
 	<script src="html.sortable.js"></script>
 	<script>
-		$(function() {
 			sortable('.js-sortable', {
 				forcePlaceholderSize: true,
 				placeholderClass: 'p1 mb1 bg-navy border border-yellow',
-				dragImage: $('.ghost')[0]
+				dragImage: document.querySelector('.ghost')
 			});
 			sortable('.js-grid', {
 				forcePlaceholderSize: true,
@@ -264,7 +262,7 @@
 				items: 'li',
 				placeholderClass: 'border border-white bg-orange mb1'
 			});
-			$('.js-sortable-connected').on('sortupdate', function(e){
+			document.querySelector('.js-sortable-connected').addEventListener('sortupdate', function(e){
 				console.log('Parent old: ');
 				console.log(e.originalEvent.detail.startparent);
 				console.log('Parent new: ');
@@ -280,43 +278,43 @@
 			});
 			// buttons to add items and reload the list
 			// separately to showcase issue without reload
-			$('.js-add-item-button').on('click', function(){
-				$(this).parents().siblings('ul').append('<li class="p1 mb1 blue bg-white">new item</li>');
+			document.querySelector('.js-add-item-button').addEventListener('click', function(){
+        doc = new DOMParser().parseFromString(`<li class="p1 mb1 blue bg-white">new item</li>`, "text/html").body.firstChild;
+				document.querySelector('.js-sortable-buttons').appendChild(doc);
 			});
-			$('.js-reload').on('click', function(){
+			document.querySelector('.js-reload').addEventListener('click', function(){
 				console.log('Options before re-init:');
-				console.log($(this).parents().siblings('ul').get(0).h5s.data.opts);
-				sortable($(this).parents().siblings('ul').get());
+				console.log(document.querySelector('.js-sortable-buttons').h5s.data.opts);
+				sortable('.js-sortable-buttons');
 				console.log('Options after re-init:');
-				console.log($(this).parents().siblings('ul').get(0).h5s.data.opts);
+				console.log(document.querySelector('.js-sortable-buttons').h5s.data.opts);
 			});
 			// JS DISABLED
-			$('.js-disable').on('click', function(){
-				var $list = $('[data-disabled]');
-				var text = $(this).data('text');
-				$(this).data('text', $(this).text()).text(text);
-				if( $list.data('disabled') === false )
+			document.querySelector('.js-disable').addEventListener('click', function(){
+				var $list = document.querySelector('[data-disabled]');
+				if( $list.getAttribute('data-disabled') === 'false' )
 				{
-					sortable($list.get(), 'disable');
-					$list.data('disabled', true);
-					$list.find('li').addClass('muted');
+          this.innerHTML = 'Enable';
+					sortable($list, 'disable');
+					$list.setAttribute('data-disabled', true);
+					$list.classList.add('muted');
 				} else {
-					sortable($list.get(), 'enable');
-					$list.data('disabled', false);
-					$list.find('li').removeClass('muted');
+          this.innerHTML = 'Disable';
+					sortable($list, 'enable');
+					$list.setAttribute('data-disabled', false);
+					$list.classList.remove('muted');
 				}
 			});
 			// Destroy & Init
-			$('.js-destroy').on('click', function(){
-				sortable($(this).parents().siblings('ul').get(), 'destroy');
+			document.querySelector('.js-destroy').addEventListener('click', function(){
+				sortable('.js-sortable-buttons', 'destroy');
 			});
-			$('.js-init').on('click', function(){
-				sortable($(this).parents().siblings('ul').get(), {
+			document.querySelector('.js-init').addEventListener('click', function(){
+				sortable('.js-sortable-buttons', {
 					forcePlaceholderSize: true,
 					items: 'li',
 					placeholderClass: 'border border-white mb1'
 				});
 			});
-		});
 	</script>
 </body>
