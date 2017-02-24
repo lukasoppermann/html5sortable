@@ -87,7 +87,7 @@ gulp.task('bump-version', function() {
     v = semver.inc(require('./package.json').version, 'patch');
   }
 
-  return gulp.src(['./package.json', './bower.json'])
+  return gulp.src(['./package.json'])
     .pipe(prompt.confirm(msg + v))
     .pipe(bump({version: v}))
     .pipe(gulp.dest('./'));
@@ -97,7 +97,7 @@ gulp.task('add-files', ['bump-version'], function() {
   var v = require('./package.json').version;
   return gulp.src([])
     .pipe(shell([
-      "git add ./package.json ./bower.json ./dist/* && git commit -m 'bump to version v"+v+"'"
+      "git add ./package.json ./dist/* && git commit -m 'bump to version v"+v+"'"
     ]))
 });
 /* tag version */

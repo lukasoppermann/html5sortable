@@ -1,7 +1,7 @@
 HTML5 Sortable library
 ============================
 
-[![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/voidberg/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases) ![Bower](https://img.shields.io/bower/v/html.sortable.svg?style=flat-square) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
+[![Build Status](https://img.shields.io/travis/voidberg/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/voidberg/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 
 > **Lightweight standalone library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
@@ -17,27 +17,16 @@ HTML5 Sortable library
 
 # Installation
 
-You need to install the package using `bower`, `npm` or downloading it manually. Afterwards you need to load `dist/html.sortable.js` or the minified version, `dist/html.sortable.min.js`. **Make sure to grab the file from the `dist/` directory.**
+You need to install the package using `npm` or downloading it manually. Afterwards you need to load `dist/html.sortable.js` or the minified version, `dist/html.sortable.min.js`. **Make sure to grab the file from the `dist/` directory.**
 
-### Using [Bower](http://bower.io):
-```
-bower install html.sortable --save
-```
-
-### Using [NPM](https://github.com/npm/npm#super-easy-install):
 ```
 npm install html5sortable --save
 ```
 
+Still using **bower**? [Look here](https://github.com/lukasoppermann/html5sortable/wiki/Installation#bower).
+
 # Examples
 You can find the **[examples online](http://lukasoppermann.github.io/html5sortable/examples/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
-
-```shell
-# To get the local examples to work do the following:
-git clone https://github.com/voidberg/html5sortable
-cd html5sortable
-bower install
-```
 
 # Build it / Hack it
 **1. Clone and install the project**
@@ -45,7 +34,7 @@ You will need `npm`, choose any way you like to [install npm](https://github.com
 ```
 git clone https://github.com/voidberg/html5sortable
 cd html5sortable
-npm install && bower install
+npm install
 ```
 
 **2. Send a PR**
