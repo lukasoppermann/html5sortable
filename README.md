@@ -13,7 +13,7 @@ HTML5 Sortable library
 * Supports exports as AMD, CommonJS or global
 * Comes with an AngularJS directive [help wanted](#angularjs-usage)
 
-**Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/examples/index.html)**
+**Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/index.html)**
 
 # Installation
 
