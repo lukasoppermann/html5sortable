@@ -11,7 +11,6 @@ HTML5 Sortable library
 * Supports both list and grid style layouts.
 * Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera), IE10+
 * Supports exports as AMD, CommonJS or global
-* Comes with an AngularJS directive [help wanted](#angularjs-usage)
 
 **Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/index.html)**
 
@@ -211,31 +210,6 @@ The plugin has limited support for sorting table rows. To sort table rows:
 
  * Initialize plugin on `tbody` element
  * Keep in mind that different browsers may display different ghost image of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`. This may or may not be fixed by setting the `td` to be `position: relative;`
-
-## AngularJS usage
-
-**HELP WANTED:** If you know angular and want to help get this package up to date and cleaned up, please contact me ([lukasoppermann](https://github.com/lukasoppermann)) or start submitting PRs.
-
-Make your app use the `htmlSortable` module. Assign html sortable options to the `html-sortable` tag, specify an ng-model and, optionally, specify a callback using `html-sortable-callback`.
-``` javascript
-$scope.sortableOptions = {
-  placeholder: '<div class="sortable-placeholder col-md-3"><div></div></div>',
-    forcePlaceholderSize: true
-};
-
-$scope.sortableCallback = function (startModel, destModel, start, end) {
-  // ...
-};
-```
-
-``` html
-<ul html-sortable="sortableOptions" html-sortable-callback="sortableCallback(startModel, destModel, start, end)" ng-model='data1'>
-  <li ng-repeat="itm in data1">
-      {{itm}}
-   </li>
-</ul>
-```
-See the [examples](#examples) for more information.
 
 ## Authors & Contributors
 

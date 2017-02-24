@@ -22,10 +22,5 @@
   "strict": true,
   "trailing": true,
   "smarttabs": true,
-  "loopfunc": true,
-  "globals": {
-    "angular": false,
-    "$": false,
-    "jQuery": false
-  }
+  "loopfunc": true
 }
