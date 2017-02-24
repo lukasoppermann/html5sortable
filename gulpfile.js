@@ -22,8 +22,7 @@ var strip = require('gulp-strip-code');
 /* linting */
 gulp.task('lint', function() {
   gulp.src([
-    'src/' + srcFile,
-    'src/html.sortable.angular.js'
+    'src/' + srcFile
   ])
     .pipe(jscs())
     .pipe(jshint())
@@ -58,7 +57,7 @@ gulp.task('build-version', ['umd'], function() {
   // clear dist
   del.sync('./dist/*', {force: true});
   // copy files to dist
-  gulp.src(['src/html.sortable.js', 'src/html.sortable.angular.js'])
+  gulp.src(['src/html.sortable.js'])
     .pipe(gulp.dest('./dist'))
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(uglify())
