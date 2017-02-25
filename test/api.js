@@ -6,7 +6,7 @@ describe('Testing api', function(){
   global.$ = require('jquery');
   var $ul;
   var ul;
-  var sortable = require("../src/html.sortable.src.js");
+  var sortable = require("../src/html.sortable.js");
   var resetSortable = function(){
     $('body').html('').append('<ul class="sortable">'+
       '<li class="item">Item 1</li>'+

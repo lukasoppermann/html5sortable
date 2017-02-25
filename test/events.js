@@ -6,7 +6,7 @@ describe('Testing events', function(){
   global.$ = require('jquery');
   var $ul;
   var ul;
-  var sortable = require("../src/html.sortable.src.js");
+  var sortable = require("../src/html.sortable.js");
   var resetSortable = function(){
     $('body').html('').append('<ul class="sortable">'+
       '<li class="item">Item 1</li>'+
@@ -23,16 +23,16 @@ describe('Testing events', function(){
   beforeEach(function(){
     resetSortable();
     $li = $ul.find('li').first();
-    
+
     $li.get(0).getClientRects = function(){
     return [{
       left: 5,
       top: 5
     }]
   };
-    
+
   });
-  
+
   it('should correctly run dragstart event', function(){
     var event;
     sortable(ul, {

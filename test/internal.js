@@ -4,7 +4,7 @@ describe('Internal function tests', function(){
   global.document = require('jsdom').jsdom('<html lang="en-US"></html>');
   global.window = global.document.defaultView;
   global.$ = global.jQuery = require('../node_modules/jquery/dist/jquery.js');
-  var sortable = require("../src/html.sortable.src.js");
+  var sortable = require("../src/html.sortable.js");
   var $ul;
   var ul;
   var $li;
@@ -127,23 +127,23 @@ describe('Internal function tests', function(){
   });
 
   it('_debounce returns given function, then 0 debounce', function(){
-      
+
       var funct = function() {};
       var debounced = sortable.__testing._debounce(funct, 0);
 
       assert.equal(debounced, funct);
   });
-  
+
   it('_debounce', function(done){
-      
+
       var funct = function() {
           done();
       };
       var debounced = sortable.__testing._debounce(funct, 5);
-      
+
       debounced();
       debounced();
   });
-  
-  
+
+
 });

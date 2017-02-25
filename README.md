@@ -1,17 +1,24 @@
 # HTML5 Sortable
 
-[![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/voidberg/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/voidberg/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![Git Release](https://img.shields.io/github/release/voidberg/html5sortable.svg?style=flat-square)](https://github.com/voidberg/html5sortable/releases)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
+[![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
+[![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 
-> **Lightweight standalone library for creating sortable lists and grids using native HTML5 drag and drop API.**
+> **Lightweight vanillajs micro-library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
 ## Features
-* Less than 1KB (minified and gzipped).
-* Built using native HTML5 drag and drop API.
+* Only 2KB (minified and gzipped).
+* Built using native HTML5 drag and drop API. No dependencies.
 * Supports both list and grid style layouts.
 * Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera), IE10+
 * Supports exports as AMD, CommonJS or global
 
 **Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/index.html)**
+
+# Support
+
+| Browser | Chrome | Firefox | Safari | Opera | IE |
+|---|---|---|---|---|---|---|
+| Tested version | 39 | 34 | 7.1.2 |  26 | IE9+ |
 
 # Installation
 
@@ -30,7 +37,7 @@ You can find the **[examples online](http://lukasoppermann.github.io/html5sortab
 **1. Clone and install the project**
 You will need `npm`, choose any way you like to [install npm](https://github.com/npm/npm#super-easy-install).
 ```
-git clone https://github.com/voidberg/html5sortable
+git clone https://github.com/lukasoppermann/html5sortable
 cd html5sortable
 npm install
 ```
@@ -40,7 +47,6 @@ If you send a *pull request* make sure it passes the tests & linting. Please see
 ```
 npm test
 ```
-
 
 # Usage
 
@@ -210,18 +216,13 @@ The plugin has limited support for sorting table rows. To sort table rows:
  * Initialize plugin on `tbody` element
  * Keep in mind that different browsers may display different ghost image of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`. This may or may not be fixed by setting the `td` to be `position: relative;`
 
-## Authors & Contributors
-
-This version is maintained by [Lukas Oppermann](https://github.com/lukasoppermann).
-
-Thanks to [all contributors](../../contributors) who contributed fixes and improvements.
-
 ## Contributing
+This version is maintained by [Lukas Oppermann](https://github.com/lukasoppermann) and [many other contributors](../../contributors). Thanks for your help! :+1:
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Contributions are always welcome. Please check out the [contribution guidelines](CONTRIBUTING.md) to make it fast & easy for us to merge your PR.
 
 ### Comment your code
-Your code should be as self-documenting as possible, but because this is an open source project with multiple contributors please add comments whenever possible.
+Your code should be as self-documenting as possible, but because this is an open source project with multiple contributors please add comments whenever possible/sensible.
 
 ### Docblocks for functions
 
@@ -234,78 +235,12 @@ Every function should have a docblock above stating what the function does and w
 ```
 
 ### Comment on individual lines
-You do not need to comment on everything you do, but if you make a decision that could be confusion or something could be potentially seen as an error (e.g. because it is not the default way or not the most obvious way) please comment on why you did this. This prevents people from “fixing” stuff that is not broken and maybe breaking things because of this.
+You do not need to comment on everything you do, but if you make a decision that could be confusion or something could be potentially seen as an error (e.g. because it is not the default way or not the most obvious way) please comment on why you did this. This prevents people from “fixing” stuff that is not broken.
 
 ## Add tests
-Please add tests using mocha and jsdom, to verify & test your changes. Make sure to make your test fail first, so you are sure they work.
-Since tests are very important, your PR is going to be failed by coveralls, if you do not include tests.
-
-If something is hard to test, you probably need to refactor it into multiple small functions. This is one of the good effects of testing, it improves your code quality.
+Please add tests using mocha and jsdom, to verify & test your changes. Make sure to make your test fail first, so you are sure they work. Your PR will fail, if you do not include tests.
 
 Just add a new `.js` file to the `test` folder, or add a test to one of the files that already exist.
-
-## Styleguide
-
-> *While the code does not pass the linking yet, we are working on it. Please ensure your code does pass our linting.*
-
-Take care to maintain the existing coding style. Lint and test your code using `npm test`.
-
-### Keep lines as short as possible (max. 80 characters)
-Keeping your lines short makes it much more easy to spot errors and for other developers to scan the code.
-
-Keeping to an 80 character limit makes you think more about how to code something and often forces you to refactor and simplify your code.
-
-Lastly, less character per line, mean less potential merge conflicts.
-
-### Don’t use multiple var declaration (except for-loop)
-```javascript
-BAD:
-var sortableElement = this, index, placeholder;
-
-Good:
-var sortableElement = this;
-var index;
-var placeholder;
-```
-
-While a little verbose, declaring one variable per line makes the code much more easy to scan.
-Additionally this helps when merging PRs.
-
-### Don’t use chaining
-```javascript
-BAD:
-var foo = bar.filter(placeholders).map(baz);
-
-Good:
-var foo = bar.filter(placeholders);
-foo = foo.map(baz);
-```
-
-While this can be a nice feature it makes the code less maintainable, harder to read and harder to understand. **Don’t use chaining**.
-
-### Try to avoid else if and else
-Try to refrain from using any `else`/`else if` statements and instead opt for simple `if`-statments with `return`s. This makes the code much easier to ready and refactor.
-
-```javascript
-if( a === b){
-  return …
-} else {
-  return …
-}
-
-// Could be refactor to
-if( a === b){
-  return …
-}
-return …
-```
-
-### Reduce parameters (max. 3)
-Never use more than 3 parameters, this will keep you from falling into bad habits. If you need complex configuration (which you should try to avoid), use an object.
-
-### Reduce nesting depth (max. 3)
-Do not nest too deeply. This will make the code confusing, hard to read, and again, makes merging hard.
-If your code gets too complex, try to refactor parts out into individual functions.
 
 # Roadmap
 If you want to help us by working on any of the points below, please let me know and I add you and your branch to the list.
@@ -314,11 +249,3 @@ If you want to help us by working on any of the points below, please let me know
 - [ ] mocha tests (wip)
 - [ ] Refactor & break code into functions (wip)
 - [ ] Nesting via drag & drop
-- [ ] refactor to have gulp create
-  - [ ] jQuery version
-  - [ ] plain js version
-- [x] ~~use css framework for examples~~
-- [x] ~~make this compatible with~~
-  - [x] ~~plain js~~
-  - [x] ~~amd~~
-  - [x] ~~commonjs~~

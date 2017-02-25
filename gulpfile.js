@@ -1,12 +1,8 @@
 'use strict'
 /* ---------- */
-/* variables */
-var srcFile = 'html.sortable.src.js'
-/* ---------- */
 /* setup */
 var gulp = require('gulp')
 var rename = require('gulp-rename')
-var del = require('del')
 var uglify = require('gulp-uglify')
 var sourcemaps = require('gulp-sourcemaps')
 var umd = require('gulp-umd')
@@ -15,7 +11,7 @@ var strip = require('gulp-strip-code')
 /* ---------- */
 /* convert to umd */
 gulp.task('umd', function () {
-  return gulp.src('src/' + srcFile)
+  return gulp.src('src/html.sortable.js')
     .pipe(strip({
       // jscs:disable
       start_comment: 'start-testing',
@@ -30,17 +26,13 @@ gulp.task('umd', function () {
         return 'sortable'
       }
     }))
-    .pipe(rename('html.sortable.js'))
-    .pipe(gulp.dest('src/'))
+    .pipe(gulp.dest('dist/'))
 })
 /* ---------- */
 /* build */
-gulp.task('build-version', ['umd'], function () {
-  // clear dist
-  del.sync('./dist/*', {force: true})
+gulp.task('minify', ['umd'], function () {
   // copy files to dist
-  gulp.src(['src/html.sortable.js'])
-    .pipe(gulp.dest('./dist'))
+  gulp.src(['dist/html.sortable.js'])
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(uglify())
     .pipe(rename({
@@ -48,11 +40,8 @@ gulp.task('build-version', ['umd'], function () {
     }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./dist'))
-    // remove umd
-    .on('end', function () {
-      del.sync('./src/html.sortable.js', {force: true})
-    })
+    .pipe(gulp.dest('./docs'))
 })
 /* ---------- */
 /* tasks */
-gulp.task('build', ['umd', 'build-version', 'test'])
+gulp.task('default', ['umd', 'minify'])

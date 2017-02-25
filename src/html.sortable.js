@@ -3,7 +3,8 @@
  * https://github.com/voidberg/html5sortable
  *
  * Original code copyright 2012 Ali Farhadi.
- * This version is mantained by Alexandru Badiu <andu@ctrlz.ro> & Lukas Oppermann <lukas@vea.re>
+ * This version is mantained by Lukas Oppermann <lukas@vea.re>
+ * Previously also mantained by Alexandru Badiu <andu@ctrlz.ro>
  * jQuery-independent implementation by Nazar Mokrynskyi <nazar@mokrynskyi.com>
  *
  * Released under the MIT license.

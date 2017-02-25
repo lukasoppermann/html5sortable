@@ -4,7 +4,7 @@ describe('Testing ghost creation methods', function(){
   global.document = require('jsdom').jsdom('<html lang="en-US"></html>');
   global.window = global.document.defaultView;
   global.$ = global.jQuery = require('../node_modules/jquery/dist/jquery.js');
-  var sortable = require("../src/html.sortable.src.js");
+  var sortable = require("../src/html.sortable.js");
   $('body').html('').append('<ul class="sortable"><li>item</li></ul>');
   // moch dragged item
   var dItem = $('<li>dItem Test</li>');
