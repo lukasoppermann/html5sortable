@@ -221,6 +221,52 @@
 		    </div>
 			</div>
 		</section>
+    <section class="mb3 mx-auto col col-12">
+      <div class="p3 clearfix bg-teal white">
+          <div class="col col-4">
+              <h2 class="h3 m0">
+                  Sortable Table
+              </h2>
+              Tables rows can be sorted too, by making the container the
+              <code class="yellow">tbody</code> and setting the <code class="yellow">items</code>
+               property to <code class="yellow">tr</code>.
+          </div>
+          <div class="col col-6">
+              <table class="ml4">
+                  <thead class="bg-yellow">
+                      <tr>
+                          <td class="black">Food</td>
+                          <td class="black">Topping</td>
+                          <td class="black">Absolutely No</td>
+                      </tr>
+                  </thead>
+                  <tbody class="js-sortable-table">
+                      <tr><td></td></tr>
+                      <tr class="border bg-white navy p4 js-sortable-tr">
+                          <td>Taco</td>
+                          <td>Salsa</td>
+                          <td>Pickles</td>
+                      </tr>
+                      <tr class="border bg-white navy p4 js-sortable-tr">
+                          <td>Burger</td>
+                          <td>Lettuce</td>
+                          <td>Rice</td>
+                      </tr>
+                      <tr class="border bg-white navy p4 js-sortable-tr">
+                          <td>Pad Thai</td>
+                          <td>Crushed Red Pepper</td>
+                          <td>Spaghetti Noodles</td>
+                      </tr>
+                      <tr class="border bg-white navy p4 js-sortable-tr">
+                          <td>Bratwurst</td>
+                          <td>Sourkraut</td>
+                          <td>Jelly</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+    </section>
 	</div>
 	<script src="html.sortable.min.js"></script>
 	<script>
@@ -272,6 +318,11 @@
 				items: 'li',
 				placeholderClass: 'border border-white mb1'
 			});
+      sortable('.js-sortable-table', {
+        items: "tr.js-sortable-tr",
+        placeholder: "<tr><td colspan=\"3\"><span class=\"center\">The row will appear here</span></tr>",
+        forcePlaceholderSize: false
+      })
 			// buttons to add items and reload the list
 			// separately to showcase issue without reload
 			document.querySelector('.js-add-item-button').addEventListener('click', function(){
