@@ -348,7 +348,7 @@ var _index = function (element) {
     if (!element.parentElement) {
         return 0
     }
-    return Array.prototype.indexOf.call(_getChildren(element.parentElement), element)
+    return Array.prototype.indexOf.call(element.parentElement.children, element)
 }
 /**
  * Whether element is in DOM
