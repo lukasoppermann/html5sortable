@@ -464,7 +464,7 @@ function _getChildren(element) {
 var sortable = function (sortableElements, options) {
   var method = String(options)
 
-  if (typeof options.getChildren === 'function'){
+  if (options && typeof options.getChildren === 'function'){
     _getChildren = options.getChildren
   }
 
