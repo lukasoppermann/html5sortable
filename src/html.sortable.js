@@ -474,9 +474,7 @@ var sortable = function (sortableElements, options) {
   })(options)
 
   if (options && typeof options.getChildren === 'function') {
-    _getChildren = function (element) {
-      return options.getChildren(element)
-    }
+    _getChildren = options.getChildren
   }
 
   if (typeof sortableElements === 'string') {
