@@ -443,7 +443,7 @@ function _debounce (fn, delay, context) {
   }
 }
 
-function _getChildren (element) {
+var _getChildren = function (element) {
   return element.children
 }
 
@@ -474,7 +474,7 @@ var sortable = function (sortableElements, options) {
   })(options)
 
   if (options && typeof options.getChildren === 'function') {
-    _getChildren = function(element) {
+    _getChildren = function (element) {
       return options.getChildren(element)
     }
   }
