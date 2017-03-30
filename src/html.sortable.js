@@ -444,11 +444,7 @@ function _debounce (fn, delay, context) {
 }
 
 function _getChildren(element) {
-    return (Polymer && Polymer.dom)
-        ? Polymer.dom(element).children.filter(function (element) {
-            return element.tagName.toLowerCase() !== 'template';
-        })
-        : element.children;
+  return element.children;
 }
 
 /*
@@ -458,6 +454,10 @@ function _getChildren(element) {
  */
 var sortable = function (sortableElements, options) {
   var method = String(options)
+
+  if (typeof options.getChildren === 'function'){
+    _getChildren = options.getChildren
+  }
 
   options = (function (options) {
     var result = {
@@ -472,7 +472,9 @@ var sortable = function (sortableElements, options) {
       debounce: 0
     }
     for (var option in options) {
-      result[option] = options[option]
+      if(typeof options[option] !== 'function'){
+        result[option] = options[option]
+      }
     }
     return result
   })(options)
@@ -605,7 +607,7 @@ var sortable = function (sortableElements, options) {
         _dispatchEventOnConnected(sortableElement, _makeEvent('sortupdate', {
           item: dragging,
           index: _filter(_getChildren(newParent), _data(newParent, 'items'))
-            .indexOf(dragging),
+              .indexOf(dragging),
           oldindex: items.indexOf(dragging),
           elementIndex: _index(dragging),
           oldElementIndex: index,
