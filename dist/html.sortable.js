@@ -274,7 +274,7 @@ var _getHandles = function (items, handle) {
  */
 var _destroySortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts') || {}
-  var items = _filter(sortableElement.children, opts.items)
+  var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   // remove event handlers & data from sortable
   _removeSortableEvents(sortableElement)
@@ -290,7 +290,7 @@ var _destroySortable = function (sortableElement) {
  */
 var _enableSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, opts.items)
+  var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'move')
   _attr(handles, 'draggable', 'true')
@@ -318,7 +318,7 @@ var _enableSortable = function (sortableElement) {
  */
 var _disableSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, opts.items)
+  var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'none')
   _attr(handles, 'draggable', 'false')
@@ -331,7 +331,7 @@ var _disableSortable = function (sortableElement) {
  */
 var _reloadSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, opts.items)
+  var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   // remove event handlers from items
   _removeItemEvents(items)
@@ -452,6 +452,10 @@ function _debounce (fn, delay, context) {
   }
 }
 
+var _getChildren = function (element) {
+  return element.children
+}
+
 /*
  * Public sortable object
  * @param {Array|NodeList} sortableElements
@@ -478,6 +482,10 @@ var sortable = function (sortableElements, options) {
     return result
   })(options)
 
+  if (options && typeof options.getChildren === 'function') {
+    _getChildren = options.getChildren
+  }
+
   if (typeof sortableElements === 'string') {
     sortableElements = document.querySelectorAll(sortableElements)
   }
@@ -502,7 +510,7 @@ var sortable = function (sortableElements, options) {
     // reset sortable
     _reloadSortable(sortableElement)
     // initialize
-    var items = _filter(sortableElement.children, options.items)
+    var items = _filter(_getChildren(sortableElement), options.items)
     var index
     var startParent
     var placeholder = options.placeholder
@@ -605,8 +613,8 @@ var sortable = function (sortableElements, options) {
       if (index !== _index(dragging) || startParent !== newParent) {
         _dispatchEventOnConnected(sortableElement, _makeEvent('sortupdate', {
           item: dragging,
-          index: _filter(newParent.children, _data(newParent, 'items'))
-            .indexOf(dragging),
+          index: _filter(_getChildren(newParent), _data(newParent, 'items'))
+              .indexOf(dragging),
           oldindex: items.indexOf(dragging),
           elementIndex: _index(dragging),
           oldElementIndex: index,
@@ -675,7 +683,7 @@ var sortable = function (sortableElements, options) {
           .forEach(_detach)
       } else {
         if (placeholders.indexOf(element) === -1 &&
-            !_filter(element.children, options.items).length) {
+            !_filter(_getChildren(element), options.items).length) {
           placeholders.forEach(_detach)
           element.appendChild(placeholder)
         }
