@@ -17,7 +17,7 @@
 # Support
 
 | Browser | Chrome | Firefox | Safari | Opera | IE |
-|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | Tested version | 39 | 34 | 7.1.2 |  26 | IE9+ |
 
 # Installation
