@@ -20,6 +20,10 @@
 |---|---|---|---|---|---|
 | Tested version | 39 | 34 | 7.1.2 |  26 | IE9+ |
 
+## Framework adapters
+If you would like to add an adapter to the list, please [create an issue](https://github.com/lukasoppermann/html5sortable/issues) with the link to your adapter.
+- **Polymer:** https://github.com/trofrigo/polymer-html5sortable
+
 # Installation
 
 You need to install the package using `npm` or downloading it manually. Afterwards you need to load `dist/html.sortable.js` or the minified version, `dist/html.sortable.min.js`. **Make sure to grab the file from the `dist/` directory.**
