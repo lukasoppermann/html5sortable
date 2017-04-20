@@ -273,12 +273,10 @@
 			sortable('.js-sortable', {
 				forcePlaceholderSize: true,
 				placeholderClass: 'p1 mb1 bg-navy border border-yellow',
-				dragImage: document.querySelector('.ghost')
 			});
 			sortable('.js-grid', {
 				forcePlaceholderSize: true,
-				placeholderClass: 'col col-4 border border-maroon',
-				dragImage: null
+				placeholderClass: 'col col-4 border border-maroon'
 			});
 			sortable('.js-sortable-disabled', {
 				forcePlaceholderSize: true,
@@ -306,11 +304,11 @@
 			});
 			document.querySelector('.js-sortable-connected').addEventListener('sortupdate', function(e){
 				console.log('Parent old: ');
-				console.log(e.originalEvent.detail.startparent);
+				console.log(e.detail.startparent);
 				console.log('Parent new: ');
-				console.log(e.originalEvent.detail.endparent);
-				console.log('Index: '+e.originalEvent.detail.oldindex+' -> '+e.originalEvent.detail.index);
-				console.log('elementIndex: '+e.originalEvent.detail.oldElementIndex+' -> '+e.originalEvent.detail.elementIndex);
+				console.log(e.detail.endparent);
+				console.log('Index: '+e.detail.oldindex+' -> '+e.detail.index);
+				console.log('elementIndex: '+e.detail.oldElementIndex+' -> '+e.detail.elementIndex);
 			});
 
 			sortable('.js-sortable-buttons', {
