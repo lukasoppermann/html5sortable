@@ -46,7 +46,7 @@ var _removeData = function (element) {
  * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
  * @param {el} DOM element
  * @param {selector} selector test against the element
- * @retirms {boolean}
+ * @returns {boolean}
  */
 var _matches = function (el, selector) {
   return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector)
@@ -459,8 +459,6 @@ var sortable = function (sortableElements, options) {
     var result = {
       connectWith: false,
       placeholder: null,
-      // dragImage can be null or a Element
-      dragImage: null,
       disableIEFix: false,
       placeholderClass: 'sortable-placeholder',
       draggingClass: 'sortable-dragging',
@@ -556,18 +554,8 @@ var sortable = function (sortableElements, options) {
         return
       }
 
-      if (options.dragImage) {
-        _attachGhost(e, {
-          draggedItem: options.dragImage,
-          x: 0,
-          y: 0
-        })
-        console.log('WARNING: dragImage option is deprecated' +
-        ' and will be removed in the future!')
-      } else {
-        // add transparent clone or other ghost to cursor
-        _getGhost(e, this)
-      }
+      // add transparent clone or other ghost to cursor
+      _getGhost(e, this)
       // cache selsection & add attr for dragging
       this.classList.add(options.draggingClass)
       dragging = this

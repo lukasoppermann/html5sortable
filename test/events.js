@@ -72,6 +72,8 @@ describe('Testing events', function(){
     });
     $li.get(0).dispatchEvent(sortable.__testing._makeEvent('mouseenter'));
     assert.isTrue($li.hasClass('sortable-over'));
+    $li.get(0).dispatchEvent(sortable.__testing._makeEvent('mouseleave'));
+    assert.isFalse($li.hasClass('sortable-over'));
   });
 
   it('should correctly add class on hover event', function(){
