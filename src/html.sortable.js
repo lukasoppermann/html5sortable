@@ -552,7 +552,7 @@ var sortable = function (sortableElements, options) {
     // Handle drag events on draggable items
     _on(items, 'dragstart', function (e) {
       e.stopImmediatePropagation()
-      if (options.handle && !_matches(e.target, options.handle)) {
+      if ((options.handle && !_matches(e.target, options.handle)) || !this.draggable) {
         return
       }
 
