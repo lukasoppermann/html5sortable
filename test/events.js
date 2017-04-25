@@ -42,6 +42,13 @@ describe('Testing events', function () {
         top: 5
       }]
     }
+
+    $ul.find('li').eq(1).get(0).getClientRects = function () {
+      return [{
+        left: 5,
+        top: 25
+      }]
+    }
   })
 
   it('should correctly run dragstart event', function () {
@@ -127,5 +134,41 @@ describe('Testing events', function () {
 
     assert.notEqual($li.index(), originalIndex)
     assert.equal($li.index(), 2)
+  })
+
+  it('should correctly place non-moved item into correct index', function () {
+    sortable(ul, {
+      'items': 'li',
+      placeholderClass: 'test-placeholder'
+    })
+    let _li = $ul.find('li').eq(1)
+    let originalIndex = _li.index()
+
+    let event = sortable.__testing._makeEvent('dragstart')
+    event.pageX = 0
+    event.pageY = 10
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    _li.get(0).dispatchEvent(event)
+    assert.equal($(sortable.__testing._getPlaceholders()[0]).index(), -1)
+
+    event = sortable.__testing._makeEvent('dragover')
+    event.pageX = 0
+    event.pageY = 35
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    $ul.find('li').eq(2).get(0).dispatchEvent(event)
+    assert.notEqual($(sortable.__testing._getPlaceholders()[0]).index(), originalIndex)
+
+    $ul.find('li').eq(1).get(0).dispatchEvent(event)
+    event = sortable.__testing._makeEvent('drop')
+    sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
+    assert.equal(_li.index(), originalIndex)
   })
 })

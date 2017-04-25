@@ -656,7 +656,11 @@ var sortable = function (sortableElements, options) {
         if (dragging.oldDisplay === undefined) {
           dragging.oldDisplay = dragging.style.display
         }
-        dragging.style.display = 'none'
+
+        if (dragging.style.display !== 'none') {
+          dragging.style.display = 'none'
+        }
+
         if (placeholderIndex < thisIndex) {
           _after(element, placeholder)
         } else {
