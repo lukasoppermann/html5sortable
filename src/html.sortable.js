@@ -656,7 +656,11 @@ var sortable = function (sortableElements, options) {
         if (dragging.oldDisplay === undefined) {
           dragging.oldDisplay = dragging.style.display
         }
-        dragging.style.display = 'none'
+
+        if (dragging.style.display !== 'none') {
+          dragging.style.display = 'none'
+        }
+
         if (placeholderIndex < thisIndex) {
           _after(element, placeholder)
         } else {
@@ -722,7 +726,11 @@ sortable.__testing = {
   _makeGhost: _makeGhost,
   _index: _index,
   _makeEvent: _makeEvent,
-  _debounce: _debounce
+  _debounce: _debounce,
+  _getPlaceholders: () => placeholders,
+  _resetPlaceholders: () => {
+    placeholders = []
+  }
 }
 module.exports = sortable
 /* end-testing */
