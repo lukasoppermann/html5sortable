@@ -171,4 +171,42 @@ describe('Testing events', function () {
     sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
     assert.equal(_li.index(), originalIndex)
   })
+
+  it('should revert item into correct index when dropped outside', function () {
+    sortable(ul, {
+      'items': 'li',
+      placeholderClass: 'test-placeholder'
+    })
+    let _li = $ul.find('li').eq(1)
+    let originalIndex = _li.index()
+
+    let event = sortable.__testing._makeEvent('dragstart')
+    event.pageX = 0
+    event.pageY = 10
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    _li.get(0).dispatchEvent(event)
+    assert.equal($(sortable.__testing._getPlaceholders()[0]).index(), -1)
+
+    event = sortable.__testing._makeEvent('dragover')
+    event.pageX = 0
+    event.pageY = 135
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    $ul.find('li').eq(1).get(0).dispatchEvent(event)
+    assert.notEqual($(sortable.__testing._getPlaceholders()[0]).index(), originalIndex)
+
+    $('body').get(0).dispatchEvent(event)
+
+    event = sortable.__testing._makeEvent('drop')
+
+    $('body').get(0).dispatchEvent(event)
+    assert.equal(_li.index(), originalIndex)
+  })
 })
