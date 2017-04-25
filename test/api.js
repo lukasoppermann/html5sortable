@@ -2,11 +2,14 @@
 describe('Testing api', function () {
   // testing basic api
   var assert = require('chai').assert
-  global.document = require('jsdom').jsdom('<html lang="en-US"></html>')
-  global.window = global.document.defaultView
+  const jsdom = require('jsdom')
+  const { JSDOM } = jsdom
+  const window = (new JSDOM(``, { runScripts: "outside-only" })).window;
+  global.window = window
+  global.document = window.document
   global.$ = require('jquery')
   let $ul, ul, $lis, $li
-
+  
   var sortable = require('../src/html.sortable.js')
   var resetSortable = function () {
     $('body').html('').append('<ul class="sortable">' +

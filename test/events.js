@@ -2,8 +2,10 @@
 describe('Testing events', function () {
   // testing basic api
   var assert = require('chai').assert
-  global.document = require('jsdom').jsdom('<html lang="en-US"></html>')
-  global.window = global.document.defaultView
+  const jsdom = require('jsdom')
+  const { JSDOM } = jsdom
+  global.document = new JSDOM(`<!DOCTYPE html>`)
+  global.window = global.document.window
   global.$ = require('jquery')
   let $ul, ul, $li
   var sortable = require('../src/html.sortable.js')
