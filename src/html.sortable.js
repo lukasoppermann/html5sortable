@@ -722,7 +722,11 @@ sortable.__testing = {
   _makeGhost: _makeGhost,
   _index: _index,
   _makeEvent: _makeEvent,
-  _debounce: _debounce
+  _debounce: _debounce,
+  _getPlaceholders: () => placeholders,
+  _resetPlaceholders: () => {
+    placeholders = []
+  }
 }
 module.exports = sortable
 /* end-testing */
