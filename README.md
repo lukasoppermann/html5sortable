@@ -18,7 +18,7 @@
 
 | Browser | Chrome | Firefox | Safari | Opera | IE |
 |---|---|---|---|---|---|
-| Tested version | 39 | 34 | 7.1.2 |  26 | IE9+ |
+| Tested version | 39 | 34 | 7.1.2 |  26 | IE11 |
 
 ## Framework adapters
 If you would like to add an adapter to the list, please [create an issue](https://github.com/lukasoppermann/html5sortable/issues) with the link to your adapter.
