@@ -247,6 +247,11 @@ var _listsConnected = function (curList, destList) {
   }
   return false
 }
+/*
+ * get handle or return item
+ * @param {Array} items
+ * @param {selector} handle
+ */
 var _getHandles = function (items, handle) {
   var result = []
   var handles
@@ -711,6 +716,7 @@ sortable.__testing = {
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
+  _getHandles: _getHandles,
   _makeGhost: _makeGhost,
   _index: _index,
   _makeEvent: _makeEvent,
