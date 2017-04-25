@@ -2,8 +2,10 @@
 describe('Testing ghost creation methods', function () {
 // testing ghost creation functions
   var assert = require('chai').assert
-  global.document = require('jsdom').jsdom('<html lang="en-US"></html>')
-  global.window = global.document.defaultView
+  const jsdom = require('jsdom')
+  const { JSDOM } = jsdom
+  global.document = new JSDOM(`<!DOCTYPE html>`)
+  global.window = global.document.window
   global.$ = global.jQuery = require('../node_modules/jquery/dist/jquery.js')
   var sortable = require('../src/html.sortable.js')
   $('body').html('').append('<ul class="sortable"><li>item</li></ul>')

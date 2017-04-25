@@ -36,7 +36,7 @@
     "gulp-util": "^3.0.4",
     "istanbul": "0.4.x",
     "jquery": "3.*",
-    "jsdom": "9.*",
+    "jsdom": "10.*",
     "mocha": "^2.2.4",
     "mocha-istanbul": "^0.2.0",
     "requirejs": "^2.1.17",
