@@ -39,7 +39,6 @@ describe('Internal function tests', function () {
     // need to add on click so that event object is not removed
     // when all sortable events are removed
     sortable(ul)
-    $ul.on('click', 'console.log')
     sortable.__testing._removeSortableEvents(ul)
     assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('dragover'))
     assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('dragenter'))
@@ -54,7 +53,6 @@ describe('Internal function tests', function () {
     // need to add on click so that event object is not removed
     // when all sortable events are removed
     sortable(ul)
-    $ul.find('li').first().on('click', 'console.log')
     sortable.__testing._removeItemEvents(li)
     // test individual events
     assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragover'))
@@ -164,5 +162,12 @@ describe('Internal function tests', function () {
     let handles = sortable.__testing._getHandles($lis.get())
     assert.equal(handles.length, 3)
     assert.equal(handles[0].nodeName, 'LI')
+  })
+
+  it('_attached', function () {
+    // let div = $('<div class="test" />')
+    console.log('Test missing')
+    // assert.equal(sortable.__testing._attached($lis.get(0)), true)
+    // assert.equal(sortable.__testing._attached(div.get(0)), false)
   })
 })

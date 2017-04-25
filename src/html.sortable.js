@@ -352,6 +352,7 @@ var _index = function (element) {
  * @returns {boolean}
  */
 var _attached = function (element) {
+  // document.body.contains(element)
   return !!element.parentNode
 }
 /**
@@ -707,6 +708,7 @@ sortable.disable = function (sortableElement) {
 /* start-testing */
 sortable.__testing = {
   // add internal methods here for testing purposes
+  _attached: _attached,
   _data: _data,
   _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
