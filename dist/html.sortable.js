@@ -55,7 +55,7 @@ var _removeData = function (element) {
  * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
  * @param {el} DOM element
  * @param {selector} selector test against the element
- * @retirms {boolean}
+ * @returns {boolean}
  */
 var _matches = function (el, selector) {
   return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector)
@@ -256,6 +256,11 @@ var _listsConnected = function (curList, destList) {
   }
   return false
 }
+/*
+ * get handle or return item
+ * @param {Array} items
+ * @param {selector} handle
+ */
 var _getHandles = function (items, handle) {
   var result = []
   var handles
@@ -356,6 +361,7 @@ var _index = function (element) {
  * @returns {boolean}
  */
 var _attached = function (element) {
+  // document.body.contains(element)
   return !!element.parentNode
 }
 /**
@@ -468,8 +474,6 @@ var sortable = function (sortableElements, options) {
     var result = {
       connectWith: false,
       placeholder: null,
-      // dragImage can be null or a Element
-      dragImage: null,
       disableIEFix: false,
       placeholderClass: 'sortable-placeholder',
       draggingClass: 'sortable-dragging',
@@ -561,22 +565,12 @@ var sortable = function (sortableElements, options) {
     // Handle drag events on draggable items
     _on(items, 'dragstart', function (e) {
       e.stopImmediatePropagation()
-      if (options.handle && !_matches(e.target, options.handle)) {
+      if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'false') {
         return
       }
 
-      if (options.dragImage) {
-        _attachGhost(e, {
-          draggedItem: options.dragImage,
-          x: 0,
-          y: 0
-        })
-        console.log('WARNING: dragImage option is deprecated' +
-        ' and will be removed in the future!')
-      } else {
-        // add transparent clone or other ghost to cursor
-        _getGhost(e, this)
-      }
+      // add transparent clone or other ghost to cursor
+      _getGhost(e, this)
       // cache selsection & add attr for dragging
       this.classList.add(options.draggingClass)
       dragging = this
