@@ -46,7 +46,7 @@ var _removeData = function (element) {
  * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
  * @param {el} DOM element
  * @param {selector} selector test against the element
- * @retirms {boolean}
+ * @returns {boolean}
  */
 var _matches = function (el, selector) {
   return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector)
@@ -247,6 +247,11 @@ var _listsConnected = function (curList, destList) {
   }
   return false
 }
+/*
+ * get handle or return item
+ * @param {Array} items
+ * @param {selector} handle
+ */
 var _getHandles = function (items, handle) {
   var result = []
   var handles
@@ -347,6 +352,7 @@ var _index = function (element) {
  * @returns {boolean}
  */
 var _attached = function (element) {
+  // document.body.contains(element)
   return !!element.parentNode
 }
 /**
@@ -702,6 +708,7 @@ sortable.disable = function (sortableElement) {
 /* start-testing */
 sortable.__testing = {
   // add internal methods here for testing purposes
+  _attached: _attached,
   _data: _data,
   _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
@@ -711,6 +718,7 @@ sortable.__testing = {
   _attachGhost: _attachGhost,
   _addGhostPos: _addGhostPos,
   _getGhost: _getGhost,
+  _getHandles: _getHandles,
   _makeGhost: _makeGhost,
   _index: _index,
   _makeEvent: _makeEvent,

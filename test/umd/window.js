@@ -1,3 +1,4 @@
-define(function(){
-   return window;
-});
+/* global define */
+define(function () {
+  return window
+})
