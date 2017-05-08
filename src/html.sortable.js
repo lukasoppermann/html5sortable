@@ -48,6 +48,7 @@ var _removeData = function (element) {
  * @param {selector} selector test against the element
  * @returns {boolean}
  */
+/* istanbul ignore next */
 var _matches = function (el, selector) {
   return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector)
 }

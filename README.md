@@ -18,7 +18,7 @@
 
 | Browser | Chrome | Firefox | Safari | Opera | IE |
 |---|---|---|---|---|---|
-| Tested version | 39 | 34 | 7.1.2 |  26 | IE9+ |
+| Tested version | 39 | 34 | 7.1.2 |  26 | IE11 |
 
 ## Framework adapters
 If you would like to add an adapter to the list, please [create an issue](https://github.com/lukasoppermann/html5sortable/issues) with the link to your adapter.
@@ -35,7 +35,7 @@ npm install html5sortable --save
 Still using **bower**? [Look here](https://github.com/lukasoppermann/html5sortable/wiki/Installation#bower).
 
 # Examples
-You can find the **[examples online](http://lukasoppermann.github.io/html5sortable/examples/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
+You can find the **[examples online](https://lukasoppermann.github.io/html5sortable/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
 
 # Build it / Hack it
 **1. Clone and install the project**
