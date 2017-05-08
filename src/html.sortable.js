@@ -318,6 +318,7 @@ var _disableSortable = function (sortableElement) {
   var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'none')
+  _data(sortableElement, '_disabled', 'true')
   _attr(handles, 'draggable', 'false')
   _off(handles, 'mousedown')
 }
@@ -330,6 +331,7 @@ var _reloadSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
   var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
+  _data(sortableElement, '_disabled', 'false')
   // remove event handlers from items
   _removeItemEvents(items)
   _off(handles, 'mousedown')
@@ -682,7 +684,7 @@ var sortable = function (sortableElements, options) {
 
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function (e) {
-      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement)) {
+      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled')) {
         return
       }
       e.preventDefault()
