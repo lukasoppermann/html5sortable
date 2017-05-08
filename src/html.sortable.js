@@ -289,6 +289,7 @@ var _enableSortable = function (sortableElement) {
   var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'move')
+  _data(sortableElement, '_disabled', 'false')
   _attr(handles, 'draggable', 'true')
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
@@ -317,6 +318,7 @@ var _disableSortable = function (sortableElement) {
   var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'none')
+  _data(sortableElement, '_disabled', 'true')
   _attr(handles, 'draggable', 'false')
   _off(handles, 'mousedown')
 }
@@ -329,6 +331,7 @@ var _reloadSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
   var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
+  _data(sortableElement, '_disabled', 'false')
   // remove event handlers from items
   _removeItemEvents(items)
   _off(handles, 'mousedown')
@@ -469,7 +472,8 @@ var sortable = function (sortableElements, options) {
       placeholderClass: 'sortable-placeholder',
       draggingClass: 'sortable-dragging',
       hoverClass: false,
-      debounce: 0
+      debounce: 0,
+      maxSize: null
     }
     for (var option in options) {
       result[option] = options[option]
@@ -509,6 +513,7 @@ var sortable = function (sortableElements, options) {
     var index
     var startParent
     var placeholder = options.placeholder
+    var maxSize
     if (!placeholder) {
       placeholder = document.createElement(
         /^ul|ol$/i.test(sortableElement.tagName) ? 'li' : 'div'
@@ -551,6 +556,11 @@ var sortable = function (sortableElements, options) {
       _on(items, 'mouseleave', function () {
         this.classList.remove(hoverClass)
       })
+    }
+
+    // max size
+    if (options.maxSize && typeof options.maxSize === 'number') {
+       maxSize = options.maxSize;
     }
 
     // Handle drag events on draggable items
@@ -623,6 +633,14 @@ var sortable = function (sortableElements, options) {
       visiblePlaceholder = placeholders.filter(_attached)[0]
       _after(visiblePlaceholder, dragging)
       dragging.dispatchEvent(_makeEvent('dragend'))
+
+      if (maxSize) {
+        if (_filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length == maxSize) {
+          _disableSortable(sortableElement)
+        } else {
+          _enableSortable(sortableElement)
+        }
+      }
     })
 
     var debouncedDragOverEnter = _debounce(function (element, pageY) {
@@ -681,7 +699,7 @@ var sortable = function (sortableElements, options) {
 
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function (e) {
-      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement)) {
+      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
       }
       e.preventDefault()
