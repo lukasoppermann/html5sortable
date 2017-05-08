@@ -685,7 +685,7 @@ var sortable = function (sortableElements, options) {
 
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function (e) {
-      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled')) {
+      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
       }
       e.preventDefault()
