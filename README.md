@@ -183,6 +183,15 @@ sortable('.sortable', {
 });
 ```
 
+### maxItems
+Use `maxItems` option to cap the number of items that can be added to the element from connected lists:
+
+``` javascript
+sortable('.sortable', {
+  maxItems: 3 // Defaults to 0 (no limit)
+});
+```
+
 ## Methods
 
 ### destroy
