@@ -290,6 +290,7 @@ var _enableSortable = function (sortableElement) {
   var items = _filter(_getChildren(sortableElement), opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'move')
+  _data(sortableElement, '_disabled', 'false')
   _attr(handles, 'draggable', 'true')
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
@@ -684,7 +685,7 @@ var sortable = function (sortableElements, options) {
 
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function (e) {
-      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled')) {
+      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'false') {
         return
       }
       e.preventDefault()
