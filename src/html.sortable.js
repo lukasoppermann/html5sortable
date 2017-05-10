@@ -471,7 +471,7 @@ var sortable = function (sortableElements, options) {
       draggingClass: 'sortable-dragging',
       hoverClass: false,
       debounce: 0,
-      maxItems: null
+      maxItems: 0
     }
     for (var option in options) {
       result[option] = options[option]
