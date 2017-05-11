@@ -560,7 +560,7 @@ var sortable = function (sortableElements, options) {
     // Handle drag events on draggable items
     _on(items, 'dragstart', function (e) {
       e.stopImmediatePropagation()
-      if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'true') {
+      if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'false') {
         return
       }
 
@@ -685,7 +685,7 @@ var sortable = function (sortableElements, options) {
 
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function (e) {
-      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'false') {
+      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
       }
       e.preventDefault()
