@@ -9,6 +9,17 @@ We ♥︎ contributions, so if you find a bug or have a great idea create an [is
 
 - **Add tests!** - To avoid bugs we keep the test coverage as high as possible. Please help by adding tests to your bugfixes & features.
 
+- **Comment your code** - Your code should be as self-documenting and easy to read as possible, however please add comments whenever possible/sensible. Better have one line too much than one too little.
+
+- **Use Docblocks for functions** – Every function should have a [docblock](http://usejsdoc.org/about-getting-started.html) above stating what the function does and what parameters it is supposed to receive, return values, etc.
+
+  ```javascript
+  /*
+  * remove event handlers from sortable
+  * @param: {Element} sortable
+  */
+  ```
+
 - **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
 
 - **Do NOT run the build script** – Please do not run the gulp build script and never commit anything in the `dist` directory, those files will be updated once a release is created.
