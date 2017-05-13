@@ -35,7 +35,6 @@
     "gulp-umd": "^0.2.0",
     "gulp-util": "^3.0.4",
     "istanbul": "0.4.x",
-    "jquery": "3.*",
     "jsdom": "9.*",
     "mocha": "^2.2.4",
     "mocha-istanbul": "^0.2.0",

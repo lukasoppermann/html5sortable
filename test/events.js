@@ -1,8 +1,9 @@
-/* global $,describe,it,beforeEach */
+/* global describe,it,beforeEach */
 describe('Testing events', function () {
   // testing basic api
-  var assert = require('chai').assert
-  global.document = require('jsdom').jsdom(`<html lang="en-US">
+  let assert = require('chai').assert
+  global.document = require('jsdom').jsdom(`
+    <html lang="en-US">
     <style>
       html, body{
         margin: 0;
@@ -16,34 +17,33 @@ describe('Testing events', function () {
     <style>
   </html>`)
   global.window = global.document.defaultView
-  global.$ = require('jquery')
-  let $ul, ul, $li
-  var sortable = require('../src/html.sortable.js')
-  var resetSortable = function () {
-    $('body').html('').append('<ul class="sortable">' +
-      '<li class="item">Item 1</li>' +
-      '<li class="item">Item 2</li>' +
-      '<li class="item">Item 3</li>' +
-      '<li class="item"><a href="#" class="handle">Item 4</a></li>' +
-      '<li class="item"><a href="#" class="notHandle">a clever ruse</a></li>' +
-      '</ul>')
-    $ul = $('.sortable')
-    ul = $ul.get()
-  }
+  let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)
+  let body = global.document.querySelector('body')
+  let ul, li, secondLi
+  let sortable = require('../src/html.sortable.js')
 
   beforeEach(function () {
     sortable.__testing._resetPlaceholders()
-    resetSortable()
-    $li = $ul.find('li').first()
+    body.innerHTML = `<ul class="sortable">
+      <li class="item first-item">Item 1</li>
+      <li class="item second-item">Item 2</li>
+      <li class="item">Item 3</li>
+      <li class="item"><a href="#" class="handle">Item 4</a></li>
+      <li class="item"><a href="#" class="notHandle">a clever ruse</a></li>
+    </ul>`
 
-    $li.get(0).getClientRects = function () {
+    ul = body.querySelector('.sortable')
+    li = ul.querySelector('.first-item')
+    secondLi = ul.querySelector('.second-item')
+
+    li.getClientRects = function () {
       return [{
         left: 5,
         top: 5
       }]
     }
 
-    $ul.find('li').eq(1).get(0).getClientRects = function () {
+    secondLi.getClientRects = function () {
       return [{
         left: 5,
         top: 25
@@ -53,32 +53,32 @@ describe('Testing events', function () {
 
   it('should correctly run dragstart event', function () {
     sortable(ul, {
-      'items': 'li',
-      'connectWith': '.test',
+      items: 'li',
+      connectWith: '.test',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     })
     let event = sortable.__testing._makeEvent('dragstart')
-    event.pageX = 100
-    event.pageY = 100
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
       }
     }
-    $li.get(0).dispatchEvent(event)
+    li.dispatchEvent(event)
 
-    assert.equal($li.attr('aria-grabbed'), 'true')
-    assert.isTrue($li.hasClass('test-dragging'))
+    assert.equal(li.getAttribute('aria-grabbed'), 'true')
+    assert.isTrue(li.classList.contains('test-dragging'))
   })
 
   it('should not add class on hover event', function () {
     sortable(ul, {
-      'items': 'li',
+      items: 'li',
       hoverClass: false
     })
-    $li.trigger('mouseover')
-    assert.isFalse($li.hasClass('sortable-over'))
+
+    let event = sortable.__testing._makeEvent('mouseenter')
+    li.dispatchEvent(event)
+    assert.isFalse(li.classList.contains('sortable-over'))
   })
 
   it('should correctly add class on hover event', function () {
@@ -86,10 +86,10 @@ describe('Testing events', function () {
       'items': 'li',
       hoverClass: true
     })
-    $li.get(0).dispatchEvent(sortable.__testing._makeEvent('mouseenter'))
-    assert.isTrue($li.hasClass('sortable-over'))
-    $li.get(0).dispatchEvent(sortable.__testing._makeEvent('mouseleave'))
-    assert.isFalse($li.hasClass('sortable-over'))
+    li.dispatchEvent(sortable.__testing._makeEvent('mouseenter'))
+    assert.isTrue(li.classList.contains('sortable-over'))
+    li.dispatchEvent(sortable.__testing._makeEvent('mouseleave'))
+    assert.isFalse(li.classList.contains('sortable-over'))
   })
 
   it('should correctly add class on hover event', function () {
@@ -97,79 +97,74 @@ describe('Testing events', function () {
       'items': 'li',
       hoverClass: 'sortable-item-over'
     })
-    $li.get(0).dispatchEvent(sortable.__testing._makeEvent('mouseenter'))
-    assert.isTrue($li.hasClass('sortable-item-over'))
+    li.dispatchEvent(sortable.__testing._makeEvent('mouseenter'))
+    assert.isTrue(li.classList.contains('sortable-item-over'))
   })
 
   it('should correctly place moved item into correct index', function () {
     sortable(ul, {
-      'items': 'li',
+      items: 'li',
       placeholderClass: 'test-placeholder'
     })
-    let originalIndex = $li.index()
+
+    let originalIndex = getIndex(li, ul.children)
 
     let event = sortable.__testing._makeEvent('dragstart')
-    event.pageX = 0
-    event.pageY = 0
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
       }
     }
-    $li.get(0).dispatchEvent(event)
+    li.dispatchEvent(event)
 
     event = sortable.__testing._makeEvent('dragover')
-    event.pageX = 0
-    event.pageY = 65
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
       }
     }
-    $ul.find('li').eq(2).get(0).dispatchEvent(event)
+    secondLi.dispatchEvent(event)
 
     event = sortable.__testing._makeEvent('drop')
 
     sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
 
-    assert.notEqual($li.index(), originalIndex)
-    assert.equal($li.index(), 2)
+    assert.notEqual(getIndex(li, ul.children), originalIndex)
+    assert.equal(getIndex(li, ul.children), 1)
   })
 
   it('should correctly place non-moved item into correct index', function () {
     sortable(ul, {
-      'items': 'li',
+      items: 'li',
       placeholderClass: 'test-placeholder'
     })
-    let _li = $ul.find('li').eq(1)
-    let originalIndex = _li.index()
+
+    let originalIndex = getIndex(li, ul.children)
 
     let event = sortable.__testing._makeEvent('dragstart')
-    event.pageX = 0
-    event.pageY = 10
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
       }
     }
-    _li.get(0).dispatchEvent(event)
-    assert.equal($(sortable.__testing._getPlaceholders()[0]).index(), -1)
+
+    li.dispatchEvent(event)
+    assert.equal(getIndex(sortable.__testing._getPlaceholders()[0], ul.children), -1)
 
     event = sortable.__testing._makeEvent('dragover')
-    event.pageX = 0
-    event.pageY = 35
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
       }
     }
-    $ul.find('li').eq(2).get(0).dispatchEvent(event)
-    assert.notEqual($(sortable.__testing._getPlaceholders()[0]).index(), originalIndex)
+    secondLi.dispatchEvent(event)
+    assert.notEqual(getIndex(sortable.__testing._getPlaceholders()[0], ul.children), originalIndex)
 
-    $ul.find('li').eq(1).get(0).dispatchEvent(event)
+    secondLi.dispatchEvent(event)
     event = sortable.__testing._makeEvent('drop')
     sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
-    assert.equal(_li.index(), originalIndex)
+    // TODO: does this test and this check make sense?
+    assert.equal(getIndex(li, ul.children), originalIndex)
   })
 
   it('should revert item into correct index when dropped outside', function () {
@@ -177,36 +172,33 @@ describe('Testing events', function () {
       'items': 'li',
       placeholderClass: 'test-placeholder'
     })
-    let _li = $ul.find('li').eq(1)
-    let originalIndex = _li.index()
+
+    let originalIndex = getIndex(secondLi, ul.children)
 
     let event = sortable.__testing._makeEvent('dragstart')
-    event.pageX = 0
-    event.pageY = 10
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
       }
     }
-    _li.get(0).dispatchEvent(event)
-    assert.equal($(sortable.__testing._getPlaceholders()[0]).index(), -1)
+
+    secondLi.dispatchEvent(event)
+    assert.equal(getIndex(sortable.__testing._getPlaceholders()[0], ul.children), -1)
 
     event = sortable.__testing._makeEvent('dragover')
-    event.pageX = 0
-    event.pageY = 135
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
       }
     }
-    $ul.find('li').eq(1).get(0).dispatchEvent(event)
-    assert.notEqual($(sortable.__testing._getPlaceholders()[0]).index(), originalIndex)
+    secondLi.dispatchEvent(event)
+    assert.notEqual(getIndex(sortable.__testing._getPlaceholders()[0], ul.children), originalIndex)
 
-    $('body').get(0).dispatchEvent(event)
+    body.dispatchEvent(event)
 
     event = sortable.__testing._makeEvent('drop')
 
-    $('body').get(0).dispatchEvent(event)
-    assert.equal(_li.index(), originalIndex)
+    body.dispatchEvent(event)
+    assert.equal(getIndex(secondLi, ul.children), originalIndex)
   })
 })
