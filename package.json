@@ -41,10 +41,11 @@
     "mocha-istanbul": "^0.2.0",
     "requirejs": "^2.1.17",
     "snazzy": "^6.0.0",
-    "standard": "^10.0.2"
+    "standard": "^10.0.2",
+    "standard-readme": "^2.0.2"
   },
   "scripts": {
-    "test": "npm run test-plugin && npm run standard  && npm run standard-test",
+    "test": "npm run test-plugin && npm run standard  && npm run standard-test && standard-readme",
     "standard": "standard 'src/*.js' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
     "travis": "npm run cover && ./node_modules/.bin/mocha test/umd/module.js && snazzy 'src/*.js'",
