@@ -1,16 +1,17 @@
-/* global $,describe,it,beforeEach */
+/* global describe,it,beforeEach */
 describe('Internal function tests', function () {
   // testing basic api
-  var assert = require('chai').assert
+  let assert = require('chai').assert
   global.document = require('jsdom').jsdom('<html lang="en-US"></html>')
   global.window = global.document.defaultView
-  global.$ = global.jQuery = require('../node_modules/jquery/dist/jquery.js')
-  var sortable = require('../src/html.sortable.js')
-  let $ul, $ul2, ul, li, $lis
+  let body = global.document.querySelector('body')
+  let sortable = require('../src/html.sortable.js')
+  let ul, li, allLiElements
 
   beforeEach(function () {
-    $('body').html('').append(`<ul class="sortable">
-      <li>
+    // reset sortable
+    body.innerHTML = `<ul class="sortable">
+      <li class="li-first">
         <span class="handle"></span>
         item
       </li>
@@ -22,27 +23,26 @@ describe('Internal function tests', function () {
         <span class="handle"></span>
         item 3
       </li>
-    </ul>`)
-    $ul = $('.sortable')
-    ul = $ul.get()
+    </ul>`
+    // select sortable
+    ul = body.querySelector('.sortable')
+    // destroy sortable to not have any config leftovers
     sortable(ul, 'destroy')
+    // init sortable
     sortable(ul)
-    $lis = $ul.find('li')
-    li = $ul.find('li').first().get(0)
+    // get all li elements
+    allLiElements = ul.querySelectorAll('li')
+    // get first li element
+    li = ul.querySelector('.li-first')
   })
 
   it('_removeSortableEvents', function () {
-    // remove general jQuery event object
+    // remove events object
     sortable.__testing._removeSortableEvents(ul)
-    assert.isUndefined(ul.h5s && ul.h5s.events)
-    // remove individual events
-    // need to add on click so that event object is not removed
-    // when all sortable events are removed
-    sortable(ul)
-    sortable.__testing._removeSortableEvents(ul)
-    assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('dragover'))
-    assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('dragenter'))
-    assert.isFalse(((ul.h5s || {}).events || {}).hasOwnProperty('drop'))
+    // check that events are gone
+    assert.isUndefined(ul.h5s.events.dragover)
+    assert.isUndefined(ul.h5s.events.dragenter)
+    assert.isUndefined(ul.h5s.events.drop)
   })
 
   it('_removeItemEvents', function () {
@@ -70,12 +70,12 @@ describe('Internal function tests', function () {
       items: 'li',
       connectWith: '.test'
     })
-    sortable.__testing._removeSortableData($ul.get(0))
+    sortable.__testing._removeSortableData(ul)
 
-    assert.isUndefined(sortable.__testing._data($ul.get(0), 'opts'))
-    assert.isUndefined(sortable.__testing._data($ul.get(0), 'connectWith'))
-    assert.isUndefined(sortable.__testing._data($ul.get(0), 'items'))
-    assert.isUndefined(sortable.__testing._data($ul.get(0), 'aria-dropeffect'))
+    assert.isUndefined(sortable.__testing._data(ul, 'opts'))
+    assert.isUndefined(sortable.__testing._data(ul, 'connectWith'))
+    assert.isUndefined(sortable.__testing._data(ul, 'items'))
+    assert.isUndefined(sortable.__testing._data(ul, 'aria-dropeffect'))
   })
 
   it('_removeItemData', function () {
@@ -85,47 +85,49 @@ describe('Internal function tests', function () {
       items: 'li',
       connectWith: '.test'
     })
-    sortable.__testing._removeItemData($ul.find('li').get())
-    var li = $ul.find('li').first()
-    assert.isUndefined(li.attr('role'))
-    assert.isUndefined(li.attr('draggable'))
-    assert.isUndefined(li.attr('aria-grabbed'))
+    sortable.__testing._removeItemData(li)
+    assert.isNull(li.getAttribute('role'))
+    assert.isNull(li.getAttribute('draggable'))
+    assert.isNull(li.getAttribute('aria-grabbed'))
   })
 
   it('_listsConnected', function () {
-    $('body').append('<ul class="sortable2"><li>item</li></ul>')
-    $ul2 = $('.sortable2')
-    sortable($ul2.get())
-    // test same sortable
-    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul.get(0)), true)
-    // test different sortables without connect with
-    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false)
-    // test one list with connectWith & one without
+    // add second sortable (not connected yet!)
+    body.innerHTML = `<ul class="sortable2"><li>item</li></ul><ul class="sortable3"><li>item</li></ul>`
+    let connectedUl = body.querySelector('.sortable2')
+    let notConnectedUl = body.querySelector('.sortable3')
+    sortable(connectedUl, {
+      connectWith: '.sortable'
+    })
+    sortable(notConnectedUl)
+    // test if sortable is connected to itself (should be true)
+    assert.equal(sortable.__testing._listsConnected(ul, ul), true)
+    // test if sortable is connected to sortable2 (should be false)
+    assert.equal(sortable.__testing._listsConnected(ul, connectedUl), false)
+    // test if sortable2 is connected to sortable (should be false)
+    assert.equal(sortable.__testing._listsConnected(connectedUl, ul), false)
+    // test if sortable2 is connected to sortable3 (should be false)
+    assert.equal(sortable.__testing._listsConnected(connectedUl, notConnectedUl), false)
+    // test if .sortable is connected to sortable3 (should be false)
+    assert.equal(sortable.__testing._listsConnected(ul, notConnectedUl), false)
+
     sortable(ul, 'destroy')
     sortable(ul, {
-      connectWith: '.test'
+      connectWith: '.sortable'
     })
-    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false)
-    // test not matching connectWith
-    sortable($ul2.get(), 'destroy')
-    sortable($ul2.get(), {
-      connectWith: '.test2'
-    })
-    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), false)
-    // test matching connectWith
-    sortable($ul2.get(), 'destroy')
-    sortable($ul2.get(), {
-      connectWith: '.test'
-    })
-    assert.equal(sortable.__testing._listsConnected($ul.get(0), $ul2.get(0)), true)
+    // test if sortables are connected (should be true)
+    assert.equal(sortable.__testing._listsConnected(connectedUl, ul), true)
+    assert.equal(sortable.__testing._listsConnected(ul, connectedUl), true)
+    // test if sortable2 is connected to sortable3 (should be false)
+    assert.equal(sortable.__testing._listsConnected(connectedUl, notConnectedUl), false)
   })
 
   it('_index', function () {
-    var div = document.createElement('div')
-    var child1 = document.createElement('div')
-    var child2 = document.createElement('div')
-    var child3 = document.createElement('div')
-    var child4 = document.createElement('div')
+    let div = document.createElement('div')
+    let child1 = document.createElement('div')
+    let child2 = document.createElement('div')
+    let child3 = document.createElement('div')
+    let child4 = document.createElement('div')
     div.appendChild(child1)
     div.appendChild(child2)
     div.appendChild(child3)
@@ -135,39 +137,26 @@ describe('Internal function tests', function () {
     assert.equal(sortable.__testing._index(child4), 0)
   })
 
-  it('_debounce returns given function, then 0 debounce', function () {
-    var funct = function () {}
-    var debounced = sortable.__testing._debounce(funct, 0)
+  it('_debounce returns given function, when 0 debounce', function () {
+    let funct = function () {}
+    let debounced = sortable.__testing._debounce(funct, 0)
 
     assert.equal(debounced, funct)
   })
 
-  it('_debounce', function (done) {
-    var funct = function () {
-      done()
-    }
-    var debounced = sortable.__testing._debounce(funct, 5)
-
-    debounced()
-    debounced()
-  })
-
   it('_getHandles: gets handles array from items', function () {
-    let handles = sortable.__testing._getHandles($lis.get(), '.handle')
+    let handles = sortable.__testing._getHandles(allLiElements, '.handle')
     assert.equal(handles.length, 2)
     assert.equal(handles[0].outerHTML, '<span class="handle"></span>')
   })
 
   it('_getHandles: gets items if no handle selector is provided', function () {
-    let handles = sortable.__testing._getHandles($lis.get())
+    let handles = sortable.__testing._getHandles(allLiElements)
     assert.equal(handles.length, 3)
     assert.equal(handles[0].nodeName, 'LI')
   })
 
   it('_attached', function () {
-    // let div = $('<div class="test" />')
     console.log('Test missing')
-    // assert.equal(sortable.__testing._attached($lis.get(0)), true)
-    // assert.equal(sortable.__testing._attached(div.get(0)), false)
   })
 })

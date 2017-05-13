@@ -1,22 +1,22 @@
-/* global $,describe,it */
+/* global describe,it */
 describe('Testing ghost creation methods', function () {
 // testing ghost creation functions
-  var assert = require('chai').assert
+  let assert = require('chai').assert
   global.document = require('jsdom').jsdom('<html lang="en-US"></html>')
   global.window = global.document.defaultView
-  global.$ = global.jQuery = require('../node_modules/jquery/dist/jquery.js')
-  var sortable = require('../src/html.sortable.js')
-  $('body').html('').append('<ul class="sortable"><li>item</li></ul>')
-  // moch dragged item
-  var dItem = $('<li>dItem Test</li>')
-  dItem.get(0).getClientRects = function () {
+  let body = global.document.querySelector('body')
+  let sortable = require('../src/html.sortable.js')
+  body.innerHTML = `<ul class="sortable"><li class="first">dragged item</li><li>item 2</li></ul>`
+  // mock dragged item
+  let draggedItem = body.querySelector('.first')
+  draggedItem.getClientRects = function () {
     return [{
       left: 5,
       top: 5
     }]
   }
   // mock event
-  var e = {
+  let e = {
     pageX: 100,
     pageY: 200,
     dataTransfer: {
@@ -50,13 +50,13 @@ describe('Testing ghost creation methods', function () {
   })
 
   it('sets item correctly from dragged item (_makeGhost)', function () {
-    var ghost = sortable.__testing._makeGhost(dItem)
-    assert.equal(ghost.draggedItem.get(0).innerHTML, dItem.get(0).innerHTML)
+    let ghost = sortable.__testing._makeGhost(draggedItem)
+    assert.equal(ghost.draggedItem.innerHTML, draggedItem.innerHTML)
   })
 
   it('sets x & y correctly (_addGhostPos)', function () {
-    var ghost = sortable.__testing._addGhostPos(e, {
-      draggedItem: dItem.get(0)
+    let ghost = sortable.__testing._addGhostPos(e, {
+      draggedItem: draggedItem
     })
 
     assert.equal(ghost.x, 95)
@@ -64,8 +64,8 @@ describe('Testing ghost creation methods', function () {
   })
 
   it('uses provided x & y correctly (_addGhostPos)', function () {
-    var ghost = sortable.__testing._addGhostPos(e, {
-      draggedItem: dItem,
+    let ghost = sortable.__testing._addGhostPos(e, {
+      draggedItem: draggedItem,
       x: 10,
       y: 20
     })
@@ -75,11 +75,11 @@ describe('Testing ghost creation methods', function () {
   })
 
   it('attaches ghost completely (_getGhost)', function () {
-    sortable.__testing._getGhost(e, dItem.get(0))
+    sortable.__testing._getGhost(e, draggedItem)
 
     assert.equal(e.dataTransfer.effectAllowed, 'move')
     assert.equal(e.dataTransfer.text, '')
-    assert.equal(e.dataTransfer.draggedItem, dItem.get(0))
+    assert.equal(e.dataTransfer.draggedItem, draggedItem)
     assert.equal(e.dataTransfer.x, 95)
     assert.equal(e.dataTransfer.y, 195)
   })
