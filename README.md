@@ -124,7 +124,7 @@ sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
 ## Options
 
 ### items
-Use `items` option to specify which items inside the element should be sortable:
+Use the `items` option to specify which items inside the element should be sortable:
 
 ``` javascript
 sortable('.sortable', {
@@ -132,7 +132,7 @@ sortable('.sortable', {
 });
 ```
 ### handle
-Use `handle` option to restrict drag start to the specified element:
+Use the `handle` option to restrict drag start to the specified element:
 
 ``` javascript
 sortable('.sortable', {
@@ -140,7 +140,7 @@ sortable('.sortable', {
 });
 ```
 ### forcePlaceholderSize
-Setting `forcePlaceholderSize` option to true, forces the placeholder to have a height:
+Setting the `forcePlaceholderSize` option to true, forces the placeholder to have a height:
 
 ``` javascript
 sortable('.sortable', {
@@ -149,7 +149,7 @@ sortable('.sortable', {
 ```
 
 ### connectWith
-Use `connectWith` option to create connected lists:
+Use the `connectWith` option to create a connected lists:
 
 ``` javascript
 sortable('.js-sortable, .js-second-sortable', {
@@ -158,7 +158,7 @@ sortable('.js-sortable, .js-second-sortable', {
 ```
 
 ### placeholder
-Use `placeholder` option to specify the markup of the placeholder:
+Use the `placeholder` option to specify the markup of the placeholder:
 
 ``` javascript
 sortable('.sortable', {
@@ -168,7 +168,7 @@ sortable('.sortable', {
 ```
 
 ### hoverClass
-Use `hoverClass` option to specify applying a css class to the hovered element rather than relying on `:hover`. This can eliminate some potential drag and drop issues where another element thinks it is being hovered over.
+Use the `hoverClass` option to specify applying a css class to the hovered element rather than relying on `:hover`. This can eliminate some potential drag and drop issues where another element thinks it is being hovered over.
 
 ``` javascript
 sortable('.sortable', {
@@ -177,7 +177,7 @@ sortable('.sortable', {
 ```
 
 ### maxItems
-Use `maxItems` option to cap the number of items that can be added to the element from connected lists. This should always be combined with `items` so that the placeholder and other elements are not counted.
+Use the `maxItems` option to restrict the number of items that can be added to a sortable from a [connected](#connectwith) sortable. `maxItems` should always be combined with the `items` option. Make sure `items` does not match placeholder and other options, so that they are not counted.
 
 ``` javascript
 sortable('.sortable', {

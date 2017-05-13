@@ -30,7 +30,7 @@
 							<li>Only 2KB (minified and gzipped).</li>
 							<li>Built using native HTML5 drag and drop API.</li>
 							<li>Supports both list and grid style layouts.</li>
-							<li>Works in IE 5.5+, Firefox 3.5+, Chrome 3+, Safari 3+ and, Opera 12+.</li>
+							<li><a href="https://github.com/lukasoppermann/html5sortable">Installation, support & more.</a></li>
 						</ul>
 		      </div>
 		    </div>
@@ -143,12 +143,12 @@
 					<script>// scripts are needed for a test for indexes in sortupdate</script>
 					<script></script>
 					<script></script>
-                    <li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span><span draggable="true" ondragstart="console.log('I am testing that draggable elements do not act as handles')">Item 1</span></li>
+          <li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span><span draggable="true" ondragstart="console.log('I am testing that draggable elements do not act as handles')">Item 1</span></li>
 					<li class="p1 mb1 border border-white white bg-orange">
-						<div class="mb1"><span class="js-handle px1">||</span>Item 2</div>
-					<ul class="js-sortable-inner-connected list flex flex-column list-reset m0">
-						<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 1</li>
-						<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 2</li>
+						<div class="mb1"><span class="js-handle px1">||</span>Only 3 children allowed</div>
+					<ul class="js-sortable-inner-connected list flex flex-column list-reset m0 py1">
+						<li class="p1 mb1 border border-blue white bg-blue item"><span class="js-inner-handle px1">||</span>Inner item 1</li>
+						<li class="p1 mb1 border border-blue white bg-blue item"><span class="js-inner-handle px1">||</span>Inner item 2</li>
 					</ul>
 					</li>
 					<li class="p1 mb1 border border-white white bg-orange"><span class="js-handle px1">||</span>Item 3</li>
@@ -175,10 +175,10 @@
 					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 2</li>
 					<li class="p1 mb1 border border-orange orange bg-white"><span class="js-handle px1">||</span>Item 3</li>
 					<li class="p1 mb1 border border-orange orange bg-white">
-						<div class="mb1"><span class="js-handle px1">||</span>Item 4</div>
-						<ul class="js-sortable-inner-connected list flex flex-column list-reset mb0">
-							<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 3</li>
-							<li class="p1 mb1 border border-blue white bg-blue"><span class="js-inner-handle px1">||</span>Inner item 4</li>
+						<div class="mb1"><span class="js-handle px1">||</span>Only 3 children allowed</div>
+						<ul class="js-sortable-inner-connected list flex flex-column list-reset mb0 py1">
+							<li class="p1 mb1 border border-blue white bg-blue item"><span class="js-inner-handle px1">||</span>Inner item 3</li>
+							<li class="p1 mb1 border border-blue white bg-blue item"><span class="js-inner-handle px1">||</span>Inner item 4</li>
 						</ul>
 					</li>
 				</ul>
@@ -299,7 +299,8 @@
 				forcePlaceholderSize: true,
 				connectWith: 'js-inner-connected',
 				handle: '.js-inner-handle',
-				items: 'li',
+				items: '.item',
+        maxItems: 3,
 				placeholderClass: 'border border-white bg-orange mb1'
 			});
 			document.querySelector('.js-sortable-connected').addEventListener('sortupdate', function(e){
