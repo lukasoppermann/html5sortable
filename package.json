@@ -23,32 +23,27 @@
   },
   "devDependencies": {
     "chai": "^3.0.0",
-    "coveralls": "^2.11.2",
-    "del": "2.x.x",
+    "coveralls": "^2.13.1",
     "gulp": "^3.8.11",
-    "gulp-jscs": "3.x.x",
-    "gulp-jshint": "2.x.x",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-strip-code": "^0.1.2",
     "gulp-uglify": "^1.2.0",
     "gulp-umd": "^0.2.0",
-    "gulp-util": "^3.0.4",
     "istanbul": "0.4.x",
-    "jsdom": "9.*",
-    "mocha": "^2.2.4",
-    "mocha-istanbul": "^0.2.0",
-    "requirejs": "^2.1.17",
+    "jsdom": "10.*",
+    "mocha": "^3.*.*",
+    "nyc": "^10.3.2",
+    "requirejs": "^2.3.*",
     "snazzy": "^6.0.0",
-    "standard": "^10.0.2",
+    "standard": "^10.0.*",
     "standard-readme": "^2.0.2"
   },
   "scripts": {
-    "test": "npm run test-plugin && npm run standard  && npm run standard-test && standard-readme",
+    "test": "mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
     "standard": "standard 'src/*.js' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
-    "travis": "npm run cover && ./node_modules/.bin/mocha test/umd/module.js && snazzy 'src/*.js'",
-    "test-plugin": "./node_modules/.bin/mocha test/umd/module.js && ./node_modules/.bin/mocha test/*.js",
-    "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/*.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "travis": "npm run cover && ./node_modules/.bin/_mocha test/umd/module.js && npm run standard",
+    "cover": "nyc cover ./node_modules/mocha/bin/_mocha test/*.js --report mocha-istanbul -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
   }
 }
