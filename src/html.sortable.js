@@ -746,5 +746,7 @@ sortable.__testing = {
     placeholders = []
   }
 }
-module.exports = sortable
+if (typeof module !== 'undefined') {
+  module.exports = sortable
+}
 /* end-testing */

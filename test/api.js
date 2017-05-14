@@ -2,14 +2,20 @@
 describe('Testing api', function () {
   // testing basic api
   let assert = require('chai').assert
-  global.document = require('jsdom').jsdom('<html lang="en-US"></html>')
-  global.window = global.document.defaultView
+  const { JSDOM } = require('jsdom')
+  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  let window, body
   let ul, li, secondLi, thirdLi
-  let body = global.document.querySelector('body')
-  let sortable = require('../src/html.sortable.js')
 
   describe('Initialization ', function () {
     beforeEach(function () {
+      window = (new JSDOM(``, { runScripts: 'dangerously' })).window
+      // Execute my library by inserting a <script> tag containing it.
+      const scriptEl = window.document.createElement('script')
+      scriptEl.textContent = sortable
+      window.document.head.appendChild(scriptEl)
+
+      body = window.document.body
       body.innerHTML = `<ul class="sortable">
         <li class="item item-first">Item 1</li>
         <li class="item item-second">Item 2</li>
@@ -21,7 +27,7 @@ describe('Testing api', function () {
       secondLi = ul.querySelector('.item-second')
       thirdLi = ul.querySelector('.item-second')
 
-      sortable(ul, {
+      window.sortable(ul, {
         'items': 'li',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder',
@@ -30,11 +36,11 @@ describe('Testing api', function () {
     })
 
     it('should have a data-opts object', function () {
-      assert.typeOf(sortable.__testing._data(ul, 'opts'), 'object')
+      assert.typeOf(window.sortable.__testing._data(ul, 'opts'), 'object')
     })
 
     it('should have correct options set on options object', function () {
-      let opts = sortable.__testing._data(ul, 'opts')
+      let opts = window.sortable.__testing._data(ul, 'opts')
       assert.equal(opts.items, 'li')
       assert.equal(opts.connectWith, '.test')
       assert.equal(opts.placeholderClass, 'test-placeholder')
@@ -46,11 +52,11 @@ describe('Testing api', function () {
     })
 
     it('should have a data-items object', function () {
-      assert.typeOf(sortable.__testing._data(ul, 'items'), 'string')
+      assert.typeOf(window.sortable.__testing._data(ul, 'items'), 'string')
     })
 
     it('should have a h5s.connectWith object', function () {
-      assert.typeOf(sortable.__testing._data(ul, 'connectWith'), 'string')
+      assert.typeOf(window.sortable.__testing._data(ul, 'connectWith'), 'string')
     })
 
     it('should have aria-grabbed attributes', function () {
@@ -87,7 +93,7 @@ describe('Testing api', function () {
     })
 
     it('string placehodler', function () {
-      sortable(ul, {
+      window.sortable(ul, {
         'items': 'li',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder',
@@ -99,15 +105,15 @@ describe('Testing api', function () {
 
   describe('Destroy', function () {
     beforeEach(function () {
-      sortable(ul, {
+      window.sortable(ul, {
         'items': 'li',
         'connectWith': '.test'
       })
-      sortable(ul, 'destroy')
+      window.sortable(ul, 'destroy')
     })
 
     it('should not have a data-opts object', function () {
-      assert.typeOf(sortable.__testing._data(ul, 'opts'), 'undefined')
+      assert.typeOf(window.sortable.__testing._data(ul, 'opts'), 'undefined')
     })
 
     it('should not have a aria-dropeffect attribute', function () {
@@ -115,11 +121,11 @@ describe('Testing api', function () {
     })
 
     it('should not have a data-items object', function () {
-      assert.isUndefined(sortable.__testing._data(ul, 'items'))
+      assert.isUndefined(window.sortable.__testing._data(ul, 'items'))
     })
 
     it('should not have a h5s.connectWith object', function () {
-      assert.isUndefined(sortable.__testing._data(ul, 'connectWith'))
+      assert.isUndefined(window.sortable.__testing._data(ul, 'connectWith'))
     })
 
     it('should not have an aria-grabbed attribute', function () {
@@ -137,40 +143,40 @@ describe('Testing api', function () {
 
   describe('Reload', function () {
     before(function () {
-      sortable(ul, {
+      window.sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
-      sortable(ul, 'reload')
+      window.sortable(ul, 'reload')
     })
 
     it('should keep the options of the sortable', function () {
-      let opts = sortable.__testing._data(ul, 'opts')
+      let opts = window.sortable.__testing._data(ul, 'opts')
       assert.equal(opts.items, 'li:not(.disabled)')
       assert.equal(opts.connectWith, '.test')
       assert.equal(opts.placeholderClass, 'test-placeholder')
     })
 
     it('should keep items attribute of the sortable', function () {
-      let items = sortable.__testing._data(ul, 'items')
+      let items = window.sortable.__testing._data(ul, 'items')
       assert.equal(items, 'li:not(.disabled)')
     })
 
     it('should keep connectWith attribute of the sortable', function () {
-      let connectWith = sortable.__testing._data(ul, 'connectWith')
+      let connectWith = window.sortable.__testing._data(ul, 'connectWith')
       assert.equal(connectWith, '.test')
     })
   })
 
   describe('Disable', function () {
     before(function () {
-      sortable(ul, {
+      window.sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
-      sortable(ul, 'disable')
+      window.sortable(ul, 'disable')
     })
 
     it('should remove attributes from sortable', function () {
@@ -193,13 +199,13 @@ describe('Testing api', function () {
 
   describe('Enable', function () {
     before(function () {
-      sortable(ul, {
+      window.sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
-      sortable(ul, 'disable')
-      sortable(ul, 'enable')
+      window.sortable(ul, 'disable')
+      window.sortable(ul, 'enable')
     })
 
     it('should readd attributes to sortable', function () {
