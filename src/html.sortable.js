@@ -746,5 +746,8 @@ sortable.__testing = {
     placeholders = []
   }
 }
-module.exports = sortable
+/* istanbul ignore next */
+if (typeof module !== 'undefined') {
+  module.exports = sortable
+}
 /* end-testing */

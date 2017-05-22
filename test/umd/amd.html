@@ -3,13 +3,14 @@
   <body>
     <script src="../../node_modules/requirejs/require.js"></script>
     <script>
-      window.require = require;
+      window.require = require
+      console.log(require);
       require.config({
-        baseUrl: "./"
-      });
-      require(["window", "../../dist/html.sortable.js"], function(win, sortable) {
-        win.sortable = sortable;
-      });
+        baseUrl: './'
+      })
+      require(['window', '../../dist/html.sortable.js'], function (win, sortable) {
+        win.requiredSortable = sortable
+      })
     </script>
   </body>
 </html>
