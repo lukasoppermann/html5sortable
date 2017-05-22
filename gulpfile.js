@@ -13,10 +13,8 @@ var strip = require('gulp-strip-code')
 gulp.task('umd', function () {
   return gulp.src('src/html.sortable.js')
     .pipe(strip({
-      // jscs:disable
       start_comment: 'start-testing',
       end_comment: 'end-testing'
-      // jscs:enable
     }))
     .pipe(umd({
       exports: function () {
