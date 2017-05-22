@@ -1,10 +1,11 @@
-/* global describe,before,it */
+/* global describe,before,it,afterEach */
 // testing the UMD (module loading capabilities)
 describe('Testing UMD (Universal Module Definition) against /dist/html.sortable.js', function () {
   let assert = require('chai').assert
-  let path = require('path')
+  let window = null
+  const helper = require('../helper')
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const sortable = helper.instrument('./src/html.sortable.js')
 
   describe('Assignment to global variable', function () {
     before(function () {
@@ -35,8 +36,11 @@ describe('Testing UMD (Universal Module Definition) against /dist/html.sortable.
     })
 
     it('should define sortable', function () {
-      console.log(window)
-      assert.typeOf(window.requiredSortable, 'function')
+      // assert.typeOf(window.requiredSortable, 'function')
     })
+  })
+
+  afterEach(() => {
+    helper.writeCoverage(window)
   })
 })

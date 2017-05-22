@@ -1,9 +1,10 @@
-/* global describe,it */
+/* global describe,it,afterEach */
 describe('Testing ghost creation methods', function () {
 // testing ghost creation functions
   let assert = require('chai').assert
+  const helper = require('./helper')
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const sortable = helper.instrument('./src/html.sortable.js')
   let window = (new JSDOM(``, { runScripts: 'dangerously' })).window
    // Execute my library by inserting a <script> tag containing it.
   const scriptEl = window.document.createElement('script')
@@ -87,5 +88,9 @@ describe('Testing ghost creation methods', function () {
     assert.equal(e.dataTransfer.draggedItem, draggedItem)
     assert.equal(e.dataTransfer.x, 95)
     assert.equal(e.dataTransfer.y, 195)
+  })
+
+  afterEach(() => {
+    helper.writeCoverage(window)
   })
 })

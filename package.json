@@ -32,6 +32,7 @@
     "gulp-umd": "^0.2.0",
     "istanbul": "0.4.x",
     "jsdom": "10.*",
+    "mkdirp": "^0.5.1",
     "mocha": "^3.*.*",
     "nyc": "^10.3.2",
     "requirejs": "^2.3.*",
@@ -44,6 +45,6 @@
     "standard": "standard 'src/*.js' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
     "travis": "npm run cover && ./node_modules/.bin/_mocha test/umd/module.js && npm run standard",
-    "cover": "nyc cover ./node_modules/mocha/bin/_mocha test/*.js --report mocha-istanbul -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+    "cover": "nyc --reporter=text --reporter=lcov mocha test/*.js && nyc report --reporter=text-lcov | coveralls"
   }
 }

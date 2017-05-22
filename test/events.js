@@ -1,9 +1,10 @@
-/* global describe,it,beforeEach */
+/* global describe,it,beforeEach,afterEach */
 describe('Testing events', function () {
   // testing basic api
   let assert = require('chai').assert
+  const helper = require('./helper')
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const sortable = helper.instrument('./src/html.sortable.js')
   let window, body
 
   let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)
@@ -54,6 +55,10 @@ describe('Testing events', function () {
         top: 25
       }]
     }
+  })
+
+  afterEach(() => {
+    helper.writeCoverage(window)
   })
 
   it('should correctly run dragstart event', function () {

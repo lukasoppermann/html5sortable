@@ -1,9 +1,11 @@
-/* global describe,it,beforeEach */
+/* global describe,it,beforeEach,afterEach */
 describe('Internal function tests', function () {
   // testing basic api
   let assert = require('chai').assert
+  const helper = require('./helper')
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+
+  const sortable = helper.instrument('./src/html.sortable.js')
   let window, body
   let ul, li, allLiElements
 
@@ -39,6 +41,10 @@ describe('Internal function tests', function () {
     allLiElements = ul.querySelectorAll('li')
     // get first li element
     li = ul.querySelector('.li-first')
+  })
+
+  afterEach(() => {
+    helper.writeCoverage(window)
   })
 
   it('_removeSortableEvents', function () {

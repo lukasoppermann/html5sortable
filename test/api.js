@@ -1,11 +1,16 @@
-/* global describe,beforeEach,before,it */
+/* global describe,beforeEach,before,it,afterEach */
 describe('Testing api', function () {
   // testing basic api
   let assert = require('chai').assert
+  const helper = require('./helper')
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const sortable = helper.instrument('./src/html.sortable.js')
   let window, body
   let ul, li, secondLi, thirdLi
+
+  afterEach(() => {
+    helper.writeCoverage(window)
+  })
 
   describe('Initialization ', function () {
     beforeEach(function () {
