@@ -3,12 +3,17 @@ describe('Internal function tests', function () {
   // testing basic api
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const helper = require('./helper')
+  const sortable = helper.instrument('./src/html.sortable.js')
   let window, body
   let ul, li, allLiElements
 
-  beforeEach(function () {
+  before(() => {
     window = (new JSDOM(``, { runScripts: 'dangerously' })).window
+  })
+
+  beforeEach(() => {
     body = window.document.body
     // reset sortable
     body.innerHTML = `<ul class="sortable">
@@ -39,6 +44,10 @@ describe('Internal function tests', function () {
     allLiElements = ul.querySelectorAll('li')
     // get first li element
     li = ul.querySelector('.li-first')
+  })
+
+  afterEach(() => {
+    helper.writeCoverage(window)
   })
 
   it('_removeSortableEvents', function () {

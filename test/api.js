@@ -3,7 +3,9 @@ describe('Testing api', function () {
   // testing basic api
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const helper = require('./helper')
+  const sortable = helper.instrument('./src/html.sortable.js')
+  // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
   let window, body
   let ul, li, secondLi, thirdLi
 
@@ -33,6 +35,10 @@ describe('Testing api', function () {
         placeholderClass: 'test-placeholder',
         draggingClass: 'test-dragging'
       })
+    })
+
+    afterEach(() => {
+      helper.writeCoverage(window)
     })
 
     it('should have a data-opts object', function () {

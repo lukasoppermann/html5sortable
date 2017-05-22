@@ -43,7 +43,7 @@
     "test": "mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
     "standard": "standard 'src/*.js' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
-    "travis": "npm run cover && ./node_modules/.bin/_mocha test/umd/module.js && npm run standard",
-    "cover": "nyc cover ./node_modules/mocha/bin/_mocha test/*.js --report mocha-istanbul -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+    "travis": "npm run cover && mocha test/umd/module.js && npm run standard",
+    "cover": "nyc mocha && nyc report --reporter=text-lcov | coveralls"
   }
 }

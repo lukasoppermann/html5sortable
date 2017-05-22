@@ -3,7 +3,9 @@ describe('Testing ghost creation methods', function () {
 // testing ghost creation functions
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const helper = require('./helper')
+  const sortable = helper.instrument('./src/html.sortable.js')
+  // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
   let window = (new JSDOM(``, { runScripts: 'dangerously' })).window
    // Execute my library by inserting a <script> tag containing it.
   const scriptEl = window.document.createElement('script')
@@ -39,6 +41,10 @@ describe('Testing ghost creation methods', function () {
       }
     }
   }
+
+  afterEach(() => {
+    helper.writeCoverage(window)
+  })
 
   it('sets the dataTransfer options correctly (_attachGhost)', function () {
     window.sortable.__testing._attachGhost(e, {

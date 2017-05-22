@@ -746,6 +746,7 @@ sortable.__testing = {
     placeholders = []
   }
 }
+/* istanbul ignore next */
 if (typeof module !== 'undefined') {
   module.exports = sortable
 }
