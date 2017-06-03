@@ -1,4 +1,4 @@
-/* global describe,it */
+/* global describe,it,afterEach */
 describe('Testing ghost creation methods', function () {
 // testing ghost creation functions
   let assert = require('chai').assert

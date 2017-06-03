@@ -268,13 +268,14 @@
       </div>
     </section>
 	</div>
-	<script src="html.sortable.min.js"></script>
+  <!-- <script src="../src/html.sortable.js"></script> -->
+  <script src="html.sortable.min.js"></script>
 	<script>
-			sortable('.js-sortable', {
-				forcePlaceholderSize: true,
-				placeholderClass: 'p1 mb1 bg-navy border border-yellow',
-			});
-			sortable('.js-grid', {
+    sortable('.js-sortable', {
+      forcePlaceholderSize: true,
+      placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+    });
+    sortable('.js-grid', {
 				forcePlaceholderSize: true,
 				placeholderClass: 'col col-4 border border-maroon'
 			});
@@ -304,10 +305,9 @@
 				placeholderClass: 'border border-white bg-orange mb1'
 			});
 			document.querySelector('.js-sortable-connected').addEventListener('sortupdate', function(e){
-				console.log('Parent old: ');
-				console.log(e.detail.startparent);
-				console.log('Parent new: ');
-				console.log(e.detail.endparent);
+        console.log('Event details object: ', e.detail);
+				console.log('Parent old: ', e.detail.startparent);
+				console.log('Parent new: ', e.detail.endparent);
 				console.log('Index: '+e.detail.oldindex+' -> '+e.detail.index);
 				console.log('elementIndex: '+e.detail.oldElementIndex+' -> '+e.detail.elementIndex);
 			});

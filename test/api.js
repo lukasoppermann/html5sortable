@@ -1,4 +1,4 @@
-/* global describe,beforeEach,before,it */
+/* global describe,beforeEach,afterEach,before,it */
 describe('Testing api', function () {
   // testing basic api
   let assert = require('chai').assert
@@ -22,7 +22,8 @@ describe('Testing api', function () {
         <li class="item item-first">Item 1</li>
         <li class="item item-second">Item 2</li>
         <li class="item item-third">Item 3</li>
-      </ul>`
+        <li class="item item-third disabled">Item 3</li>
+      </ul><ul class="sortable-2"></ul>`
       // select sortable
       ul = body.querySelector('.sortable')
       li = ul.querySelector('.item-first')
@@ -229,6 +230,24 @@ describe('Testing api', function () {
       assert.isDefined(handle.h5s.events)
       assert.isDefined(handle.h5s.events.hasOwnProperty('mousedown'))
       assert.isDefined(handle.h5s.events.hasOwnProperty('mousedown.h5s'))
+    })
+  })
+
+  describe('Serialize', function () {
+    before(function () {
+      window.sortable(ul, {
+        'items': 'li:not(.disabled)',
+        'connectWith': '.test',
+        placeholderClass: 'test-placeholder'
+      })
+    })
+
+    it('should have the right sortable in the list property', function () {
+      assert.equal(window.sortable(ul, 'serialize')[0].list, window.sortable(ul)[0])
+    })
+
+    it('should have 3 children', function () {
+      assert.equal(window.sortable(ul, 'serialize')[0].children.length, 3)
     })
   })
 })
