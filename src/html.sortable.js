@@ -502,7 +502,7 @@ var sortable = function (sortableElements, options) {
   sortableElements = Array.prototype.slice.call(sortableElements)
 
   if (/serialize/.test(method)) {
-    let serialized = []
+    var serialized = []
     sortableElements.forEach(function (sortableElement) {
       serialized.push({
         list: sortableElement,

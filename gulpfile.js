@@ -5,6 +5,7 @@ var gulp = require('gulp')
 var rename = require('gulp-rename')
 var uglify = require('gulp-uglify')
 var sourcemaps = require('gulp-sourcemaps')
+var pump = require('pump')
 var umd = require('gulp-umd')
 var strip = require('gulp-strip-code')
 
@@ -28,17 +29,19 @@ gulp.task('umd', function () {
 })
 /* ---------- */
 /* build */
-gulp.task('minify', ['umd'], function () {
+gulp.task('minify', ['umd'], function (cb) {
   // copy files to dist
-  gulp.src(['dist/html.sortable.js'])
+  pump([
+    gulp.src(['dist/html.sortable.js'])
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(uglify())
     .pipe(rename({
       suffix: '.min'
-    }))
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./dist'))
-    .pipe(gulp.dest('./docs'))
+    })),
+    uglify(),
+    sourcemaps.write('./'),
+    gulp.dest('./dist'),
+    gulp.dest('./docs')
+  ],cb)
 })
 /* ---------- */
 /* tasks */

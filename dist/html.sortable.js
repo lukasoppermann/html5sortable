@@ -466,6 +466,11 @@ var _getChildren = function (element) {
   return element.children
 }
 
+var _serialize = function (list) {
+  var children = _filter(_getChildren(list), _data(list, 'items'))
+  return children
+}
+
 /*
  * Public sortable object
  * @param {Array|NodeList} sortableElements
@@ -505,12 +510,22 @@ var sortable = function (sortableElements, options) {
 
   sortableElements = Array.prototype.slice.call(sortableElements)
 
+  if (/serialize/.test(method)) {
+    var serialized = []
+    sortableElements.forEach(function (sortableElement) {
+      serialized.push({
+        list: sortableElement,
+        children: _serialize(sortableElement)
+      })
+    })
+    return serialized
+  }
+
   /* TODO: maxstatements should be 25, fix and remove line below */
   /* jshint maxstatements:false */
   sortableElements.forEach(function (sortableElement) {
     if (/enable|disable|destroy/.test(method)) {
-      sortable[method](sortableElement)
-      return
+      return sortable[method](sortableElement)
     }
 
     // get options & set options on sortable
@@ -522,6 +537,7 @@ var sortable = function (sortableElements, options) {
     var items = _filter(_getChildren(sortableElement), options.items)
     var index
     var startParent
+    var startList
     var placeholder = options.placeholder
     var maxItems
     if (!placeholder) {
@@ -590,6 +606,7 @@ var sortable = function (sortableElements, options) {
       index = _index(dragging)
       draggingHeight = parseInt(window.getComputedStyle(dragging).height)
       startParent = this.parentElement
+      startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
       _dispatchEventOnConnected(sortableElement, _makeEvent('sortstart', {
         item: dragging,
@@ -624,7 +641,10 @@ var sortable = function (sortableElements, options) {
           elementIndex: _index(dragging),
           oldElementIndex: index,
           startparent: startParent,
-          endparent: newParent
+          endparent: newParent,
+          newEndList: _serialize(newParent),
+          newStartList: _serialize(startParent),
+          oldStartList: startList
         }))
       }
       dragging = null
