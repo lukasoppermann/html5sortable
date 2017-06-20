@@ -1,8 +1,8 @@
-/* global describe,before,it */
+/* global describe,before,it,afterEach */
 // testing the UMD (module loading capabilities)
 describe('Testing UMD (Universal Module Definition) against /dist/html.sortable.js', function () {
   let assert = require('chai').assert
-  let path = require('path')
+  let window
   const helper = require('../helper')
   const { JSDOM } = require('jsdom')
   const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
@@ -43,7 +43,7 @@ describe('Testing UMD (Universal Module Definition) against /dist/html.sortable.
           window.requiredSortable = sortable
           window.onModulesLoaded()
         })`
-        window.document.head.appendChild(scriptEl)
+      window.document.head.appendChild(scriptEl)
     })
 
     // it('should define sortable', function () {

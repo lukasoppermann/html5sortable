@@ -116,7 +116,9 @@ sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
     e.detail.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
     e.detail.startparent contains the element that the dragged item comes from
     e.detail.endparent contains the element that the dragged item was added to (new parent)
-
+    e.detail.newEndList contains all elements in the list the dragged item was dragged to
+    e.detail.newStartList contains all elements in the list the dragged item was dragged from
+    e.detail.oldStartList contains all elements in the list the dragged item was dragged from BEFORE it was dragged from it
     */
 });
 ```
@@ -206,6 +208,27 @@ To enable a disabled sortable:
 
 ``` javascript
 sortable('.sortable', 'enable');
+```
+
+### serialize
+To serialize a sortable:
+
+``` javascript
+sortable('.sortable', 'serialize');
+```
+
+This will return an array of objects, each with a `list` key for the sortable and a `children` key for the children.
+
+```javascript
+[
+  0: {
+    list: ul.js-sortable // Object
+    children: [
+      0: li, // object
+      1: li // object
+    ]
+  }
+]
 ```
 
 ### reload
