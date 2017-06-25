@@ -1,6 +1,6 @@
 /*
  * HTML5 Sortable library
- * https://github.com/voidberg/html5sortable
+ * https://github.com/lukasoppermann/html5sortable
  *
  * Original code copyright 2012 Ali Farhadi.
  * This version is mantained by Lukas Oppermann <lukas@vea.re>
