@@ -173,7 +173,9 @@ var _removeSortableEvents = function (sortable) {
 var _attachGhost = function (event, ghost) {
   // this needs to be set for HTML5 drag & drop to work
   event.dataTransfer.effectAllowed = 'move'
-  event.dataTransfer.setData('text', '')
+  // Firefox requires some arbitrary content in the data in order for
+  // the drag & drop functionality to work
+  event.dataTransfer.setData('text', 'arbitrary-content')
 
   // check if setDragImage method is available
   if (event.dataTransfer.setDragImage) {

@@ -54,7 +54,7 @@ describe('Testing ghost creation methods', function () {
     })
 
     assert.equal(e.dataTransfer.effectAllowed, 'move')
-    assert.equal(e.dataTransfer.text, '')
+    assert.equal(e.dataTransfer.text, 'arbitrary-content')
     assert.equal(e.dataTransfer.draggedItem, 'test-item')
     assert.equal(e.dataTransfer.x, 10)
     assert.equal(e.dataTransfer.y, 20)
@@ -89,7 +89,7 @@ describe('Testing ghost creation methods', function () {
     window.sortable.__testing._getGhost(e, draggedItem)
 
     assert.equal(e.dataTransfer.effectAllowed, 'move')
-    assert.equal(e.dataTransfer.text, '')
+    assert.equal(e.dataTransfer.text, 'arbitrary-content')
     assert.equal(e.dataTransfer.draggedItem, draggedItem)
     assert.equal(e.dataTransfer.x, 95)
     assert.equal(e.dataTransfer.y, 195)
