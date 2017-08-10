@@ -9,7 +9,7 @@
 }(this, function() {
 /*
  * HTML5 Sortable library
- * https://github.com/voidberg/html5sortable
+ * https://github.com/lukasoppermann/html5sortable
  *
  * Original code copyright 2012 Ali Farhadi.
  * This version is mantained by Lukas Oppermann <lukas@vea.re>
@@ -182,7 +182,9 @@ var _removeSortableEvents = function (sortable) {
 var _attachGhost = function (event, ghost) {
   // this needs to be set for HTML5 drag & drop to work
   event.dataTransfer.effectAllowed = 'move'
-  event.dataTransfer.setData('text', '')
+  // Firefox requires some arbitrary content in the data in order for
+  // the drag & drop functionality to work
+  event.dataTransfer.setData('text', 'arbitrary-content')
 
   // check if setDragImage method is available
   if (event.dataTransfer.setDragImage) {
