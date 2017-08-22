@@ -249,3 +249,8 @@ The plugin has limited support for sorting table rows. To sort table rows:
 This version is maintained by [Lukas Oppermann](https://github.com/lukasoppermann) and [many other contributors](../../contributors). Thanks for your help! :+1:
 
 Contributions are always welcome. Please check out the [contribution guidelines](CONTRIBUTING.md) to make it fast & easy for us to merge your PR.
+
+## Known Issues
+### Firefox
+- **Dragstart not working on buttons**  
+Dragstart event does not fire on `button` elements. This effectively disables drag and drop for button elements. See https://caniuse.com/#feat=dragndrop in the known issues section.
