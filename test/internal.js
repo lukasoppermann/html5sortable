@@ -134,6 +134,46 @@ describe('Internal function tests', function () {
     assert.equal(window.sortable.__testing._listsConnected(ul, connectedUl), true)
     // test if sortable2 is connected to sortable3 (should be false)
     assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), false)
+
+    window.sortable(connectedUl, 'destroy')
+    window.sortable(notConnectedUl, 'destroy')
+    window.sortable(connectedUl, {
+      acceptFrom: '.sortable3'
+    })
+    window.sortable(notConnectedUl, {
+      acceptFrom: false
+    })
+    // test .sortable2 only accepts from .sortable3 (should be true)
+    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), true)
+    // test .sortable2 only accepts from .sortable3 (should be false)
+    assert.equal(window.sortable.__testing._listsConnected(connectedUl, connectedUl), false)
+    // test .sortable3 does not accept from anyone (should be false)
+    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl), false)
+    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl), false)
+
+    window.sortable(notConnectedUl, 'destroy')
+    window.sortable(notConnectedUl, {
+      acceptFrom: ''
+    })
+    // test .sortable2 only accepts from .sortable3 (should be true)
+    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), true)
+    // test .sortable2 only accepts from .sortable3 (should be false)
+    assert.equal(window.sortable.__testing._listsConnected(connectedUl, connectedUl), false)
+    // test .sortable3 does not accept from anyone (should be false)
+    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl), false)
+    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl), false)
+
+    window.sortable(notConnectedUl, 'destroy')
+    window.sortable(notConnectedUl, {
+      acceptFrom: null
+    })
+    // test .sortable2 only accepts from .sortable3 (should be true)
+    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), true)
+    // test .sortable2 only accepts from .sortable3 (should be false)
+    assert.equal(window.sortable.__testing._listsConnected(connectedUl, connectedUl), false)
+    // test .sortable3 does not accept from anyone (should be false)
+    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl), false)
+    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl), true)
   })
 
   it('_index', function () {
