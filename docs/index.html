@@ -311,10 +311,44 @@
 		    </div>
 			</div>
 		</section>
+		<section class="mb3 mx-auto col col-12">
+  		<div class="p3 clearfix bg-yellow maroon">
+				<div class="col col-12 mb1">
+			    <h2 class="h3 m0">
+						Sortable Copy
+			    </h2>
+				</div>
+				<div class="col col-6">
+					<div class="p2 bg-yellow border maroon border-maroon mt1">
+				    <code class="mb0">
+							<div>sortable('.o-sortable', {</div>
+							<div class="px2 muted">copy:true // default to false</div>
+							<div>});</div>
+						</code>
+  				</div>
+		    </div>
+				<div class="col col-6">
+						<ul class="ml4 js-sortable-copy sortable list flex flex-column list-reset">
+							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 1</li>
+							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 2</li>
+							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 3</li>
+							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 4</li>
+							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 5</li>
+							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 6</li>	
+						</ul>
+			    </div>
+		    </div>
+		</div>
+		</section>
 	</div>
   <!-- <script src="../src/html.sortable.js"></script> -->
   <script src="html.sortable.min.js"></script>
 	<script>
+	sortable('.js-sortable-copy', {
+      forcePlaceholderSize: true,
+      copy: true,
+      placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+    });
 	sortable('.js-sortable-oneway', {
       forcePlaceholderSize: true,
       acceptFrom: false,

@@ -172,7 +172,7 @@ var _removeSortableEvents = function (sortable) {
  */
 var _attachGhost = function (event, ghost) {
   // this needs to be set for HTML5 drag & drop to work
-  event.dataTransfer.effectAllowed = 'move'
+  event.dataTransfer.effectAllowed = 'copyMove'
   // Firefox requires some arbitrary content in the data in order for
   // the drag & drop functionality to work
   event.dataTransfer.setData('text', 'arbitrary-content')
@@ -219,6 +219,24 @@ var _getGhost = function (event, draggedItem) {
   // attach ghost to dataTransfer
   _attachGhost(event, ghost)
 }
+/**
+ * _getDragging returns the current element to drag or
+ * a copy of the element.
+ * Is Copy Active for sortable
+ * @param {Element} draggedItem - the item that the user drags
+ * @param {Element} sortable a single sortable
+ */
+var _getDragging = function (draggedItem, sortable) {
+  var ditem = draggedItem
+  if (_isCopyActive(sortable)) {
+    ditem = draggedItem.cloneNode(true)
+    _attr(ditem, 'aria-copied', 'true')
+    draggedItem.parentElement.appendChild(ditem)
+    ditem.style.display = 'none'
+    ditem.oldDisplay = draggedItem.style.display
+  }
+  return ditem
+}
 /*
  * Remove data from sortable
  * @param {Element} sortable a single sortable
@@ -233,6 +251,7 @@ var _removeSortableData = function (sortable) {
  */
 var _removeItemData = function (items) {
   _removeAttr(items, 'aria-grabbed')
+  _removeAttr(items, 'aria-copied')
   _removeAttr(items, 'draggable')
   _removeAttr(items, 'role')
 }
@@ -255,6 +274,13 @@ var _listsConnected = function (curList, destList) {
     return _data(curList, 'connectWith') === _data(destList, 'connectWith')
   }
   return false
+}
+/*
+ * Is Copy Active for sortable
+ * @param {Element} sortable a single sortable
+ */
+var _isCopyActive = function (sortable) {
+  return _data(sortable, 'opts').copy === true
 }
 /*
  * get handle or return item
@@ -482,6 +508,7 @@ var sortable = function (sortableElements, options) {
     var result = {
       connectWith: false,
       acceptFrom: null,
+      copy: false,
       placeholder: null,
       disableIEFix: false,
       placeholderClass: 'sortable-placeholder',
@@ -602,7 +629,8 @@ var sortable = function (sortableElements, options) {
       _getGhost(e, this)
       // cache selsection & add attr for dragging
       this.classList.add(options.draggingClass)
-      dragging = this
+      dragging = _getDragging(this, sortableElement)
+
       _attr(dragging, 'aria-grabbed', 'true')
       // grab values
       index = _index(dragging)
@@ -625,6 +653,11 @@ var sortable = function (sortableElements, options) {
       // remove dragging attributes and show item
       dragging.classList.remove(options.draggingClass)
       _attr(dragging, 'aria-grabbed', 'false')
+
+      if (dragging.getAttribute('aria-copied') === 'true' && _data(dragging, 'dropped') !== 'true') {
+        _detach(dragging)
+      }
+
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
 
@@ -662,6 +695,8 @@ var sortable = function (sortableElements, options) {
 
       e.preventDefault()
       e.stopPropagation()
+
+      _data(dragging, 'dropped', 'true')
       visiblePlaceholder = placeholders.filter(_attached)[0]
       _after(visiblePlaceholder, dragging)
       dragging.dispatchEvent(_makeEvent('dragend'))
@@ -731,7 +766,7 @@ var sortable = function (sortableElements, options) {
       }
       e.preventDefault()
       e.stopPropagation()
-      e.dataTransfer.dropEffect = 'move'
+      e.dataTransfer.dropEffect = _isCopyActive(sortableElement) ? 'copy' : 'move'
       debouncedDragOverEnter(this, e.pageY)
     }
 

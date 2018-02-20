@@ -81,6 +81,40 @@ describe('Testing events', function () {
     assert.isTrue(li.classList.contains('test-dragging'))
   })
 
+  it('should correctly copy element on run dragstart/dragover event', function () {
+    window.sortable(ul, {
+      items: 'li',
+      copy: true,
+      connectWith: '.test',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
+    })
+    let childcount = li.parentNode.childNodes.length
+    let event = window.sortable.__testing._makeEvent('dragstart')
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    li.dispatchEvent(event)
+
+    assert.equal(li.getAttribute('aria-grabbed'), 'false')
+
+    let copyli = li.parentNode.lastChild
+    assert.equal(childcount + 1, copyli.parentNode.childNodes.length)
+    assert.equal(copyli.getAttribute('aria-grabbed'), 'true')
+    assert.isTrue(copyli.classList.contains('test-dragging'))
+
+    event = window.sortable.__testing._makeEvent('dragover')
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    secondLi.dispatchEvent(event)
+    assert.equal(event.dataTransfer.dropEffect, 'copy')
+  })
+
   it('should not add class on hover event', function () {
     window.sortable(ul, {
       items: 'li',
@@ -135,6 +169,7 @@ describe('Testing events', function () {
       }
     }
     secondLi.dispatchEvent(event)
+    assert.equal(event.dataTransfer.dropEffect, 'move')
 
     event = window.sortable.__testing._makeEvent('drop')
 
