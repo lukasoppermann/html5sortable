@@ -150,14 +150,25 @@ sortable('.sortable', {
 });
 ```
 
-### connectWith
-Use the `connectWith` option to create a connected lists:
+### connectWith (deprecated)
+**Use [`acceptFrom`](#acceptFrom) instead.** The `connectWith` option allows you to create a connected lists:
 
 ``` javascript
 sortable('.js-sortable, .js-second-sortable', {
     connectWith: 'connected' // unique string, which is not used for other connectWith sortables
 });
 ```
+
+### acceptFrom
+Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a space separated list of selectors or `false` to disabling accepting items. This is an alternative to [connectWith](#connectwith) and should not be used together.
+
+``` javascript
+sortable('.sortable', {
+  acceptForm: '.selector,.anotherSortable' // Defaults to null
+});
+```
+
+If you want to be able to move items between to sortables, the `acceptFrom` option must be present on both of them.
 
 ### placeholder
 Use the `placeholder` option to specify the markup of the placeholder:
@@ -184,14 +195,6 @@ Use the `maxItems` option to restrict the number of items that can be added to a
 ``` javascript
 sortable('.sortable', {
   maxItems: 3 // Defaults to 0 (no limit)
-});
-```
-### acceptFrom
-Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. acceptForm accepts a space separeted list of selectors or false to accept nothing. This is an alternative to #connectwith and should not be used together.
-
-``` javascript
-sortable('.sortable', {
-  acceptForm: '.selector,.anotherSortable' // Defaults to null
 });
 ```
 
