@@ -186,6 +186,14 @@ sortable('.sortable', {
   maxItems: 3 // Defaults to 0 (no limit)
 });
 ```
+### acceptFrom
+Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. acceptForm accepts a space separeted list of selectors or false to accept nothing. This is an alternative to #connectwith and should not be used together.
+
+``` javascript
+sortable('.sortable', {
+  acceptForm: '.selector,.anotherSortable' // Defaults to null
+});
+```
 
 ## Methods
 

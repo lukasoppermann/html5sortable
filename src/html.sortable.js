@@ -242,6 +242,12 @@ var _removeItemData = function (items) {
  * @param {Element} destList
  */
 var _listsConnected = function (curList, destList) {
+  var acceptFrom = _data(curList, 'opts').acceptFrom
+  if (acceptFrom !== null) {
+    return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
+      return sel.length > 0 && _matches(destList, sel)
+    }).length > 0
+  }
   if (curList === destList) {
     return true
   }
@@ -475,6 +481,7 @@ var sortable = function (sortableElements, options) {
   options = (function (options) {
     var result = {
       connectWith: false,
+      acceptFrom: null,
       placeholder: null,
       disableIEFix: false,
       placeholderClass: 'sortable-placeholder',
@@ -554,7 +561,9 @@ var sortable = function (sortableElements, options) {
 
     _data(sortableElement, 'items', options.items)
     placeholders.push(placeholder)
-    if (options.connectWith) {
+    if (options.acceptFrom) {
+      _data(sortableElement, 'acceptFrom', options.acceptFrom)
+    } else if (options.connectWith) {
       _data(sortableElement, 'connectWith', options.connectWith)
     }
 
