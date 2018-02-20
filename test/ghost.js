@@ -4,7 +4,7 @@ describe('Testing ghost creation methods', function () {
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
   const helper = require('./helper')
-  const sortable = helper.instrument('./src/html.sortable.js')
+  const sortable = helper.instrument('./_test/html.sortable.js')
   // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
   let window = (new JSDOM(``, { runScripts: 'dangerously' })).window
   // Execute my library by inserting a <script> tag containing it.

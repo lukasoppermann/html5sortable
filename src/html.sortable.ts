@@ -488,7 +488,7 @@ var _serialize = function (list) {
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
  */
-var sortable = function (sortableElements, options) {
+export default function sortable (sortableElements, options) {
   var method = String(options)
   options = (function (options) {
     var result = {
@@ -768,7 +768,7 @@ sortable.disable = function (sortableElement) {
   _disableSortable(sortableElement)
 }
 
-/* start-testing */
+/* START.TESTS_ONLY */
 sortable.__testing = {
   // add internal methods here for testing purposes
   _attached: _attached,
@@ -792,8 +792,4 @@ sortable.__testing = {
     placeholders = []
   }
 }
-/* istanbul ignore next */
-if (typeof module !== 'undefined') {
-  module.exports = sortable
-}
-/* end-testing */
+/* END.TESTS_ONLY */

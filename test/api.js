@@ -4,8 +4,8 @@ describe('Testing api', function () {
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
   const helper = require('./helper')
-  const sortable = helper.instrument('./src/html.sortable.js')
-  // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  const sortable = helper.instrument('./_test/html.sortable.js')
+  // const sortable = require('fs').readFileSync('./_test/html.sortable.js', { encoding: 'utf-8' })
   let window, body
   let ul, li, secondLi, thirdLi
 

@@ -1,4 +1,4 @@
-var sortable = (function () {
+define(function () {
   'use strict'
 
   /*
@@ -723,4 +723,4 @@ var sortable = (function () {
   }
 
   return sortable
-}())
+})
