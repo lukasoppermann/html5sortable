@@ -638,7 +638,7 @@ var sortable = function (sortableElements, options) {
         _dispatchEventOnConnected(sortableElement, _makeEvent('sortupdate', {
           item: dragging,
           index: _filter(_getChildren(newParent), _data(newParent, 'items'))
-              .indexOf(dragging),
+            .indexOf(dragging),
           oldindex: items.indexOf(dragging),
           elementIndex: _index(dragging),
           oldElementIndex: index,
