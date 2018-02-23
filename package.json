@@ -44,7 +44,11 @@
     "test": "mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
     "standard": "standard 'src/*.js' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
+    "build": "gulp",
     "travis": "npm run cover && mocha test/umd/module.js && npm run standard",
-    "cover": "nyc mocha && nyc report --reporter=text-lcov | coveralls"
+    "cover": "nyc mocha && nyc report --reporter=text-lcov | coveralls",
+    "preversion": "npm test",
+    "version": "npm run build && git add -A dist docs",
+    "postversion": "git push && git push --tags"
   }
 }
