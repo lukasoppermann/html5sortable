@@ -314,9 +314,7 @@
 		<section class="mb3 mx-auto col col-12">
   		<div class="p3 clearfix bg-yellow maroon">
 				<div class="col col-12 mb1">
-			    <h2 class="h3 m0">
-						Sortable Copy
-			    </h2>
+			    <h2 class="h3 m0">Sortable Copy</h2>
 				</div>
 				<div class="col col-6">
 					<div class="p2 bg-yellow border maroon border-maroon mt1">
@@ -326,6 +324,9 @@
 							<div>});</div>
 						</code>
   				</div>
+					<h2 class="h4 mt1">Copy items here</h2>
+					<ul class="p2 border maroon border-maroon js-sortable-copy-target sortable list flex flex-column list-reset">
+					</ul>
 		    </div>
 				<div class="col col-6">
 						<ul class="ml4 js-sortable-copy sortable list flex flex-column list-reset">
@@ -334,7 +335,7 @@
 							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 3</li>
 							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 4</li>
 							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 5</li>
-							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 6</li>	
+							<li class="p1 mb1 yellow bg-maroon" style="position: relative; z-index: 10">Item 6</li>
 						</ul>
 			    </div>
 		    </div>
@@ -347,8 +348,14 @@
 	sortable('.js-sortable-copy', {
       forcePlaceholderSize: true,
       copy: true,
+			acceptFrom: null,
       placeholderClass: 'p1 mb1 bg-navy border border-yellow',
     });
+	sortable('.js-sortable-copy-target', {
+    forcePlaceholderSize: true,
+		acceptFrom: '.js-sortable-copy',
+    placeholderClass: 'p2 mb1 bg-navy border border-yellow',
+  });
 	sortable('.js-sortable-oneway', {
       forcePlaceholderSize: true,
       acceptFrom: false,
