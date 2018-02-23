@@ -197,7 +197,14 @@ sortable('.sortable', {
   maxItems: 3 // Defaults to 0 (no limit)
 });
 ```
+### copy
+Use the `copy` option to duplicate the element on drag. The original element will remain in the same position.
 
+``` javascript
+sortable('.sortable', {
+  copy: true // Defaults to false
+});
+```
 ## Methods
 
 ### destroy
