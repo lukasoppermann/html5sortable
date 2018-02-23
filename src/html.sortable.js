@@ -578,14 +578,6 @@ var sortable = function (sortableElements, options) {
       options.placeholderClass.split(' ')
     )
 
-    // setup sortable ids
-    if (!sortableElement.getAttribute('data-sortable-id')) {
-      var id = sortables.length
-      sortables[id] = sortableElement
-      _attr(sortableElement, 'data-sortable-id', id)
-      _attr(items, 'data-item-sortable-id', id)
-    }
-
     _data(sortableElement, 'items', options.items)
     placeholders.push(placeholder)
     if (options.acceptFrom) {
