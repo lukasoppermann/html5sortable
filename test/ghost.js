@@ -7,7 +7,7 @@ describe('Testing ghost creation methods', function () {
   const sortable = helper.instrument('./src/html.sortable.js')
   // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
   let window = (new JSDOM(``, { runScripts: 'dangerously' })).window
-   // Execute my library by inserting a <script> tag containing it.
+  // Execute my library by inserting a <script> tag containing it.
   const scriptEl = window.document.createElement('script')
   scriptEl.textContent = sortable
   window.document.head.appendChild(scriptEl)
