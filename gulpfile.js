@@ -39,8 +39,7 @@ gulp.task('minify', ['umd'], function (cb) {
     })),
     uglify(),
     sourcemaps.write('./'),
-    gulp.dest('./dist'),
-    gulp.dest('./docs')
+    gulp.dest('./dist')
   ],cb)
 })
 /* ---------- */
