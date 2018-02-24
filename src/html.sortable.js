@@ -16,7 +16,6 @@
 var dragging
 var draggingHeight
 var placeholders = []
-var sortables = []
 /**
  * Get or set data on element
  * @param {Element} element
@@ -453,18 +452,6 @@ var _makeEvent = function (name, detail) {
   return e
 }
 /**
- * @param {Element} sortableElement
- * @param {CustomEvent} event
- */
-var _dispatchEventOnConnected = function (sortableElement, event) {
-  sortables.forEach(function (target) {
-    if (_listsConnected(sortableElement, target)) {
-      target.dispatchEvent(event)
-    }
-  })
-}
-
-/**
  * Creates and returns a new debounced version of the passed function which will postpone its execution until after wait milliseconds have elapsed
  * @param {fn} Function to debounce
  * @param {delay} time to wait before calling function with latest arguments, 0 - no debounce
@@ -503,7 +490,6 @@ var _serialize = function (list) {
  */
 var sortable = function (sortableElements, options) {
   var method = String(options)
-
   options = (function (options) {
     var result = {
       connectWith: false,
@@ -630,7 +616,7 @@ var sortable = function (sortableElements, options) {
       startParent = this.parentElement
       startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
-      _dispatchEventOnConnected(sortableElement, _makeEvent('sortstart', {
+      sortableElement.dispatchEvent(_makeEvent('sortstart', {
         item: dragging,
         placeholder: placeholder,
         startparent: startParent
@@ -655,24 +641,27 @@ var sortable = function (sortableElements, options) {
 
       placeholders.forEach(_detach)
       newParent = this.parentElement
-      _dispatchEventOnConnected(sortableElement, _makeEvent('sortstop', {
-        item: dragging,
-        startparent: startParent
-      }))
-      if (index !== _index(dragging) || startParent !== newParent) {
-        _dispatchEventOnConnected(sortableElement, _makeEvent('sortupdate', {
+
+      if (_listsConnected(newParent, startParent)) {
+        sortableElement.dispatchEvent(_makeEvent('sortstop', {
           item: dragging,
-          index: _filter(_getChildren(newParent), _data(newParent, 'items'))
-            .indexOf(dragging),
-          oldindex: items.indexOf(dragging),
-          elementIndex: _index(dragging),
-          oldElementIndex: index,
-          startparent: startParent,
-          endparent: newParent,
-          newEndList: _serialize(newParent),
-          newStartList: _serialize(startParent),
-          oldStartList: startList
+          startparent: startParent
         }))
+        if (index !== _index(dragging) || startParent !== newParent) {
+          sortableElement.dispatchEvent(_makeEvent('sortupdate', {
+            item: dragging,
+            index: _filter(_getChildren(newParent), _data(newParent, 'items'))
+              .indexOf(dragging),
+            oldindex: items.indexOf(dragging),
+            elementIndex: _index(dragging),
+            oldElementIndex: index,
+            startparent: startParent,
+            endparent: newParent,
+            newEndList: _serialize(newParent),
+            newStartList: _serialize(startParent),
+            oldStartList: startList
+          }))
+        }
       }
       dragging = null
       draggingHeight = null
@@ -681,17 +670,15 @@ var sortable = function (sortableElements, options) {
     // TODO: REMOVE placeholder?????
     _on([sortableElement, placeholder], 'drop', function (e) {
       var visiblePlaceholder
-      if (!_listsConnected(sortableElement, dragging.parentElement)) {
+      if (!_listsConnected(e.target.parentElement, sortableElement)) {
         return
       }
-
       e.preventDefault()
       e.stopPropagation()
 
       _data(dragging, 'dropped', 'true')
       visiblePlaceholder = placeholders.filter(_attached)[0]
       _after(visiblePlaceholder, dragging)
-      dragging.dispatchEvent(_makeEvent('dragend'))
     })
 
     var debouncedDragOverEnter = _debounce(function (element, pageY) {
