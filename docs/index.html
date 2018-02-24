@@ -399,12 +399,19 @@
 				placeholderClass: 'border border-white bg-orange mb1'
 			});
 			document.querySelector('.js-sortable-connected').addEventListener('sortupdate', function(e){
-        console.log('Event details object: ', e.detail);
-				console.log('Parent old: ', e.detail.startparent);
-				console.log('Parent new: ', e.detail.endparent);
+        console.log('Sortupdate: ', e.detail);
+				console.log('Parent: ', e.detail.startparent, ' -> ', e.detail.endparent);
 				console.log('Index: '+e.detail.oldindex+' -> '+e.detail.index);
 				console.log('elementIndex: '+e.detail.oldElementIndex+' -> '+e.detail.elementIndex);
 			});
+
+      document.querySelector('.js-sortable-connected').addEventListener('sortstart', function(e){
+        console.log('Sortstart: ', e.detail);
+      });
+
+      document.querySelector('.js-sortable-connected').addEventListener('sortstop', function(e){
+        console.log('Sortstop: ', e.detail);
+      });
 
 			sortable('.js-sortable-buttons', {
 				forcePlaceholderSize: true,
