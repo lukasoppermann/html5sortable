@@ -3,9 +3,9 @@ describe('Testing events', function () {
   // testing basic api
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
-  // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
+  // const sortable = require('fs').readFileSync('./src/html5sortable.js', { encoding: 'utf-8' })
   const helper = require('./helper')
-  const sortable = helper.instrument('./_test/html.sortable.js')
+  const sortable = helper.instrument('./_test/html5sortable.js')
   let window, body
 
   let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)

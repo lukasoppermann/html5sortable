@@ -8,10 +8,10 @@ const server = http.createServer(function (req, res) {
       res.end(data)
     })
   }
-  if (req.url === '/_test/html.sortable.es.js') {
+  if (req.url === '/_test/html5sortable.es.js') {
     res.writeHead(200, {'Content-Type': 'application/javascript'})
 
-    fs.readFile('./_test/html.sortable.es.js', function (err = null, data) {
+    fs.readFile('./_test/html5sortable.es.js', function (err = null, data) {
       res.end(data)
     })
   }

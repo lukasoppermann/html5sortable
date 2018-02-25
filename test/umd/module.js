@@ -5,7 +5,7 @@ describe('Testing UMD (Universal Module Definition) against /dist/', function ()
   let window
   const helper = require('../helper')
   const { JSDOM } = require('jsdom')
-  const sortable = require('fs').readFileSync('./_test/html.sortable.js', { encoding: 'utf-8' })
+  const sortable = require('fs').readFileSync('./_test/html5sortable.js', { encoding: 'utf-8' })
 
   describe('Assignment to global variable', function () {
     before(function () {
@@ -23,7 +23,7 @@ describe('Testing UMD (Universal Module Definition) against /dist/', function ()
 
   describe('CommonJS Module', function () {
     it('should be able to require html.sortable', function () {
-      var sortable = require('../../_test/html.sortable.cjs.js')
+      var sortable = require('../../_test/html5sortable.cjs.js')
       assert.typeOf(sortable, 'function')
     })
   })
@@ -36,7 +36,7 @@ describe('Testing UMD (Universal Module Definition) against /dist/', function ()
       scriptEl.textContent = requirejs
       window.document.head.appendChild(scriptEl)
       scriptEl.textContent = `
-        requirejs(['./dist/html.sortable.amd'], function (sortable) {
+        requirejs(['./dist/html5sortable.amd'], function (sortable) {
           window.requiredSortable = sortable
         })`
       window.document.head.appendChild(scriptEl)

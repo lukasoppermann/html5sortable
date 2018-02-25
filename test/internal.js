@@ -4,7 +4,7 @@ describe('Internal function tests', function () {
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
   const helper = require('./helper')
-  const sortable = helper.instrument('./_test/html.sortable.js')
+  const sortable = helper.instrument('./_test/html5sortable.js')
   let window, body
   let ul, li, allLiElements
 

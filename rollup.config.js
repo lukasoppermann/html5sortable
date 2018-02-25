@@ -3,7 +3,8 @@ import typescript from 'rollup-plugin-typescript'
 import strip from 'rollup-plugin-strip-code'
 import pkg from './package.json'
 
-let dir = (process.env.test ? '_test/' : 'dist/')
+let dir = `${pkg.dist}/`
+
 let plugins = [
   typescript({
     target: 'ES5'
@@ -15,26 +16,28 @@ if (!process.env.test) {
     start_comment: 'START.TESTS_ONLY',
     end_comment: 'END.TESTS_ONLY'
   })]
+} else {
+  dir = '_test/'
 }
 
 export default [
   {
-    input: 'src/html.sortable.ts',
+    input: pkg.file,
     output: {
       name: 'sortable',
-      file: `${dir}${pkg.file}.min.js`,
+      file: `${dir}${pkg.name}.min.js`,
       format: 'iife',
       sourcemap: true
     },
     plugins: [...plugins, uglify()]
   },
   {
-    input: 'src/html.sortable.ts',
+    input: pkg.file,
     output: [
-      { file: `${dir}${pkg.file}.js`, format: 'iife', name: 'sortable' },
-      { file: `${dir}${pkg.file}.cjs.js`, format: 'cjs' },
-      { file: `${dir}${pkg.file}.amd.js`, format: 'amd' },
-      { file: `${dir}${pkg.file}.es.js`, format: 'es' }
+      { file: `${dir}${pkg.name}.js`, format: 'iife', name: 'sortable' },
+      { file: `${dir}${pkg.name}.cjs.js`, format: 'cjs' },
+      { file: `${dir}${pkg.name}.amd.js`, format: 'amd' },
+      { file: `${dir}${pkg.name}.es.js`, format: 'es' }
     ],
     plugins: plugins
   }

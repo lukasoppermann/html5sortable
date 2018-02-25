@@ -1,7 +1,8 @@
 {
   "name": "html5sortable",
-  "main": "dist/html.sortable.js",
-  "file": "html.sortable",
+  "main": "dist/html5sortable.js",
+  "file": "src/html5sortable.ts",
+  "dist": "dist",
   "version": "0.7.0",
   "license": "MIT",
   "description": "VanillaJS sortable lists and grids using native HTML5 drag and drop API.",
@@ -43,7 +44,7 @@
   },
   "scripts": {
     "test": "rollup -c --environment test && mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
-    "build": "rollup -c && cp dist/html.sortable.js docs/html.sortable.js",
+    "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
     "standard": "standard 'src/*.js' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
     "travis": "npm run cover && mocha test/umd/module.js && npm run standard",
