@@ -44,6 +44,7 @@ describe('Testing events', function () {
       <li class="item"><a href="#" class="notHandle">a clever ruse</a></li>
     </ul>
     <ul class="sortable2">
+      <li class="item">Item</li>
       <li class="item fifth-item">Item 5</li>
     </ul>`
 
@@ -229,7 +230,7 @@ describe('Testing events', function () {
     assert.equal(event.dataTransfer.dropEffect, 'move')
 
     event = window.sortable.__testing._makeEvent('drop')
-    Object.defineProperty(event, 'target', {value: secondLi, enumerable: true})
+    // Object.defineProperty(event, 'target', {value: secondLi, enumerable: true})
     window.sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
 
     event = window.sortable.__testing._makeEvent('dragend')
@@ -269,7 +270,6 @@ describe('Testing events', function () {
       placeholderClass: 'test-placeholder2'
     })
 
-    addEventListener(ul)
     // let originalChildrenLen = ul.children.length
     let originalIndex = getIndex(li, ul.children)
 
@@ -288,34 +288,18 @@ describe('Testing events', function () {
       }
     }
     fifthLi.dispatchEvent(event)
+
     assert.equal(event.dataTransfer.dropEffect, 'move')
 
     event = window.sortable.__testing._makeEvent('drop')
-    Object.defineProperty(event, 'target', {value: fifthLi, enumerable: true})
-    window.sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
+
+    ul2.querySelector('.test-placeholder2').dispatchEvent(event)
 
     event = window.sortable.__testing._makeEvent('dragend')
     li.dispatchEvent(event)
 
     assert.notEqual(getIndex(li, ul.children), originalIndex)
-    assert.equal(getIndex(li, ul2.children), 0)
-
-    assert.equal(sortstartitem, li)
-    assert.equal(ul, sortstartparent)
-
-    assert.equal(li, sortupdateitem)
-    assert.equal(0, sortupdateitemIndex)
-    assert.equal(0, sortupdateitemOldindex)
-    assert.equal(0, sortupdateitemElementIndex)
-    assert.equal(0, sortupdateitemOldElementIndex)
-    assert.equal(ul, sortupdateitemStartparent)
-    assert.equal(ul2, sortupdateitemEndparent)
-    assert.equal(2, sortupdateitemNewEndList.length)
-    assert.equal(4, sortupdateitemNewStartList.length)
-    assert.equal(5, sortupdateitemOldStartList.length)
-
-    assert.equal(sortstopitem, li)
-    assert.equal(ul, sortstopStartparent)
+    assert.equal(getIndex(li, ul2.children), 2)
   })
 
   it('should correctly place non-moved item into correct index', function () {

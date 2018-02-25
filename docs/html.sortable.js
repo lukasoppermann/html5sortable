@@ -679,9 +679,7 @@ var sortable = function (sortableElements, options) {
     // TODO: REMOVE placeholder?????
     _on([sortableElement, placeholder], 'drop', function (e) {
       var visiblePlaceholder
-      console.log(dragging.parentElement, e.target.parentElement)
-      // if (!_listsConnected(sortableElement, dragging.parentElement)) {
-      if (!_listsConnected(e.target.parentElement, dragging.parentElement)) {
+      if (!_listsConnected(sortableElement, dragging.parentElement)) {
         return
       }
       e.preventDefault()
