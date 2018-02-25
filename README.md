@@ -10,7 +10,7 @@
 * Built using native HTML5 drag and drop API. No dependencies.
 * Supports both list and grid style layouts.
 * Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera, Edge), IE11+
-* Supports exports as AMD, CommonJS or global
+* Available as ES6 Module, AMD, CommonJS and iffe with `sortable` global
 
 **Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/index.html)**
 
@@ -20,11 +20,16 @@ If you would like to add an adapter to the list, please [create an issue](https:
 
 # Installation
 
-You need to install the package using `npm` or downloading it manually. Afterwards you need to load `dist/html.sortable.js` or the minified version, `dist/html.sortable.min.js`. **Make sure to grab the file from the `dist/` directory.**
-
 ```
 npm install html5sortable --save
 ```
+
+Once you install the package using `npm` or downloading it manually, load file you need **from the `dist/` directory**, e.g. `dist/html.sortable.min.js` for the minified iife version.
+
+- iffe (loading file via script tag): `dist/html5sortable.js` or `dist/html5sortable.min.js`
+- ES6 Module: `dist/html5sortable.es.js`
+- CommonJS Module: `dist/html5sortable.cjs.js`
+- AMD Module: `dist/html5sortable.amd.js`
 
 Still using **bower**? [Look here](https://github.com/lukasoppermann/html5sortable/wiki/Installation#bower).
 

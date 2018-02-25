@@ -3,9 +3,8 @@ describe('Internal function tests', function () {
   // testing basic api
   let assert = require('chai').assert
   const { JSDOM } = require('jsdom')
-  // const sortable = require('fs').readFileSync('./src/html.sortable.js', { encoding: 'utf-8' })
   const helper = require('./helper')
-  const sortable = helper.instrument('./src/html.sortable.js')
+  const sortable = helper.instrument('./_test/html5sortable.js')
   let window, body
   let ul, li, allLiElements
 
