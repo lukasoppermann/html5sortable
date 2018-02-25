@@ -1,15 +1,19 @@
 # Contributing
 
-We ♥︎ contributions, so if you find a bug or have a great idea create an [issue](https://github.com/lukasoppermann/html5sortable/issues) or even better, send a [pull request](https://github.com/lukasoppermann/html5sortable/pulls). We are a beginners friendly project, so if you are not 100% sure how to make your PR fullfill all the points below, just start with what you know and send a PR mentioning the points you need help with.
+We ❤️ contributions, so if you find a bug or have a great idea for a feature create an [issue](https://github.com/lukasoppermann/html5sortable/issues) or even better, send a [pull request](https://github.com/lukasoppermann/html5sortable/pulls).
+
+We are a beginners friendly project! This means, we are happy to help you with contributing to the project. If you are not sure how to make your PR fulfill all the points below, send a [WIP] (work in progress) PR. In the description you can mentioning the points you are still working on and what you need help with.
+
+If you are just starting out with github, you are very welcome to submit small PRs. For example improvements to the readme or code cleanup PRs.
 
 
 ## Pull Requests
 
-- We use [standardjs](https://standardjs.com/) to enforce a good coding style, so please write your code according to it. (Run `npm test` to where you need to do some tweaking.)
+- We use [standardjs](https://standardjs.com/) to enforce common coding style, so please write your code according to it. (Run `npm test` to see where you need adjust your code.)
 
 - **Add tests!** - To avoid bugs we keep the test coverage as high as possible. Please help by adding tests to your bugfixes & features.
 
-- **Comment your code** - Your code should be as self-documenting and easy to read as possible, however please add comments whenever possible/sensible. Better have one line too much than one too little.
+- **Comment your code** - Your code should be as self-documenting and easy to read as possible, however please add comments whenever possible/sensible. People with all levels of skill and involvement in the project will work on the code.
 
 - **Use Docblocks for functions** – Every function should have a [docblock](http://usejsdoc.org/about-getting-started.html) above stating what the function does and what parameters it is supposed to receive, return values, etc.
 
@@ -22,20 +26,20 @@ We ♥︎ contributions, so if you find a bug or have a great idea create an [is
 
 - **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
 
-- **Do NOT run the build script** – Please do not run the gulp build script and never commit anything in the `dist` directory, those files will be updated once a release is created.
+- **Do NOT commit the dist folder** – Please do not commit anything in the `dist` directory, those files will be updated once a release is created.
 
 - **One pull request per feature** - We appreciate every improvement you have for the project. To make it easy and fast to merge your pull requests, only change one thing per PR. We rather have 10 small PRs than one giant one.
 
 - **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please [squash them](http://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) before submitting.
 
-  ###### Use rebase to your advantage
-  Never commit merges in your PR history, as they will mess up the projects history.
+###### Use rebase to your advantage
+Never commit merges in your PR history, as they will mess up the projects history.
 
-  Instead of a `pull` to get the latest changes, always [`rebase` to `master`](#rebase-to-master).
+Instead of a `pull` to get the latest changes, always [`rebase` to `master`](#rebase-to-master).
 
-  When you have a messy history (e.g. `typo` or `fix` commits) do an [interactive `rebase`](#interactive-rebase)
+When you have a messy history (e.g. `typo` or `fix` commits) do an [interactive `rebase`](#interactive-rebase)
 
-**Remember:** If you have trouble with any of the steps above, don't despair, just ask for help.
+**Remember:** If you have trouble with any of the steps above, just ask for help.
 
 ## Running Tests
 
@@ -45,7 +49,7 @@ $ npm test
 
 ## Rebase
 
-If you are new to rebasing you might want to create a backup of your branch, in case you mess it up.
+If you are new to rebasing you might want to create a backup of your branch, in case something goes wrong 😉.
 
 ### Rebase to master
 
