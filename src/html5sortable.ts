@@ -1,14 +1,3 @@
-/*
- * HTML5 Sortable library
- * https://github.com/lukasoppermann/html5sortable
- *
- * Original code copyright 2012 Ali Farhadi.
- * This version is mantained by Lukas Oppermann <lukas@vea.re>
- * Previously also mantained by Alexandru Badiu <andu@ctrlz.ro>
- * jQuery-independent implementation by Nazar Mokrynskyi <nazar@mokrynskyi.com>
- *
- * Released under the MIT license.
- */
 'use strict'
 
 import _matches from './matches'
