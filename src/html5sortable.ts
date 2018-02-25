@@ -10,139 +10,19 @@
  * Released under the MIT license.
  */
 'use strict'
+
+import _matches from './matches'
+import { addData as _data , removeData as _removeData } from './data'
+import _filter from './filter'
+import { addEventListener as _on , removeEventListener as _off } from './eventListener'
+import { addAttribute as _attr , removeAttribute as _removeAttr } from './attribute'
+import _offset from './offset'
 /*
  * variables global to the plugin
  */
 var dragging
 var draggingHeight
 var placeholders = []
-/**
- * Get or set data on element
- * @param {Element} element
- * @param {string} key
- * @param {*} value
- * @return {*}
- */
-var _data = function (element, key, value) {
-  if (value === undefined) {
-    return element && element.h5s && element.h5s.data && element.h5s.data[key]
-  } else {
-    element.h5s = element.h5s || {}
-    element.h5s.data = element.h5s.data || {}
-    element.h5s.data[key] = value
-  }
-}
-/**
- * Remove data from element
- * @param {Element} element
- */
-var _removeData = function (element) {
-  if (element.h5s) {
-    delete element.h5s.data
-  }
-}
-/**
- * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
- * @param {el} DOM element
- * @param {selector} selector test against the element
- * @returns {boolean}
- */
-/* istanbul ignore next */
-var _matches = function (el, selector) {
-  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector)
-}
-/**
- * Filter only wanted nodes
- * @param {Array|NodeList} nodes
- * @param {Array/string} wanted
- * @returns {Array}
- */
-var _filter = function (nodes, wanted) {
-  if (!wanted) {
-    return Array.prototype.slice.call(nodes)
-  }
-  var result = []
-  for (var i = 0; i < nodes.length; ++i) {
-    if (typeof wanted === 'string' && _matches(nodes[i], wanted)) {
-      result.push(nodes[i])
-    }
-    if (wanted.indexOf(nodes[i]) !== -1) {
-      result.push(nodes[i])
-    }
-  }
-  return result
-}
-/**
- * @param {Array|Element} element
- * @param {Array|string} event
- * @param {Function} callback
- */
-var _on = function (element, event, callback) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _on(element[i], event, callback)
-    }
-    return
-  }
-  element.addEventListener(event, callback)
-  element.h5s = element.h5s || {}
-  element.h5s.events = element.h5s.events || {}
-  element.h5s.events[event] = callback
-}
-/**
- * @param {Array|Element} element
- * @param {Array|string} event
- */
-var _off = function (element, event) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _off(element[i], event)
-    }
-    return
-  }
-  if (element.h5s && element.h5s.events && element.h5s.events[event]) {
-    element.removeEventListener(event, element.h5s.events[event])
-    delete element.h5s.events[event]
-  }
-}
-/**
- * @param {Array|Element} element
- * @param {string} attribute
- * @param {*} value
- */
-var _attr = function (element, attribute, value) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _attr(element[i], attribute, value)
-    }
-    return
-  }
-  element.setAttribute(attribute, value)
-}
-/**
- * @param {Array|Element} element
- * @param {string} attribute
- */
-var _removeAttr = function (element, attribute) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _removeAttr(element[i], attribute)
-    }
-    return
-  }
-  element.removeAttribute(attribute)
-}
-/**
- * @param {Element} element
- * @returns {{left: *, top: *}}
- */
-var _offset = function (element) {
-  var rect = element.getClientRects()[0]
-  return {
-    left: rect.left + window.scrollX,
-    top: rect.top + window.scrollY
-  }
-}
 /*
  * remove event handlers from items
  * @param {Array|NodeList} items
