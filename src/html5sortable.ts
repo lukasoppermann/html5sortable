@@ -1,148 +1,21 @@
-/*
- * HTML5 Sortable library
- * https://github.com/lukasoppermann/html5sortable
- *
- * Original code copyright 2012 Ali Farhadi.
- * This version is mantained by Lukas Oppermann <lukas@vea.re>
- * Previously also mantained by Alexandru Badiu <andu@ctrlz.ro>
- * jQuery-independent implementation by Nazar Mokrynskyi <nazar@mokrynskyi.com>
- *
- * Released under the MIT license.
- */
 'use strict'
+
+import _matches from './matches'
+import { addData as _data , removeData as _removeData } from './data'
+import _filter from './filter'
+import { addEventListener as _on , removeEventListener as _off } from './eventListener'
+import { addAttribute as _attr , removeAttribute as _removeAttr } from './attribute'
+import _offset from './offset'
+import _debounce from './debounce'
+import _index from './index'
+import _detach from './removeElement'
+import {makeElement as _html2element, insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
 /*
  * variables global to the plugin
  */
 var dragging
 var draggingHeight
 var placeholders = []
-/**
- * Get or set data on element
- * @param {Element} element
- * @param {string} key
- * @param {*} value
- * @return {*}
- */
-var _data = function (element, key, value) {
-  if (value === undefined) {
-    return element && element.h5s && element.h5s.data && element.h5s.data[key]
-  } else {
-    element.h5s = element.h5s || {}
-    element.h5s.data = element.h5s.data || {}
-    element.h5s.data[key] = value
-  }
-}
-/**
- * Remove data from element
- * @param {Element} element
- */
-var _removeData = function (element) {
-  if (element.h5s) {
-    delete element.h5s.data
-  }
-}
-/**
- * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
- * @param {el} DOM element
- * @param {selector} selector test against the element
- * @returns {boolean}
- */
-/* istanbul ignore next */
-var _matches = function (el, selector) {
-  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector)
-}
-/**
- * Filter only wanted nodes
- * @param {Array|NodeList} nodes
- * @param {Array/string} wanted
- * @returns {Array}
- */
-var _filter = function (nodes, wanted) {
-  if (!wanted) {
-    return Array.prototype.slice.call(nodes)
-  }
-  var result = []
-  for (var i = 0; i < nodes.length; ++i) {
-    if (typeof wanted === 'string' && _matches(nodes[i], wanted)) {
-      result.push(nodes[i])
-    }
-    if (wanted.indexOf(nodes[i]) !== -1) {
-      result.push(nodes[i])
-    }
-  }
-  return result
-}
-/**
- * @param {Array|Element} element
- * @param {Array|string} event
- * @param {Function} callback
- */
-var _on = function (element, event, callback) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _on(element[i], event, callback)
-    }
-    return
-  }
-  element.addEventListener(event, callback)
-  element.h5s = element.h5s || {}
-  element.h5s.events = element.h5s.events || {}
-  element.h5s.events[event] = callback
-}
-/**
- * @param {Array|Element} element
- * @param {Array|string} event
- */
-var _off = function (element, event) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _off(element[i], event)
-    }
-    return
-  }
-  if (element.h5s && element.h5s.events && element.h5s.events[event]) {
-    element.removeEventListener(event, element.h5s.events[event])
-    delete element.h5s.events[event]
-  }
-}
-/**
- * @param {Array|Element} element
- * @param {string} attribute
- * @param {*} value
- */
-var _attr = function (element, attribute, value) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _attr(element[i], attribute, value)
-    }
-    return
-  }
-  element.setAttribute(attribute, value)
-}
-/**
- * @param {Array|Element} element
- * @param {string} attribute
- */
-var _removeAttr = function (element, attribute) {
-  if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
-      _removeAttr(element[i], attribute)
-    }
-    return
-  }
-  element.removeAttribute(attribute)
-}
-/**
- * @param {Element} element
- * @returns {{left: *, top: *}}
- */
-var _offset = function (element) {
-  var rect = element.getClientRects()[0]
-  return {
-    left: rect.left + window.scrollX,
-    top: rect.top + window.scrollY
-  }
-}
 /*
  * remove event handlers from items
  * @param {Array|NodeList} items
@@ -373,17 +246,6 @@ var _reloadSortable = function (sortableElement) {
   _removeSortableEvents(sortableElement)
 }
 /**
- * Get position of the element relatively to its sibling elements
- * @param {Element} element
- * @returns {number}
- */
-var _index = function (element) {
-  if (!element.parentElement) {
-    return 0
-  }
-  return Array.prototype.indexOf.call(element.parentElement.children, element)
-}
-/**
  * Whether element is in DOM
  * @param {Element} element
  * @returns {boolean}
@@ -391,51 +253,6 @@ var _index = function (element) {
 var _attached = function (element) {
   // document.body.contains(element)
   return !!element.parentNode
-}
-/**
- * Convert HTML string into DOM element.
- * @param {Element|string} html
- * @param {string} tagname
- * @returns {Element}
- */
-var _html2element = function (html, tagName) {
-  if (typeof html !== 'string') {
-    return html
-  }
-  var parentElement = document.createElement(tagName)
-  parentElement.innerHTML = html
-  return parentElement.firstChild
-}
-/**
- * Insert before target
- * @param {Element} target
- * @param {Element} element
- */
-var _before = function (target, element) {
-  target.parentElement.insertBefore(
-    element,
-    target
-  )
-}
-/**
- * Insert after target
- * @param {Element} target
- * @param {Element} element
- */
-var _after = function (target, element) {
-  target.parentElement.insertBefore(
-    element,
-    target.nextElementSibling
-  )
-}
-/**
- * Detach element from DOM
- * @param {Element} element
- */
-var _detach = function (element) {
-  if (element.parentNode) {
-    element.parentNode.removeChild(element)
-  }
 }
 /**
  * Make native event that can be dispatched afterwards
@@ -450,28 +267,6 @@ var _makeEvent = function (name, detail) {
   }
   e.initEvent(name, false, true)
   return e
-}
-/**
- * Creates and returns a new debounced version of the passed function which will postpone its execution until after wait milliseconds have elapsed
- * @param {fn} Function to debounce
- * @param {delay} time to wait before calling function with latest arguments, 0 - no debounce
- * @param {context} time to wait before calling function with latest arguments, 0 - no debounce
- * @returns {function} - debounced function
- */
-function _debounce (fn, delay, context) {
-  var timer = null
-
-  if (delay === 0) {
-    return fn
-  }
-  return function () {
-    var eContext = context || this
-    var args = arguments
-    clearTimeout(timer)
-    timer = setTimeout(function () {
-      fn.apply(eContext, args)
-    }, delay)
-  }
 }
 
 var _getChildren = function (element) {
@@ -681,7 +476,7 @@ export default function sortable (sortableElements, options) {
       _after(visiblePlaceholder, dragging)
     })
 
-    var debouncedDragOverEnter = _debounce(function (element, pageY) {
+    var debouncedDragOverEnter = _debounce((element, pageY) => {
       if (!dragging) {
         return
       }
@@ -726,7 +521,8 @@ export default function sortable (sortableElements, options) {
         placeholders
           .filter(function (element) { return element !== placeholder })
           .forEach(_detach)
-      } else {
+      }
+      else {
         if (placeholders.indexOf(element) === -1 &&
             !_filter(_getChildren(element), options.items).length) {
           placeholders.forEach(_detach)
@@ -734,7 +530,6 @@ export default function sortable (sortableElements, options) {
         }
       }
     }, options.debounce)
-
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function (e) {
       if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
@@ -786,7 +581,6 @@ sortable.__testing = {
   _makeGhost: _makeGhost,
   _index: _index,
   _makeEvent: _makeEvent,
-  _debounce: _debounce,
   _getPlaceholders: () => placeholders,
   _resetPlaceholders: () => {
     placeholders = []

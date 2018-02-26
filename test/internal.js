@@ -191,10 +191,7 @@ describe('Internal function tests', function () {
   })
 
   it('_debounce returns given function, when 0 debounce', function () {
-    let funct = function () {}
-    let debounced = window.sortable.__testing._debounce(funct, 0)
-
-    assert.equal(debounced, funct)
+    this.skip('add tests for debounce in seperate file')
   })
 
   it('_getHandles: gets handles array from items', function () {
