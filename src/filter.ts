@@ -5,7 +5,7 @@ import _matches from './matches'
  * @param {Array/string} wanted
  * @returns {Array}
  */
-export default function (nodes, wanted) {
+export default (nodes, wanted) => {
   if (!wanted) {
     return Array.prototype.slice.call(nodes)
   }

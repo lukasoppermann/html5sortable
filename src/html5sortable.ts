@@ -6,6 +6,7 @@ import _filter from './filter'
 import { addEventListener as _on , removeEventListener as _off } from './eventListener'
 import { addAttribute as _attr , removeAttribute as _removeAttr } from './attribute'
 import _offset from './offset'
+import _debounce from './debounce'
 /*
  * variables global to the plugin
  */
@@ -320,28 +321,6 @@ var _makeEvent = function (name, detail) {
   e.initEvent(name, false, true)
   return e
 }
-/**
- * Creates and returns a new debounced version of the passed function which will postpone its execution until after wait milliseconds have elapsed
- * @param {fn} Function to debounce
- * @param {delay} time to wait before calling function with latest arguments, 0 - no debounce
- * @param {context} time to wait before calling function with latest arguments, 0 - no debounce
- * @returns {function} - debounced function
- */
-function _debounce (fn, delay, context) {
-  var timer = null
-
-  if (delay === 0) {
-    return fn
-  }
-  return function () {
-    var eContext = context || this
-    var args = arguments
-    clearTimeout(timer)
-    timer = setTimeout(function () {
-      fn.apply(eContext, args)
-    }, delay)
-  }
-}
 
 var _getChildren = function (element) {
   return element.children
@@ -655,7 +634,6 @@ sortable.__testing = {
   _makeGhost: _makeGhost,
   _index: _index,
   _makeEvent: _makeEvent,
-  _debounce: _debounce,
   _getPlaceholders: () => placeholders,
   _resetPlaceholders: () => {
     placeholders = []

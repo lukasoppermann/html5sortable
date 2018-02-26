@@ -2,7 +2,7 @@
  * @param {Element} element
  * @returns {{left: *, top: *}}
  */
-export default function (element) {
+export default (element) => {
   var rect = element.getClientRects()[0]
   return {
     left: rect.left + window.scrollX,
