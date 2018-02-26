@@ -16,6 +16,10 @@
 var dragging
 var draggingHeight
 var placeholders = []
+var placeholderMap = new Map();
+var index
+var startParent
+var startList
 /**
  * Get or set data on element
  * @param {Element} element
@@ -84,10 +88,12 @@ var _on = function (element, event, callback) {
     }
     return
   }
-  element.addEventListener(event, callback)
-  element.h5s = element.h5s || {}
-  element.h5s.events = element.h5s.events || {}
-  element.h5s.events[event] = callback
+  if (!(element.h5s && element.h5s.events && element.h5s.events[event])) {
+    element.addEventListener(event, callback)
+    element.h5s = element.h5s || {}
+    element.h5s.events = element.h5s.events || {}
+    element.h5s.events[event] = callback
+  }
 }
 /**
  * @param {Array|Element} element
@@ -548,11 +554,7 @@ export default function sortable (sortableElements, options) {
     _reloadSortable(sortableElement)
     // initialize
     var items = _filter(_getChildren(sortableElement), options.items)
-    var index
-    var startParent
-    var startList
     var placeholder = options.placeholder
-    var maxItems
     if (!placeholder) {
       placeholder = document.createElement(
         /^ul|ol$/i.test(sortableElement.tagName) ? 'li' : 'div'
@@ -566,6 +568,7 @@ export default function sortable (sortableElements, options) {
 
     _data(sortableElement, 'items', options.items)
     placeholders.push(placeholder)
+    placeholderMap.set(sortableElement, placeholder)
     if (options.acceptFrom) {
       _data(sortableElement, 'acceptFrom', options.acceptFrom)
     } else if (options.connectWith) {
@@ -577,177 +580,19 @@ export default function sortable (sortableElements, options) {
     _attr(items, 'aria-grabbed', 'false')
 
     // Mouse over class
-    if (options.hoverClass) {
-      var hoverClass = 'sortable-over'
-      if (typeof options.hoverClass === 'string') {
-        hoverClass = options.hoverClass
-      }
-
-      _on(items, 'mouseenter', function () {
-        this.classList.add(hoverClass)
-      })
-      _on(items, 'mouseleave', function () {
-        this.classList.remove(hoverClass)
-      })
-    }
-
-    // max items
-    if (options.maxItems && typeof options.maxItems === 'number') {
-      maxItems = options.maxItems
+    var hoverClass = _getHoverClass(sortableElement)
+    if (hoverClass != null) {
+      _on(items, 'mouseenter', mouseenter)
+      _on(items, 'mouseleave', mouseleave)
     }
 
     // Handle drag events on draggable items
-    _on(items, 'dragstart', function (e) {
-      e.stopImmediatePropagation()
-      if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'false') {
-        return
-      }
-
-      // add transparent clone or other ghost to cursor
-      _getGhost(e, this)
-      // cache selsection & add attr for dragging
-      this.classList.add(options.draggingClass)
-      dragging = _getDragging(this, sortableElement)
-
-      _attr(dragging, 'aria-grabbed', 'true')
-      // grab values
-      index = _index(dragging)
-      draggingHeight = parseInt(window.getComputedStyle(dragging).height)
-      startParent = this.parentElement
-      startList = _serialize(startParent)
-      // dispatch sortstart event on each element in group
-      sortableElement.dispatchEvent(_makeEvent('sortstart', {
-        item: dragging,
-        placeholder: placeholder,
-        startparent: startParent
-      }))
-    })
+    _on(items, 'dragstart', dragstart)
     // Handle drag events on draggable items
-    _on(items, 'dragend', function () {
-      var newParent
-      if (!dragging) {
-        return
-      }
-      // remove dragging attributes and show item
-      dragging.classList.remove(options.draggingClass)
-      _attr(dragging, 'aria-grabbed', 'false')
-
-      if (dragging.getAttribute('aria-copied') === 'true' && _data(dragging, 'dropped') !== 'true') {
-        _detach(dragging)
-      }
-
-      dragging.style.display = dragging.oldDisplay
-      delete dragging.oldDisplay
-
-      placeholders.forEach(_detach)
-      newParent = this.parentElement
-
-      if (_listsConnected(newParent, startParent)) {
-        sortableElement.dispatchEvent(_makeEvent('sortstop', {
-          item: dragging,
-          startparent: startParent
-        }))
-        if (index !== _index(dragging) || startParent !== newParent) {
-          sortableElement.dispatchEvent(_makeEvent('sortupdate', {
-            item: dragging,
-            index: _filter(_getChildren(newParent), _data(newParent, 'items'))
-              .indexOf(dragging),
-            oldindex: items.indexOf(dragging),
-            elementIndex: _index(dragging),
-            oldElementIndex: index,
-            startparent: startParent,
-            endparent: newParent,
-            newEndList: _serialize(newParent),
-            newStartList: _serialize(startParent),
-            oldStartList: startList
-          }))
-        }
-      }
-      dragging = null
-      draggingHeight = null
-    })
+    _on(items, 'dragend', dragend)
     // Handle drop event on sortable & placeholder
     // TODO: REMOVE placeholder?????
-    _on([sortableElement, placeholder], 'drop', function (e) {
-      var visiblePlaceholder
-      if (!_listsConnected(sortableElement, dragging.parentElement)) {
-        return
-      }
-      e.preventDefault()
-      e.stopPropagation()
-
-      _data(dragging, 'dropped', 'true')
-      visiblePlaceholder = placeholders.filter(_attached)[0]
-      _after(visiblePlaceholder, dragging)
-    })
-
-    var debouncedDragOverEnter = _debounce(function (element, pageY) {
-      if (!dragging) {
-        return
-      }
-
-      if (items.indexOf(element) !== -1) {
-        var thisHeight = parseInt(window.getComputedStyle(element).height)
-        var placeholderIndex = _index(placeholder)
-        var thisIndex = _index(element)
-        if (options.forcePlaceholderSize) {
-          placeholder.style.height = draggingHeight + 'px'
-        }
-
-        // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
-        if (thisHeight > draggingHeight) {
-          // Dead zone?
-          var deadZone = thisHeight - draggingHeight
-          var offsetTop = _offset(element).top
-          if (placeholderIndex < thisIndex &&
-              pageY < offsetTop + deadZone) {
-            return
-          }
-          if (placeholderIndex > thisIndex &&
-              pageY > offsetTop + thisHeight - deadZone) {
-            return
-          }
-        }
-
-        if (dragging.oldDisplay === undefined) {
-          dragging.oldDisplay = dragging.style.display
-        }
-
-        if (dragging.style.display !== 'none') {
-          dragging.style.display = 'none'
-        }
-
-        if (placeholderIndex < thisIndex) {
-          _after(element, placeholder)
-        } else {
-          _before(element, placeholder)
-        }
-        // Intentionally violated chaining, it is more complex otherwise
-        placeholders
-          .filter(function (element) { return element !== placeholder })
-          .forEach(_detach)
-      } else {
-        if (placeholders.indexOf(element) === -1 &&
-            !_filter(_getChildren(element), options.items).length) {
-          placeholders.forEach(_detach)
-          element.appendChild(placeholder)
-        }
-      }
-    }, options.debounce)
-
-    // Handle dragover and dragenter events on draggable items
-    var onDragOverEnter = function (e) {
-      if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
-        return
-      }
-      if (maxItems && _filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length >= maxItems) {
-        return
-      }
-      e.preventDefault()
-      e.stopPropagation()
-      e.dataTransfer.dropEffect = _isCopyActive(sortableElement) ? 'copy' : 'move'
-      debouncedDragOverEnter(this, e.pageY)
-    }
+    _on([sortableElement, placeholder], 'drop', drop)
 
     _on(items.concat(sortableElement), 'dragover', onDragOverEnter)
     _on(items.concat(sortableElement), 'dragenter', onDragOverEnter)
@@ -756,6 +601,204 @@ export default function sortable (sortableElements, options) {
   return sortableElements
 }
 
+function _getHoverClass(sortableElement) {
+  var options = _data(sortableElement, 'opts')
+  if (options.hoverClass) {
+    var hoverClass = 'sortable-over'
+    if (typeof options.hoverClass === 'string') {
+      hoverClass = options.hoverClass
+    }
+    return hoverClass
+  }
+  return null
+}
+function mouseenter (e) {
+  var hoverClass = _getHoverClass(e.target.parentElement)
+  if (hoverClass != null) {
+    this.classList.add(hoverClass)
+  }
+}
+function mouseleave (e) {
+  var hoverClass = _getHoverClass(e.target.parentElement)
+  if (hoverClass != null) {
+    this.classList.remove(hoverClass)
+  }
+}
+function dragOverEnter (element, options, pageY) {
+  if (!dragging) {
+    return
+  }
+
+  var items = _filter(_getChildren(element.parentElement), options.items)
+  if (items.indexOf(element) !== -1) {
+    var placeholder = placeholderMap.get(element.parentElement)
+    var thisHeight = parseInt(window.getComputedStyle(element).height)
+    var placeholderIndex = _index(placeholder)
+    var thisIndex = _index(element)
+    if (options.forcePlaceholderSize) {
+      placeholder.style.height = draggingHeight + 'px'
+    }
+
+    // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
+    if (thisHeight > draggingHeight) {
+      // Dead zone?
+      var deadZone = thisHeight - draggingHeight
+      var offsetTop = _offset(element).top
+      if (placeholderIndex < thisIndex &&
+          pageY < offsetTop + deadZone) {
+        return
+      }
+      if (placeholderIndex > thisIndex &&
+          pageY > offsetTop + thisHeight - deadZone) {
+        return
+      }
+    }
+
+    if (dragging.oldDisplay === undefined) {
+      dragging.oldDisplay = dragging.style.display
+    }
+
+    if (dragging.style.display !== 'none') {
+      dragging.style.display = 'none'
+    }
+
+    if (placeholderIndex < thisIndex) {
+      _after(element, placeholder)
+    } else {
+      _before(element, placeholder)
+    }
+    // Intentionally violated chaining, it is more complex otherwise
+    placeholders
+      .filter(function (element) { return element !== placeholder })
+      .forEach(_detach)
+  } else {
+    if (placeholders.indexOf(element) === -1 &&
+        !_filter(_getChildren(element), options.items).length) {
+      placeholders.forEach(_detach)
+      element.appendChild(placeholder)
+    }
+  }
+}
+
+// Handle dragover and dragenter events on draggable items
+var onDragOverEnter = function (e) {
+  var sortableElement = e.target.parentElement
+  if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
+    return
+  }
+
+  var options = _data(sortableElement, 'opts')
+  var maxItems = 0
+  // max items
+  if (options.maxItems && typeof options.maxItems === 'number') {
+    maxItems = options.maxItems
+  }
+  if (maxItems && _filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length >= maxItems) {
+    return
+  }
+  e.preventDefault()
+  e.stopPropagation()
+  e.dataTransfer.dropEffect = _isCopyActive(sortableElement) ? 'copy' : 'move'
+  _debounce(dragOverEnter(e.target, options, e.pageY), options.debounce)
+}
+
+/**
+ * Handle Dragstart event.
+ */
+function dragstart (e) {
+  e.stopImmediatePropagation()
+  var sortableElement = e.target.parentElement
+  var options = _data(sortableElement, 'opts')
+  if ((options.handle && !_matches(e.target, options.handle)) || e.target.getAttribute('draggable') === 'false') {
+    return
+  }
+  
+  // add transparent clone or other ghost to cursor
+  _getGhost(e, e.target)
+  // cache selsection & add attr for dragging
+  e.target.classList.add(options.draggingClass)
+  dragging = _getDragging(e.target, sortableElement)
+
+  _attr(dragging, 'aria-grabbed', 'true')
+  // grab values
+  index = _index(dragging)
+  draggingHeight = parseInt(window.getComputedStyle(dragging).height)
+  startParent = e.target.parentElement
+  startList = _serialize(startParent)
+  // dispatch sortstart event on each element in group
+  var placeholder = placeholderMap.get(sortableElement)
+  sortableElement.dispatchEvent(_makeEvent('sortstart', {
+    item: dragging,
+    placeholder: placeholder,
+    startparent: startParent
+  }))
+}
+
+/**
+ * Handle Dragend event.
+ */
+function dragend (e) {
+  var newParent
+  if (!dragging) {
+    return
+  }
+
+  var sortableElement = e.target.parentElement
+  var options = _data(sortableElement, 'opts')
+
+  // remove dragging attributes and show item
+  dragging.classList.remove(options.draggingClass)
+  _attr(dragging, 'aria-grabbed', 'false')
+
+  if (dragging.getAttribute('aria-copied') === 'true' && _data(dragging, 'dropped') !== 'true') {
+    _detach(dragging)
+  }
+
+  dragging.style.display = dragging.oldDisplay
+  delete dragging.oldDisplay
+
+  placeholders.forEach(_detach)
+  newParent = e.target.parentElement
+
+  if (_listsConnected(newParent, startParent)) {
+
+    var items = _filter(startList, options.items)
+    sortableElement.dispatchEvent(_makeEvent('sortstop', {
+      item: dragging,
+      startparent: startParent
+    }))
+    if (index !== _index(dragging) || startParent !== newParent) {
+      sortableElement.dispatchEvent(_makeEvent('sortupdate', {
+        item: dragging,
+        index: _filter(_getChildren(newParent), _data(newParent, 'items'))
+          .indexOf(dragging),
+        oldindex: items.indexOf(dragging),
+        elementIndex: _index(dragging),
+        oldElementIndex: index,
+        startparent: startParent,
+        endparent: newParent,
+        newEndList: _serialize(newParent),
+        newStartList: _serialize(startParent),
+        oldStartList: startList
+      }))
+    }
+  }
+  dragging = null
+  draggingHeight = null
+}
+
+function drop (e) {
+  var sortableElement = e.target.parentElement
+  if (!_listsConnected(sortableElement, dragging.parentElement)) {
+    return
+  }
+  e.preventDefault()
+  e.stopPropagation()
+
+  _data(dragging, 'dropped', 'true')
+  var visiblePlaceholder = placeholders.filter(_attached)[0]
+  _after(visiblePlaceholder, dragging)
+}
 sortable.destroy = function (sortableElement) {
   _destroySortable(sortableElement)
 }

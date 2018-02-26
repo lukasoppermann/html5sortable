@@ -230,7 +230,7 @@ describe('Testing events', function () {
     assert.equal(event.dataTransfer.dropEffect, 'move')
 
     event = window.sortable.__testing._makeEvent('drop')
-    // Object.defineProperty(event, 'target', {value: secondLi, enumerable: true})
+    Object.defineProperty(event, 'target', {value: secondLi, enumerable: true})
     window.sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
 
     event = window.sortable.__testing._makeEvent('dragend')
