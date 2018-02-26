@@ -6,5 +6,5 @@
  */
 /* istanbul ignore next */
 export default function (el, selector) {
-  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector)
+  return (el.matches || el.msMatchesSelector).call(el, selector)
 }
