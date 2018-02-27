@@ -172,6 +172,30 @@ describe('Testing events', function () {
     assert.equal(event.dataTransfer.dropEffect, 'copy')
   })
 
+  it('dragstart/dragover event with maxitems', function () {
+    window.sortable(ul, {
+      items: 'li',
+      maxItems: 1,
+      connectWith: '.test',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
+    })
+    let childcount = li.parentNode.childNodes.length
+    let event = window.sortable.__testing._makeEvent('dragstart')
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    li.dispatchEvent(event)
+
+    assert.equal(li.getAttribute('aria-grabbed'), 'true')
+
+    let copyli = li.parentNode.lastChild
+    assert.equal(childcount, copyli.parentNode.childNodes.length)
+    assert.strictEqual(event.dataTransfer.dropEffect, undefined)
+  })
+
   it('should not add class on hover event', function () {
     window.sortable(ul, {
       items: 'li',
