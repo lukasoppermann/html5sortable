@@ -24,6 +24,7 @@
     "url": "http://github.com/lukasoppermann/html5sortable/issues"
   },
   "devDependencies": {
+    "@types/jest": "^22.1.4",
     "chai": "^4.1.2",
     "coveralls": "^3.0.0",
     "istanbul": "0.4.x",
@@ -41,21 +42,37 @@
     "snazzy": "^7.0.0",
     "standard": "^11.0.0",
     "standard-readme": "^2.0.2",
+    "ts-jest": "^22.4.0",
     "typescript": "^2.7.2"
+  },
+  "jest": {
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "_test/html5sortable.js",
+      "_test/html5sortable.cjs.js",
+      "src/html5sortable.ts"
+    ],
+    "notify": true,
+    "moduleFileExtensions": ["ts", "js"],
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    },
+    "testMatch": ["**/__tests__/**/*.test.(ts|js)"]
   },
   "scripts": {
     "jest": "jest",
-    "test": "rollup -c --environment test && mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
+    "test": "rollup -c --environment test && jest && npm run standard && npm run standard-test && standard-readme",
+    "coverage": "rollup -c --environment test && jest --coverage && npm run standard && npm run standard-test && standard-readme",
+    "oldtest": "rollup -c --environment test && mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
     "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
     "standard": "standard 'src/*.ts' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
-    "travis": "npm run cover && mocha test/umd/module.js && npm run standard",
-    "cover": "rollup -c --environment test && nyc mocha test/*.js && nyc report --reporter=text-lcov | coveralls",
+    "travis": "npm run cover && npm run standard",
+    "oldtravis": "npm run cover && mocha test/umd/module.js && npm run standard",
+    "cover": "rollup -c --environment test && jest --colors --coverage --coverageReporters=text-lcov | coveralls",
+    "oldcover": "rollup -c --environment test && nyc mocha test/*.js && nyc report --reporter=text-lcov | coveralls",
     "preversion": "npm test",
     "version": "npm run build && git add -A dist docs",
     "postversion": "git push && git push --tags"
-  },
-  "dependencies": {
-    "jest-codemods": "^0.13.9"
   }
 }
