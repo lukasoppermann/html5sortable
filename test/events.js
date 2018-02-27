@@ -188,9 +188,13 @@ describe('Testing events', function () {
       'items': 'li',
       hoverClass: true
     })
-    li.dispatchEvent(window.sortable.__testing._makeEvent('mouseenter'))
+    var event = window.sortable.__testing._makeEvent('mouseenter')
+    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    li.dispatchEvent(event)
     assert.isTrue(li.classList.contains('sortable-over'))
-    li.dispatchEvent(window.sortable.__testing._makeEvent('mouseleave'))
+    event = window.sortable.__testing._makeEvent('mouseleave')
+    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    li.dispatchEvent(event)
     assert.isFalse(li.classList.contains('sortable-over'))
   })
 

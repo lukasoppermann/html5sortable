@@ -27,6 +27,8 @@ var _removeItemEvents = function (items) {
   _off(items, 'dragover')
   _off(items, 'dragenter')
   _off(items, 'drop')
+  _off(items, 'mouseenter')
+  _off(items, 'mouseleave')
 }
 /*
  * Remove event handlers from sortable
@@ -372,19 +374,20 @@ export default function sortable (sortableElements, options) {
     _attr(items, 'aria-grabbed', 'false')
 
     // Mouse over class
-    if (options.hoverClass) {
-      var hoverClass = 'sortable-over'
-      if (typeof options.hoverClass === 'string') {
-        hoverClass = options.hoverClass
+    _on(items, 'mouseenter', function (e) {
+      var sortableElement = e.target.parentElement
+      var options = _data(sortableElement, 'opts')
+      if (options.hoverClass !== false) {
+        e.target.classList.add(options.hoverClass === true ? 'sortable-over' : options.hoverClass)
       }
-
-      _on(items, 'mouseenter', function () {
-        this.classList.add(hoverClass)
-      })
-      _on(items, 'mouseleave', function () {
-        this.classList.remove(hoverClass)
-      })
-    }
+    })
+    _on(items, 'mouseleave', function (e) {
+      var sortableElement = e.target.parentElement
+      var options = _data(sortableElement, 'opts')
+      if (options.hoverClass !== false) {
+        e.target.classList.remove(options.hoverClass === true ? 'sortable-over' : options.hoverClass)
+      }
+    })
 
     // max items
     if (options.maxItems && typeof options.maxItems === 'number') {
