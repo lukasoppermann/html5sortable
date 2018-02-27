@@ -1,33 +1,33 @@
+import sortable from '../src/html5sortable'
 /* global describe,beforeEach,afterEach,before,it */
 describe('Testing api', () => {
   const { JSDOM } = require('jsdom')
-  const helper = require('./helper')
-  const sortable = helper.instrument('./_test/html5sortable.js')
-  let window, body
-  let ul, li, secondLi, thirdLi
+  const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
+  global.document = new JSDOM(documentHTML)
+  global.window = document.parentWindow
+  global.body = global.document.querySelector('body')
+  // const sortable = require('../_test/html5sortable.cjs.js')
+  let body, ul, li, secondLi, thirdLi
 
   describe('Initialization ', () => {
     beforeEach(() => {
-      window = (new JSDOM(``, { runScripts: 'dangerously' })).window
       // Execute my library by inserting a <script> tag containing it.
-      const scriptEl = window.document.createElement('script')
-      scriptEl.textContent = sortable
-      window.document.head.appendChild(scriptEl)
-
-      body = window.document.body
-      body.innerHTML = `<ul class="sortable">
+      // const scriptEl = window.document.createElement('script')
+      // scriptEl.textContent = sortable
+      // window.document.head.appendChild(scriptEl)
+      global.body.innerHTML = `<ul class="sortable">
         <li class="item item-first">Item 1</li>
         <li class="item item-second">Item 2</li>
         <li class="item item-third">Item 3</li>
         <li class="item item-third disabled">Item 3</li>
       </ul><ul class="sortable-2"></ul>`
       // select sortable
-      ul = body.querySelector('.sortable')
+      ul = global.body.querySelector('.sortable')
       li = ul.querySelector('.item-first')
       secondLi = ul.querySelector('.item-second')
       thirdLi = ul.querySelector('.item-second')
 
-      window.sortable(ul, {
+      sortable(ul, {
         'items': 'li',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder',
@@ -35,16 +35,12 @@ describe('Testing api', () => {
       })
     })
 
-    afterEach(() => {
-      helper.writeCoverage(window)
-    })
-
     test('should have a data-opts object', () => {
-      expect(typeof window.sortable.__testing._data(ul, 'opts')).toBe('object')
+      expect(typeof sortable.__testing._data(ul, 'opts')).toBe('object')
     })
 
     test('should have correct options set on options object', () => {
-      let opts = window.sortable.__testing._data(ul, 'opts')
+      let opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li')
       expect(opts.connectWith).toEqual('.test')
       expect(opts.placeholderClass).toEqual('test-placeholder')
@@ -56,11 +52,11 @@ describe('Testing api', () => {
     })
 
     test('should have a data-items object', () => {
-      expect(typeof window.sortable.__testing._data(ul, 'items')).toBe('string')
+      expect(typeof sortable.__testing._data(ul, 'items')).toBe('string')
     })
 
     test('should have a h5s.connectWith object', () => {
-      expect(typeof window.sortable.__testing._data(ul, 'connectWith')).toBe('string')
+      expect(typeof sortable.__testing._data(ul, 'connectWith')).toBe('string')
     })
 
     test('should have aria-grabbed attributes', () => {
@@ -97,7 +93,7 @@ describe('Testing api', () => {
     })
 
     test('string placehodler', () => {
-      window.sortable(ul, {
+      sortable(ul, {
         'items': 'li',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder',
@@ -109,15 +105,15 @@ describe('Testing api', () => {
 
   describe('Destroy', () => {
     beforeEach(() => {
-      window.sortable(ul, {
+      sortable(ul, {
         'items': 'li',
         'connectWith': '.test'
       })
-      window.sortable(ul, 'destroy')
+      sortable(ul, 'destroy')
     })
 
     test('should not have a data-opts object', () => {
-      expect(typeof window.sortable.__testing._data(ul, 'opts')).toBe('undefined')
+      expect(typeof sortable.__testing._data(ul, 'opts')).toBe('undefined')
     })
 
     test('should not have a aria-dropeffect attribute', () => {
@@ -125,11 +121,11 @@ describe('Testing api', () => {
     })
 
     test('should not have a data-items object', () => {
-      expect(window.sortable.__testing._data(ul, 'items')).not.toBeDefined()
+      expect(sortable.__testing._data(ul, 'items')).not.toBeDefined()
     })
 
     test('should not have a h5s.connectWith object', () => {
-      expect(window.sortable.__testing._data(ul, 'connectWith')).not.toBeDefined()
+      expect(sortable.__testing._data(ul, 'connectWith')).not.toBeDefined()
     })
 
     test('should not have an aria-grabbed attribute', () => {
@@ -147,40 +143,40 @@ describe('Testing api', () => {
 
   describe('Reload', () => {
     beforeAll(function () {
-      window.sortable(ul, {
+      sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
-      window.sortable(ul, 'reload')
+      sortable(ul, 'reload')
     })
 
     test('should keep the options of the sortable', () => {
-      let opts = window.sortable.__testing._data(ul, 'opts')
+      let opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li:not(.disabled)')
       expect(opts.connectWith).toEqual('.test')
       expect(opts.placeholderClass).toEqual('test-placeholder')
     })
 
     test('should keep items attribute of the sortable', () => {
-      let items = window.sortable.__testing._data(ul, 'items')
+      let items = sortable.__testing._data(ul, 'items')
       expect(items).toEqual('li:not(.disabled)')
     })
 
     test('should keep connectWith attribute of the sortable', () => {
-      let connectWith = window.sortable.__testing._data(ul, 'connectWith')
+      let connectWith = sortable.__testing._data(ul, 'connectWith')
       expect(connectWith).toEqual('.test')
     })
   })
 
   describe('Disable', () => {
     beforeAll(function () {
-      window.sortable(ul, {
+      sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
-      window.sortable(ul, 'disable')
+      sortable(ul, 'disable')
     })
 
     test('should remove attributes from sortable', () => {
@@ -203,13 +199,13 @@ describe('Testing api', () => {
 
   describe('Enable', () => {
     beforeAll(function () {
-      window.sortable(ul, {
+      sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
-      window.sortable(ul, 'disable')
-      window.sortable(ul, 'enable')
+      sortable(ul, 'disable')
+      sortable(ul, 'enable')
     })
 
     test('should readd attributes to sortable', () => {
@@ -232,7 +228,7 @@ describe('Testing api', () => {
 
   describe('Serialize', () => {
     beforeAll(function () {
-      window.sortable(ul, {
+      sortable(ul, {
         'items': 'li:not(.disabled)',
         'connectWith': '.test',
         placeholderClass: 'test-placeholder'
@@ -240,11 +236,11 @@ describe('Testing api', () => {
     })
 
     test('should have the right sortable in the list property', () => {
-      expect(window.sortable(ul, 'serialize')[0].list).toEqual(window.sortable(ul)[0])
+      expect(sortable(ul, 'serialize')[0].list).toEqual(sortable(ul)[0])
     })
 
     test('should have 3 children', () => {
-      expect(window.sortable(ul, 'serialize')[0].children.length).toEqual(3)
+      expect(sortable(ul, 'serialize')[0].children.length).toEqual(3)
     })
   })
 })
