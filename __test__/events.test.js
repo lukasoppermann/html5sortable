@@ -1,7 +1,5 @@
 /* global describe,it,beforeEach,afterEach */
-describe('Testing events', function () {
-  // testing basic api
-  let assert = require('chai').assert
+describe('Testing events', () => {
   const { JSDOM } = require('jsdom')
   // const sortable = require('fs').readFileSync('./src/html5sortable.js', { encoding: 'utf-8' })
   const helper = require('./helper')
@@ -16,7 +14,7 @@ describe('Testing events', function () {
     sortupdateitemNewEndList, sortupdateitemNewStartList, sortupdateitemOldStartList
   var sortstopitem, sortstopStartparent
 
-  beforeEach(function () {
+  beforeEach(() => {
     window = (new JSDOM(``, { runScripts: 'dangerously' })).window
     body = window.document.body
 
@@ -112,7 +110,7 @@ describe('Testing events', function () {
       sortstopStartparent = e.detail.startparent
     })
   }
-  it('should correctly run dragstart event', function () {
+  test('should correctly run dragstart event', () => {
     window.sortable(ul, {
       items: 'li',
       connectWith: '.test',
@@ -129,50 +127,53 @@ describe('Testing events', function () {
     }
     li.dispatchEvent(event)
 
-    assert.equal(li.getAttribute('aria-grabbed'), 'true')
-    assert.isTrue(li.classList.contains('test-dragging'))
+    expect(li.getAttribute('aria-grabbed')).toEqual('true')
+    expect(li.classList.contains('test-dragging')).toBe(true)
 
-    assert.equal(sortstartitem, li)
-    assert.equal(ul, sortstartparent)
-    assert.equal(null, sortupdateitem)
-    assert.equal(null, sortstopitem)
+    expect(sortstartitem).toEqual(li)
+    expect(ul).toEqual(sortstartparent)
+    expect(null).toEqual(sortupdateitem)
+    expect(null).toEqual(sortstopitem)
   })
 
-  it('should correctly copy element on run dragstart/dragover event', function () {
-    window.sortable(ul, {
-      items: 'li',
-      copy: true,
-      connectWith: '.test',
-      placeholderClass: 'test-placeholder',
-      draggingClass: 'test-dragging'
-    })
-    let childcount = li.parentNode.childNodes.length
-    let event = window.sortable.__testing._makeEvent('dragstart')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
+  test(
+    'should correctly copy element on run dragstart/dragover event',
+    () => {
+      window.sortable(ul, {
+        items: 'li',
+        copy: true,
+        connectWith: '.test',
+        placeholderClass: 'test-placeholder',
+        draggingClass: 'test-dragging'
+      })
+      let childcount = li.parentNode.childNodes.length
+      let event = window.sortable.__testing._makeEvent('dragstart')
+      event.dataTransfer = {
+        setData: function (val) {
+          this.data = val
+        }
       }
-    }
-    li.dispatchEvent(event)
+      li.dispatchEvent(event)
 
-    assert.equal(li.getAttribute('aria-grabbed'), 'false')
+      expect(li.getAttribute('aria-grabbed')).toEqual('false')
 
-    let copyli = li.parentNode.lastChild
-    assert.equal(childcount + 1, copyli.parentNode.childNodes.length)
-    assert.equal(copyli.getAttribute('aria-grabbed'), 'true')
-    assert.isTrue(copyli.classList.contains('test-dragging'))
+      let copyli = li.parentNode.lastChild
+      expect(childcount + 1).toEqual(copyli.parentNode.childNodes.length)
+      expect(copyli.getAttribute('aria-grabbed')).toEqual('true')
+      expect(copyli.classList.contains('test-dragging')).toBe(true)
 
-    event = window.sortable.__testing._makeEvent('dragover')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
+      event = window.sortable.__testing._makeEvent('dragover')
+      event.dataTransfer = {
+        setData: function (val) {
+          this.data = val
+        }
       }
+      secondLi.dispatchEvent(event)
+      expect(event.dataTransfer.dropEffect).toEqual('copy')
     }
-    secondLi.dispatchEvent(event)
-    assert.equal(event.dataTransfer.dropEffect, 'copy')
-  })
+  )
 
-  it('dragstart/dragover event with maxitems', function () {
+  test('dragstart/dragover event with maxitems', () => {
     window.sortable(ul, {
       items: 'li',
       maxItems: 1,
@@ -189,14 +190,14 @@ describe('Testing events', function () {
     }
     li.dispatchEvent(event)
 
-    assert.equal(li.getAttribute('aria-grabbed'), 'true')
+    expect(li.getAttribute('aria-grabbed')).toEqual('true')
 
     let copyli = li.parentNode.lastChild
-    assert.equal(childcount, copyli.parentNode.childNodes.length)
-    assert.strictEqual(event.dataTransfer.dropEffect, undefined)
+    expect(childcount).toEqual(copyli.parentNode.childNodes.length)
+    expect(event.dataTransfer.dropEffect).toBe(undefined)
   })
 
-  it('should not add class on hover event', function () {
+  test('should not add class on hover event', () => {
     window.sortable(ul, {
       items: 'li',
       hoverClass: false
@@ -204,38 +205,40 @@ describe('Testing events', function () {
 
     let event = window.sortable.__testing._makeEvent('mouseenter')
     li.dispatchEvent(event)
-    assert.isFalse(li.classList.contains('sortable-over'))
+    expect(li.classList.contains('sortable-over')).toBe(false)
   })
-  it('should correctly add class on hover event', function () {
+  test('should correctly add class on hover event', () => {
     window.sortable(ul, {
       'items': 'li',
       hoverClass: 'sortable-item-over'
     })
     // class is added on hover
     li.dispatchEvent(window.sortable.__testing._makeEvent('mouseenter'))
-    assert.isTrue(li.classList.contains('sortable-item-over'))
+    expect(li.classList.contains('sortable-item-over')).toBe(true)
     // class is removed on leave
     li.dispatchEvent(window.sortable.__testing._makeEvent('mouseleave'))
-    assert.isFalse(li.classList.contains('sortable-item-over'))
+    expect(li.classList.contains('sortable-item-over')).toBe(false)
   })
 
-  it('should correctly add and remove both classes on hover event', function () {
-    window.sortable(ul, {
-      'items': 'li',
-      hoverClass: 'sortable-item-over sortable-item-over-second'
-    })
-    // classes are added on hover
-    li.dispatchEvent(window.sortable.__testing._makeEvent('mouseenter'))
-    assert.isTrue(li.classList.contains('sortable-item-over'))
-    assert.isTrue(li.classList.contains('sortable-item-over-second'))
-    // class are removed on leave
-    li.dispatchEvent(window.sortable.__testing._makeEvent('mouseleave'))
-    assert.isFalse(li.classList.contains('sortable-item-over'))
-    assert.isFalse(li.classList.contains('sortable-item-over-second'))
-  })
+  test(
+    'should correctly add and remove both classes on hover event',
+    () => {
+      window.sortable(ul, {
+        'items': 'li',
+        hoverClass: 'sortable-item-over sortable-item-over-second'
+      })
+      // classes are added on hover
+      li.dispatchEvent(window.sortable.__testing._makeEvent('mouseenter'))
+      expect(li.classList.contains('sortable-item-over')).toBe(true)
+      expect(li.classList.contains('sortable-item-over-second')).toBe(true)
+      // class are removed on leave
+      li.dispatchEvent(window.sortable.__testing._makeEvent('mouseleave'))
+      expect(li.classList.contains('sortable-item-over')).toBe(false)
+      expect(li.classList.contains('sortable-item-over-second')).toBe(false)
+    }
+  )
 
-  it('should correctly place moved item into correct index', function () {
-    this.skip('Is probably testing the wrong thing')
+  test.skip('should correctly place moved item into correct index', () => {
     window.sortable(ul, {
       items: 'li',
       placeholderClass: 'test-placeholder'
@@ -259,7 +262,7 @@ describe('Testing events', function () {
       }
     }
     secondLi.dispatchEvent(event)
-    assert.equal(event.dataTransfer.dropEffect, 'move')
+    expect(event.dataTransfer.dropEffect).toEqual('move')
 
     event = window.sortable.__testing._makeEvent('drop')
     // Object.defineProperty(event, 'target', {value: secondLi, enumerable: true})
@@ -268,42 +271,81 @@ describe('Testing events', function () {
     event = window.sortable.__testing._makeEvent('dragend')
     li.dispatchEvent(event)
 
-    assert.notEqual(getIndex(li, ul.children), originalIndex)
-    assert.equal(getIndex(li, ul.children), 1)
+    expect(getIndex(li, ul.children)).not.toEqual(originalIndex)
+    expect(getIndex(li, ul.children)).toEqual(1)
 
-    assert.equal(sortstartitem, li)
-    assert.equal(ul, sortstartparent)
+    expect(sortstartitem).toEqual(li)
+    expect(ul).toEqual(sortstartparent)
 
-    assert.equal(li, sortupdateitem)
-    assert.equal(1, sortupdateitemIndex)
-    assert.equal(0, sortupdateitemOldindex)
-    assert.equal(1, sortupdateitemElementIndex)
-    assert.equal(0, sortupdateitemOldElementIndex)
-    assert.equal(ul, sortupdateitemStartparent)
-    assert.equal(ul, sortupdateitemEndparent)
-    assert.equal(5, sortupdateitemNewEndList.length)
-    assert.equal(5, sortupdateitemNewStartList.length)
-    assert.equal(5, sortupdateitemOldStartList.length)
+    expect(li).toEqual(sortupdateitem)
+    expect(1).toEqual(sortupdateitemIndex)
+    expect(0).toEqual(sortupdateitemOldindex)
+    expect(1).toEqual(sortupdateitemElementIndex)
+    expect(0).toEqual(sortupdateitemOldElementIndex)
+    expect(ul).toEqual(sortupdateitemStartparent)
+    expect(ul).toEqual(sortupdateitemEndparent)
+    expect(5).toEqual(sortupdateitemNewEndList.length)
+    expect(5).toEqual(sortupdateitemNewStartList.length)
+    expect(5).toEqual(sortupdateitemOldStartList.length)
 
-    assert.equal(sortstopitem, li)
-    assert.equal(ul, sortstopStartparent)
+    expect(sortstopitem).toEqual(li)
+    expect(ul).toEqual(sortstopStartparent)
   })
 
-  it('should correctly place moved item into correct index using acceptFrom', function () {
-    this.skip('Is probably testing the wrong thing')
+  test.skip(
+    'should correctly place moved item into correct index using acceptFrom',
+    () => {
+      window.sortable(ul, {
+        items: 'li',
+        acceptFrom: false,
+        placeholderClass: 'test-placeholder'
+      })
+
+      window.sortable(ul2, {
+        items: 'li',
+        acceptFrom: '.sortable',
+        placeholderClass: 'test-placeholder2'
+      })
+
+      // let originalChildrenLen = ul.children.length
+      let originalIndex = getIndex(li, ul.children)
+
+      let event = window.sortable.__testing._makeEvent('dragstart')
+      event.dataTransfer = {
+        setData: function (val) {
+          this.data = val
+        }
+      }
+      li.dispatchEvent(event)
+
+      event = window.sortable.__testing._makeEvent('dragover')
+      event.dataTransfer = {
+        setData: function (val) {
+          this.data = val
+        }
+      }
+      fifthLi.dispatchEvent(event)
+
+      expect(event.dataTransfer.dropEffect).toEqual('move')
+
+      event = window.sortable.__testing._makeEvent('drop')
+
+      ul2.querySelector('.test-placeholder2').dispatchEvent(event)
+
+      event = window.sortable.__testing._makeEvent('dragend')
+      li.dispatchEvent(event)
+
+      expect(getIndex(li, ul.children)).not.toEqual(originalIndex)
+      expect(getIndex(li, ul2.children)).toEqual(2)
+    }
+  )
+
+  test.skip('should correctly place non-moved item into correct index', () => {
     window.sortable(ul, {
       items: 'li',
-      acceptFrom: false,
       placeholderClass: 'test-placeholder'
     })
 
-    window.sortable(ul2, {
-      items: 'li',
-      acceptFrom: '.sortable',
-      placeholderClass: 'test-placeholder2'
-    })
-
-    // let originalChildrenLen = ul.children.length
     let originalIndex = getIndex(li, ul.children)
 
     let event = window.sortable.__testing._makeEvent('dragstart')
@@ -312,47 +354,9 @@ describe('Testing events', function () {
         this.data = val
       }
     }
-    li.dispatchEvent(event)
-
-    event = window.sortable.__testing._makeEvent('dragover')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
-    fifthLi.dispatchEvent(event)
-
-    assert.equal(event.dataTransfer.dropEffect, 'move')
-
-    event = window.sortable.__testing._makeEvent('drop')
-
-    ul2.querySelector('.test-placeholder2').dispatchEvent(event)
-
-    event = window.sortable.__testing._makeEvent('dragend')
-    li.dispatchEvent(event)
-
-    assert.notEqual(getIndex(li, ul.children), originalIndex)
-    assert.equal(getIndex(li, ul2.children), 2)
-  })
-
-  it('should correctly place non-moved item into correct index', function () {
-    this.skip('Is probably testing the wrong thing')
-    window.sortable(ul, {
-      items: 'li',
-      placeholderClass: 'test-placeholder'
-    })
-
-    let originalIndex = getIndex(li, ul.children)
-
-    let event = window.sortable.__testing._makeEvent('dragstart')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
 
     li.dispatchEvent(event)
-    assert.equal(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children), -1)
+    expect(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
 
     event = window.sortable.__testing._makeEvent('dragover')
     event.dataTransfer = {
@@ -361,7 +365,7 @@ describe('Testing events', function () {
       }
     }
     secondLi.dispatchEvent(event)
-    assert.notEqual(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children), originalIndex)
+    expect(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
 
     secondLi.dispatchEvent(event)
     event = window.sortable.__testing._makeEvent('drop')
@@ -371,41 +375,44 @@ describe('Testing events', function () {
     li.dispatchEvent(event)
 
     // TODO: does this test and this check make sense?
-    assert.equal(getIndex(li, ul.children), originalIndex)
+    expect(getIndex(li, ul.children)).toEqual(originalIndex)
   })
 
-  it('should revert item into correct index when dropped outside', function () {
-    window.sortable(ul, {
-      'items': 'li',
-      placeholderClass: 'test-placeholder'
-    })
+  test(
+    'should revert item into correct index when dropped outside',
+    () => {
+      window.sortable(ul, {
+        'items': 'li',
+        placeholderClass: 'test-placeholder'
+      })
 
-    let originalIndex = getIndex(secondLi, ul.children)
+      let originalIndex = getIndex(secondLi, ul.children)
 
-    let event = window.sortable.__testing._makeEvent('dragstart')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
+      let event = window.sortable.__testing._makeEvent('dragstart')
+      event.dataTransfer = {
+        setData: function (val) {
+          this.data = val
+        }
       }
-    }
 
-    secondLi.dispatchEvent(event)
-    assert.equal(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children), -1)
+      secondLi.dispatchEvent(event)
+      expect(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
 
-    event = window.sortable.__testing._makeEvent('dragover')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
+      event = window.sortable.__testing._makeEvent('dragover')
+      event.dataTransfer = {
+        setData: function (val) {
+          this.data = val
+        }
       }
+      secondLi.dispatchEvent(event)
+      expect(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
+
+      body.dispatchEvent(event)
+
+      event = window.sortable.__testing._makeEvent('drop')
+
+      body.dispatchEvent(event)
+      expect(getIndex(secondLi, ul.children)).toEqual(originalIndex)
     }
-    secondLi.dispatchEvent(event)
-    assert.notEqual(getIndex(window.sortable.__testing._getPlaceholders()[0], ul.children), originalIndex)
-
-    body.dispatchEvent(event)
-
-    event = window.sortable.__testing._makeEvent('drop')
-
-    body.dispatchEvent(event)
-    assert.equal(getIndex(secondLi, ul.children), originalIndex)
-  })
+  )
 })

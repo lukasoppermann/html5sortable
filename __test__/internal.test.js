@@ -1,14 +1,12 @@
 /* global describe,it,beforeEach,afterEach,before */
-describe('Internal function tests', function () {
-  // testing basic api
-  let assert = require('chai').assert
+describe('Internal function tests', () => {
   const { JSDOM } = require('jsdom')
   const helper = require('./helper')
   const sortable = helper.instrument('./_test/html5sortable.js')
   let window, body
   let ul, li, allLiElements
 
-  before(() => {
+  beforeAll(() => {
     window = (new JSDOM(``, { runScripts: 'dangerously' })).window
   })
 
@@ -49,34 +47,34 @@ describe('Internal function tests', function () {
     helper.writeCoverage(window)
   })
 
-  it('_removeSortableEvents', function () {
+  test('_removeSortableEvents', () => {
     // remove events object
     window.sortable.__testing._removeSortableEvents(ul)
     // check that events are gone
-    assert.isUndefined(ul.h5s.events.dragover)
-    assert.isUndefined(ul.h5s.events.dragenter)
-    assert.isUndefined(ul.h5s.events.drop)
+    expect(ul.h5s.events.dragover).not.toBeDefined()
+    expect(ul.h5s.events.dragenter).not.toBeDefined()
+    expect(ul.h5s.events.drop).not.toBeDefined()
   })
 
-  it('_removeItemEvents', function () {
+  test('_removeItemEvents', () => {
     // remove general jQuery event object
     window.sortable.__testing._removeItemEvents(li)
-    assert.deepEqual(li.h5s.events, {})
+    expect(li.h5s.events).toEqual({})
     // remove individual events
     // need to add on click so that event object is not removed
     // when all sortable events are removed
     window.sortable(ul)
     window.sortable.__testing._removeItemEvents(li)
     // test individual events
-    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragover'))
-    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragenter'))
-    assert.isFalse((li.h5s.events || {}).hasOwnProperty('drop'))
-    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragstart'))
-    assert.isFalse((li.h5s.events || {}).hasOwnProperty('dragend'))
-    assert.isFalse((li.h5s.events || {}).hasOwnProperty('mousedown'))
+    expect((li.h5s.events || {}).hasOwnProperty('dragover')).toBe(false)
+    expect((li.h5s.events || {}).hasOwnProperty('dragenter')).toBe(false)
+    expect((li.h5s.events || {}).hasOwnProperty('drop')).toBe(false)
+    expect((li.h5s.events || {}).hasOwnProperty('dragstart')).toBe(false)
+    expect((li.h5s.events || {}).hasOwnProperty('dragend')).toBe(false)
+    expect((li.h5s.events || {}).hasOwnProperty('mousedown')).toBe(false)
   })
 
-  it('_removeSortableData', function () {
+  test('_removeSortableData', () => {
     // destroy, so it does not use old values
     window.sortable(ul, 'destroy')
     window.sortable(ul, {
@@ -85,13 +83,13 @@ describe('Internal function tests', function () {
     })
     window.sortable.__testing._removeSortableData(ul)
 
-    assert.isUndefined(window.sortable.__testing._data(ul, 'opts'))
-    assert.isUndefined(window.sortable.__testing._data(ul, 'connectWith'))
-    assert.isUndefined(window.sortable.__testing._data(ul, 'items'))
-    assert.isUndefined(window.sortable.__testing._data(ul, 'aria-dropeffect'))
+    expect(window.sortable.__testing._data(ul, 'opts')).not.toBeDefined()
+    expect(window.sortable.__testing._data(ul, 'connectWith')).not.toBeDefined()
+    expect(window.sortable.__testing._data(ul, 'items')).not.toBeDefined()
+    expect(window.sortable.__testing._data(ul, 'aria-dropeffect')).not.toBeDefined()
   })
 
-  it('_removeItemData', function () {
+  test('_removeItemData', () => {
     // destroy, so it does not use old values
     window.sortable(ul, 'destroy')
     window.sortable(ul, {
@@ -99,12 +97,12 @@ describe('Internal function tests', function () {
       connectWith: '.test'
     })
     window.sortable.__testing._removeItemData(li)
-    assert.isNull(li.getAttribute('role'))
-    assert.isNull(li.getAttribute('draggable'))
-    assert.isNull(li.getAttribute('aria-grabbed'))
+    expect(li.getAttribute('role')).toBeNull()
+    expect(li.getAttribute('draggable')).toBeNull()
+    expect(li.getAttribute('aria-grabbed')).toBeNull()
   })
 
-  it('_listsConnected', function () {
+  test('_listsConnected', () => {
     // add second sortable (not connected yet!)
     body.innerHTML = `<ul class="sortable2"><li>item</li></ul><ul class="sortable3"><li>item</li></ul>`
     let connectedUl = body.querySelector('.sortable2')
@@ -114,25 +112,25 @@ describe('Internal function tests', function () {
     })
     window.sortable(notConnectedUl)
     // test if sortable is connected to itself (should be true)
-    assert.equal(window.sortable.__testing._listsConnected(ul, ul), true)
+    expect(window.sortable.__testing._listsConnected(ul, ul)).toEqual(true)
     // test if sortable is connected to sortable2 (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(ul, connectedUl), false)
+    expect(window.sortable.__testing._listsConnected(ul, connectedUl)).toEqual(false)
     // test if sortable2 is connected to sortable (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, ul), false)
+    expect(window.sortable.__testing._listsConnected(connectedUl, ul)).toEqual(false)
     // test if sortable2 is connected to sortable3 (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), false)
+    expect(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(false)
     // test if .sortable is connected to sortable3 (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(ul, notConnectedUl), false)
+    expect(window.sortable.__testing._listsConnected(ul, notConnectedUl)).toEqual(false)
 
     window.sortable(ul, 'destroy')
     window.sortable(ul, {
       connectWith: '.sortable'
     })
     // test if sortables are connected (should be true)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, ul), true)
-    assert.equal(window.sortable.__testing._listsConnected(ul, connectedUl), true)
+    expect(window.sortable.__testing._listsConnected(connectedUl, ul)).toEqual(true)
+    expect(window.sortable.__testing._listsConnected(ul, connectedUl)).toEqual(true)
     // test if sortable2 is connected to sortable3 (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), false)
+    expect(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(false)
 
     window.sortable(connectedUl, 'destroy')
     window.sortable(notConnectedUl, 'destroy')
@@ -143,39 +141,39 @@ describe('Internal function tests', function () {
       acceptFrom: false
     })
     // test .sortable2 only accepts from .sortable3 (should be true)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), true)
+    expect(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
     // test .sortable2 only accepts from .sortable3 (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, connectedUl), false)
+    expect(window.sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
     // test .sortable3 does not accept from anyone (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl), false)
-    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl), false)
+    expect(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
+    expect(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(false)
 
     window.sortable(notConnectedUl, 'destroy')
     window.sortable(notConnectedUl, {
       acceptFrom: ''
     })
     // test .sortable2 only accepts from .sortable3 (should be true)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), true)
+    expect(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
     // test .sortable2 only accepts from .sortable3 (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, connectedUl), false)
+    expect(window.sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
     // test .sortable3 does not accept from anyone (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl), false)
-    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl), false)
+    expect(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
+    expect(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(false)
 
     window.sortable(notConnectedUl, 'destroy')
     window.sortable(notConnectedUl, {
       acceptFrom: null
     })
     // test .sortable2 only accepts from .sortable3 (should be true)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl), true)
+    expect(window.sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
     // test .sortable2 only accepts from .sortable3 (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(connectedUl, connectedUl), false)
+    expect(window.sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
     // test .sortable3 does not accept from anyone (should be false)
-    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl), false)
-    assert.equal(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl), true)
+    expect(window.sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
+    expect(window.sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(true)
   })
 
-  it('_index', function () {
+  test('_index', () => {
     let div = window.document.createElement('div')
     let child1 = window.document.createElement('div')
     let child2 = window.document.createElement('div')
@@ -184,29 +182,29 @@ describe('Internal function tests', function () {
     div.appendChild(child1)
     div.appendChild(child2)
     div.appendChild(child3)
-    assert.equal(window.sortable.__testing._index(child1), 0)
-    assert.equal(window.sortable.__testing._index(child2), 1)
-    assert.equal(window.sortable.__testing._index(child3), 2)
-    assert.equal(window.sortable.__testing._index(child4), 0)
+    expect(window.sortable.__testing._index(child1)).toEqual(0)
+    expect(window.sortable.__testing._index(child2)).toEqual(1)
+    expect(window.sortable.__testing._index(child3)).toEqual(2)
+    expect(window.sortable.__testing._index(child4)).toEqual(0)
   })
 
-  it('_debounce returns given function, when 0 debounce', function () {
-    this.skip('add tests for debounce in seperate file')
+  test.skip('_debounce returns given function, when 0 debounce', () => {
+    
   })
 
-  it('_getHandles: gets handles array from items', function () {
+  test('_getHandles: gets handles array from items', () => {
     let handles = window.sortable.__testing._getHandles(allLiElements, '.handle')
-    assert.equal(handles.length, 2)
-    assert.equal(handles[0].outerHTML, '<span class="handle"></span>')
+    expect(handles.length).toEqual(2)
+    expect(handles[0].outerHTML).toEqual('<span class="handle"></span>')
   })
 
-  it('_getHandles: gets items if no handle selector is provided', function () {
+  test('_getHandles: gets items if no handle selector is provided', () => {
     let handles = window.sortable.__testing._getHandles(allLiElements)
-    assert.equal(handles.length, 3)
-    assert.equal(handles[0].nodeName, 'LI')
+    expect(handles.length).toEqual(3)
+    expect(handles[0].nodeName).toEqual('LI')
   })
 
-  it('_attached', function () {
+  test('_attached', () => {
     console.log('Test missing')
   })
 })

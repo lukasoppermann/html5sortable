@@ -1,7 +1,5 @@
 /* global describe,it,afterEach */
-describe('Testing ghost creation methods', function () {
-// testing ghost creation functions
-  let assert = require('chai').assert
+describe('Testing ghost creation methods', () => {
   const { JSDOM } = require('jsdom')
   const helper = require('./helper')
   const sortable = helper.instrument('./_test/html5sortable.js')
@@ -46,52 +44,52 @@ describe('Testing ghost creation methods', function () {
     helper.writeCoverage(window)
   })
 
-  it('sets the dataTransfer options correctly (_attachGhost)', function () {
+  test('sets the dataTransfer options correctly (_attachGhost)', () => {
     window.sortable.__testing._attachGhost(e, {
       draggedItem: 'test-item',
       x: 10,
       y: 20
     })
 
-    assert.equal(e.dataTransfer.effectAllowed, 'copyMove')
-    assert.equal(e.dataTransfer.text, 'arbitrary-content')
-    assert.equal(e.dataTransfer.draggedItem, 'test-item')
-    assert.equal(e.dataTransfer.x, 10)
-    assert.equal(e.dataTransfer.y, 20)
+    expect(e.dataTransfer.effectAllowed).toEqual('copyMove')
+    expect(e.dataTransfer.text).toEqual('arbitrary-content')
+    expect(e.dataTransfer.draggedItem).toEqual('test-item')
+    expect(e.dataTransfer.x).toEqual(10)
+    expect(e.dataTransfer.y).toEqual(20)
   })
 
-  it('sets item correctly from dragged item (_makeGhost)', function () {
+  test('sets item correctly from dragged item (_makeGhost)', () => {
     let ghost = window.sortable.__testing._makeGhost(draggedItem)
-    assert.equal(ghost.draggedItem.innerHTML, draggedItem.innerHTML)
+    expect(ghost.draggedItem.innerHTML).toEqual(draggedItem.innerHTML)
   })
 
-  it('sets x & y correctly (_addGhostPos)', function () {
+  test('sets x & y correctly (_addGhostPos)', () => {
     let ghost = window.sortable.__testing._addGhostPos(e, {
       draggedItem: draggedItem
     })
 
-    assert.equal(ghost.x, 95)
-    assert.equal(ghost.y, 195)
+    expect(ghost.x).toEqual(95)
+    expect(ghost.y).toEqual(195)
   })
 
-  it('uses provided x & y correctly (_addGhostPos)', function () {
+  test('uses provided x & y correctly (_addGhostPos)', () => {
     let ghost = window.sortable.__testing._addGhostPos(e, {
       draggedItem: draggedItem,
       x: 10,
       y: 20
     })
 
-    assert.equal(ghost.x, 10)
-    assert.equal(ghost.y, 20)
+    expect(ghost.x).toEqual(10)
+    expect(ghost.y).toEqual(20)
   })
 
-  it('attaches ghost completely (_getGhost)', function () {
+  test('attaches ghost completely (_getGhost)', () => {
     window.sortable.__testing._getGhost(e, draggedItem)
 
-    assert.equal(e.dataTransfer.effectAllowed, 'copyMove')
-    assert.equal(e.dataTransfer.text, 'arbitrary-content')
-    assert.equal(e.dataTransfer.draggedItem, draggedItem)
-    assert.equal(e.dataTransfer.x, 95)
-    assert.equal(e.dataTransfer.y, 195)
+    expect(e.dataTransfer.effectAllowed).toEqual('copyMove')
+    expect(e.dataTransfer.text).toEqual('arbitrary-content')
+    expect(e.dataTransfer.draggedItem).toEqual(draggedItem)
+    expect(e.dataTransfer.x).toEqual(95)
+    expect(e.dataTransfer.y).toEqual(195)
   })
 })
