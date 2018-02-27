@@ -182,29 +182,32 @@ describe('Testing events', function () {
     li.dispatchEvent(event)
     assert.isFalse(li.classList.contains('sortable-over'))
   })
-
-  it('should correctly add class on hover event', function () {
-    window.sortable(ul, {
-      'items': 'li',
-      hoverClass: true
-    })
-    var event = window.sortable.__testing._makeEvent('mouseenter')
-    Object.defineProperty(event, 'target', {value: li, enumerable: true})
-    li.dispatchEvent(event)
-    assert.isTrue(li.classList.contains('sortable-over'))
-    event = window.sortable.__testing._makeEvent('mouseleave')
-    Object.defineProperty(event, 'target', {value: li, enumerable: true})
-    li.dispatchEvent(event)
-    assert.isFalse(li.classList.contains('sortable-over'))
-  })
-
   it('should correctly add class on hover event', function () {
     window.sortable(ul, {
       'items': 'li',
       hoverClass: 'sortable-item-over'
     })
+    // class is added on hover
     li.dispatchEvent(window.sortable.__testing._makeEvent('mouseenter'))
     assert.isTrue(li.classList.contains('sortable-item-over'))
+    // class is removed on leave
+    li.dispatchEvent(window.sortable.__testing._makeEvent('mouseleave'))
+    assert.isFalse(li.classList.contains('sortable-item-over'))
+  })
+
+  it('should correctly add and remove both classes on hover event', function () {
+    window.sortable(ul, {
+      'items': 'li',
+      hoverClass: 'sortable-item-over sortable-item-over-second'
+    })
+    // classes are added on hover
+    li.dispatchEvent(window.sortable.__testing._makeEvent('mouseenter'))
+    assert.isTrue(li.classList.contains('sortable-item-over'))
+    assert.isTrue(li.classList.contains('sortable-item-over-second'))
+    // class are removed on leave
+    li.dispatchEvent(window.sortable.__testing._makeEvent('mouseleave'))
+    assert.isFalse(li.classList.contains('sortable-item-over'))
+    assert.isFalse(li.classList.contains('sortable-item-over-second'))
   })
 
   it('should correctly place moved item into correct index', function () {
