@@ -43,6 +43,7 @@
     "typescript": "^2.7.2"
   },
   "scripts": {
+    "jest": "jest",
     "test": "rollup -c --environment test && mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
     "build": "rollup -c && cp $npm_package_main docs/",
     "standard": "standard 'src/*.ts' | snazzy",
@@ -52,5 +53,8 @@
     "preversion": "npm test",
     "version": "npm run build && git add -A dist docs",
     "postversion": "git push && git push --tags"
+  },
+  "dependencies": {
+    "jest-codemods": "^0.13.9"
   }
 }
