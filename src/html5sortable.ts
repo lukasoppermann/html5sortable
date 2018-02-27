@@ -349,7 +349,6 @@ export default function sortable (sortableElements, options) {
     var startParent
     var startList
     var placeholder = options.placeholder
-    var maxItems
     if (!placeholder) {
       placeholder = document.createElement(
         /^ul|ol$/i.test(sortableElement.tagName) ? 'li' : 'div'
@@ -384,11 +383,6 @@ export default function sortable (sortableElements, options) {
       _on(items, 'mouseleave', function (e) {
         e.target.classList.remove(...hoverClasses)
       })
-    }
-
-    // max items
-    if (options.maxItems && typeof options.maxItems === 'number') {
-      maxItems = options.maxItems
     }
 
     // Handle drag events on draggable items
@@ -534,7 +528,8 @@ export default function sortable (sortableElements, options) {
       if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
       }
-      if (maxItems && _filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length >= maxItems) {
+      var options = _data(sortableElement, 'opts')
+      if (parseInt(options.maxItems) && _filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length >= parseInt(options.maxItems) ) {
         return
       }
       e.preventDefault()
