@@ -24,7 +24,7 @@ If you would like to add an adapter to the list, please [create an issue](https:
 npm install html5sortable --save
 ```
 
-Once you install the package using `npm` or downloading it manually, load file you need **from the `dist/` directory**, e.g. `dist/html.sortable.min.js` for the minified iife version.
+Once you install the package using `npm` or [downloading the latest release](https://github.com/lukasoppermann/html5sortable/releases/latest) (don't use the master branch), load file you need **from the `dist/` directory**, e.g. `dist/html.sortable.min.js` for the minified iife version.
 
 - iffe (loading file via script tag): `dist/html5sortable.js` or `dist/html5sortable.min.js`
 - ES6 Module: `dist/html5sortable.es.js`
