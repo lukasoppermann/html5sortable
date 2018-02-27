@@ -1,10 +1,10 @@
 'use strict'
 
 import _matches from './matches'
-import { addData as _data , removeData as _removeData } from './data'
+import { addData as _data, removeData as _removeData } from './data'
 import _filter from './filter'
-import { addEventListener as _on , removeEventListener as _off } from './eventListener'
-import { addAttribute as _attr , removeAttribute as _removeAttr } from './attribute'
+import { addEventListener as _on, removeEventListener as _off } from './eventListener'
+import { addAttribute as _attr, removeAttribute as _removeAttr } from './attribute'
 import _offset from './offset'
 import _debounce from './debounce'
 import _index from './index'
@@ -27,6 +27,8 @@ var _removeItemEvents = function (items) {
   _off(items, 'dragover')
   _off(items, 'dragenter')
   _off(items, 'drop')
+  _off(items, 'mouseenter')
+  _off(items, 'mouseleave')
 }
 /*
  * Remove event handlers from sortable
@@ -371,17 +373,15 @@ export default function sortable (sortableElements, options) {
     _attr(items, 'aria-grabbed', 'false')
 
     // Mouse over class
-    if (options.hoverClass) {
-      var hoverClass = 'sortable-over'
-      if (typeof options.hoverClass === 'string') {
-        hoverClass = options.hoverClass
-      }
-
-      _on(items, 'mouseenter', function () {
-        this.classList.add(hoverClass)
+    if (typeof options.hoverClass === 'string') {
+      let hoverClasses = options.hoverClass.split(' ')
+      // add class on hover
+      _on(items, 'mouseenter', function (e) {
+        e.target.classList.add(...hoverClasses)
       })
-      _on(items, 'mouseleave', function () {
-        this.classList.remove(hoverClass)
+      // remove class on leave
+      _on(items, 'mouseleave', function (e) {
+        e.target.classList.remove(...hoverClasses)
       })
     }
 
@@ -515,8 +515,7 @@ export default function sortable (sortableElements, options) {
         placeholders
           .filter(function (element) { return element !== placeholder })
           .forEach(_detach)
-      }
-      else {
+      } else {
         if (placeholders.indexOf(element) === -1 &&
             !_filter(_getChildren(element), options.items).length) {
           placeholders.forEach(_detach)

@@ -46,7 +46,11 @@
 					<div class="mt2 p2 bg-navy border yellow border-yellow">
 				    <code class="mb0">
 							<div>sortable('.o-sortable', {</div>
-							<div class="px2 muted">// options</div>
+							<div class="px2 muted">
+								forcePlaceholderSize: true,<br />
+								placeholderClass: 'ph-class', <br />
+								hoverClass: 'bg-maroon yellow' <br />
+							</div>
 							<div>});</div>
 						</code>
   				</div>
@@ -61,6 +65,13 @@
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 6</li>
 						<li class="mb1 bg-navy ghost border border-yellow" style="position: relative; z-index: 1; margin-top: -49px; height: 40px; display: block;">Ghost test</li>
 					</ul>
+					<script type="text/javascript">
+						sortable('.js-sortable', {
+							forcePlaceholderSize: true,
+							placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+							hoverClass: 'bg-maroon yellow'
+						});
+					</script>
 		    </div>
 			</div>
 		</section>
@@ -363,10 +374,6 @@
     sortable('.js-sortable-oneway-receive', {
       forcePlaceholderSize: true,
       acceptFrom: '.js-sortable-oneway,.js-sortable-oneway-receive',
-      placeholderClass: 'p1 mb1 bg-navy border border-yellow',
-    });
-    sortable('.js-sortable', {
-      forcePlaceholderSize: true,
       placeholderClass: 'p1 mb1 bg-navy border border-yellow',
     });
     sortable('.js-grid', {
