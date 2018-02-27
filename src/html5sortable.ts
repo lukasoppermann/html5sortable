@@ -529,7 +529,7 @@ export default function sortable (sortableElements, options) {
         return
       }
       var options = _data(sortableElement, 'opts')
-      if (parseInt(options.maxItems) && _filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length >= parseInt(options.maxItems) ) {
+      if (parseInt(options.maxItems) && _filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
         return
       }
       e.preventDefault()
