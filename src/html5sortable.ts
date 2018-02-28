@@ -428,7 +428,7 @@ export default function sortable (sortableElements, options) {
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
 
-      Array.from(placeholderMap.values()).forEach(_detach)
+      placeholderMap.forEach(_detach)
       newParent = this.parentElement
 
       if (_listsConnected(newParent, startParent)) {
@@ -517,7 +517,7 @@ export default function sortable (sortableElements, options) {
       } else {
         if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
             !_filter(_getChildren(element), options.items).length) {
-          Array.from(placeholderMap.values()).forEach(_detach)
+          placeholderMap.forEach(_detach)
           element.appendChild(placeholder)
         }
       }
@@ -576,7 +576,7 @@ sortable.__testing = {
   _makeEvent: _makeEvent,
   _getPlaceholders: () => placeholderMap,
   _resetPlaceholders: () => {
-    placeholderMap = new Map()
+    placeholderMap.clear()
   }
 }
 /* END.TESTS_ONLY */
