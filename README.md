@@ -1,5 +1,7 @@
 # HTML5Sortable
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/lukasoppermann/html5sortable.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 [![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
 
