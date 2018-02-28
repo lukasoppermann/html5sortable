@@ -16,6 +16,10 @@ import {makeElement as _html2element, insertBefore as _before, insertAfter as _a
 var dragging
 var draggingHeight
 var placeholderMap = new Map()
+var startParent
+var startList
+var startIndex
+
 /*
  * remove event handlers from items
  * @param {Array|NodeList} items
@@ -280,6 +284,34 @@ var _serialize = function (list) {
   return children
 }
 
+var _dragStart = function (e) {
+  var sortableElement = e.target.parentElement
+  var options = _data(sortableElement, 'opts')
+  e.stopImmediatePropagation()
+  if ((options.handle && !_matches(e.target, options.handle)) || e.target.getAttribute('draggable') === 'false') {
+    return
+  }
+
+  // add transparent clone or other ghost to cursor
+  _getGhost(e, e.target)
+  // cache selsection & add attr for dragging
+  e.target.classList.add(options.draggingClass)
+  dragging = _getDragging(e.target, sortableElement)
+
+  _attr(dragging, 'aria-grabbed', 'true')
+  // grab values
+  startIndex = _index(dragging)
+  draggingHeight = parseInt(window.getComputedStyle(dragging).height)
+  startParent = e.target.parentElement
+  startList = _serialize(startParent)
+  // dispatch sortstart event on each element in group
+  sortableElement.dispatchEvent(_makeEvent('sortstart', {
+    item: dragging,
+    placeholder: placeholderMap.get(sortableElement),
+    startparent: startParent
+  }))
+}
+
 /*
  * Public sortable object
  * @param {Array|NodeList} sortableElements
@@ -345,9 +377,6 @@ export default function sortable (sortableElements, options) {
     _reloadSortable(sortableElement)
     // initialize
     var items = _filter(_getChildren(sortableElement), options.items)
-    var index
-    var startParent
-    var startList
     var placeholder = options.placeholder
     if (!placeholder) {
       placeholder = document.createElement(
@@ -386,37 +415,16 @@ export default function sortable (sortableElements, options) {
     }
 
     // Handle drag events on draggable items
-    _on(items, 'dragstart', function (e) {
-      e.stopImmediatePropagation()
-      if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'false') {
-        return
-      }
+    _on(items, 'dragstart', _dragStart)
 
-      // add transparent clone or other ghost to cursor
-      _getGhost(e, this)
-      // cache selsection & add attr for dragging
-      this.classList.add(options.draggingClass)
-      dragging = _getDragging(this, sortableElement)
-
-      _attr(dragging, 'aria-grabbed', 'true')
-      // grab values
-      index = _index(dragging)
-      draggingHeight = parseInt(window.getComputedStyle(dragging).height)
-      startParent = this.parentElement
-      startList = _serialize(startParent)
-      // dispatch sortstart event on each element in group
-      sortableElement.dispatchEvent(_makeEvent('sortstart', {
-        item: dragging,
-        placeholder: placeholderMap.get(sortableElement),
-        startparent: startParent
-      }))
-    })
     // Handle drag events on draggable items
-    _on(items, 'dragend', function () {
+    _on(items, 'dragend', function (e) {
       var newParent
       if (!dragging) {
         return
       }
+      var sortableElement = e.target.parentElement
+      var options = _data(sortableElement, 'opts')
       // remove dragging attributes and show item
       dragging.classList.remove(options.draggingClass)
       _attr(dragging, 'aria-grabbed', 'false')
@@ -428,22 +436,22 @@ export default function sortable (sortableElements, options) {
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
 
-      placeholderMap.forEach(_detach)
-      newParent = this.parentElement
+      Array.from(placeholderMap.values()).forEach(_detach)
+      newParent = e.target.parentElement
 
       if (_listsConnected(newParent, startParent)) {
         sortableElement.dispatchEvent(_makeEvent('sortstop', {
           item: dragging,
           startparent: startParent
         }))
-        if (index !== _index(dragging) || startParent !== newParent) {
+        if (startIndex !== _index(dragging) || startParent !== newParent) {
           sortableElement.dispatchEvent(_makeEvent('sortupdate', {
             item: dragging,
             index: _filter(_getChildren(newParent), _data(newParent, 'items'))
               .indexOf(dragging),
-            oldindex: items.indexOf(dragging),
+            oldindex: startList.indexOf(dragging),
             elementIndex: _index(dragging),
-            oldElementIndex: index,
+            oldElementIndex: startIndex,
             startparent: startParent,
             endparent: newParent,
             newEndList: _serialize(newParent),
@@ -517,7 +525,7 @@ export default function sortable (sortableElements, options) {
       } else {
         if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
             !_filter(_getChildren(element), options.items).length) {
-          placeholderMap.forEach(_detach)
+          Array.from(placeholderMap.values()).forEach(_detach)
           element.appendChild(placeholder)
         }
       }
