@@ -15,7 +15,7 @@ import {makeElement as _html2element, insertBefore as _before, insertAfter as _a
  */
 var dragging
 var draggingHeight
-var placeholders = []
+var placeholderMap = new Map()
 /*
  * remove event handlers from items
  * @param {Array|NodeList} items
@@ -361,7 +361,7 @@ export default function sortable (sortableElements, options) {
     )
 
     _data(sortableElement, 'items', options.items)
-    placeholders.push(placeholder)
+    placeholderMap.set(sortableElement, placeholder)
     if (options.acceptFrom) {
       _data(sortableElement, 'acceptFrom', options.acceptFrom)
     } else if (options.connectWith) {
@@ -407,7 +407,7 @@ export default function sortable (sortableElements, options) {
       // dispatch sortstart event on each element in group
       sortableElement.dispatchEvent(_makeEvent('sortstart', {
         item: dragging,
-        placeholder: placeholder,
+        placeholder: placeholderMap.get(sortableElement),
         startparent: startParent
       }))
     })
@@ -428,7 +428,7 @@ export default function sortable (sortableElements, options) {
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
 
-      placeholders.forEach(_detach)
+      Array.from(placeholderMap.values()).forEach(_detach)
       newParent = this.parentElement
 
       if (_listsConnected(newParent, startParent)) {
@@ -458,7 +458,6 @@ export default function sortable (sortableElements, options) {
     // Handle drop event on sortable & placeholder
     // TODO: REMOVE placeholder?????
     _on([sortableElement, placeholder], 'drop', function (e) {
-      var visiblePlaceholder
       if (!_listsConnected(sortableElement, dragging.parentElement)) {
         return
       }
@@ -466,7 +465,7 @@ export default function sortable (sortableElements, options) {
       e.stopPropagation()
 
       _data(dragging, 'dropped', 'true')
-      visiblePlaceholder = placeholders.filter(_attached)[0]
+      var visiblePlaceholder = Array.from(placeholderMap.values()).filter(_attached)[0]
       _after(visiblePlaceholder, dragging)
     })
 
@@ -512,13 +511,13 @@ export default function sortable (sortableElements, options) {
           _before(element, placeholder)
         }
         // Intentionally violated chaining, it is more complex otherwise
-        placeholders
+        Array.from(placeholderMap.values())
           .filter(function (element) { return element !== placeholder })
           .forEach(_detach)
       } else {
-        if (placeholders.indexOf(element) === -1 &&
+        if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
             !_filter(_getChildren(element), options.items).length) {
-          placeholders.forEach(_detach)
+          Array.from(placeholderMap.values()).forEach(_detach)
           element.appendChild(placeholder)
         }
       }
@@ -575,9 +574,9 @@ sortable.__testing = {
   _makeGhost: _makeGhost,
   _index: _index,
   _makeEvent: _makeEvent,
-  _getPlaceholders: () => placeholders,
+  _getPlaceholders: () => placeholderMap,
   _resetPlaceholders: () => {
-    placeholders = []
+    placeholderMap = new Map()
   }
 }
 /* END.TESTS_ONLY */
