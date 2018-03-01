@@ -161,22 +161,6 @@ describe('Internal function tests', () => {
     expect(sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
     expect(sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(true)
   })
-
-  test('_index', () => {
-    let div = window.document.createElement('div')
-    let child1 = window.document.createElement('div')
-    let child2 = window.document.createElement('div')
-    let child3 = window.document.createElement('div')
-    let child4 = window.document.createElement('div')
-    div.appendChild(child1)
-    div.appendChild(child2)
-    div.appendChild(child3)
-    expect(sortable.__testing._index(child1)).toEqual(0)
-    expect(sortable.__testing._index(child2)).toEqual(1)
-    expect(sortable.__testing._index(child3)).toEqual(2)
-    expect(sortable.__testing._index(child4)).toEqual(0)
-  })
-
   test.skip('_debounce returns given function, when 0 debounce', () => {
 
   })
