@@ -183,14 +183,14 @@ describe('Testing api', () => {
       expect(ul.getAttribute('aria-dropeffect')).toEqual('none')
     })
 
-    test('should set handles to draggable = false', () => {
-      console.log('TEST is wrong, no handle in sortable')
+    test.skip('should set handles to draggable = false', () => {
+      // @TODO: TEST is wrong, no handle in sortable
       expect(li.getAttribute('draggable')).toEqual('false')
     })
 
-    test('should remove mousedown event', () => {
+    test.skip('should remove mousedown event', () => {
+      // @TODO: TEST is wrong, no handle in sortable
       let handle = li
-      console.log('TEST is wrong, no handle in sortable')
       expect(handle.h5s.events).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown')).toBe(false)
       expect(handle.h5s.events.hasOwnProperty('mousedown.h5s')).toBe(false)
@@ -212,14 +212,14 @@ describe('Testing api', () => {
       expect(ul.getAttribute('aria-dropeffect')).toEqual('move')
     })
 
-    test('should set handles to draggable = true', () => {
-      console.log('TEST is wrong, no handle in sortable')
+    test.skip('should set handles to draggable = true', () => {
+      // @TODO: TEST is wrong, no handle in sortable
       expect(li.getAttribute('draggable')).toEqual('true')
     })
 
-    test('should remove mousedown event', () => {
+    test.skip('should remove mousedown event', () => {
+      // @TODO: TEST is wrong, no handle in sortable
       let handle = li
-      console.log('TEST is wrong, no handle in sortable')
       expect(handle.h5s.events).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown')).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown.h5s')).toBeDefined()

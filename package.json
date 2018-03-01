@@ -50,16 +50,21 @@
       "src/*.ts"
     ],
     "notify": true,
-    "moduleFileExtensions": ["ts", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
       "^.+\\.ts?$": "ts-jest"
     },
-    "testMatch": ["**/__tests__/**/*.test.(ts|js)"]
+    "testMatch": [
+      "**/__tests__/**/*.test.(ts|js)"
+    ]
   },
   "scripts": {
     "jest": "jest",
-    "test": "rollup -c --environment test && jest && npm run standard && npm run standard-test && standard-readme",
-    "coverage": "rollup -c --environment test && jest --coverage && npm run standard && npm run standard-test && standard-readme",
+    "test": "jest && npm run standard && npm run standard-test && standard-readme",
+    "coverage": "jest --coverage && npm run standard && npm run standard-test && standard-readme",
     "oldtest": "rollup -c --environment test && mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
     "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
     "standard": "standard 'src/*.ts' | snazzy",

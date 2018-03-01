@@ -189,7 +189,7 @@ describe('Internal function tests', () => {
   })
 
   test.skip('_debounce returns given function, when 0 debounce', () => {
-    
+
   })
 
   test('_getHandles: gets handles array from items', () => {
@@ -204,7 +204,6 @@ describe('Internal function tests', () => {
     expect(handles[0].nodeName).toEqual('LI')
   })
 
-  test('_attached', () => {
-    console.log('Test missing')
+  test.skip('_attached', () => {
   })
 })
