@@ -19,6 +19,10 @@ let makeElement = (html, tagName) => {
  * @param {Element} element
  */
 let insertBefore = (target, element) => {
+  if (!target || target.nodeType !== 1 || !element || element.nodeType !== 1) {
+    throw new Error('target and element must be a node')
+  }
+
   target.parentElement.insertBefore(
     element,
     target
