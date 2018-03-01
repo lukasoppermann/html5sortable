@@ -1,17 +1,13 @@
+import sortable from '../src/html5sortable'
 /* global describe,it,afterEach */
 describe('Testing ghost creation methods', () => {
   const { JSDOM } = require('jsdom')
-  const helper = require('./helper')
-  const sortable = helper.instrument('./_test/html5sortable.js')
-  // const sortable = require('fs').readFileSync('./src/html5sortable.js', { encoding: 'utf-8' })
-  let window = (new JSDOM(``, { runScripts: 'dangerously' })).window
-  // Execute my library by inserting a <script> tag containing it.
-  const scriptEl = window.document.createElement('script')
-  scriptEl.textContent = sortable
-  window.document.head.appendChild(scriptEl)
+  const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
+  global.document = new JSDOM(documentHTML)
+  global.window = document.parentWindow
+  global.body = global.document.querySelector('body')
 
-  let body = window.document.body
-  body.innerHTML = `<ul class="sortable"><li class="first">dragged item</li><li>item 2</li></ul>`
+  global.body.innerHTML = `<ul class="sortable"><li class="first">dragged item</li><li>item 2</li></ul>`
   // mock dragged item
   let draggedItem = body.querySelector('.first')
   draggedItem.getClientRects = function () {
@@ -40,12 +36,8 @@ describe('Testing ghost creation methods', () => {
     }
   }
 
-  afterEach(() => {
-    helper.writeCoverage(window)
-  })
-
   test('sets the dataTransfer options correctly (_attachGhost)', () => {
-    window.sortable.__testing._attachGhost(e, {
+    sortable.__testing._attachGhost(e, {
       draggedItem: 'test-item',
       x: 10,
       y: 20
@@ -59,12 +51,12 @@ describe('Testing ghost creation methods', () => {
   })
 
   test('sets item correctly from dragged item (_makeGhost)', () => {
-    let ghost = window.sortable.__testing._makeGhost(draggedItem)
+    let ghost = sortable.__testing._makeGhost(draggedItem)
     expect(ghost.draggedItem.innerHTML).toEqual(draggedItem.innerHTML)
   })
 
   test('sets x & y correctly (_addGhostPos)', () => {
-    let ghost = window.sortable.__testing._addGhostPos(e, {
+    let ghost = sortable.__testing._addGhostPos(e, {
       draggedItem: draggedItem
     })
 
@@ -73,7 +65,7 @@ describe('Testing ghost creation methods', () => {
   })
 
   test('uses provided x & y correctly (_addGhostPos)', () => {
-    let ghost = window.sortable.__testing._addGhostPos(e, {
+    let ghost = sortable.__testing._addGhostPos(e, {
       draggedItem: draggedItem,
       x: 10,
       y: 20
@@ -84,7 +76,7 @@ describe('Testing ghost creation methods', () => {
   })
 
   test('attaches ghost completely (_getGhost)', () => {
-    window.sortable.__testing._getGhost(e, draggedItem)
+    sortable.__testing._getGhost(e, draggedItem)
 
     expect(e.dataTransfer.effectAllowed).toEqual('copyMove')
     expect(e.dataTransfer.text).toEqual('arbitrary-content')
