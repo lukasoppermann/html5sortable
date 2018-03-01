@@ -3,7 +3,7 @@
  * @param {Element} element
  * @returns {number}
  */
-export default (element) => {
+export default (element: Element): number => {
   if (!element.parentElement) {
     return -1
   }
