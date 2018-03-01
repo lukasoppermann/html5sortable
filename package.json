@@ -29,7 +29,7 @@
     "istanbul": "0.4.x",
     "jsdom": "^11.6.2",
     "mocha": "^5.0.1",
-    "nyc": "~11.4.1",
+    "nyc": "11.3.*",
     "plugin-typescript": "^8.0.0",
     "requirejs": "^2.3.5",
     "rollup": "^0.56.0",
