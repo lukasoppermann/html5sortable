@@ -1,5 +1,6 @@
+/* global describe,expect,test,beforeEach,beforeAll */
 import sortable from '../src/html5sortable'
-/* global describe,beforeEach,afterEach,before,it */
+
 describe('Testing api', () => {
   const { JSDOM } = require('jsdom')
   const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
@@ -7,7 +8,7 @@ describe('Testing api', () => {
   global.window = document.parentWindow
   global.body = global.document.querySelector('body')
   // const sortable = require('../_test/html5sortable.cjs.js')
-  let body, ul, li, secondLi, thirdLi
+  let ul, li, secondLi, thirdLi
 
   describe('Initialization ', () => {
     beforeEach(() => {

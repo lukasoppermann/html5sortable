@@ -1,7 +1,7 @@
-import index from '../src/index.ts'
-/* global describe,it,beforeEach,afterEach */
-describe('Testing index', () => {
+/* global describe,test,expect */
+import index from '../src/index'
 
+describe('Testing index', () => {
   test('element is not in DOM', () => {
     // setup
     let div = window.document.createElement('div')
@@ -20,5 +20,4 @@ describe('Testing index', () => {
     expect(index(child1)).toEqual(0)
     expect(index(child2)).toEqual(1)
   })
-
 })
