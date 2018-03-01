@@ -16,6 +16,13 @@ describe('Testing methods for inserting HTML into the dom', () => {
     expect(div.children[1].tagName).toBe('P')
   })
 
+  test('try to insertBefore element which is not in dom', () => {
+    let div = window.document.createElement('div')
+    let span = window.document.createElement('span')
+    // test missing elements
+    expect(() => { insertBefore(div, span) }).toThrow('target and element must be a node')
+  })
+
   test('try to insertBefore text', () => {
     let div = window.document.createElement('div')
     // test missing elements
