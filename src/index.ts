@@ -5,7 +5,7 @@
  */
 export default (element) => {
   if (!element.parentElement) {
-    return 0
+    return -1
   }
   return Array.prototype.indexOf.call(element.parentElement.children, element)
 }
