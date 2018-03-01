@@ -47,9 +47,7 @@
   "jest": {
     "collectCoverage": false,
     "collectCoverageFrom": [
-      "_test/html5sortable.js",
-      "_test/html5sortable.cjs.js",
-      "src/html5sortable.ts"
+      "src/*.ts"
     ],
     "notify": true,
     "moduleFileExtensions": ["ts", "js"],
