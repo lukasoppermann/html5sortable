@@ -1,6 +1,5 @@
 'use strict'
 
-import _matches from './matches'
 import { addData as _data, removeData as _removeData } from './data'
 import _filter from './filter'
 import { addEventListener as _on, removeEventListener as _off } from './eventListener'
@@ -8,7 +7,6 @@ import { addAttribute as _attr, removeAttribute as _removeAttr } from './attribu
 import _offset from './offset'
 import _debounce from './debounce'
 import _index from './index'
-import _detach from './removeElement'
 import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
 /*
  * variables global to the plugin
@@ -172,7 +170,7 @@ var _listsConnected = function (curList, destList) {
   var acceptFrom = _data(curList, 'opts').acceptFrom
   if (acceptFrom !== null) {
     return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
-      return sel.length > 0 && _matches(destList, sel)
+      return sel.length > 0 && destList.matches(sel)
     }).length > 0
   }
   if (curList === destList) {
@@ -427,7 +425,7 @@ export default function sortable (sortableElements, options) {
     // Handle drag events on draggable items
     _on(items, 'dragstart', function (e) {
       e.stopImmediatePropagation()
-      if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'false') {
+      if ((options.handle && !e.target.matches(options.handle)) || this.getAttribute('draggable') === 'false') {
         return
       }
       // add transparent clone or other ghost to cursor
@@ -459,13 +457,13 @@ export default function sortable (sortableElements, options) {
       _attr(dragging, 'aria-grabbed', 'false')
 
       if (dragging.getAttribute('aria-copied') === 'true' && _data(dragging, 'dropped') !== 'true') {
-        _detach(dragging)
+        dragging.remove()
       }
 
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
 
-      placeholderMap.forEach(_detach)
+      placeholderMap.forEach((element) => element.remove())
       newParent = this.parentElement
 
       if (_listsConnected(newParent, startParent)) {
@@ -551,11 +549,11 @@ export default function sortable (sortableElements, options) {
         // Intentionally violated chaining, it is more complex otherwise
         Array.from(placeholderMap.values())
           .filter(function (element) { return element !== placeholder })
-          .forEach(_detach)
+          .forEach((element) => element.remove())
       } else {
         if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
             !_filter(_getChildren(element), options.items).length) {
-          placeholderMap.forEach(_detach)
+          placeholderMap.forEach((element) => element.remove())
           element.appendChild(placeholder)
         }
       }

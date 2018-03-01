@@ -10,17 +10,6 @@ var sortable = (function () {
 'use strict';
 
 /**
- * Tests if an element matches a given selector. Comparable to jQuery's $(el).is('.my-class')
- * @param {el} DOM element
- * @param {selector} selector test against the element
- * @returns {boolean}
- */
-/* istanbul ignore next */
-function _matches (el, selector) {
-    return (el.matches || el.msMatchesSelector).call(el, selector);
-}
-
-/**
  * Get or set data on element
  * @param {Element} element
  * @param {string} key
@@ -53,7 +42,7 @@ function _filter (nodes, wanted) {
     }
     var result = [];
     for (var i = 0; i < nodes.length; ++i) {
-        if (typeof wanted === 'string' && _matches(nodes[i], wanted)) {
+        if (typeof wanted === 'string' && nodes[i].matches(wanted)) {
             result.push(nodes[i]);
         }
         if (wanted.indexOf(nodes[i]) !== -1) {
@@ -153,12 +142,6 @@ function _index (element) {
         return 0;
     }
     return Array.prototype.indexOf.call(element.parentElement.children, element);
-}
-
-function _detach (element) {
-    if (element.parentNode) {
-        element.parentNode.removeChild(element);
-    }
 }
 
 /**
@@ -342,7 +325,7 @@ var _listsConnected = function (curList, destList) {
     var acceptFrom = addData(curList, 'opts').acceptFrom;
     if (acceptFrom !== null) {
         return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
-            return sel.length > 0 && _matches(destList, sel);
+            return sel.length > 0 && destList.matches(sel);
         }).length > 0;
     }
     if (curList === destList) {
@@ -587,7 +570,7 @@ function sortable(sortableElements, options) {
         // Handle drag events on draggable items
         addEventListener(items, 'dragstart', function (e) {
             e.stopImmediatePropagation();
-            if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'false') {
+            if ((options.handle && !e.target.matches(options.handle)) || this.getAttribute('draggable') === 'false') {
                 return;
             }
             // add transparent clone or other ghost to cursor
@@ -618,11 +601,11 @@ function sortable(sortableElements, options) {
             dragging.classList.remove(options.draggingClass);
             addAttribute(dragging, 'aria-grabbed', 'false');
             if (dragging.getAttribute('aria-copied') === 'true' && addData(dragging, 'dropped') !== 'true') {
-                _detach(dragging);
+                dragging.remove();
             }
             dragging.style.display = dragging.oldDisplay;
             delete dragging.oldDisplay;
-            placeholderMap.forEach(_detach);
+            placeholderMap.forEach(function (element) { return element.remove(); });
             newParent = this.parentElement;
             if (_listsConnected(newParent, startParent)) {
                 sortableElement.dispatchEvent(_makeEvent('sortstop', {
@@ -701,12 +684,12 @@ function sortable(sortableElements, options) {
                 // Intentionally violated chaining, it is more complex otherwise
                 Array.from(placeholderMap.values())
                     .filter(function (element) { return element !== placeholder; })
-                    .forEach(_detach);
+                    .forEach(function (element) { return element.remove(); });
             }
             else {
                 if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
                     !_filter(_getChildren(element), options.items).length) {
-                    placeholderMap.forEach(_detach);
+                    placeholderMap.forEach(function (element) { return element.remove(); });
                     element.appendChild(placeholder);
                 }
             }

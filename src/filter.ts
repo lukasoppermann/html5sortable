@@ -1,4 +1,3 @@
-import _matches from './matches'
 /**
  * Filter only wanted nodes
  * @param {Array|NodeList} nodes
@@ -11,7 +10,7 @@ export default (nodes, wanted) => {
   }
   var result = []
   for (var i = 0; i < nodes.length; ++i) {
-    if (typeof wanted === 'string' && _matches(nodes[i], wanted)) {
+    if (typeof wanted === 'string' && nodes[i].matches(wanted)) {
       result.push(nodes[i])
     }
     if (wanted.indexOf(nodes[i]) !== -1) {

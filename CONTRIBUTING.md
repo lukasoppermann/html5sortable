@@ -30,14 +30,8 @@ If you are just starting out with github, you are very welcome to submit small P
 
 - **One pull request per feature** - We appreciate every improvement you have for the project. To make it easy and fast to merge your pull requests, only change one thing per PR. We rather have 10 small PRs than one giant one.
 
-- **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please [squash them](http://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) before submitting.
-
-###### Use rebase to your advantage
-Never commit merges in your PR history, as they will mess up the projects history.
-
-Instead of a `pull` to get the latest changes, always [`rebase` to `master`](#rebase-to-master).
-
-When you have a messy history (e.g. `typo` or `fix` commits) do an [interactive `rebase`](#interactive-rebase)
+- **Rebase to master**
+Please make sure to [`rebase` to `master`](#rebase-to-master) so that your pull request can be easily merged.
 
 **Remember:** If you have trouble with any of the steps above, just ask for help.
 
@@ -75,7 +69,7 @@ git rebase upstream/master
 If you are unlucky you might get a conflict. You will need to resolve it just like a merge conflict.
 
 ### Interactive rebase
-You should only have meaningful commits, as this makes it easier for us to understand what you where doing. However when working one often has commits like `fix` or `update`.
+It is nice to try to send only meaningful commits, as this makes it easier for us to understand what you where doing. However when working one often has commits like `fix` or `update`.
 
 To remove those and create an easy to understand history you can use `git rebase -i` – an interactive `-i` rebase.
 
@@ -99,6 +93,6 @@ You can `pick` (keep), `reword` (keep & edit message), `edit`, `squash` (meld in
 
 Once you are happy with you changes, save and close the file to move on. Another file with all commit messages is shown. Remove the ones you don't want and save and close this file as well. Your rebase should continue and you should be down.
 
-**Note:** As you rewrote history, you will now need to force-push if you changes commits that are already on a remote server.
+**Note:** As you rewrote history, you will now need to force-push if you changed commits that are already on a remote server.
 
 **Happy coding!**
