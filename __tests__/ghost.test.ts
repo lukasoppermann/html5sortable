@@ -1,5 +1,6 @@
+/* global describe,test,expect */
 import sortable from '../src/html5sortable'
-/* global describe,it,afterEach */
+
 describe('Testing ghost creation methods', () => {
   const { JSDOM } = require('jsdom')
   const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
@@ -9,7 +10,7 @@ describe('Testing ghost creation methods', () => {
 
   global.body.innerHTML = `<ul class="sortable"><li class="first">dragged item</li><li>item 2</li></ul>`
   // mock dragged item
-  let draggedItem = body.querySelector('.first')
+  let draggedItem = global.body.querySelector('.first')
   draggedItem.getClientRects = function () {
     return [{
       left: 5,

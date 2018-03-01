@@ -1,5 +1,6 @@
+/* global describe,test,expect,beforeEach */
 import sortable from '../src/html5sortable'
-/* global describe,it,beforeEach,afterEach,before */
+
 describe('Internal function tests', () => {
   const { JSDOM } = require('jsdom')
   const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
@@ -25,7 +26,7 @@ describe('Internal function tests', () => {
       </li>
     </ul>`
     // select sortable
-    ul = body.querySelector('.sortable')
+    ul = global.body.querySelector('.sortable')
     // destroy sortable to not have any config leftovers
     sortable(ul, 'destroy')
     // init sortable
@@ -93,9 +94,9 @@ describe('Internal function tests', () => {
 
   test('_listsConnected', () => {
     // add second sortable (not connected yet!)
-    body.innerHTML = `<ul class="sortable2"><li>item</li></ul><ul class="sortable3"><li>item</li></ul>`
-    let connectedUl = body.querySelector('.sortable2')
-    let notConnectedUl = body.querySelector('.sortable3')
+    global.body.innerHTML = `<ul class="sortable2"><li>item</li></ul><ul class="sortable3"><li>item</li></ul>`
+    let connectedUl = global.body.querySelector('.sortable2')
+    let notConnectedUl = global.body.querySelector('.sortable3')
     sortable(connectedUl, {
       connectWith: '.sortable'
     })

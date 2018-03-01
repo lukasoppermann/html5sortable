@@ -1,5 +1,6 @@
+/* global describe,test,expect,beforeEach */
 import sortable from '../src/html5sortable'
-/* global describe,it,beforeEach,afterEach */
+
 describe('Testing events', () => {
   const { JSDOM } = require('jsdom')
   const documentHTML = `<!doctype html><html><head><style>
@@ -38,10 +39,10 @@ describe('Testing events', () => {
       <li class="item fifth-item">Item 5</li>
     </ul>`
 
-    ul = body.querySelector('.sortable')
+    ul = global.body.querySelector('.sortable')
     li = ul.querySelector('.first-item')
     secondLi = ul.querySelector('.second-item')
-    ul2 = body.querySelector('.sortable2')
+    ul2 = global.body.querySelector('.sortable2')
     fifthLi = ul2.querySelector('.fifth-item')
 
     li.getClientRects = function () {
@@ -395,11 +396,11 @@ describe('Testing events', () => {
       secondLi.dispatchEvent(event)
       expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
 
-      body.dispatchEvent(event)
+      global.body.dispatchEvent(event)
 
       event = sortable.__testing._makeEvent('drop')
 
-      body.dispatchEvent(event)
+      global.body.dispatchEvent(event)
       expect(getIndex(secondLi, ul.children)).toEqual(originalIndex)
     }
   )
