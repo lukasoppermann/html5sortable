@@ -191,6 +191,18 @@ var _isCopyActive = function (sortable) {
   return _data(sortable, 'opts').copy === true
 }
 /*
+ * Get height of an element including padding
+ * @param {Element} sortable a single sortable
+ */
+let _getElementHeight = (element) => {
+  // get calculated style of element
+  let style = window.getComputedStyle(element)
+  // pick applicable properties, convert to int and reduce by adding
+  return ['height', 'padding-top', 'padding-bottom']
+    .map((key) => parseInt(style.getPropertyValue(key), 10))
+    .reduce((prev, cur) => prev + cur)
+}
+/*
  * get handle or return item
  * @param {Array} items
  * @param {selector} handle
@@ -425,7 +437,7 @@ export default function sortable (sortableElements, options) {
       _attr(dragging, 'aria-grabbed', 'true')
       // grab values
       index = _index(dragging)
-      draggingHeight = parseInt(window.getComputedStyle(dragging).height)
+      draggingHeight = _getElementHeight(dragging)
       startParent = this.parentElement
       startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
@@ -499,14 +511,13 @@ export default function sortable (sortableElements, options) {
       }
 
       if (items.indexOf(element) !== -1) {
-        var thisHeight = parseInt(window.getComputedStyle(element).height)
+        let thisHeight = _getElementHeight(element)
         var placeholderIndex = _index(placeholder)
         var thisIndex = _index(element)
         if (options.forcePlaceholderSize) {
           let forcedHeight = draggingHeight > 0 ? draggingHeight : 50
           placeholder.style.height = forcedHeight + 'px'
         }
-
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight) {
           // Dead zone?

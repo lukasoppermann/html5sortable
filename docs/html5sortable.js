@@ -162,12 +162,6 @@ function _detach (element) {
 }
 
 /**
- * Convert HTML string into DOM element.
- * @param {Element|string} html
- * @param {string} tagname
- * @returns {Element}
- */
-/**
  * Insert before target
  * @param {Element} target
  * @param {Element} element
@@ -365,6 +359,18 @@ var _listsConnected = function (curList, destList) {
  */
 var _isCopyActive = function (sortable) {
     return addData(sortable, 'opts').copy === true;
+};
+/*
+ * Get height of an element including padding
+ * @param {Element} sortable a single sortable
+ */
+var _getElementHeight = function (element) {
+    // get calculated style of element
+    var style = window.getComputedStyle(element);
+    // pick applicable properties, convert to int and reduce by adding
+    return ['height', 'padding-top', 'padding-bottom']
+        .map(function (key) { return parseInt(style.getPropertyValue(key), 10); })
+        .reduce(function (prev, cur) { return prev + cur; });
 };
 /*
  * get handle or return item
@@ -589,7 +595,7 @@ function sortable(sortableElements, options) {
             addAttribute(dragging, 'aria-grabbed', 'true');
             // grab values
             index = _index(dragging);
-            draggingHeight = parseInt(window.getComputedStyle(dragging).height);
+            draggingHeight = _getElementHeight(dragging);
             startParent = this.parentElement;
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
@@ -656,7 +662,7 @@ function sortable(sortableElements, options) {
                 return;
             }
             if (items.indexOf(element) !== -1) {
-                var thisHeight = parseInt(window.getComputedStyle(element).height);
+                var thisHeight = _getElementHeight(element);
                 var placeholderIndex = _index(placeholder);
                 var thisIndex = _index(element);
                 if (options.forcePlaceholderSize) {
