@@ -276,6 +276,27 @@
                       </tr>
                   </tbody>
               </table>
+              <script type="text/javascript">
+                sortable('.js-sortable-table', {
+                  items: "tr.js-sortable-tr",
+                  placeholder: "<tr><td colspan=\"3\"><span class=\"center\">The row will appear here</span></td></tr>",
+                  forcePlaceholderSize: false
+                })
+              </script>
+              <table class="mt4 ml4 js-sortable-table-no-placeholder">
+                <tbody>
+                <tr class="border bg-white navy p4 js-sortable-tr"><td>Simple</td></tr>
+                <tr class="border bg-white navy p4 js-sortable-tr"><td>Table</td></tr>
+                <tr class="border bg-white navy p4 js-sortable-tr"><td>Bratwurst</td></tr>
+                </tbody>
+              </table>
+              <script type="text/javascript">
+              sortable('.js-sortable-table-no-placeholder tbody', {
+                items: "tr",
+                forcePlaceholderSize: true,
+                placeholderClass: 'placeholder sort-placeholder'
+              })
+              </script>
           </div>
       </div>
     </section>
@@ -425,11 +446,6 @@
 				items: 'li',
 				placeholderClass: 'border border-white mb1'
 			});
-      sortable('.js-sortable-table', {
-        items: "tr.js-sortable-tr",
-        placeholder: "<tr><td colspan=\"3\"><span class=\"center\">The row will appear here</span></td></tr>",
-        forcePlaceholderSize: false
-      })
 			// buttons to add items and reload the list
 			// separately to showcase issue without reload
 			document.querySelector('.js-add-item-button').addEventListener('click', function(){

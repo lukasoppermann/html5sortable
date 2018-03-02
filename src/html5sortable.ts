@@ -9,7 +9,7 @@ import _offset from './offset'
 import _debounce from './debounce'
 import _index from './index'
 import _detach from './removeElement'
-import {makeElement as _html2element, insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
+import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
 /*
  * variables global to the plugin
  */
@@ -38,6 +38,40 @@ var _removeSortableEvents = function (sortable) {
   _off(sortable, 'dragover')
   _off(sortable, 'dragenter')
   _off(sortable, 'drop')
+}
+/*
+ * Attach ghost to dataTransfer object
+ * @param {Event} original event
+ * @param {object} ghost-object with item, x and y coordinates
+ */
+let _makePlaceholder = (sortableElement, placeholder = undefined, placeholderClasses = 'sortable-placeholder') => {
+  if (typeof placeholder === 'string') {
+    let tempContainer = document.createElement(sortableElement.tagName)
+    tempContainer.innerHTML = placeholder
+    placeholder = tempContainer.children[0]
+  } else {
+    switch (sortableElement.tagName) {
+      case 'UL':
+        placeholder = 'li'
+        break
+      case 'OL':
+        placeholder = 'li'
+        break
+      case 'TABLE':
+        placeholder = 'tr'
+        break
+      case 'TBODY':
+        placeholder = 'tr'
+        break
+      default:
+        placeholder = 'div'
+    }
+    placeholder = document.createElement(placeholder)
+  }
+  // add classes to placeholder
+  placeholder.classList.add(...placeholderClasses.split(' '))
+
+  return placeholder
 }
 /*
  * Attach ghost to dataTransfer object
@@ -348,17 +382,7 @@ export default function sortable (sortableElements, options) {
     var index
     var startParent
     var startList
-    var placeholder = options.placeholder
-    if (!placeholder) {
-      placeholder = document.createElement(
-        /^ul|ol$/i.test(sortableElement.tagName) ? 'li' : 'div'
-      )
-    }
-    placeholder = _html2element(placeholder, sortableElement.tagName)
-    placeholder.classList.add.apply(
-      placeholder.classList,
-      options.placeholderClass.split(' ')
-    )
+    let placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass)
 
     _data(sortableElement, 'items', options.items)
     placeholderMap.set(sortableElement, placeholder)
