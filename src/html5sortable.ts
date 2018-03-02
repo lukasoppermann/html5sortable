@@ -503,7 +503,8 @@ export default function sortable (sortableElements, options) {
         var placeholderIndex = _index(placeholder)
         var thisIndex = _index(element)
         if (options.forcePlaceholderSize) {
-          placeholder.style.height = draggingHeight + 'px'
+          let forcedHeight = draggingHeight > 0 ? draggingHeight : 50
+          placeholder.style.height = forcedHeight + 'px'
         }
 
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
