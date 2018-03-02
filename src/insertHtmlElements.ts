@@ -1,19 +1,4 @@
 /**
- * Convert HTML string into DOM element.
- * @param {Element|string} html
- * @param {string} tagname
- * @returns {Element}
- */
-let makeElement = (html, tagName) => {
-  if (typeof html !== 'string') {
-    return html
-  }
-  var parentElement = document.createElement(tagName)
-  parentElement.innerHTML = html
-  return parentElement.firstChild
-}
-
-/**
  * Insert before target
  * @param {Element} target
  * @param {Element} element
@@ -36,4 +21,4 @@ let insertAfter = (target, element) => {
   )
 }
 
-export { makeElement, insertBefore, insertAfter }
+export { insertBefore, insertAfter }
