@@ -369,7 +369,10 @@ var _getElementHeight = function (element) {
     var style = window.getComputedStyle(element);
     // pick applicable properties, convert to int and reduce by adding
     return ['height', 'padding-top', 'padding-bottom']
-        .map(function (key) { return parseInt(style.getPropertyValue(key), 10); })
+        .map(function (key) {
+        var int = parseInt(style.getPropertyValue(key), 10);
+        return isNaN(int) ? 0 : int;
+    })
         .reduce(function (prev, cur) { return prev + cur; });
 };
 /*
@@ -590,12 +593,12 @@ function sortable(sortableElements, options) {
             // add transparent clone or other ghost to cursor
             _getGhost(e, this);
             // cache selsection & add attr for dragging
+            draggingHeight = _getElementHeight(this);
             this.classList.add(options.draggingClass);
             dragging = _getDragging(this, sortableElement);
             addAttribute(dragging, 'aria-grabbed', 'true');
             // grab values
             index = _index(dragging);
-            draggingHeight = _getElementHeight(dragging);
             startParent = this.parentElement;
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
@@ -661,14 +664,14 @@ function sortable(sortableElements, options) {
             if (!dragging) {
                 return;
             }
+            // set placeholder height if forcePlaceholderSize option is set
+            if (options.forcePlaceholderSize) {
+                placeholder.style.height = draggingHeight + 'px';
+            }
             if (items.indexOf(element) !== -1) {
                 var thisHeight = _getElementHeight(element);
                 var placeholderIndex = _index(placeholder);
                 var thisIndex = _index(element);
-                if (options.forcePlaceholderSize) {
-                    var forcedHeight = draggingHeight > 0 ? draggingHeight : 50;
-                    placeholder.style.height = forcedHeight + 'px';
-                }
                 // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
                 if (thisHeight > draggingHeight) {
                     // Dead zone?
