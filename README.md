@@ -262,11 +262,9 @@ sortable('.sortable');
 
 ## Sorting table rows
 
-The plugin has limited support for sorting table rows. To sort table rows:
-
- * Initialize plugin on `tbody` element
+ * Initialize plugin on `tbody` element (browsers automatically add `tbody` if you don't)
  * Keep in mind that different browsers may display different ghost image of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`. This may or may not be fixed by setting the `td` to be `position: relative;`
- * Make sure to specify the `placeholder` as a `tr` e.g. `placeholder: "<tr><td colspan="3">The row will appear here</td></tr>"`, otherwise you will only be able to drop items into the first row.
+ * If you add a custom `placeholder` you must use a `tr` e.g. `placeholder: "<tr><td colspan="3">The row will appear here</td></tr>"`, otherwise you will only be able to drop items when hovering the first column.
 
 ## Contributing
 This version is maintained by [Lukas Oppermann](https://github.com/lukasoppermann) and [many other contributors](../../contributors). Thanks for your help! :+1:

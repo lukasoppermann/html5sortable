@@ -2,9 +2,9 @@
 <head>
 	<meta charset="utf-8">
 	<title>HTML5 Sortable library</title>
-  	<link rel="stylesheet" href="basscss.css">
-	<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-	<script src="html5sortable.js"></script>
+  <link rel="stylesheet" href="basscss.css">
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+  <script src="html5sortable.js"></script>
 </head>
 <body>
 	<div class="clearfix mb2 white bg-navy">
@@ -64,12 +64,11 @@
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 4</li>
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 5</li>
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 6</li>
-						<li class="mb1 bg-navy ghost border border-yellow" style="position: relative; z-index: 1; margin-top: -49px; height: 40px; display: block;">Ghost test</li>
 					</ul>
 					<script type="text/javascript">
 						sortable('.js-sortable', {
 							forcePlaceholderSize: true,
-							placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+							placeholderClass: 'mb1 bg-navy border border-yellow',
 							hoverClass: 'bg-maroon yellow'
 						});
 					</script>
@@ -277,6 +276,27 @@
                       </tr>
                   </tbody>
               </table>
+              <script type="text/javascript">
+                sortable('.js-sortable-table', {
+                  items: "tr.js-sortable-tr",
+                  placeholder: "<tr><td colspan=\"3\"><span class=\"center\">The row will appear here</span></td></tr>",
+                  forcePlaceholderSize: false
+                })
+              </script>
+              <table class="mt4 ml4 js-sortable-table-no-placeholder">
+                <tbody>
+                <tr class="border bg-white navy p4 js-sortable-tr"><td>Simple</td></tr>
+                <tr class="border bg-white navy p4 js-sortable-tr"><td>Table</td></tr>
+                <tr class="border bg-white navy p4 js-sortable-tr"><td>Bratwurst</td></tr>
+                </tbody>
+              </table>
+              <script type="text/javascript">
+              sortable('.js-sortable-table-no-placeholder tbody', {
+                items: "tr",
+                forcePlaceholderSize: true,
+                placeholderClass: 'placeholder sort-placeholder'
+              })
+              </script>
           </div>
       </div>
     </section>
@@ -360,22 +380,22 @@
       forcePlaceholderSize: true,
       copy: true,
 			acceptFrom: false,
-      placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+      placeholderClass: 'mb1 bg-navy border border-yellow',
     });
 	sortable('.js-sortable-copy-target', {
     forcePlaceholderSize: true,
 		acceptFrom: '.js-sortable-copy',
-    placeholderClass: 'p2 mb1 bg-navy border border-yellow',
+    placeholderClass: 'mb1 border border-maroon',
   });
 	sortable('.js-sortable-oneway', {
       forcePlaceholderSize: true,
       acceptFrom: false,
-      placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+      placeholderClass: 'mb1 bg-navy border border-yellow',
     });
     sortable('.js-sortable-oneway-receive', {
       forcePlaceholderSize: true,
       acceptFrom: '.js-sortable-oneway,.js-sortable-oneway-receive',
-      placeholderClass: 'p1 mb1 bg-navy border border-yellow',
+      placeholderClass: 'mb1 bg-navy border border-yellow',
     });
     sortable('.js-grid', {
 				forcePlaceholderSize: true,
@@ -426,11 +446,6 @@
 				items: 'li',
 				placeholderClass: 'border border-white mb1'
 			});
-      sortable('.js-sortable-table', {
-        items: "tr.js-sortable-tr",
-        placeholder: "<tr><td colspan=\"3\"><span class=\"center\">The row will appear here</span></td></tr>",
-        forcePlaceholderSize: false
-      })
 			// buttons to add items and reload the list
 			// separately to showcase issue without reload
 			document.querySelector('.js-add-item-button').addEventListener('click', function(){

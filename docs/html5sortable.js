@@ -162,20 +162,6 @@ function _detach (element) {
 }
 
 /**
- * Convert HTML string into DOM element.
- * @param {Element|string} html
- * @param {string} tagname
- * @returns {Element}
- */
-var makeElement = function (html, tagName) {
-    if (typeof html !== 'string') {
-        return html;
-    }
-    var parentElement = document.createElement(tagName);
-    parentElement.innerHTML = html;
-    return parentElement.firstChild;
-};
-/**
  * Insert before target
  * @param {Element} target
  * @param {Element} element
@@ -220,6 +206,43 @@ var _removeSortableEvents = function (sortable) {
     removeEventListener(sortable, 'dragover');
     removeEventListener(sortable, 'dragenter');
     removeEventListener(sortable, 'drop');
+};
+/*
+ * Attach ghost to dataTransfer object
+ * @param {Event} original event
+ * @param {object} ghost-object with item, x and y coordinates
+ */
+var _makePlaceholder = function (sortableElement, placeholder, placeholderClasses) {
+    if (placeholder === void 0) { placeholder = undefined; }
+    if (placeholderClasses === void 0) { placeholderClasses = 'sortable-placeholder'; }
+    if (typeof placeholder === 'string') {
+        var tempContainer = document.createElement(sortableElement.tagName);
+        tempContainer.innerHTML = placeholder;
+        placeholder = tempContainer.children[0];
+    }
+    else {
+        switch (sortableElement.tagName) {
+            case 'UL':
+                placeholder = 'li';
+                break;
+            case 'OL':
+                placeholder = 'li';
+                break;
+            case 'TABLE':
+                placeholder = 'tr';
+                break;
+            case 'TBODY':
+                placeholder = 'tr';
+                break;
+            default:
+                placeholder = 'div';
+        }
+        placeholder = document.createElement(placeholder);
+    }
+    // add classes to placeholder
+    (_a = placeholder.classList).add.apply(_a, placeholderClasses.split(' '));
+    return placeholder;
+    var _a;
 };
 /*
  * Attach ghost to dataTransfer object
@@ -336,6 +359,21 @@ var _listsConnected = function (curList, destList) {
  */
 var _isCopyActive = function (sortable) {
     return addData(sortable, 'opts').copy === true;
+};
+/*
+ * Get height of an element including padding
+ * @param {Element} sortable a single sortable
+ */
+var _getElementHeight = function (element) {
+    // get calculated style of element
+    var style = window.getComputedStyle(element);
+    // pick applicable properties, convert to int and reduce by adding
+    return ['height', 'padding-top', 'padding-bottom']
+        .map(function (key) {
+        var int = parseInt(style.getPropertyValue(key), 10);
+        return isNaN(int) ? 0 : int;
+    })
+        .reduce(function (prev, cur) { return prev + cur; });
 };
 /*
  * get handle or return item
@@ -520,12 +558,7 @@ function sortable(sortableElements, options) {
         var index;
         var startParent;
         var startList;
-        var placeholder = options.placeholder;
-        if (!placeholder) {
-            placeholder = document.createElement(/^ul|ol$/i.test(sortableElement.tagName) ? 'li' : 'div');
-        }
-        placeholder = makeElement(placeholder, sortableElement.tagName);
-        placeholder.classList.add.apply(placeholder.classList, options.placeholderClass.split(' '));
+        var placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass);
         addData(sortableElement, 'items', options.items);
         placeholderMap.set(sortableElement, placeholder);
         if (options.acceptFrom) {
@@ -560,12 +593,12 @@ function sortable(sortableElements, options) {
             // add transparent clone or other ghost to cursor
             _getGhost(e, this);
             // cache selsection & add attr for dragging
+            draggingHeight = _getElementHeight(this);
             this.classList.add(options.draggingClass);
             dragging = _getDragging(this, sortableElement);
             addAttribute(dragging, 'aria-grabbed', 'true');
             // grab values
             index = _index(dragging);
-            draggingHeight = parseInt(window.getComputedStyle(dragging).height);
             startParent = this.parentElement;
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
@@ -631,13 +664,14 @@ function sortable(sortableElements, options) {
             if (!dragging) {
                 return;
             }
+            // set placeholder height if forcePlaceholderSize option is set
+            if (options.forcePlaceholderSize) {
+                placeholder.style.height = draggingHeight + 'px';
+            }
             if (items.indexOf(element) !== -1) {
-                var thisHeight = parseInt(window.getComputedStyle(element).height);
+                var thisHeight = _getElementHeight(element);
                 var placeholderIndex = _index(placeholder);
                 var thisIndex = _index(element);
-                if (options.forcePlaceholderSize) {
-                    placeholder.style.height = draggingHeight + 'px';
-                }
                 // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
                 if (thisHeight > draggingHeight) {
                     // Dead zone?

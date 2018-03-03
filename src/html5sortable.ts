@@ -9,7 +9,7 @@ import _offset from './offset'
 import _debounce from './debounce'
 import _index from './index'
 import _detach from './removeElement'
-import {makeElement as _html2element, insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
+import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
 /*
  * variables global to the plugin
  */
@@ -38,6 +38,40 @@ var _removeSortableEvents = function (sortable) {
   _off(sortable, 'dragover')
   _off(sortable, 'dragenter')
   _off(sortable, 'drop')
+}
+/*
+ * Attach ghost to dataTransfer object
+ * @param {Event} original event
+ * @param {object} ghost-object with item, x and y coordinates
+ */
+let _makePlaceholder = (sortableElement, placeholder = undefined, placeholderClasses = 'sortable-placeholder') => {
+  if (typeof placeholder === 'string') {
+    let tempContainer = document.createElement(sortableElement.tagName)
+    tempContainer.innerHTML = placeholder
+    placeholder = tempContainer.children[0]
+  } else {
+    switch (sortableElement.tagName) {
+      case 'UL':
+        placeholder = 'li'
+        break
+      case 'OL':
+        placeholder = 'li'
+        break
+      case 'TABLE':
+        placeholder = 'tr'
+        break
+      case 'TBODY':
+        placeholder = 'tr'
+        break
+      default:
+        placeholder = 'div'
+    }
+    placeholder = document.createElement(placeholder)
+  }
+  // add classes to placeholder
+  placeholder.classList.add(...placeholderClasses.split(' '))
+
+  return placeholder
 }
 /*
  * Attach ghost to dataTransfer object
@@ -155,6 +189,21 @@ var _listsConnected = function (curList, destList) {
  */
 var _isCopyActive = function (sortable) {
   return _data(sortable, 'opts').copy === true
+}
+/*
+ * Get height of an element including padding
+ * @param {Element} sortable a single sortable
+ */
+let _getElementHeight = (element) => {
+  // get calculated style of element
+  let style = window.getComputedStyle(element)
+  // pick applicable properties, convert to int and reduce by adding
+  return ['height', 'padding-top', 'padding-bottom']
+    .map((key) => {
+      let int = parseInt(style.getPropertyValue(key), 10)
+      return isNaN(int) ? 0 : int
+    })
+    .reduce((prev, cur) => prev + cur)
 }
 /*
  * get handle or return item
@@ -348,17 +397,7 @@ export default function sortable (sortableElements, options) {
     var index
     var startParent
     var startList
-    var placeholder = options.placeholder
-    if (!placeholder) {
-      placeholder = document.createElement(
-        /^ul|ol$/i.test(sortableElement.tagName) ? 'li' : 'div'
-      )
-    }
-    placeholder = _html2element(placeholder, sortableElement.tagName)
-    placeholder.classList.add.apply(
-      placeholder.classList,
-      options.placeholderClass.split(' ')
-    )
+    let placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass)
 
     _data(sortableElement, 'items', options.items)
     placeholderMap.set(sortableElement, placeholder)
@@ -391,17 +430,15 @@ export default function sortable (sortableElements, options) {
       if ((options.handle && !_matches(e.target, options.handle)) || this.getAttribute('draggable') === 'false') {
         return
       }
-
       // add transparent clone or other ghost to cursor
       _getGhost(e, this)
       // cache selsection & add attr for dragging
+      draggingHeight = _getElementHeight(this)
       this.classList.add(options.draggingClass)
       dragging = _getDragging(this, sortableElement)
-
       _attr(dragging, 'aria-grabbed', 'true')
       // grab values
       index = _index(dragging)
-      draggingHeight = parseInt(window.getComputedStyle(dragging).height)
       startParent = this.parentElement
       startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
@@ -474,14 +511,15 @@ export default function sortable (sortableElements, options) {
         return
       }
 
+      // set placeholder height if forcePlaceholderSize option is set
+      if (options.forcePlaceholderSize) {
+        placeholder.style.height = draggingHeight + 'px'
+      }
+
       if (items.indexOf(element) !== -1) {
-        var thisHeight = parseInt(window.getComputedStyle(element).height)
+        let thisHeight = _getElementHeight(element)
         var placeholderIndex = _index(placeholder)
         var thisIndex = _index(element)
-        if (options.forcePlaceholderSize) {
-          placeholder.style.height = draggingHeight + 'px'
-        }
-
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight) {
           // Dead zone?
