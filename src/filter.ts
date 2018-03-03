@@ -1,21 +1,17 @@
+/* global HTMLCollection, NodeList */
 /**
  * Filter only wanted nodes
- * @param {Array|NodeList} nodes
- * @param {Array/string} wanted
+ * @param {NodeList|HTMLCollection} nodes
+ * @param {String} selector
  * @returns {Array}
  */
-export default (nodes, wanted) => {
-  if (!wanted) {
-    return Array.prototype.slice.call(nodes)
+export default (nodes, selector) => {
+  if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection)) {
+    throw new Error('You must provide a nodeList/HTMLCollection of elements to be filtered.')
   }
-  var result = []
-  for (var i = 0; i < nodes.length; ++i) {
-    if (typeof wanted === 'string' && nodes[i].matches(wanted)) {
-      result.push(nodes[i])
-    }
-    if (wanted.indexOf(nodes[i]) !== -1) {
-      result.push(nodes[i])
-    }
+  if (typeof selector !== 'string') {
+    return Array.from(nodes)
   }
-  return result
+
+  return Array.from(nodes).filter((item) => item.nodeType === 1 && item.matches(selector))
 }

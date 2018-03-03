@@ -3,9 +3,9 @@
  * @param {Element} element
  * @returns {number}
  */
-export default (element) => {
+export default (element: Element): number => {
   if (!element.parentElement) {
-    return 0
+    return -1
   }
   return Array.prototype.indexOf.call(element.parentElement.children, element)
 }
