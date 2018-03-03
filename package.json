@@ -43,7 +43,7 @@
   },
   "scripts": {
     "test": "rollup -c --environment test && mocha test/umd/module.js && mocha test/*.js && npm run standard && npm run standard-test && standard-readme",
-    "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
+    "build": "rollup -c && cp $npm_package_main docs/",
     "standard": "standard 'src/*.ts' | snazzy",
     "standard-test": "standard 'test/**/*.js' | snazzy",
     "travis": "npm run cover && mocha test/umd/module.js && npm run standard",

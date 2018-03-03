@@ -8,7 +8,7 @@
 * Only 2KB (minified and gzipped).
 * Built using native HTML5 drag and drop API. No dependencies.
 * Supports both list and grid style layouts.
-* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera, Edge), IE11+
+* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera, Edge), [IE11+ (Polyfill required)](#polyfills)
 * Available as ES6 Module, AMD, CommonJS and iffe with `sortable` global
 
 **Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/index.html)**
@@ -270,6 +270,25 @@ sortable('.sortable');
 This version is maintained by [Lukas Oppermann](https://github.com/lukasoppermann) and [many other contributors](../../contributors). Thanks for your help! :+1:
 
 Contributions are always welcome. Please check out the [contribution guidelines](CONTRIBUTING.md) to make it fast & easy for us to merge your PR.
+
+## Polyfills: Facing towards the future instead of the past
+This project is focusing on modern, evergreen browsers to deliver a fast and small package. While many projects try build features so that it runs in the oldest browser (looking at you IE9), we try to create a fast and pleasant development experience using the language capabilities that the current version of Javascript offers.
+
+### Benefits
+## Small and fast package for modern browsers
+While a backwards facing approach penalises modern browsers by making them download huge files, we prefer to ship a small package and have outdated browser bear the penalty of the polyfill. An additional benefit is that you might polyfill those features in any case so you don't have any additional load.
+
+## Contribution friendly code base
+We try to encourage people to help shape the future of this package and contribute in small or big ways. By removing hard to understand hacks we make it easier for people new to the code base or even Javascript to contribute.
+
+## Helps browser optimisation
+Browser try to performance optimise language features as much as possible. Working around the language to make code work in outdated browser may actually work against this.
+
+### Polyfill
+We recommend using the [Financial Times Polyfill Service](https://github.com/Financial-Times/polyfill-service) which will polyfill only the necessary features for browsers that need a polyfill. It is basically a no-config, easy solution.
+```
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+```
 
 ## Known Issues
 ### Firefox
