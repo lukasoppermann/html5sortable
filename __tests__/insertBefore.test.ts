@@ -1,5 +1,5 @@
 /* global describe,test,expect */
-import {insertBefore, insertAfter} from '../src/insertHtmlElements'
+import {insertBefore} from '../src/insertHtmlElements'
 
 describe('Testing methods for inserting HTML into the dom', () => {
   test('insertBefore element', () => {
