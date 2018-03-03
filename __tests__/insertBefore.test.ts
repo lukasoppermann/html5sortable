@@ -1,7 +1,7 @@
 /* global describe,test,expect */
 import {insertBefore} from '../src/insertHtmlElements'
 
-describe('Testing methods for inserting HTML into the dom', () => {
+describe('Testing insertBefore', () => {
   test('insertBefore element', () => {
     // setup
     let div = window.document.createElement('div')

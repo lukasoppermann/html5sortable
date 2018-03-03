@@ -1,7 +1,7 @@
 /* global describe,test,expect */
 import {insertAfter} from '../src/insertHtmlElements'
 
-describe('Testing methods for inserting HTML into the dom', () => {
+describe('Testing insertAfter', () => {
   test('insertAfter element', () => {
     // setup
     let div = window.document.createElement('div')
