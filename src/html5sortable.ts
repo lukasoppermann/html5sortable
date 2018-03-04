@@ -226,7 +226,7 @@ var _getHandles = function (items, handle) {
  */
 var _destroySortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts') || {}
-  var items = _filter(_getChildren(sortableElement), opts.items)
+  var items = _filter(sortableElement.children, opts.items)
   var handles = _getHandles(items, opts.handle)
   // remove event handlers & data from sortable
   _removeSortableEvents(sortableElement)
@@ -242,7 +242,7 @@ var _destroySortable = function (sortableElement) {
  */
 var _enableSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
-  var items = _filter(_getChildren(sortableElement), opts.items)
+  var items = _filter(sortableElement.children, opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'move')
   _data(sortableElement, '_disabled', 'false')
@@ -271,7 +271,7 @@ var _enableSortable = function (sortableElement) {
  */
 var _disableSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
-  var items = _filter(_getChildren(sortableElement), opts.items)
+  var items = _filter(sortableElement.children, opts.items)
   var handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'none')
   _data(sortableElement, '_disabled', 'true')
@@ -285,7 +285,7 @@ var _disableSortable = function (sortableElement) {
  */
 var _reloadSortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts')
-  var items = _filter(_getChildren(sortableElement), opts.items)
+  var items = _filter(sortableElement.children, opts.items)
   var handles = _getHandles(items, opts.handle)
   _data(sortableElement, '_disabled', 'false')
   // remove event handlers from items
@@ -318,12 +318,8 @@ var _makeEvent = function (name, detail) {
   return e
 }
 
-var _getChildren = function (element) {
-  return element.children
-}
-
 var _serialize = function (list) {
-  var children = _filter(_getChildren(list), _data(list, 'items'))
+  var children = _filter(list.children, _data(list, 'items'))
   return children
 }
 
@@ -352,10 +348,6 @@ export default function sortable (sortableElements, options) {
     }
     return result
   })(options)
-
-  if (options && typeof options.getChildren === 'function') {
-    _getChildren = options.getChildren
-  }
 
   if (typeof sortableElements === 'string') {
     sortableElements = document.querySelectorAll(sortableElements)
@@ -391,7 +383,7 @@ export default function sortable (sortableElements, options) {
     // reset sortable
     _reloadSortable(sortableElement)
     // initialize
-    var items = _filter(_getChildren(sortableElement), options.items)
+    var items = _filter(sortableElement.children, options.items)
     var index
     var startParent
     var startList
@@ -474,7 +466,7 @@ export default function sortable (sortableElements, options) {
         if (index !== _index(dragging) || startParent !== newParent) {
           sortableElement.dispatchEvent(_makeEvent('sortupdate', {
             item: dragging,
-            index: _filter(_getChildren(newParent), _data(newParent, 'items'))
+            index: _filter(newParent.children, _data(newParent, 'items'))
               .indexOf(dragging),
             oldindex: items.indexOf(dragging),
             elementIndex: _index(dragging),
@@ -552,7 +544,7 @@ export default function sortable (sortableElements, options) {
           .forEach((element) => element.remove())
       } else {
         if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
-            !_filter(_getChildren(element), options.items).length) {
+            !_filter(element.children, options.items).length) {
           placeholderMap.forEach((element) => element.remove())
           element.appendChild(placeholder)
         }
@@ -564,7 +556,7 @@ export default function sortable (sortableElements, options) {
         return
       }
       var options = _data(sortableElement, 'opts')
-      if (parseInt(options.maxItems) && _filter(_getChildren(sortableElement), _data(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
+      if (parseInt(options.maxItems) && _filter(sortableElement.children, _data(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
         return
       }
       e.preventDefault()

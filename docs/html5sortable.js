@@ -36,20 +36,14 @@ function removeData(element) {
     }
 }
 
-function _filter (nodes, wanted) {
-    if (!wanted) {
-        return Array.prototype.slice.call(nodes);
+function _filter (nodes, selector) {
+    if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection)) {
+        throw new Error('You must provide a nodeList/HTMLCollection of elements to be filtered.');
     }
-    var result = [];
-    for (var i = 0; i < nodes.length; ++i) {
-        if (typeof wanted === 'string' && nodes[i].matches(wanted)) {
-            result.push(nodes[i]);
-        }
-        if (wanted.indexOf(nodes[i]) !== -1) {
-            result.push(nodes[i]);
-        }
+    if (typeof selector !== 'string') {
+        return Array.from(nodes);
     }
-    return result;
+    return Array.from(nodes).filter(function (item) { return item.nodeType === 1 && item.matches(selector); });
 }
 
 /**
@@ -115,10 +109,15 @@ function removeAttribute(element, attribute) {
 }
 
 function _offset (element) {
+    if (!element.parentElement) {
+        throw new Error('target element must be part of the dom');
+    }
     var rect = element.getClientRects()[0];
     return {
         left: rect.left + window.scrollX,
-        top: rect.top + window.scrollY
+        right: rect.right + window.scrollX,
+        top: rect.top + window.scrollY,
+        bottom: rect.bottom + window.scrollY
     };
 }
 
@@ -139,27 +138,36 @@ function _debounce (func, wait) {
 
 function _index (element) {
     if (!element.parentElement) {
-        return 0;
+        return -1;
     }
     return Array.prototype.indexOf.call(element.parentElement.children, element);
 }
 
 /**
+ * Insert node before or after target
+ * @param {Element} referenceNode - reference element
+ * @param {Element} newElement - element to be inserted
+ * @param {String} position - insert before or after reference element
+ */
+var insertNode = function (referenceNode, newElement, position) {
+    if (position === void 0) { position = 'before'; }
+    if ((referenceNode || {}).nodeType !== 1 || !referenceNode.parentElement || (newElement || {}).nodeType !== 1) {
+        throw new Error('target and element must be a node');
+    }
+    referenceNode.parentElement.insertBefore(newElement, (position === 'before' ? referenceNode : referenceNode.nextElementSibling));
+};
+/**
  * Insert before target
  * @param {Element} target
  * @param {Element} element
  */
-var insertBefore = function (target, element) {
-    target.parentElement.insertBefore(element, target);
-};
+var insertBefore = function (target, element) { return insertNode(target, element, 'before'); };
 /**
  * Insert after target
  * @param {Element} target
  * @param {Element} element
  */
-var insertAfter = function (target, element) {
-    target.parentElement.insertBefore(element, target.nextElementSibling);
-};
+var insertAfter = function (target, element) { return insertNode(target, element, 'after'); };
 
 /*
  * variables global to the plugin
@@ -381,7 +389,7 @@ var _getHandles = function (items, handle) {
  */
 var _destroySortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts') || {};
-    var items = _filter(_getChildren(sortableElement), opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     // remove event handlers & data from sortable
     _removeSortableEvents(sortableElement);
@@ -397,7 +405,7 @@ var _destroySortable = function (sortableElement) {
  */
 var _enableSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = _filter(_getChildren(sortableElement), opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addAttribute(sortableElement, 'aria-dropeffect', 'move');
     addData(sortableElement, '_disabled', 'false');
@@ -427,7 +435,7 @@ var _enableSortable = function (sortableElement) {
  */
 var _disableSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = _filter(_getChildren(sortableElement), opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addAttribute(sortableElement, 'aria-dropeffect', 'none');
     addData(sortableElement, '_disabled', 'true');
@@ -441,7 +449,7 @@ var _disableSortable = function (sortableElement) {
  */
 var _reloadSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = _filter(_getChildren(sortableElement), opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addData(sortableElement, '_disabled', 'false');
     // remove event handlers from items
@@ -473,11 +481,8 @@ var _makeEvent = function (name, detail) {
     e.initEvent(name, false, true);
     return e;
 };
-var _getChildren = function (element) {
-    return element.children;
-};
 var _serialize = function (list) {
-    var children = _filter(_getChildren(list), addData(list, 'items'));
+    var children = _filter(list.children, addData(list, 'items'));
     return children;
 };
 /*
@@ -505,9 +510,6 @@ function sortable(sortableElements, options) {
         }
         return result;
     })(options);
-    if (options && typeof options.getChildren === 'function') {
-        _getChildren = options.getChildren;
-    }
     if (typeof sortableElements === 'string') {
         sortableElements = document.querySelectorAll(sortableElements);
     }
@@ -537,7 +539,7 @@ function sortable(sortableElements, options) {
         // reset sortable
         _reloadSortable(sortableElement);
         // initialize
-        var items = _filter(_getChildren(sortableElement), options.items);
+        var items = _filter(sortableElement.children, options.items);
         var index;
         var startParent;
         var startList;
@@ -615,7 +617,7 @@ function sortable(sortableElements, options) {
                 if (index !== _index(dragging) || startParent !== newParent) {
                     sortableElement.dispatchEvent(_makeEvent('sortupdate', {
                         item: dragging,
-                        index: _filter(_getChildren(newParent), addData(newParent, 'items'))
+                        index: _filter(newParent.children, addData(newParent, 'items'))
                             .indexOf(dragging),
                         oldindex: items.indexOf(dragging),
                         elementIndex: _index(dragging),
@@ -688,7 +690,7 @@ function sortable(sortableElements, options) {
             }
             else {
                 if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
-                    !_filter(_getChildren(element), options.items).length) {
+                    !_filter(element.children, options.items).length) {
                     placeholderMap.forEach(function (element) { return element.remove(); });
                     element.appendChild(placeholder);
                 }
@@ -700,7 +702,7 @@ function sortable(sortableElements, options) {
                 return;
             }
             var options = addData(sortableElement, 'opts');
-            if (parseInt(options.maxItems) && _filter(_getChildren(sortableElement), addData(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
+            if (parseInt(options.maxItems) && _filter(sortableElement.children, addData(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
                 return;
             }
             e.preventDefault();
