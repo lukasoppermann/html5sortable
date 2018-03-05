@@ -7,6 +7,7 @@ import { addAttribute as _attr, removeAttribute as _removeAttr } from './attribu
 import _offset from './offset'
 import _debounce from './debounce'
 import _index from './index'
+import isInDom from './isInDom'
 import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
 /*
  * variables global to the plugin
@@ -295,15 +296,6 @@ var _reloadSortable = function (sortableElement) {
   _removeSortableEvents(sortableElement)
 }
 /**
- * Whether element is in DOM
- * @param {Element} element
- * @returns {boolean}
- */
-var _attached = function (element) {
-  // document.body.contains(element)
-  return !!element.parentNode
-}
-/**
  * Make native event that can be dispatched afterwards
  * @param {string} name
  * @param {object} detail
@@ -492,7 +484,7 @@ export default function sortable (sortableElements, options) {
       e.stopPropagation()
 
       _data(dragging, 'dropped', 'true')
-      var visiblePlaceholder = Array.from(placeholderMap.values()).filter(_attached)[0]
+      var visiblePlaceholder = Array.from(placeholderMap.values()).filter(isInDom)[0]
       _after(visiblePlaceholder, dragging)
     })
 
@@ -587,7 +579,6 @@ sortable.disable = function (sortableElement) {
 /* START.TESTS_ONLY */
 sortable.__testing = {
   // add internal methods here for testing purposes
-  _attached: _attached,
   _data: _data,
   _serialize: _serialize,
   _removeSortableEvents: _removeSortableEvents,
