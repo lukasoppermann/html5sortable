@@ -10,7 +10,8 @@ import _debounce from './debounce'
 import _index from './index'
 import isInDom from './isInDom'
 import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
-/**
+import _serialize from './serialize'
+/*
  * variables global to the plugin
  */
 var dragging
@@ -392,6 +393,8 @@ export default function sortable (sortableElements, options) {
     // get options & set options on sortable
     options = _data(sortableElement, 'opts') || options
     _data(sortableElement, 'opts', options)
+    // property to define as sortable
+    sortableElement.isSortable = true
     // reset sortable
     _reloadSortable(sortableElement)
     // initialize
@@ -643,7 +646,6 @@ sortable.enable = function (sortableElement) {
 sortable.disable = function (sortableElement) {
   _disableSortable(sortableElement)
 }
-
 /* START.TESTS_ONLY */
 sortable.__testing = {
   // add internal methods here for testing purposes
