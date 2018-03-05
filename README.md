@@ -168,7 +168,7 @@ Use the `acceptFrom` option to restrict which sortable's items will be accepted 
 
 ``` javascript
 sortable('.sortable', {
-  acceptForm: '.selector,.anotherSortable' // Defaults to null
+  acceptFrom: '.selector,.anotherSortable' // Defaults to null
 });
 ```
 
