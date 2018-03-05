@@ -143,6 +143,13 @@ function _index (element) {
     return Array.prototype.indexOf.call(element.parentElement.children, element);
 }
 
+function isInDom (element) {
+    if (!element || element.nodeType !== 1) {
+        throw new Error('Element is not a node element.');
+    }
+    return element.parentNode !== null;
+}
+
 /**
  * Insert node before or after target
  * @param {Element} referenceNode - reference element
@@ -459,15 +466,6 @@ var _reloadSortable = function (sortableElement) {
     _removeSortableEvents(sortableElement);
 };
 /**
- * Whether element is in DOM
- * @param {Element} element
- * @returns {boolean}
- */
-var _attached = function (element) {
-    // document.body.contains(element)
-    return !!element.parentNode;
-};
-/**
  * Make native event that can be dispatched afterwards
  * @param {string} name
  * @param {object} detail
@@ -642,7 +640,7 @@ function sortable(sortableElements, options) {
             e.preventDefault();
             e.stopPropagation();
             addData(dragging, 'dropped', 'true');
-            var visiblePlaceholder = Array.from(placeholderMap.values()).filter(_attached)[0];
+            var visiblePlaceholder = Array.from(placeholderMap.values()).filter(isInDom)[0];
             insertAfter(visiblePlaceholder, dragging);
         });
         var debouncedDragOverEnter = _debounce(function (element, pageY) {
