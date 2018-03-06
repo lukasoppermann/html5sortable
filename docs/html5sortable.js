@@ -337,17 +337,19 @@ var _removeItemData = function (items) {
  * @param {Element} destList
  */
 var _listsConnected = function (curList, destList) {
-    var acceptFrom = addData(curList, 'opts').acceptFrom;
-    if (acceptFrom !== null) {
-        return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
-            return sel.length > 0 && destList.matches(sel);
-        }).length > 0;
-    }
-    if (curList === destList) {
-        return true;
-    }
-    if (addData(curList, 'connectWith') !== undefined) {
-        return addData(curList, 'connectWith') === addData(destList, 'connectWith');
+    if (_isSortable(curList)) {
+        var acceptFrom = addData(curList, 'opts').acceptFrom;
+        if (acceptFrom !== null) {
+            return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
+                return sel.length > 0 && destList.matches(sel);
+            }).length > 0;
+        }
+        if (curList === destList) {
+            return true;
+        }
+        if (addData(curList, 'connectWith') !== undefined) {
+            return addData(curList, 'connectWith') === addData(destList, 'connectWith');
+        }
     }
     return false;
 };
@@ -390,6 +392,36 @@ var _getHandles = function (items, handle) {
     }
     return result;
 };
+/**
+ * Is {Element} a sortable.
+ * @param {Element} sortable a single sortable
+ */
+function _isSortable(element) {
+    return element !== undefined && element != null && addData(element, 'opts') !== undefined;
+}
+/**
+ * find sortable from element. travels up parent element until found or null.
+ * @param {Element} sortable a single sortable
+ */
+function findSortable(element) {
+    while ((element = element.parentElement) && !_isSortable(element))
+        ;
+    return element;
+}
+/**
+ * Dragging event is on the sortable element. finds the top child that
+ * contains the element.
+ * @param {Element} sortable a single sortable
+ * @param {Element} element is that being dragged
+ */
+function findDragElement(sortableElement, element) {
+    var options = addData(sortableElement, 'opts');
+    var items = _filter(sortableElement.children, options.items);
+    var itemlist = items.filter(function (ele) {
+        return ele.contains(element);
+    });
+    return itemlist.length > 0 ? itemlist[0] : element;
+}
 /*
  * Destroy the sortable
  * @param {Element} sortableElement a single sortable
@@ -568,21 +600,29 @@ function sortable(sortableElements, options) {
             });
         }
         // Handle drag events on draggable items
-        addEventListener(items, 'dragstart', function (e) {
-            e.stopImmediatePropagation();
-            if ((options.handle && !e.target.matches(options.handle)) || this.getAttribute('draggable') === 'false') {
+        // Handle set at sortableelement level as it will bubble up
+        // from the item
+        addEventListener(sortableElement, 'dragstart', function (e) {
+            // ignore dragstart events
+            if (_isSortable(e.target)) {
                 return;
             }
+            e.stopImmediatePropagation();
+            if ((options.handle && !e.target.matches(options.handle)) || e.target.getAttribute('draggable') === 'false') {
+                return;
+            }
+            var sortableElement = findSortable(e.target);
+            var dragitem = findDragElement(sortableElement, e.target);
             // add transparent clone or other ghost to cursor
-            _getGhost(e, this);
+            _getGhost(e, dragitem);
             // cache selsection & add attr for dragging
-            draggingHeight = _getElementHeight(this);
-            this.classList.add(options.draggingClass);
-            dragging = _getDragging(this, sortableElement);
+            draggingHeight = _getElementHeight(dragitem);
+            dragitem.classList.add(options.draggingClass);
+            dragging = _getDragging(dragitem, sortableElement);
             addAttribute(dragging, 'aria-grabbed', 'true');
             // grab values
             index = _index(dragging);
-            startParent = this.parentElement;
+            startParent = findSortable(e.target);
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
             sortableElement.dispatchEvent(_makeEvent('sortstart', {
@@ -592,11 +632,12 @@ function sortable(sortableElements, options) {
             }));
         });
         // Handle drag events on draggable items
-        addEventListener(items, 'dragend', function () {
+        addEventListener(sortableElement, 'dragend', function (e) {
             var newParent;
             if (!dragging) {
                 return;
             }
+            var sortableElement = findSortable(e.target);
             // remove dragging attributes and show item
             dragging.classList.remove(options.draggingClass);
             addAttribute(dragging, 'aria-grabbed', 'false');
@@ -632,8 +673,7 @@ function sortable(sortableElements, options) {
             draggingHeight = null;
         });
         // Handle drop event on sortable & placeholder
-        // TODO: REMOVE placeholder?????
-        addEventListener([sortableElement, placeholder], 'drop', function (e) {
+        addEventListener(sortableElement, 'drop', function (e) {
             if (!_listsConnected(sortableElement, dragging.parentElement)) {
                 return;
             }
@@ -643,14 +683,16 @@ function sortable(sortableElements, options) {
             var visiblePlaceholder = Array.from(placeholderMap.values()).filter(isInDom)[0];
             insertAfter(visiblePlaceholder, dragging);
         });
-        var debouncedDragOverEnter = _debounce(function (element, pageY) {
+        var debouncedDragOverEnter = _debounce(function (sortableElement, element, pageY) {
             if (!dragging) {
                 return;
             }
+            var placeholder = placeholderMap.get(sortableElement);
             // set placeholder height if forcePlaceholderSize option is set
             if (options.forcePlaceholderSize) {
                 placeholder.style.height = draggingHeight + 'px';
             }
+            var items = _filter(sortableElement.children, options.items);
             if (items.indexOf(element) !== -1) {
                 var thisHeight = _getElementHeight(element);
                 var placeholderIndex = _index(placeholder);
@@ -688,6 +730,7 @@ function sortable(sortableElements, options) {
             }
             else {
                 if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
+                    sortableElement === element &&
                     !_filter(element.children, options.items).length) {
                     placeholderMap.forEach(function (element) { return element.remove(); });
                     element.appendChild(placeholder);
@@ -696,6 +739,9 @@ function sortable(sortableElements, options) {
         }, options.debounce);
         // Handle dragover and dragenter events on draggable items
         var onDragOverEnter = function (e) {
+            var element = e.target;
+            var sortableElement = _isSortable(element) ? element : findSortable(element);
+            element = findDragElement(sortableElement, element);
             if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || addData(sortableElement, '_disabled') === 'true') {
                 return;
             }
@@ -706,7 +752,7 @@ function sortable(sortableElements, options) {
             e.preventDefault();
             e.stopPropagation();
             e.dataTransfer.dropEffect = _isCopyActive(sortableElement) ? 'copy' : 'move';
-            debouncedDragOverEnter(this, e.pageY);
+            debouncedDragOverEnter(sortableElement, element, e.pageY);
         };
         addEventListener(items.concat(sortableElement), 'dragover', onDragOverEnter);
         addEventListener(items.concat(sortableElement), 'dragenter', onDragOverEnter);
