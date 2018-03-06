@@ -9,15 +9,15 @@ import index from './index'
  */
 export default (sortableContainer: Element, customItemSerializer: Function = (serializedItem: object, sortableContainer: Element) => serializedItem, customContainerSerializer: Function = (serializedContainer: object) => serializedContainer): object => {
   // @TODO: replace sortableContainer.isSortable with typeof Sortable as soon as sortable is changed to a class
-  if ( !sortableContainer || sortableContainer.nodeType !== 1 || !sortableContainer.isSortable) {
+  if ( !(sortableContainer instanceof Element) || !sortableContainer.isSortable === true ) {
     throw new Error('You need to provide a sortableContainer to be serialized.')
   }
-
+  // get options
   let options = _data(sortableContainer, 'opts')
   // serialize container
   let items = filter(sortableContainer.children, options.items).map((item) => {
     return {
-      parent: sortableContainer
+      parent: sortableContainer,
       node: item,
       html: item.outerHTML,
       index: index(item)
