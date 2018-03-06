@@ -373,14 +373,15 @@ export default function sortable (sortableElements, options) {
   sortableElements = Array.prototype.slice.call(sortableElements)
 
   if (/serialize/.test(method)) {
-    var serialized = []
-    sortableElements.forEach(function (sortableElement) {
-      serialized.push({
-        list: sortableElement,
-        children: _serialize(sortableElement)
-      })
-    })
-    return serialized
+    // var serialized = []
+    return sortableElements.map((sortableContainer) => _serialize(sortableContainer))
+    // sortableElements.forEach(function (sortableElement) {
+      // serialized.push({
+      //   list: sortableElement,
+      //   children: _serialize(sortableElement)
+      // })
+    // })
+    // return serialized
   }
 
   /* TODO: maxstatements should be 25, fix and remove line below */
@@ -650,7 +651,6 @@ sortable.disable = function (sortableElement) {
 sortable.__testing = {
   // add internal methods here for testing purposes
   _data: _data,
-  _serialize: _serialize,
   _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
