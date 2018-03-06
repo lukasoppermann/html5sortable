@@ -21,13 +21,18 @@ describe('Testing isInDom', () => {
     }))
   })
 
-  test.skip('serialize: empty sortableContainer', () => {
+  test('serialize: empty sortableContainer', () => {
     let div = sortable(window.document.createElement('div'), {})[0]
     console.log(serialize(div).items)
     expect(() => { serialize(div).items }).not.toThrow('You need to provide a sortableContainer to be serialized.')
   })
 
-  test.skip('serialize: with elements', () => {
+  test('serialize: with elements', () => {
+    let div = sortable(window.document.createElement('div'), {
+      items: 'div'
+    })[0]
+    div.innerHTML = '<div>Item1</div><div>Item2</div>'
+    console.log(serialize(div))
   })
 
   test.skip('serialize: with child sortable', () => {

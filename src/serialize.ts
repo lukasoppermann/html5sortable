@@ -1,5 +1,6 @@
 import {addData as _data} from './data' // yuk, data really needs to be refactored
-import _filter from './filter'
+import filter from './filter'
+import index from './index'
 /**
  * Filter only wanted nodes
  * @param {Element} sortableContainer
@@ -11,15 +12,20 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
   if ( !sortableContainer || sortableContainer.nodeType !== 1 || !sortableContainer.isSortable) {
     throw new Error('You need to provide a sortableContainer to be serialized.')
   }
+
+  let options = _data(sortableContainer, 'opts')
   // serialize container
-  let items = [{
-    parent: Element
-  }]
-  // get the items in this sortable
-  let sortableItems = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
+  let items = filter(sortableContainer.children, options.items).map((item) => {
+    return {
+      parent: sortableContainer
+      node: item,
+      html: item.outerHTML,
+      index: index(item)
+    }
+  })
   // serialize container
   let container = {
-    element: Element,
+    element: sortableContainer,
     itemCount: items.length
   }
 
