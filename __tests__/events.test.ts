@@ -1,5 +1,8 @@
 /* global describe,test,expect,beforeEach */
 import sortable from '../src/html5sortable'
+/* eslint-env jest */
+
+jest.useFakeTimers()
 
 describe('Testing events', () => {
   const { JSDOM } = require('jsdom')
@@ -19,7 +22,7 @@ describe('Testing events', () => {
   global.body = global.document.querySelector('body')
 
   let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)
-  let ul, li, secondLi, ul2, fifthLi
+  let ul, li, secondLi, ul2, fifthLi, fourthLi
   var sortstartitem, sortstartparent
   var sortupdateitem, sortupdateitemIndex, sortupdateitemOldindex, sortupdateitemElementIndex,
     sortupdateitemOldElementIndex, sortupdateitemStartparent, sortupdateitemEndparent,
@@ -31,7 +34,7 @@ describe('Testing events', () => {
       <li class="item first-item">Item 1</li>
       <li class="item second-item">Item 2</li>
       <li class="item">Item 3</li>
-      <li class="item"><a href="#" class="handle">Item 4</a></li>
+      <li class="item fourth-item"><a href="#" class="handle"><span class='item4'>Item 4</span></a></li>
       <li class="item"><a href="#" class="notHandle">a clever ruse</a></li>
     </ul>
     <ul class="sortable2">
@@ -42,6 +45,7 @@ describe('Testing events', () => {
     ul = global.body.querySelector('.sortable')
     li = ul.querySelector('.first-item')
     secondLi = ul.querySelector('.second-item')
+    fourthLi = ul.querySelector('.fourth-item')
     ul2 = global.body.querySelector('.sortable2')
     fifthLi = ul2.querySelector('.fifth-item')
 
@@ -53,6 +57,13 @@ describe('Testing events', () => {
     }
 
     secondLi.getClientRects = function () {
+      return [{
+        left: 5,
+        top: 25
+      }]
+    }
+
+    fourthLi.getClientRects = function () {
       return [{
         left: 5,
         top: 25
@@ -99,6 +110,7 @@ describe('Testing events', () => {
       sortstopStartparent = e.detail.startparent
     })
   }
+
   test('should correctly run dragstart event', () => {
     sortable(ul, {
       items: 'li',
@@ -114,7 +126,8 @@ describe('Testing events', () => {
         this.data = val
       }
     }
-    li.dispatchEvent(event)
+    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    ul.dispatchEvent(event)
 
     expect(li.getAttribute('aria-grabbed')).toEqual('true')
     expect(li.classList.contains('test-dragging')).toBe(true)
@@ -142,7 +155,8 @@ describe('Testing events', () => {
           this.data = val
         }
       }
-      li.dispatchEvent(event)
+      Object.defineProperty(event, 'target', {value: li, enumerable: true})
+      ul.dispatchEvent(event)
 
       expect(li.getAttribute('aria-grabbed')).toEqual('false')
 
@@ -177,7 +191,8 @@ describe('Testing events', () => {
         this.data = val
       }
     }
-    li.dispatchEvent(event)
+    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    ul.dispatchEvent(event)
 
     expect(li.getAttribute('aria-grabbed')).toEqual('true')
 
@@ -404,4 +419,37 @@ describe('Testing events', () => {
       expect(getIndex(secondLi, ul.children)).toEqual(originalIndex)
     }
   )
+
+  test('should find sortable child dragover event', () => {
+    var item4 = ul.querySelector('.item4')
+    sortable(ul, {
+      items: 'li',
+      placeholderClass: 'test-placeholder',
+      draggingClass: 'test-dragging'
+    })
+    let event = sortable.__testing._makeEvent('dragstart')
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    ul.dispatchEvent(event)
+
+    expect(li.getAttribute('aria-grabbed')).toEqual('true')
+
+    event = sortable.__testing._makeEvent('dragover')
+    event.dataTransfer = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
+    Object.defineProperty(event, 'target', {value: item4, enumerable: true})
+    ul.dispatchEvent(event)
+    jest.runOnlyPendingTimers()
+
+    expect(event.dataTransfer.dropEffect).toEqual('move')
+    expect(ul.querySelector('.test-placeholder')).not.toBe(undefined)
+    expect(ul.querySelector('.test-placeholder')).not.toBe(null)
+  })
 })

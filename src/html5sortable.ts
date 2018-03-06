@@ -168,17 +168,19 @@ var _removeItemData = function (items) {
  * @param {Element} destList
  */
 var _listsConnected = function (curList, destList) {
-  var acceptFrom = _data(curList, 'opts').acceptFrom
-  if (acceptFrom !== null) {
-    return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
-      return sel.length > 0 && destList.matches(sel)
-    }).length > 0
-  }
-  if (curList === destList) {
-    return true
-  }
-  if (_data(curList, 'connectWith') !== undefined) {
-    return _data(curList, 'connectWith') === _data(destList, 'connectWith')
+  if (_isSortable(curList)) {
+    var acceptFrom = _data(curList, 'opts').acceptFrom
+    if (acceptFrom !== null) {
+      return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
+        return sel.length > 0 && destList.matches(sel)
+      }).length > 0
+    }
+    if (curList === destList) {
+      return true
+    }
+    if (_data(curList, 'connectWith') !== undefined) {
+      return _data(curList, 'connectWith') === _data(destList, 'connectWith')
+    }
   }
   return false
 }
@@ -220,6 +222,36 @@ var _getHandles = function (items, handle) {
     result = result.concat(Array.prototype.slice.call(handles))
   }
   return result
+}
+/**
+ * Is {Element} a sortable.
+ * @param {Element} sortable a single sortable
+ */
+function _isSortable (element) {
+  return element !== undefined && element != null && _data(element, 'opts') !== undefined
+}
+/**
+ * find sortable from element. travels up parent element until found or null.
+ * @param {Element} sortable a single sortable
+ */
+function findSortable (element) {
+  while ((element = element.parentElement) && !_isSortable(element));
+  return element
+}
+/**
+ * Dragging event is on the sortable element. finds the top child that
+ * contains the element.
+ * @param {Element} sortable a single sortable
+ * @param {Element} element is that being dragged
+ */
+function findDragElement (sortableElement, element) {
+  var options = _data(sortableElement, 'opts')
+  var items = _filter(sortableElement.children, options.items)
+  var itemlist = items.filter(function (ele) {
+    return ele.contains(element)
+  })
+
+  return itemlist.length > 0 ? itemlist[0] : element
 }
 /*
  * Destroy the sortable
@@ -407,21 +439,31 @@ export default function sortable (sortableElements, options) {
     }
 
     // Handle drag events on draggable items
-    _on(items, 'dragstart', function (e) {
-      e.stopImmediatePropagation()
-      if ((options.handle && !e.target.matches(options.handle)) || this.getAttribute('draggable') === 'false') {
+    // Handle set at sortableelement level as it will bubble up
+    // from the item
+    _on(sortableElement, 'dragstart', function (e) {
+      // ignore dragstart events
+      if (_isSortable(e.target)) {
         return
       }
+      e.stopImmediatePropagation()
+
+      if ((options.handle && !e.target.matches(options.handle)) || e.target.getAttribute('draggable') === 'false') {
+        return
+      }
+
+      var sortableElement = findSortable(e.target)
+      var dragitem = findDragElement(sortableElement, e.target)
       // add transparent clone or other ghost to cursor
-      _getGhost(e, this)
+      _getGhost(e, dragitem)
       // cache selsection & add attr for dragging
-      draggingHeight = _getElementHeight(this)
-      this.classList.add(options.draggingClass)
-      dragging = _getDragging(this, sortableElement)
+      draggingHeight = _getElementHeight(dragitem)
+      dragitem.classList.add(options.draggingClass)
+      dragging = _getDragging(dragitem, sortableElement)
       _attr(dragging, 'aria-grabbed', 'true')
       // grab values
       index = _index(dragging)
-      startParent = this.parentElement
+      startParent = findSortable(e.target)
       startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
       sortableElement.dispatchEvent(_makeEvent('sortstart', {
@@ -431,11 +473,12 @@ export default function sortable (sortableElements, options) {
       }))
     })
     // Handle drag events on draggable items
-    _on(items, 'dragend', function () {
+    _on(sortableElement, 'dragend', function (e) {
       var newParent
       if (!dragging) {
         return
       }
+      var sortableElement = findSortable(e.target)
       // remove dragging attributes and show item
       dragging.classList.remove(options.draggingClass)
       _attr(dragging, 'aria-grabbed', 'false')
@@ -475,8 +518,7 @@ export default function sortable (sortableElements, options) {
       draggingHeight = null
     })
     // Handle drop event on sortable & placeholder
-    // TODO: REMOVE placeholder?????
-    _on([sortableElement, placeholder], 'drop', function (e) {
+    _on(sortableElement, 'drop', function (e) {
       if (!_listsConnected(sortableElement, dragging.parentElement)) {
         return
       }
@@ -488,16 +530,18 @@ export default function sortable (sortableElements, options) {
       _after(visiblePlaceholder, dragging)
     })
 
-    var debouncedDragOverEnter = _debounce((element, pageY) => {
+    var debouncedDragOverEnter = _debounce((sortableElement, element, pageY) => {
       if (!dragging) {
         return
       }
 
+      var placeholder = placeholderMap.get(sortableElement)
       // set placeholder height if forcePlaceholderSize option is set
       if (options.forcePlaceholderSize) {
         placeholder.style.height = draggingHeight + 'px'
       }
 
+      var items = _filter(sortableElement.children, options.items)
       if (items.indexOf(element) !== -1) {
         let thisHeight = _getElementHeight(element)
         var placeholderIndex = _index(placeholder)
@@ -524,7 +568,6 @@ export default function sortable (sortableElements, options) {
         if (dragging.style.display !== 'none') {
           dragging.style.display = 'none'
         }
-
         if (placeholderIndex < thisIndex) {
           _after(element, placeholder)
         } else {
@@ -536,6 +579,7 @@ export default function sortable (sortableElements, options) {
           .forEach((element) => element.remove())
       } else {
         if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
+            sortableElement === element &&
             !_filter(element.children, options.items).length) {
           placeholderMap.forEach((element) => element.remove())
           element.appendChild(placeholder)
@@ -544,6 +588,9 @@ export default function sortable (sortableElements, options) {
     }, options.debounce)
     // Handle dragover and dragenter events on draggable items
     var onDragOverEnter = function (e) {
+      var element = e.target
+      var sortableElement = _isSortable(element) ? element : findSortable(element)
+      element = findDragElement(sortableElement, element)
       if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
       }
@@ -554,7 +601,7 @@ export default function sortable (sortableElements, options) {
       e.preventDefault()
       e.stopPropagation()
       e.dataTransfer.dropEffect = _isCopyActive(sortableElement) ? 'copy' : 'move'
-      debouncedDragOverEnter(this, e.pageY)
+      debouncedDragOverEnter(sortableElement, element, e.pageY)
     }
 
     _on(items.concat(sortableElement), 'dragover', onDragOverEnter)
