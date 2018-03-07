@@ -2,19 +2,20 @@
 import index from '../src/index'
 
 describe('Testing index', () => {
-  test('element is not undefined', () => {
+  test('element is undefined', () => {
     // setup
     let div = window.document.createElement('div')
     // assert
     expect(() => { index(undefined, div) }).toThrow('You must provide an element and a list of elements.')
   })
 
-  test('elementList is not a list', () => {
+  test('elementList is not a valid list', () => {
     // setup
     let div = window.document.createElement('div')
     let div2 = window.document.createElement('div')
     // assert
     expect(() => { index(div, div2) }).toThrow('You must provide an element and a list of elements.')
+    expect(() => { index(div, undefined) }).toThrow('You must provide an element and a list of elements.')
   })
 
   test('elementList is a nodelist', () => {
