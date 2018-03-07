@@ -36,7 +36,7 @@ function removeData(element) {
     }
 }
 
-function _filter (nodes, selector) {
+function filter (nodes, selector) {
     if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection)) {
         throw new Error('You must provide a nodeList/HTMLCollection of elements to be filtered.');
     }
@@ -136,7 +136,7 @@ function _debounce (func, wait) {
     };
 }
 
-function _index (element, elementList) {
+function index (element, elementList) {
     if (!(element instanceof Element) || !(elementList instanceof NodeList || elementList instanceof HTMLCollection || elementList instanceof Array)) {
         throw new Error('You must provide an element and a list of elements.');
     }
@@ -176,8 +176,42 @@ var insertBefore = function (target, element) { return insertNode(target, elemen
  */
 var insertAfter = function (target, element) { return insertNode(target, element, 'after'); };
 
+function _serialize (sortableContainer, customItemSerializer, customContainerSerializer) {
+    if (customItemSerializer === void 0) { customItemSerializer = function (serializedItem, sortableContainer) { return serializedItem; }; }
+    if (customContainerSerializer === void 0) { customContainerSerializer = function (serializedContainer) { return serializedContainer; }; }
+    // check for valid sortableContainer
+    if (!(sortableContainer instanceof Element) || !sortableContainer.isSortable === true) {
+        throw new Error('You need to provide a sortableContainer to be serialized.');
+    }
+    // check for valid serializers
+    if (typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function') {
+        throw new Error('You need to provide a valid serializer for items and the container.');
+    }
+    // get options
+    var options = addData(sortableContainer, 'opts');
+    // serialize container
+    var items = filter(sortableContainer.children, options.items);
+    items = items.map(function (item) {
+        return {
+            parent: sortableContainer,
+            node: item,
+            html: item.outerHTML,
+            index: index(item, items)
+        };
+    });
+    // serialize container
+    var container = {
+        node: sortableContainer,
+        itemCount: items.length
+    };
+    return {
+        container: customContainerSerializer(container),
+        items: items.map(function (item) { return customItemSerializer(item, sortableContainer); })
+    };
+}
+
 /* eslint-env browser */
-/**
+/*
  * variables global to the plugin
  */
 var dragging;
@@ -418,7 +452,7 @@ function findSortable(element) {
  */
 function findDragElement(sortableElement, element) {
     var options = addData(sortableElement, 'opts');
-    var items = _filter(sortableElement.children, options.items);
+    var items = filter(sortableElement.children, options.items);
     var itemlist = items.filter(function (ele) {
         return ele.contains(element);
     });
@@ -430,7 +464,7 @@ function findDragElement(sortableElement, element) {
  */
 var _destroySortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts') || {};
-    var items = _filter(sortableElement.children, opts.items);
+    var items = filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     // remove event handlers & data from sortable
     _removeSortableEvents(sortableElement);
@@ -446,7 +480,7 @@ var _destroySortable = function (sortableElement) {
  */
 var _enableSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = _filter(sortableElement.children, opts.items);
+    var items = filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addAttribute(sortableElement, 'aria-dropeffect', 'move');
     addData(sortableElement, '_disabled', 'false');
@@ -476,7 +510,7 @@ var _enableSortable = function (sortableElement) {
  */
 var _disableSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = _filter(sortableElement.children, opts.items);
+    var items = filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addAttribute(sortableElement, 'aria-dropeffect', 'none');
     addData(sortableElement, '_disabled', 'true');
@@ -490,7 +524,7 @@ var _disableSortable = function (sortableElement) {
  */
 var _reloadSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = _filter(sortableElement.children, opts.items);
+    var items = filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addData(sortableElement, '_disabled', 'false');
     // remove event handlers from items
@@ -498,10 +532,6 @@ var _reloadSortable = function (sortableElement) {
     removeEventListener(handles, 'mousedown');
     // remove event handlers from sortable
     _removeSortableEvents(sortableElement);
-};
-var _serialize = function (list) {
-    var children = _filter(list.children, addData(list, 'items'));
-    return children;
 };
 /**
  * Public sortable object
@@ -521,10 +551,14 @@ function sortable(sortableElements, options) {
             draggingClass: 'sortable-dragging',
             hoverClass: false,
             debounce: 0,
-            maxItems: 0
+            maxItems: 0,
+            itemSerializer: undefined,
+            containerSerializer: undefined
         };
-        for (var option in options) {
-            result[option] = options[option];
+        if (typeof options === 'object') {
+            for (var option in options) {
+                result[option] = options[option];
+            }
         }
         return result;
     })(options);
@@ -536,17 +570,11 @@ function sortable(sortableElements, options) {
     }
     sortableElements = Array.prototype.slice.call(sortableElements);
     if (/serialize/.test(method)) {
-        var serialized = [];
-        sortableElements.forEach(function (sortableElement) {
-            serialized.push({
-                list: sortableElement,
-                children: _serialize(sortableElement)
-            });
+        return sortableElements.map(function (sortableContainer) {
+            var opts = addData(sortableContainer, 'opts');
+            return _serialize(sortableContainer, opts.itemSerializer, opts.containerSerializer);
         });
-        return serialized;
     }
-    /* TODO: maxstatements should be 25, fix and remove line below */
-    /* jshint maxstatements:false */
     sortableElements.forEach(function (sortableElement) {
         if (/enable|disable|destroy/.test(method)) {
             return sortable[method](sortableElement);
@@ -554,11 +582,13 @@ function sortable(sortableElements, options) {
         // get options & set options on sortable
         options = addData(sortableElement, 'opts') || options;
         addData(sortableElement, 'opts', options);
+        // property to define as sortable
+        sortableElement.isSortable = true;
         // reset sortable
         _reloadSortable(sortableElement);
         // initialize
-        var items = _filter(sortableElement.children, options.items);
-        var index;
+        var items = filter(sortableElement.children, options.items);
+        var index$$1;
         var startParent;
         var startList;
         var placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass);
@@ -609,7 +639,7 @@ function sortable(sortableElements, options) {
             dragging = _getDragging(dragitem, sortableElement);
             addAttribute(dragging, 'aria-grabbed', 'true');
             // grab values
-            index = _index(dragging, dragging.parentElement.children);
+            index$$1 = index(dragging, dragging.parentElement.children);
             startParent = findSortable(e.target);
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
@@ -645,15 +675,15 @@ function sortable(sortableElements, options) {
                         startparent: startParent
                     }
                 }));
-                if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+                if (index$$1 !== index(dragging, dragging.parentElement.children) || startParent !== newParent) {
                     sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
                         detail: {
                             item: dragging,
-                            index: _filter(newParent.children, addData(newParent, 'items'))
+                            index: filter(newParent.children, addData(newParent, 'items'))
                                 .indexOf(dragging),
                             oldindex: items.indexOf(dragging),
-                            elementIndex: _index(dragging, dragging.parentElement.children),
-                            oldElementIndex: index,
+                            elementIndex: index(dragging, dragging.parentElement.children),
+                            oldElementIndex: index$$1,
                             startparent: startParent,
                             endparent: newParent,
                             newEndList: _serialize(newParent),
@@ -685,14 +715,14 @@ function sortable(sortableElements, options) {
             }));
             var newParent = _isSortable(this) ? this : this.parentElement;
             // fire sortupdate if index or parent changed
-            if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+            if (index$$1 !== index(dragging, dragging.parentElement.children) || startParent !== newParent) {
                 sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
                     detail: {
                         item: dragging,
-                        index: _index(dragging, _filter(newParent.children, addData(newParent, 'items'))),
+                        index: index(dragging, filter(newParent.children, addData(newParent, 'items'))),
                         oldindex: items.indexOf(dragging),
-                        elementIndex: _index(dragging, dragging.parentElement.children),
-                        oldElementIndex: index,
+                        elementIndex: index(dragging, dragging.parentElement.children),
+                        oldElementIndex: index$$1,
                         startparent: startParent,
                         endparent: newParent,
                         newEndList: _serialize(newParent),
@@ -715,8 +745,8 @@ function sortable(sortableElements, options) {
             // (not only items, but also disabled, etc.)
             if (Array.from(sortableElement.children).indexOf(element) > -1) {
                 var thisHeight = _getElementHeight(element);
-                var placeholderIndex = _index(placeholder, element.parentElement.children);
-                var thisIndex = _index(element, element.parentElement.children);
+                var placeholderIndex = index(placeholder, element.parentElement.children);
+                var thisIndex = index(element, element.parentElement.children);
                 // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
                 if (thisHeight > draggingHeight) {
                     // Dead zone?
@@ -751,7 +781,7 @@ function sortable(sortableElements, options) {
             else {
                 if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
                     sortableElement === element &&
-                    !_filter(element.children, options.items).length) {
+                    !filter(element.children, options.items).length) {
                     placeholderMap.forEach(function (element) { return element.remove(); });
                     element.appendChild(placeholder);
                 }
@@ -766,7 +796,7 @@ function sortable(sortableElements, options) {
                 return;
             }
             var options = addData(sortableElement, 'opts');
-            if (parseInt(options.maxItems) && _filter(sortableElement.children, addData(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
+            if (parseInt(options.maxItems) && filter(sortableElement.children, addData(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
                 return;
             }
             e.preventDefault();

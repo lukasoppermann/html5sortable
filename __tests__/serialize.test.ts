@@ -31,7 +31,7 @@ describe('Testing serialize', () => {
     expect(serialize(isASortable)).toEqual(expect.objectContaining({
       items: expect.arrayContaining([]),
       container: expect.objectContaining({
-        element: isASortable,
+        node: isASortable,
         itemCount: 0
       })
     }))
@@ -62,7 +62,7 @@ describe('Testing serialize', () => {
         })
       ]),
       container: expect.objectContaining({
-        element: isASortable,
+        node: isASortable,
         itemCount: 2
       })
     }))
@@ -93,11 +93,10 @@ describe('Testing serialize', () => {
         })
       ]),
       container: expect.objectContaining({
-        element: isASortable,
+        node: isASortable,
         itemCount: 2
       })
     }))
-  })
   })
 
   test('serialize: with invalid customItemSerializer', () => {
@@ -120,22 +119,19 @@ describe('Testing serialize', () => {
       items: 'div'
     })[0]
     isASortable.innerHTML = '<div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'
-    let itemOne = isASortable.querySelector('#itemOne')
-    let itemTwo = isASortable.querySelector('#itemTwo')
     // assert
     expect(serialize(isASortable,
       (item, sortable) => { return {index: item.index, container: sortable} },
       (container) => { return {itemCount: container.itemCount + 1} }
     )).toEqual({
       items: [{
-          index: 0,
-          container: isASortable
-        },
-        {
-          index: 1,
-          container: isASortable
-        }
-      ],
+        index: 0,
+        container: isASortable
+      },
+      {
+        index: 1,
+        container: isASortable
+      }],
       container: {
         itemCount: 3
       }

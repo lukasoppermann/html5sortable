@@ -331,11 +331,6 @@ var _reloadSortable = function (sortableElement) {
   _removeSortableEvents(sortableElement)
 }
 
-var _serialize = function (list) {
-  var children = _filter(list.children, _data(list, 'items'))
-  return children
-}
-
 /**
  * Public sortable object
  * @param {Array|NodeList} sortableElements
@@ -354,10 +349,14 @@ export default function sortable (sortableElements, options) {
       draggingClass: 'sortable-dragging',
       hoverClass: false,
       debounce: 0,
-      maxItems: 0
+      maxItems: 0,
+      itemSerializer: undefined,
+      containerSerializer: undefined
     }
-    for (var option in options) {
-      result[option] = options[option]
+    if (typeof options === 'object') {
+      for (var option in options) {
+        result[option] = options[option]
+      }
     }
     return result
   })(options)
@@ -373,19 +372,12 @@ export default function sortable (sortableElements, options) {
   sortableElements = Array.prototype.slice.call(sortableElements)
 
   if (/serialize/.test(method)) {
-    // var serialized = []
-    return sortableElements.map((sortableContainer) => _serialize(sortableContainer))
-    // sortableElements.forEach(function (sortableElement) {
-      // serialized.push({
-      //   list: sortableElement,
-      //   children: _serialize(sortableElement)
-      // })
-    // })
-    // return serialized
+    return sortableElements.map((sortableContainer) => {
+      let opts = _data(sortableContainer, 'opts')
+      return _serialize(sortableContainer, opts.itemSerializer, opts.containerSerializer)
+    })
   }
 
-  /* TODO: maxstatements should be 25, fix and remove line below */
-  /* jshint maxstatements:false */
   sortableElements.forEach(function (sortableElement) {
     if (/enable|disable|destroy/.test(method)) {
       return sortable[method](sortableElement)
@@ -647,6 +639,7 @@ sortable.enable = function (sortableElement) {
 sortable.disable = function (sortableElement) {
   _disableSortable(sortableElement)
 }
+
 /* START.TESTS_ONLY */
 sortable.__testing = {
   // add internal methods here for testing purposes

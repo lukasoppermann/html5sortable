@@ -1,3 +1,4 @@
+/* eslint-env browser */
 import {addData as _data} from './data' // yuk, data really needs to be refactored
 import filter from './filter'
 import index from './index'
@@ -9,11 +10,11 @@ import index from './index'
  */
 export default (sortableContainer: Element, customItemSerializer: Function = (serializedItem: object, sortableContainer: Element) => serializedItem, customContainerSerializer: Function = (serializedContainer: object) => serializedContainer): object => {
   // check for valid sortableContainer
-  if ( !(sortableContainer instanceof Element) || !sortableContainer.isSortable === true ) {
+  if (!(sortableContainer instanceof Element) || !sortableContainer.isSortable === true) {
     throw new Error('You need to provide a sortableContainer to be serialized.')
   }
   // check for valid serializers
-  if ( typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function' ) {
+  if (typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function') {
     throw new Error('You need to provide a valid serializer for items and the container.')
   }
   // get options
@@ -30,7 +31,7 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
   })
   // serialize container
   let container = {
-    element: sortableContainer,
+    node: sortableContainer,
     itemCount: items.length
   }
 

@@ -65,15 +65,37 @@
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 5</li>
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 6</li>
 					</ul>
+          <button class="ml4 js-serialize-button button navy bg-yellow">Serialize</button>
 					<script type="text/javascript">
 						sortable('.js-sortable', {
 							forcePlaceholderSize: true,
 							placeholderClass: 'mb1 bg-navy border border-yellow',
-							hoverClass: 'bg-maroon yellow'
-						});
+							hoverClass: 'bg-maroon yellow',
+              itemSerializer: (item, container) => {
+                item.parent = '[parentNode]'
+                item.node = '[Node]'
+                item.html = item.html.replace('<','&lt;')
+                return item
+              },
+              containerSerializer: (container) => {
+                container.node = '[Node]'
+                return container
+              }
+						})
+            document.querySelector('.js-serialize-button').addEventListener('click', () => {
+              let serialized = sortable('.js-sortable', 'serialize')
+              document.querySelector('.serialized-content').innerHTML = JSON.stringify(serialized, null, ' ')
+            })
 					</script>
 		    </div>
 			</div>
+      <div class="p2 bg-navy border-top yellow border-yellow">
+        <h5>Serialized:</h5>
+        <code>
+          <pre class="serialized-content">
+          </pre>
+        </code>
+      </div>
 		</section>
 		<section class="mb3 mx-auto col col-12">
   		<div class="p3 clearfix bg-yellow maroon">
