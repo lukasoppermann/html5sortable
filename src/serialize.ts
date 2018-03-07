@@ -8,19 +8,24 @@ import index from './index'
  * @returns {Array}
  */
 export default (sortableContainer: Element, customItemSerializer: Function = (serializedItem: object, sortableContainer: Element) => serializedItem, customContainerSerializer: Function = (serializedContainer: object) => serializedContainer): object => {
-  // @TODO: replace sortableContainer.isSortable with typeof Sortable as soon as sortable is changed to a class
+  // check for valid sortableContainer
   if ( !(sortableContainer instanceof Element) || !sortableContainer.isSortable === true ) {
     throw new Error('You need to provide a sortableContainer to be serialized.')
+  }
+  // check for valid serializers
+  if ( typeof customItemSerializer !== 'function' || typeof customContainerSerializer !== 'function' ) {
+    throw new Error('You need to provide a valid serializer for items and the container.')
   }
   // get options
   let options = _data(sortableContainer, 'opts')
   // serialize container
-  let items = filter(sortableContainer.children, options.items).map((item) => {
+  let items = filter(sortableContainer.children, options.items)
+  items = items.map((item) => {
     return {
       parent: sortableContainer,
       node: item,
       html: item.outerHTML,
-      index: index(item)
+      index: index(item, items)
     }
   })
   // serialize container
@@ -31,6 +36,6 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
 
   return {
     container: customContainerSerializer(container),
-    items: items.map((item: object) => customContainerSerializer(item, sortableContainer))
+    items: items.map((item: object) => customItemSerializer(item, sortableContainer))
   }
 }
