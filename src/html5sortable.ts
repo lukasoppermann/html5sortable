@@ -462,7 +462,7 @@ export default function sortable (sortableElements, options) {
       dragging = _getDragging(dragitem, sortableElement)
       _attr(dragging, 'aria-grabbed', 'true')
       // grab values
-      index = _index(dragging)
+      index = _index(dragging, dragging.parentElement.children)
       startParent = findSortable(e.target)
       startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
@@ -498,13 +498,13 @@ export default function sortable (sortableElements, options) {
           item: dragging,
           startparent: startParent
         }))
-        if (index !== _index(dragging) || startParent !== newParent) {
+        if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
           sortableElement.dispatchEvent(_makeEvent('sortupdate', {
             item: dragging,
             index: _filter(newParent.children, _data(newParent, 'items'))
               .indexOf(dragging),
             oldindex: items.indexOf(dragging),
-            elementIndex: _index(dragging),
+            elementIndex: _index(dragging, dragging.parentElement.children),
             oldElementIndex: index,
             startparent: startParent,
             endparent: newParent,
@@ -544,8 +544,8 @@ export default function sortable (sortableElements, options) {
       var items = _filter(sortableElement.children, options.items)
       if (items.indexOf(element) !== -1) {
         let thisHeight = _getElementHeight(element)
-        var placeholderIndex = _index(placeholder)
-        var thisIndex = _index(element)
+        var placeholderIndex = _index(placeholder, element.parentElement.children)
+        var thisIndex = _index(element, element.parentElement.children)
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight) {
           // Dead zone?

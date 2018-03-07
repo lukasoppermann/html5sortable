@@ -136,11 +136,11 @@ function _debounce (func, wait) {
     };
 }
 
-function _index (element) {
-    if (!element.parentElement) {
-        return -1;
+function _index (element, elementList) {
+    if (!(element instanceof Element) || !(elementList instanceof NodeList || elementList instanceof HTMLCollection)) {
+        throw new Error('You must provide an element and a list of elements.');
     }
-    return Array.prototype.indexOf.call(element.parentElement.children, element);
+    return Array.prototype.indexOf.call(elementList, element);
 }
 
 function isInDom (element) {
@@ -621,7 +621,7 @@ function sortable(sortableElements, options) {
             dragging = _getDragging(dragitem, sortableElement);
             addAttribute(dragging, 'aria-grabbed', 'true');
             // grab values
-            index = _index(dragging);
+            index = _index(dragging, dragging.parentElement.children);
             startParent = findSortable(e.target);
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
@@ -653,13 +653,13 @@ function sortable(sortableElements, options) {
                     item: dragging,
                     startparent: startParent
                 }));
-                if (index !== _index(dragging) || startParent !== newParent) {
+                if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
                     sortableElement.dispatchEvent(_makeEvent('sortupdate', {
                         item: dragging,
                         index: _filter(newParent.children, addData(newParent, 'items'))
                             .indexOf(dragging),
                         oldindex: items.indexOf(dragging),
-                        elementIndex: _index(dragging),
+                        elementIndex: _index(dragging, dragging.parentElement.children),
                         oldElementIndex: index,
                         startparent: startParent,
                         endparent: newParent,
@@ -695,8 +695,8 @@ function sortable(sortableElements, options) {
             var items = _filter(sortableElement.children, options.items);
             if (items.indexOf(element) !== -1) {
                 var thisHeight = _getElementHeight(element);
-                var placeholderIndex = _index(placeholder);
-                var thisIndex = _index(element);
+                var placeholderIndex = _index(placeholder, element.parentElement.children);
+                var thisIndex = _index(element, element.parentElement.children);
                 // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
                 if (thisHeight > draggingHeight) {
                     // Dead zone?
