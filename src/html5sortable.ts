@@ -540,9 +540,9 @@ export default function sortable (sortableElements, options) {
       if (options.forcePlaceholderSize) {
         placeholder.style.height = draggingHeight + 'px'
       }
-
-      var items = _filter(sortableElement.children, options.items)
-      if (items.indexOf(element) !== -1) {
+      // if element the draggedItem is dragged onto is within the array of all elements in list
+      // (not only items, but also disabled, etc.)
+      if (Array.from(sortableElement.children).indexOf(element) > -1) {
         let thisHeight = _getElementHeight(element)
         var placeholderIndex = _index(placeholder, element.parentElement.children)
         var thisIndex = _index(element, element.parentElement.children)
