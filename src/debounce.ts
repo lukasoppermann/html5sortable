@@ -4,7 +4,7 @@
  * @param {wait} time to wait before calling function with latest arguments, 0 - no debounce
  * @returns {function} - debounced function
  */
-export default (func, wait = 0) => {
+export default (func: Function, wait: number = 0): Function => {
   let timeout
 
   return (...args) => {

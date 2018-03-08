@@ -21,4 +21,13 @@ describe('Testing debounce', () => {
     expect(callback).toBeCalled()
     expect(callback).toHaveBeenCalledTimes(1)
   })
+
+  test('debounce a function time 0', () => {
+    // setup
+    const callback = jest.fn()
+    const testdebounce = debounce(callback)
+    testdebounce()
+    jest.advanceTimersByTime(0)
+    expect(callback).toBeCalled()
+  })
 })
