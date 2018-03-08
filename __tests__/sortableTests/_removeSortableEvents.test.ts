@@ -11,7 +11,7 @@ describe('_removeSortableEvents', () => {
     // init sortable
     sortable(ul)
   })
-  test('_removeSortableEvents', () {
+  test('solely removes events related to sorting', () {
     // remove events object
     sortable.__testing._removeSortableEvents(ul)
     // check that events are gone

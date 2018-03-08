@@ -11,7 +11,6 @@ describe('_removeSortableEvents', () => {
     // init sortable
     sortable(ul)
 
-
     document.body.innerHTML = `<ul class="sortable2">
     <li>item</li>
     </ul>
@@ -51,7 +50,7 @@ describe('_removeSortableEvents', () => {
     // notConnectedUl was never connected
     expect(sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(false)
   })
-  test(('acceptFrom: '), () => {
+  test(('acceptFrom: if a list is specified to accept from a certain list it should only accept from that list'), () => {
     sortable(connectedUl, 'destroy')
     sortable(notConnectedUl, 'destroy')
     sortable(connectedUl, {
@@ -62,35 +61,45 @@ describe('_removeSortableEvents', () => {
     })
     // test .sortable2 only accepts from .sortable3 (should be true)
     expect(sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
+    // test .sortable2 only accepts from .sortable3, not itself any longer (should be false)
+    expect(sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
+    // test .sortable3 does not accept from anyone (should be false)
+    expect(sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
+    expect(sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(false)
+  })
+  test(('acceptFrom: setting a uls acceptFrom to a string that is not another ul should not change the functionality'), () => {
+    sortable(connectedUl, 'destroy')
+    sortable(notConnectedUl, 'destroy')
+    sortable(connectedUl, {
+      acceptFrom: '.sortable3'
+    })
+    sortable(notConnectedUl, {
+      acceptFrom: ''
+    })
+    console.log(connectedUl.h5s.data, notConnectedUl.h5s.data)
+    // test .sortable2 only accepts from .sortable3 (should be true)
+    expect(sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
     // test .sortable2 only accepts from .sortable3 (should be false)
     expect(sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
     // test .sortable3 does not accept from anyone (should be false)
     expect(sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
     expect(sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(false)
   })
-
-  //     sortable(notConnectedUl, 'destroy')
-  //     sortable(notConnectedUl, {
-  //       acceptFrom: ''
-  //     })
-  //     // test .sortable2 only accepts from .sortable3 (should be true)
-  //     expect(sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
-  //     // test .sortable2 only accepts from .sortable3 (should be false)
-  //     expect(sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
-  //     // test .sortable3 does not accept from anyone (should be false)
-  //     expect(sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
-  //     expect(sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(false)
-
-  //     sortable(notConnectedUl, 'destroy')
-  //     sortable(notConnectedUl, {
-  //       acceptFrom: null
-  //     })
-  //     // test .sortable2 only accepts from .sortable3 (should be true)
-  //     expect(sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
-  //     // test .sortable2 only accepts from .sortable3 (should be false)
-  //     expect(sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
-  //     // test .sortable3 does not accept from anyone (should be false)
-  //     expect(sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
-  //     expect(sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(true)
-  //   })
+  test(('acceptFrom: setting a uls acceptFrom to null should not change the functionality'), () => {
+    sortable(connectedUl, 'destroy')
+    sortable(notConnectedUl, 'destroy')
+    sortable(connectedUl, {
+      acceptFrom: '.sortable3'
+    })
+    sortable(notConnectedUl, {
+      acceptFrom: null
+    })
+    // test .sortable2 only accepts from .sortable3 (should be true)
+    expect(sortable.__testing._listsConnected(connectedUl, notConnectedUl)).toEqual(true)
+    // test .sortable2 only accepts from .sortable3 (should be false)
+    expect(sortable.__testing._listsConnected(connectedUl, connectedUl)).toEqual(false)
+    // test .sortable3 does not accept from anyone (should be false)
+    expect(sortable.__testing._listsConnected(notConnectedUl, connectedUl)).toEqual(false)
+    expect(sortable.__testing._listsConnected(notConnectedUl, notConnectedUl)).toEqual(true)
+  })
 })
