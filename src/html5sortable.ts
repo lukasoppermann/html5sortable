@@ -327,20 +327,6 @@ var _reloadSortable = function (sortableElement) {
   // remove event handlers from sortable
   _removeSortableEvents(sortableElement)
 }
-/**
- * Make native event that can be dispatched afterwards
- * @param {string} name
- * @param {object} detail
- * @returns {CustomEvent}
- */
-var _makeEvent = function (name, detail) {
-  var e = document.createEvent('Event')
-  if (detail) {
-    e.detail = detail
-  }
-  e.initEvent(name, false, true)
-  return e
-}
 
 var _serialize = function (list) {
   var children = _filter(list.children, _data(list, 'items'))
@@ -466,10 +452,13 @@ export default function sortable (sortableElements, options) {
       startParent = findSortable(e.target)
       startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
-      sortableElement.dispatchEvent(_makeEvent('sortstart', {
-        item: dragging,
-        placeholder: placeholderMap.get(sortableElement),
-        startparent: startParent
+
+      sortableElement.dispatchEvent(new CustomEvent('sortstart', {
+        detail: {
+          item: dragging,
+          placeholder: placeholderMap.get(sortableElement),
+          startparent: startParent
+        }
       }))
     })
     // Handle drag events on draggable items
@@ -494,23 +483,27 @@ export default function sortable (sortableElements, options) {
       newParent = this.parentElement
 
       if (_listsConnected(newParent, startParent)) {
-        sortableElement.dispatchEvent(_makeEvent('sortstop', {
-          item: dragging,
-          startparent: startParent
+        sortableElement.dispatchEvent(new CustomEvent('sortstop', {
+          detail: {
+            item: dragging,
+            startparent: startParent
+          }
         }))
         if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
-          sortableElement.dispatchEvent(_makeEvent('sortupdate', {
-            item: dragging,
-            index: _filter(newParent.children, _data(newParent, 'items'))
-              .indexOf(dragging),
-            oldindex: items.indexOf(dragging),
-            elementIndex: _index(dragging, dragging.parentElement.children),
-            oldElementIndex: index,
-            startparent: startParent,
-            endparent: newParent,
-            newEndList: _serialize(newParent),
-            newStartList: _serialize(startParent),
-            oldStartList: startList
+          sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
+            detail: {
+              item: dragging,
+              index: _filter(newParent.children, _data(newParent, 'items'))
+                .indexOf(dragging),
+              oldindex: items.indexOf(dragging),
+              elementIndex: _index(dragging, dragging.parentElement.children),
+              oldElementIndex: index,
+              startparent: startParent,
+              endparent: newParent,
+              newEndList: _serialize(newParent),
+              newStartList: _serialize(startParent),
+              oldStartList: startList
+            }
           }))
         }
       }
@@ -639,7 +632,6 @@ sortable.__testing = {
   _getHandles: _getHandles,
   _makeGhost: _makeGhost,
   _index: _index,
-  _makeEvent: _makeEvent,
   _getPlaceholders: () => placeholderMap,
   _resetPlaceholders: () => {
     placeholderMap.clear()
