@@ -158,7 +158,7 @@ function isInDom (element) {
  */
 var insertNode = function (referenceNode, newElement, position) {
     if (position === void 0) { position = 'before'; }
-    if ((referenceNode || {}).nodeType !== 1 || !referenceNode.parentElement || (newElement || {}).nodeType !== 1) {
+    if (!(referenceNode instanceof Element) || !(referenceNode.parentElement instanceof Element)) {
         throw new Error('target and element must be a node');
     }
     referenceNode.parentElement.insertBefore(newElement, (position === 'before' ? referenceNode : referenceNode.nextElementSibling));
