@@ -150,6 +150,7 @@ function isInDom (element) {
     return element.parentNode !== null;
 }
 
+/* eslint-env browser */
 /**
  * Insert node before or after target
  * @param {Element} referenceNode - reference element
@@ -157,7 +158,6 @@ function isInDom (element) {
  * @param {String} position - insert before or after reference element
  */
 var insertNode = function (referenceNode, newElement, position) {
-    if (position === void 0) { position = 'before'; }
     if (!(referenceNode instanceof Element) || !(referenceNode.parentElement instanceof Element)) {
         throw new Error('target and element must be a node');
     }
@@ -693,7 +693,8 @@ function sortable(sortableElements, options) {
                 placeholder.style.height = draggingHeight + 'px';
             }
             var items = _filter(sortableElement.children, options.items);
-            if (items.indexOf(element) !== -1) {
+            // if element the draggedItem is dragged onto is within the array
+            if (Array.from(sortableElement.children).indexOf(element) > -1) {
                 var thisHeight = _getElementHeight(element);
                 var placeholderIndex = _index(placeholder, element.parentElement.children);
                 var thisIndex = _index(element, element.parentElement.children);
