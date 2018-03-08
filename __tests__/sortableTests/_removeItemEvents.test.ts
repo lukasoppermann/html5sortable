@@ -1,6 +1,7 @@
 /* global describe,test,expect */
-import { mockInnerHTML } from '../testHelpers.ts'
+import { mockInnerHTML } from '../testHelpers'
 import sortable from '../../src/html5sortable'
+/* eslint-env jest */
 
 describe('_removeItemEvents', () => {
   let ul, allLiElements, li
@@ -12,10 +13,9 @@ describe('_removeItemEvents', () => {
     sortable(ul)
     // get all li elements
     allLiElements = ul.querySelectorAll('li')
-    // get first li element
     li = ul.querySelector('.li-first')
   })
-  test('_removeItemEvents', () => {
+  test('should remove all events attached to a list', () => {
     // remove general jQuery event object
     sortable.__testing._removeItemEvents(li)
     expect(li.h5s.events).toEqual({})

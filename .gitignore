@@ -4,4 +4,3 @@ coverage
 .test
 _test
 package-lock.json
-dist

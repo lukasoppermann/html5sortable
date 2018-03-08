@@ -1,6 +1,7 @@
 /* global describe,test,expect */
-import { mockInnerHTML } from '../testHelpers.ts'
+import { mockInnerHTML } from '../testHelpers'
 import sortable from '../../src/html5sortable'
+/* eslint-env jest */
 
 describe('_getHandles', () => {
   let ul, li, allLiElements
