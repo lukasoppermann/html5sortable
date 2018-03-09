@@ -217,6 +217,7 @@ function _serialize (sortableContainer, customItemSerializer, customContainerSer
 var dragging;
 var draggingHeight;
 var placeholderMap = new Map();
+var startParent;
 /**
  * remove event handlers from items
  * @param {Array|NodeList} items
@@ -565,7 +566,7 @@ function sortable(sortableElements, options) {
     if (typeof sortableElements === 'string') {
         sortableElements = document.querySelectorAll(sortableElements);
     }
-    if (sortableElements instanceof window.Element) {
+    if (sortableElements instanceof Element) {
         sortableElements = [sortableElements];
     }
     sortableElements = Array.prototype.slice.call(sortableElements);
@@ -589,7 +590,6 @@ function sortable(sortableElements, options) {
         // initialize
         var items = filter(sortableElement.children, options.items);
         var index$$1;
-        var startParent;
         var startList;
         var placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass);
         addData(sortableElement, 'items', options.items);

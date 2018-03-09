@@ -17,6 +17,7 @@ import _serialize from './serialize'
 var dragging
 var draggingHeight
 var placeholderMap = new Map()
+let startParent
 /**
  * remove event handlers from items
  * @param {Array|NodeList} items
@@ -365,7 +366,7 @@ export default function sortable (sortableElements, options) {
     sortableElements = document.querySelectorAll(sortableElements)
   }
 
-  if (sortableElements instanceof window.Element) {
+  if (sortableElements instanceof Element) {
     sortableElements = [sortableElements]
   }
 
@@ -393,7 +394,6 @@ export default function sortable (sortableElements, options) {
     // initialize
     var items = _filter(sortableElement.children, options.items)
     var index
-    var startParent
     var startList
     let placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass)
 
