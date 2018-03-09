@@ -1,4 +1,4 @@
-/* global describe,test,expect,beforeEach */
+/* global describe,test,expect,beforeEach,CustomEvent */
 import sortable from '../src/html5sortable'
 /* eslint-env jest */
 
@@ -120,7 +120,7 @@ describe('Testing events', () => {
     })
 
     addEventListener(ul)
-    let event = sortable.__testing._makeEvent('dragstart')
+    let event = new CustomEvent('dragstart')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -149,7 +149,7 @@ describe('Testing events', () => {
         draggingClass: 'test-dragging'
       })
       let childcount = li.parentNode.childNodes.length
-      let event = sortable.__testing._makeEvent('dragstart')
+      let event = new CustomEvent('dragstart')
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -165,7 +165,7 @@ describe('Testing events', () => {
       expect(copyli.getAttribute('aria-grabbed')).toEqual('true')
       expect(copyli.classList.contains('test-dragging')).toBe(true)
 
-      event = sortable.__testing._makeEvent('dragover')
+      event = new CustomEvent('dragover')
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -185,7 +185,7 @@ describe('Testing events', () => {
       draggingClass: 'test-dragging'
     })
     let childcount = li.parentNode.childNodes.length
-    let event = sortable.__testing._makeEvent('dragstart')
+    let event = new CustomEvent('dragstart')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -207,7 +207,7 @@ describe('Testing events', () => {
       hoverClass: false
     })
 
-    let event = sortable.__testing._makeEvent('mouseenter')
+    let event = new CustomEvent('mouseenter')
     li.dispatchEvent(event)
     expect(li.classList.contains('sortable-over')).toBe(false)
   })
@@ -217,10 +217,10 @@ describe('Testing events', () => {
       hoverClass: 'sortable-item-over'
     })
     // class is added on hover
-    li.dispatchEvent(sortable.__testing._makeEvent('mouseenter'))
+    li.dispatchEvent(new CustomEvent('mouseenter'))
     expect(li.classList.contains('sortable-item-over')).toBe(true)
     // class is removed on leave
-    li.dispatchEvent(sortable.__testing._makeEvent('mouseleave'))
+    li.dispatchEvent(new CustomEvent('mouseleave'))
     expect(li.classList.contains('sortable-item-over')).toBe(false)
   })
 
@@ -232,11 +232,11 @@ describe('Testing events', () => {
         hoverClass: 'sortable-item-over sortable-item-over-second'
       })
       // classes are added on hover
-      li.dispatchEvent(sortable.__testing._makeEvent('mouseenter'))
+      li.dispatchEvent(new CustomEvent('mouseenter'))
       expect(li.classList.contains('sortable-item-over')).toBe(true)
       expect(li.classList.contains('sortable-item-over-second')).toBe(true)
       // class are removed on leave
-      li.dispatchEvent(sortable.__testing._makeEvent('mouseleave'))
+      li.dispatchEvent(new CustomEvent('mouseleave'))
       expect(li.classList.contains('sortable-item-over')).toBe(false)
       expect(li.classList.contains('sortable-item-over-second')).toBe(false)
     }
@@ -251,7 +251,7 @@ describe('Testing events', () => {
     addEventListener(ul)
     let originalIndex = getIndex(li, ul.children)
 
-    let event = sortable.__testing._makeEvent('dragstart')
+    let event = new CustomEvent('dragstart')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -259,7 +259,7 @@ describe('Testing events', () => {
     }
     li.dispatchEvent(event)
 
-    event = sortable.__testing._makeEvent('dragover')
+    event = new CustomEvent('dragover')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -268,12 +268,10 @@ describe('Testing events', () => {
     secondLi.dispatchEvent(event)
     expect(event.dataTransfer.dropEffect).toEqual('move')
 
-    event = sortable.__testing._makeEvent('drop')
     // Object.defineProperty(event, 'target', {value: secondLi, enumerable: true})
-    sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
+    sortable.__testing._getPlaceholders()[0].dispatchEvent(new CustomEvent('drop'))
 
-    event = sortable.__testing._makeEvent('dragend')
-    li.dispatchEvent(event)
+    li.dispatchEvent(new CustomEvent('dragend'))
 
     expect(getIndex(li, ul.children)).not.toEqual(originalIndex)
     expect(getIndex(li, ul.children)).toEqual(1)
@@ -314,7 +312,7 @@ describe('Testing events', () => {
       // let originalChildrenLen = ul.children.length
       let originalIndex = getIndex(li, ul.children)
 
-      let event = sortable.__testing._makeEvent('dragstart')
+      let event = new CustomEvent('dragstart')
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -322,7 +320,7 @@ describe('Testing events', () => {
       }
       li.dispatchEvent(event)
 
-      event = sortable.__testing._makeEvent('dragover')
+      event = new CustomEvent('dragover')
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -332,11 +330,11 @@ describe('Testing events', () => {
 
       expect(event.dataTransfer.dropEffect).toEqual('move')
 
-      event = sortable.__testing._makeEvent('drop')
+      event = new CustomEvent('drop')
 
       ul2.querySelector('.test-placeholder2').dispatchEvent(event)
 
-      event = sortable.__testing._makeEvent('dragend')
+      event = new CustomEvent('dragend')
       li.dispatchEvent(event)
 
       expect(getIndex(li, ul.children)).not.toEqual(originalIndex)
@@ -352,7 +350,7 @@ describe('Testing events', () => {
 
     let originalIndex = getIndex(li, ul.children)
 
-    let event = sortable.__testing._makeEvent('dragstart')
+    let event = new CustomEvent('dragstart')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -362,7 +360,7 @@ describe('Testing events', () => {
     li.dispatchEvent(event)
     expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
 
-    event = sortable.__testing._makeEvent('dragover')
+    event = new CustomEvent('dragover')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -372,10 +370,10 @@ describe('Testing events', () => {
     expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
 
     secondLi.dispatchEvent(event)
-    event = sortable.__testing._makeEvent('drop')
+    event = new CustomEvent('drop')
     sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
 
-    event = sortable.__testing._makeEvent('dragend')
+    event = new CustomEvent('dragend')
     li.dispatchEvent(event)
 
     // TODO: does this test and this check make sense?
@@ -392,7 +390,7 @@ describe('Testing events', () => {
 
       let originalIndex = getIndex(secondLi, ul.children)
 
-      let event = sortable.__testing._makeEvent('dragstart')
+      let event = new CustomEvent('dragstart')
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -402,7 +400,7 @@ describe('Testing events', () => {
       secondLi.dispatchEvent(event)
       expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
 
-      event = sortable.__testing._makeEvent('dragover')
+      event = new CustomEvent('dragover')
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -413,7 +411,7 @@ describe('Testing events', () => {
 
       global.body.dispatchEvent(event)
 
-      event = sortable.__testing._makeEvent('drop')
+      event = new CustomEvent('drop')
 
       global.body.dispatchEvent(event)
       expect(getIndex(secondLi, ul.children)).toEqual(originalIndex)
@@ -427,7 +425,7 @@ describe('Testing events', () => {
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     })
-    let event = sortable.__testing._makeEvent('dragstart')
+    let event = new CustomEvent('dragstart')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -438,7 +436,7 @@ describe('Testing events', () => {
 
     expect(li.getAttribute('aria-grabbed')).toEqual('true')
 
-    event = sortable.__testing._makeEvent('dragover')
+    event = new CustomEvent('dragover')
     event.dataTransfer = {
       setData: function (val) {
         this.data = val

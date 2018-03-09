@@ -1,3 +1,4 @@
+/* eslint-env browser */
 'use strict'
 
 import { addData as _data, removeData as _removeData } from './data'
