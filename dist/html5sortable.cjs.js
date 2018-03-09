@@ -789,8 +789,9 @@ function sortable(sortableElements, options) {
         }, options.debounce);
         // Handle dragover and dragenter events on draggable items
         var onDragOverEnter = function (e) {
-            var sortableElement = _isSortable(e.target) ? e.target : findSortable(e.target);
-            var element = findDragElement(sortableElement, e.target);
+            var element = e.target;
+            var sortableElement = _isSortable(element) ? element : findSortable(element);
+            element = findDragElement(sortableElement, element);
             if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || addData(sortableElement, '_disabled') === 'true') {
                 return;
             }
