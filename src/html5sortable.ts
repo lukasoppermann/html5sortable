@@ -10,7 +10,8 @@ import _debounce from './debounce'
 import _index from './index'
 import isInDom from './isInDom'
 import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
-/**
+import _serialize from './serialize'
+/*
  * variables global to the plugin
  */
 var dragging
@@ -330,11 +331,6 @@ var _reloadSortable = function (sortableElement) {
   _removeSortableEvents(sortableElement)
 }
 
-var _serialize = function (list) {
-  var children = _filter(list.children, _data(list, 'items'))
-  return children
-}
-
 /**
  * Public sortable object
  * @param {Array|NodeList} sortableElements
@@ -353,10 +349,14 @@ export default function sortable (sortableElements, options) {
       draggingClass: 'sortable-dragging',
       hoverClass: false,
       debounce: 0,
-      maxItems: 0
+      maxItems: 0,
+      itemSerializer: undefined,
+      containerSerializer: undefined
     }
-    for (var option in options) {
-      result[option] = options[option]
+    if (typeof options === 'object') {
+      for (var option in options) {
+        result[option] = options[option]
+      }
     }
     return result
   })(options)
@@ -372,18 +372,12 @@ export default function sortable (sortableElements, options) {
   sortableElements = Array.prototype.slice.call(sortableElements)
 
   if (/serialize/.test(method)) {
-    var serialized = []
-    sortableElements.forEach(function (sortableElement) {
-      serialized.push({
-        list: sortableElement,
-        children: _serialize(sortableElement)
-      })
+    return sortableElements.map((sortableContainer) => {
+      let opts = _data(sortableContainer, 'opts')
+      return _serialize(sortableContainer, opts.itemSerializer, opts.containerSerializer)
     })
-    return serialized
   }
 
-  /* TODO: maxstatements should be 25, fix and remove line below */
-  /* jshint maxstatements:false */
   sortableElements.forEach(function (sortableElement) {
     if (/enable|disable|destroy/.test(method)) {
       return sortable[method](sortableElement)
@@ -392,6 +386,8 @@ export default function sortable (sortableElements, options) {
     // get options & set options on sortable
     options = _data(sortableElement, 'opts') || options
     _data(sortableElement, 'opts', options)
+    // property to define as sortable
+    sortableElement.isSortable = true
     // reset sortable
     _reloadSortable(sortableElement)
     // initialize
@@ -648,7 +644,6 @@ sortable.disable = function (sortableElement) {
 sortable.__testing = {
   // add internal methods here for testing purposes
   _data: _data,
-  _serialize: _serialize,
   _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,

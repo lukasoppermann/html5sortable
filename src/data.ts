@@ -5,7 +5,7 @@
  * @param {*} value
  * @return {*}
  */
-function addData (element, key, value) {
+function addData (element: Element, key: string, value?: any) {
   if (value === undefined) {
     return element && element.h5s && element.h5s.data && element.h5s.data[key]
   } else {
@@ -18,7 +18,7 @@ function addData (element, key, value) {
  * Remove data from element
  * @param {Element} element
  */
-function removeData (element) {
+function removeData (element: Element) {
   if (element.h5s) {
     delete element.h5s.data
   }

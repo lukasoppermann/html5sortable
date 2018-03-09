@@ -12,10 +12,6 @@ describe('Testing api', () => {
 
   describe('Initialization ', () => {
     beforeEach(() => {
-      // Execute my library by inserting a <script> tag containing it.
-      // const scriptEl = window.document.createElement('script')
-      // scriptEl.textContent = sortable
-      // window.document.head.appendChild(scriptEl)
       global.body.innerHTML = `<ul class="sortable">
         <li class="item item-first">Item 1</li>
         <li class="item item-second">Item 2</li>
@@ -224,24 +220,6 @@ describe('Testing api', () => {
       expect(handle.h5s.events).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown')).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown.h5s')).toBeDefined()
-    })
-  })
-
-  describe('Serialize', () => {
-    beforeAll(function () {
-      sortable(ul, {
-        'items': 'li:not(.disabled)',
-        'connectWith': '.test',
-        placeholderClass: 'test-placeholder'
-      })
-    })
-
-    test('should have the right sortable in the list property', () => {
-      expect(sortable(ul, 'serialize')[0].list).toEqual(sortable(ul)[0])
-    })
-
-    test('should have 3 children', () => {
-      expect(sortable(ul, 'serialize')[0].children.length).toEqual(3)
     })
   })
 })

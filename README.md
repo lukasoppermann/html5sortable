@@ -209,6 +209,34 @@ sortable('.sortable', {
   copy: true // Defaults to false
 });
 ```
+
+### itemSerializer
+You can provide a `function` that will be applied to every item in the `items` array ([see serialize](#serialize)). The function receives two arguments: `serializedItem: object`, `sortableContainer: Element`. This function can be used to change the output for the items. Defaults to `undefined`.
+
+``` javascript
+sortable('.sortable', {
+  itemSerializer: (serializedItem, sortableContainer) => {
+    return {
+      position:  serializedItem.index + 1,
+      html: serializedItem.html
+    }
+  }
+});
+```
+
+### containerSerializer
+You can provide a `function` that will be applied to the `container` object ([see serialize](#serialize)). The function receives one argument: `serializedContainer: object`. This function can be used to change the output for the container. Defaults to `undefined`.
+
+``` javascript
+sortable('.sortable', {
+  containerSerializer: (serializedContainer) => {
+    return {
+      length: container.itemCount
+    }
+  }
+});
+```
+
 ## Methods
 
 ### destroy
@@ -233,24 +261,24 @@ sortable('.sortable', 'enable');
 ```
 
 ### serialize
-To serialize a sortable:
+You can easily serialize a sortable using the `serialize` command. If you provided an [`itemSerializer`](#itemSerializer) or [`containerSerializer`](#containerSerializer) function in the options object, they will be applied to the `container` object and the `items` objects before they are returned.
 
 ``` javascript
 sortable('.sortable', 'serialize');
-```
 
-This will return an array of objects, each with a `list` key for the sortable and a `children` key for the children.
-
-```javascript
-[
-  0: {
-    list: ul.js-sortable // Object
-    children: [
-      0: li, // object
-      1: li // object
-    ]
+// You will receive an object in the following format
+[{
+  container: {
+    node: sortableContainer,
+    itemCount: items.length
   }
-]
+  items: [{
+    parent: sortableContainer,
+    node: item,
+    html: item.outerHTML,
+    index: index(item, items)
+  }, …]
+}, …]
 ```
 
 ### reload
@@ -275,13 +303,13 @@ Contributions are always welcome. Please check out the [contribution guidelines]
 This project is focusing on modern, evergreen browsers to deliver a fast and small package. While many projects try build features so that it runs in the oldest browser (looking at you IE9), we try to create a fast and pleasant development experience using the language capabilities that the current version of Javascript offers.
 
 ### Benefits
-## Small and fast package for modern browsers
+#### Small and fast package for modern browsers
 While a backwards facing approach penalises modern browsers by making them download huge files, we prefer to ship a small package and have outdated browser bear the penalty of the polyfill. An additional benefit is that you might polyfill those features in any case so you don't have any additional load.
 
-## Contribution friendly code base
+#### Contribution friendly code base
 We try to encourage people to help shape the future of this package and contribute in small or big ways. By removing hard to understand hacks we make it easier for people new to the code base or even Javascript to contribute.
 
-## Helps browser optimisation
+#### Helps browser optimisation
 Browser try to performance optimise language features as much as possible. Working around the language to make code work in outdated browser may actually work against this.
 
 ### Polyfill
