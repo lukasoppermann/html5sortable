@@ -10,13 +10,13 @@ import _debounce from './debounce'
 import _index from './index'
 import isInDom from './isInDom'
 import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
-/*
+/**
  * variables global to the plugin
  */
 var dragging
 var draggingHeight
 var placeholderMap = new Map()
-/*
+/**
  * remove event handlers from items
  * @param {Array|NodeList} items
  */
@@ -30,7 +30,7 @@ var _removeItemEvents = function (items) {
   _off(items, 'mouseenter')
   _off(items, 'mouseleave')
 }
-/*
+/**
  * Remove event handlers from sortable
  * @param {Element} sortable a single sortable
  */
@@ -39,10 +39,11 @@ var _removeSortableEvents = function (sortable) {
   _off(sortable, 'dragenter')
   _off(sortable, 'drop')
 }
-/*
- * Attach ghost to dataTransfer object
- * @param {Event} original event
- * @param {object} ghost-object with item, x and y coordinates
+/**
+ * create a placeholder element
+ * @param {Elememnt} sortableElement a single sortable
+ * @param {string|undefine} placeholder a string representing an html element
+ * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
  */
 let _makePlaceholder = (sortableElement, placeholder = undefined, placeholderClasses = 'sortable-placeholder') => {
   if (typeof placeholder === 'string') {
@@ -73,7 +74,7 @@ let _makePlaceholder = (sortableElement, placeholder = undefined, placeholderCla
 
   return placeholder
 }
-/*
+/**
  * Attach ghost to dataTransfer object
  * @param {Event} original event
  * @param {object} ghost-object with item, x and y coordinates
@@ -145,7 +146,7 @@ var _getDragging = function (draggedItem, sortable) {
   }
   return ditem
 }
-/*
+/**
  * Remove data from sortable
  * @param {Element} sortable a single sortable
  */
@@ -153,7 +154,7 @@ var _removeSortableData = function (sortable) {
   _removeData(sortable)
   _removeAttr(sortable, 'aria-dropeffect')
 }
-/*
+/**
  * Remove data from items
  * @param {Array|Element} items
  */
@@ -163,7 +164,7 @@ var _removeItemData = function (items) {
   _removeAttr(items, 'draggable')
   _removeAttr(items, 'role')
 }
-/*
+/**
  * Check if two lists are connected
  * @param {Element} curList
  * @param {Element} destList
@@ -185,14 +186,14 @@ var _listsConnected = function (curList, destList) {
   }
   return false
 }
-/*
+/**
  * Is Copy Active for sortable
  * @param {Element} sortable a single sortable
  */
 var _isCopyActive = function (sortable) {
   return _data(sortable, 'opts').copy === true
 }
-/*
+/**
  * Get height of an element including padding
  * @param {Element} sortable a single sortable
  */
@@ -207,7 +208,7 @@ let _getElementHeight = (element) => {
     })
     .reduce((prev, cur) => prev + cur)
 }
-/*
+/**
  * get handle or return item
  * @param {Array} items
  * @param {selector} handle
@@ -254,7 +255,7 @@ function findDragElement (sortableElement, element) {
 
   return itemlist.length > 0 ? itemlist[0] : element
 }
-/*
+/**
  * Destroy the sortable
  * @param {Element} sortableElement a single sortable
  */
@@ -270,7 +271,7 @@ var _destroySortable = function (sortableElement) {
   _removeItemEvents(items)
   _removeItemData(items)
 }
-/*
+/**
  * Enable the sortable
  * @param {Element} sortableElement a single sortable
  */
@@ -299,7 +300,7 @@ var _enableSortable = function (sortableElement) {
     })
   }
 }
-/*
+/**
  * Disable the sortable
  * @param {Element} sortableElement a single sortable
  */
@@ -312,7 +313,7 @@ var _disableSortable = function (sortableElement) {
   _attr(handles, 'draggable', 'false')
   _off(handles, 'mousedown')
 }
-/*
+/**
  * Reload the sortable
  * @param {Element} sortableElement a single sortable
  * @description events need to be removed to not be double bound
@@ -334,7 +335,7 @@ var _serialize = function (list) {
   return children
 }
 
-/*
+/**
  * Public sortable object
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
@@ -522,6 +523,32 @@ export default function sortable (sortableElements, options) {
       _data(dragging, 'dropped', 'true')
       var visiblePlaceholder = Array.from(placeholderMap.values()).filter(isInDom)[0]
       _after(visiblePlaceholder, dragging)
+      // fire sortstop
+      sortableElement.dispatchEvent(new CustomEvent('sortstop', {
+        detail: {
+          item: dragging,
+          startparent: startParent
+        }
+      }))
+
+      let newParent = _isSortable(this) ? this : this.parentElement
+      // fire sortupdate if index or parent changed
+      if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+        sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
+          detail: {
+            item: dragging,
+            index: _index(dragging, _filter(newParent.children, _data(newParent, 'items'))),
+            oldindex: items.indexOf(dragging),
+            elementIndex: _index(dragging, dragging.parentElement.children),
+            oldElementIndex: index,
+            startparent: startParent,
+            endparent: newParent,
+            newEndList: _serialize(newParent),
+            newStartList: _serialize(startParent),
+            oldStartList: startList
+          }
+        }))
+      }
     })
 
     var debouncedDragOverEnter = _debounce((sortableElement, element, pageY) => {

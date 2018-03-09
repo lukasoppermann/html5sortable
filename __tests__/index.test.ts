@@ -34,6 +34,13 @@ describe('Testing index', () => {
     expect(() => { index(div, document.links) }).not.toThrow('You must provide an element and a list of elements.')
   })
 
+  test('elementList is an Array', () => {
+    // setup
+    let div = window.document.createElement('div')
+    // assert
+    expect(() => { index(div, []) }).not.toThrow('You must provide an element and a list of elements.')
+  })
+
   test('element is child of div', () => {
     // setup
     let div = window.document.createElement('div')
