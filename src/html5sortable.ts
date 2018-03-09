@@ -55,21 +55,22 @@ let _makePlaceholder = (sortableElement, placeholder = undefined, placeholderCla
   } else {
     switch (sortableElement.tagName) {
       case 'UL':
-        placeholder = 'li'
+        placeholder = document.createElement('li')
         break
       case 'OL':
-        placeholder = 'li'
+        placeholder = document.createElement('li')
         break
       case 'TABLE':
         placeholder = 'tr'
+        placeholder.innerHTML = '<td colspan="100"></td>'
         break
       case 'TBODY':
-        placeholder = 'tr'
+        placeholder = document.createElement('tr')
+        placeholder.innerHTML = '<td colspan="100"></td>'
         break
       default:
-        placeholder = 'div'
+        placeholder = document.createElement('div')
     }
-    placeholder = document.createElement(placeholder)
   }
   // add classes to placeholder
   placeholder.classList.add(...placeholderClasses.split(' '))

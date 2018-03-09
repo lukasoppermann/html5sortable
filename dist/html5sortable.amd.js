@@ -257,21 +257,22 @@ var _makePlaceholder = function (sortableElement, placeholder, placeholderClasse
     else {
         switch (sortableElement.tagName) {
             case 'UL':
-                placeholder = 'li';
+                placeholder = document.createElement('li');
                 break;
             case 'OL':
-                placeholder = 'li';
+                placeholder = document.createElement('li');
                 break;
             case 'TABLE':
                 placeholder = 'tr';
+                placeholder.innerHTML = '<td colspan="100"></td>';
                 break;
             case 'TBODY':
-                placeholder = 'tr';
+                placeholder = document.createElement('tr');
+                placeholder.innerHTML = '<td colspan="100"></td>';
                 break;
             default:
-                placeholder = 'div';
+                placeholder = document.createElement('div');
         }
-        placeholder = document.createElement(placeholder);
     }
     // add classes to placeholder
     (_a = placeholder.classList).add.apply(_a, placeholderClasses.split(' '));
@@ -788,9 +789,8 @@ function sortable(sortableElements, options) {
         }, options.debounce);
         // Handle dragover and dragenter events on draggable items
         var onDragOverEnter = function (e) {
-            var element = e.target;
-            var sortableElement = _isSortable(element) ? element : findSortable(element);
-            element = findDragElement(sortableElement, element);
+            var sortableElement = _isSortable(e.target) ? e.target : findSortable(e.target);
+            var element = findDragElement(sortableElement, e.target);
             if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || addData(sortableElement, '_disabled') === 'true') {
                 return;
             }
