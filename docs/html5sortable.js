@@ -137,10 +137,10 @@ function _debounce (func, wait) {
 }
 
 function _index (element, elementList) {
-    if (!(element instanceof Element) || !(elementList instanceof NodeList || elementList instanceof HTMLCollection)) {
+    if (!(element instanceof Element) || !(elementList instanceof NodeList || elementList instanceof HTMLCollection || elementList instanceof Array)) {
         throw new Error('You must provide an element and a list of elements.');
     }
-    return Array.prototype.indexOf.call(elementList, element);
+    return Array.from(elementList).indexOf(element);
 }
 
 function isInDom (element) {
@@ -176,13 +176,14 @@ var insertBefore = function (target, element) { return insertNode(target, elemen
  */
 var insertAfter = function (target, element) { return insertNode(target, element, 'after'); };
 
-/*
+/* eslint-env browser */
+/**
  * variables global to the plugin
  */
 var dragging;
 var draggingHeight;
 var placeholderMap = new Map();
-/*
+/**
  * remove event handlers from items
  * @param {Array|NodeList} items
  */
@@ -196,7 +197,7 @@ var _removeItemEvents = function (items) {
     removeEventListener(items, 'mouseenter');
     removeEventListener(items, 'mouseleave');
 };
-/*
+/**
  * Remove event handlers from sortable
  * @param {Element} sortable a single sortable
  */
@@ -205,10 +206,11 @@ var _removeSortableEvents = function (sortable) {
     removeEventListener(sortable, 'dragenter');
     removeEventListener(sortable, 'drop');
 };
-/*
- * Attach ghost to dataTransfer object
- * @param {Event} original event
- * @param {object} ghost-object with item, x and y coordinates
+/**
+ * create a placeholder element
+ * @param {Elememnt} sortableElement a single sortable
+ * @param {string|undefine} placeholder a string representing an html element
+ * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
  */
 var _makePlaceholder = function (sortableElement, placeholder, placeholderClasses) {
     if (placeholder === void 0) { placeholder = undefined; }
@@ -242,7 +244,7 @@ var _makePlaceholder = function (sortableElement, placeholder, placeholderClasse
     return placeholder;
     var _a;
 };
-/*
+/**
  * Attach ghost to dataTransfer object
  * @param {Event} original event
  * @param {object} ghost-object with item, x and y coordinates
@@ -313,7 +315,7 @@ var _getDragging = function (draggedItem, sortable) {
     }
     return ditem;
 };
-/*
+/**
  * Remove data from sortable
  * @param {Element} sortable a single sortable
  */
@@ -321,7 +323,7 @@ var _removeSortableData = function (sortable) {
     removeData(sortable);
     removeAttribute(sortable, 'aria-dropeffect');
 };
-/*
+/**
  * Remove data from items
  * @param {Array|Element} items
  */
@@ -331,7 +333,7 @@ var _removeItemData = function (items) {
     removeAttribute(items, 'draggable');
     removeAttribute(items, 'role');
 };
-/*
+/**
  * Check if two lists are connected
  * @param {Element} curList
  * @param {Element} destList
@@ -353,14 +355,14 @@ var _listsConnected = function (curList, destList) {
     }
     return false;
 };
-/*
+/**
  * Is Copy Active for sortable
  * @param {Element} sortable a single sortable
  */
 var _isCopyActive = function (sortable) {
     return addData(sortable, 'opts').copy === true;
 };
-/*
+/**
  * Get height of an element including padding
  * @param {Element} sortable a single sortable
  */
@@ -375,7 +377,7 @@ var _getElementHeight = function (element) {
     })
         .reduce(function (prev, cur) { return prev + cur; });
 };
-/*
+/**
  * get handle or return item
  * @param {Array} items
  * @param {selector} handle
@@ -422,7 +424,7 @@ function findDragElement(sortableElement, element) {
     });
     return itemlist.length > 0 ? itemlist[0] : element;
 }
-/*
+/**
  * Destroy the sortable
  * @param {Element} sortableElement a single sortable
  */
@@ -438,7 +440,7 @@ var _destroySortable = function (sortableElement) {
     _removeItemEvents(items);
     _removeItemData(items);
 };
-/*
+/**
  * Enable the sortable
  * @param {Element} sortableElement a single sortable
  */
@@ -468,7 +470,7 @@ var _enableSortable = function (sortableElement) {
         });
     }
 };
-/*
+/**
  * Disable the sortable
  * @param {Element} sortableElement a single sortable
  */
@@ -481,7 +483,7 @@ var _disableSortable = function (sortableElement) {
     addAttribute(handles, 'draggable', 'false');
     removeEventListener(handles, 'mousedown');
 };
-/*
+/**
  * Reload the sortable
  * @param {Element} sortableElement a single sortable
  * @description events need to be removed to not be double bound
@@ -497,25 +499,11 @@ var _reloadSortable = function (sortableElement) {
     // remove event handlers from sortable
     _removeSortableEvents(sortableElement);
 };
-/**
- * Make native event that can be dispatched afterwards
- * @param {string} name
- * @param {object} detail
- * @returns {CustomEvent}
- */
-var _makeEvent = function (name, detail) {
-    var e = document.createEvent('Event');
-    if (detail) {
-        e.detail = detail;
-    }
-    e.initEvent(name, false, true);
-    return e;
-};
 var _serialize = function (list) {
     var children = _filter(list.children, addData(list, 'items'));
     return children;
 };
-/*
+/**
  * Public sortable object
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
@@ -625,10 +613,12 @@ function sortable(sortableElements, options) {
             startParent = findSortable(e.target);
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
-            sortableElement.dispatchEvent(_makeEvent('sortstart', {
-                item: dragging,
-                placeholder: placeholderMap.get(sortableElement),
-                startparent: startParent
+            sortableElement.dispatchEvent(new CustomEvent('sortstart', {
+                detail: {
+                    item: dragging,
+                    placeholder: placeholderMap.get(sortableElement),
+                    startparent: startParent
+                }
             }));
         });
         // Handle drag events on draggable items
@@ -649,23 +639,27 @@ function sortable(sortableElements, options) {
             placeholderMap.forEach(function (element) { return element.remove(); });
             newParent = this.parentElement;
             if (_listsConnected(newParent, startParent)) {
-                sortableElement.dispatchEvent(_makeEvent('sortstop', {
-                    item: dragging,
-                    startparent: startParent
+                sortableElement.dispatchEvent(new CustomEvent('sortstop', {
+                    detail: {
+                        item: dragging,
+                        startparent: startParent
+                    }
                 }));
                 if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
-                    sortableElement.dispatchEvent(_makeEvent('sortupdate', {
-                        item: dragging,
-                        index: _filter(newParent.children, addData(newParent, 'items'))
-                            .indexOf(dragging),
-                        oldindex: items.indexOf(dragging),
-                        elementIndex: _index(dragging, dragging.parentElement.children),
-                        oldElementIndex: index,
-                        startparent: startParent,
-                        endparent: newParent,
-                        newEndList: _serialize(newParent),
-                        newStartList: _serialize(startParent),
-                        oldStartList: startList
+                    sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
+                        detail: {
+                            item: dragging,
+                            index: _filter(newParent.children, addData(newParent, 'items'))
+                                .indexOf(dragging),
+                            oldindex: items.indexOf(dragging),
+                            elementIndex: _index(dragging, dragging.parentElement.children),
+                            oldElementIndex: index,
+                            startparent: startParent,
+                            endparent: newParent,
+                            newEndList: _serialize(newParent),
+                            newStartList: _serialize(startParent),
+                            oldStartList: startList
+                        }
                     }));
                 }
             }
@@ -682,6 +676,31 @@ function sortable(sortableElements, options) {
             addData(dragging, 'dropped', 'true');
             var visiblePlaceholder = Array.from(placeholderMap.values()).filter(isInDom)[0];
             insertAfter(visiblePlaceholder, dragging);
+            // fire sortstop
+            sortableElement.dispatchEvent(new CustomEvent('sortstop', {
+                detail: {
+                    item: dragging,
+                    startparent: startParent
+                }
+            }));
+            var newParent = _isSortable(this) ? this : this.parentElement;
+            // fire sortupdate if index or parent changed
+            if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+                sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
+                    detail: {
+                        item: dragging,
+                        index: _index(dragging, _filter(newParent.children, addData(newParent, 'items'))),
+                        oldindex: items.indexOf(dragging),
+                        elementIndex: _index(dragging, dragging.parentElement.children),
+                        oldElementIndex: index,
+                        startparent: startParent,
+                        endparent: newParent,
+                        newEndList: _serialize(newParent),
+                        newStartList: _serialize(startParent),
+                        oldStartList: startList
+                    }
+                }));
+            }
         });
         var debouncedDragOverEnter = _debounce(function (sortableElement, element, pageY) {
             if (!dragging) {
@@ -692,8 +711,8 @@ function sortable(sortableElements, options) {
             if (options.forcePlaceholderSize) {
                 placeholder.style.height = draggingHeight + 'px';
             }
-            var items = _filter(sortableElement.children, options.items);
-            // if element the draggedItem is dragged onto is within the array
+            // if element the draggedItem is dragged onto is within the array of all elements in list
+            // (not only items, but also disabled, etc.)
             if (Array.from(sortableElement.children).indexOf(element) > -1) {
                 var thisHeight = _getElementHeight(element);
                 var placeholderIndex = _index(placeholder, element.parentElement.children);

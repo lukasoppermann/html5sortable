@@ -125,6 +125,10 @@
 							<div>});</div>
 						</code>
   				</div>
+					<div class="mt2 bg-maroon border-top border-orange">
+						<h4 id="eventName"></h4>
+						<code><pre id="eventsConsole" style="overflow:auto"></pre></code>
+					</div>
 		    </div>
 				<div class="col col-6">
 					<ul class="ml4 js-sortable-disabled list flex flex-column list-reset">
@@ -141,8 +145,32 @@
 						<li class="disabled p1 mb1 maroon bg-orange muted">disabled 5</li>
 						<li class="p1 mb1 maroon bg-orange">Item 6</li>
 					</ul>
+					<script type="text/javascript">
+						sortable('.js-sortable-disabled', {
+							forcePlaceholderSize: true,
+							items: ':not(.disabled)',
+							placeholderClass: 'border border-orange mb1'
+						});
+						sortable('.js-sortable-disabled-inner', {
+							forcePlaceholderSize: true,
+							items: ':not(.disabled)',
+							placeholderClass: 'border border-maroon mb1'
+						});
+						let eventTitle = document.querySelector('#eventName')
+						let eventsConsole = document.querySelector('#eventsConsole')
+						let sortableWithEvents = document.querySelector('.js-sortable-disabled')
+						let events = ['sortstart','sortstop','sortupdate']
+						events.forEach((eventName) => {
+							sortableWithEvents.addEventListener(eventName, (e) => {
+								console.log('Fired: ', eventName)
+								eventTitle.innerHTML = eventName
+								eventsConsole.innerHTML = JSON.stringify(e.detail, null, ' ')
+							})
+						})
+					</script>
 		    </div>
 			</div>
+
 		</section>
 		<section class="mb3 mx-auto col col-12">
   		<div class="p3 bg-white orange col col-6">
@@ -400,16 +428,6 @@
     sortable('.js-grid', {
 				forcePlaceholderSize: true,
 				placeholderClass: 'col col-4 border border-maroon'
-			});
-			sortable('.js-sortable-disabled', {
-				forcePlaceholderSize: true,
-				items: ':not(.disabled)',
-				placeholderClass: 'border border-orange mb1'
-			});
-			sortable('.js-sortable-disabled-inner', {
-				forcePlaceholderSize: true,
-				items: ':not(.disabled)',
-				placeholderClass: 'border border-maroon mb1'
 			});
 			sortable('.js-sortable-connected', {
 				forcePlaceholderSize: true,
