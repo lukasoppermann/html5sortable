@@ -521,8 +521,7 @@ export default function sortable (sortableElements, options: object|string|undef
           // Dead zone?
           var deadZone = thisHeight - draggingHeight
           var offsetTop = _offset(element).top
-          if (placeholderIndex < thisIndex &&
-              pageY < offsetTop + deadZone) {
+          if (placeholderIndex < thisIndex && pageY < offsetTop) {
             return
           }
           if (placeholderIndex > thisIndex &&
