@@ -1,4 +1,4 @@
-/* global describe,test,expect,beforeEach */
+/* global describe,test,expect */
 import sortable from '../src/html5sortable'
 
 describe('Test options from sortable', () => {
