@@ -11,7 +11,9 @@ import _index from './index'
 import isInDom from './isInDom'
 import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
 import _serialize from './serialize'
+import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
+
 /*
  * variables global to the plugin
  */
@@ -41,42 +43,6 @@ var _removeSortableEvents = function (sortable) {
   _off(sortable, 'dragover')
   _off(sortable, 'dragenter')
   _off(sortable, 'drop')
-}
-/**
- * create a placeholder element
- * @param {Elememnt} sortableElement a single sortable
- * @param {string|undefine} placeholder a string representing an html element
- * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
- */
-let _makePlaceholder = (sortableElement, placeholder = undefined, placeholderClasses = 'sortable-placeholder') => {
-  if (typeof placeholder === 'string') {
-    let tempContainer = document.createElement(sortableElement.tagName)
-    tempContainer.innerHTML = placeholder
-    placeholder = tempContainer.children[0]
-  } else {
-    switch (sortableElement.tagName) {
-      case 'UL':
-        placeholder = document.createElement('li')
-        break
-      case 'OL':
-        placeholder = document.createElement('li')
-        break
-      case 'TABLE':
-        placeholder = 'tr'
-        placeholder.innerHTML = '<td colspan="100"></td>'
-        break
-      case 'TBODY':
-        placeholder = document.createElement('tr')
-        placeholder.innerHTML = '<td colspan="100"></td>'
-        break
-      default:
-        placeholder = document.createElement('div')
-    }
-  }
-  // add classes to placeholder
-  placeholder.classList.add(...placeholderClasses.split(' '))
-
-  return placeholder
 }
 /**
  * Attach ghost to dataTransfer object
@@ -377,7 +343,12 @@ export default function sortable (sortableElements, options: object|string|undef
     var items = _filter(sortableElement.children, options.items)
     var index
     var startList
-    let placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass)
+    // create element if user defined a placeholder element as a string
+    let customPlaceholder
+    if (options.placeholder !== null && options.placeholder !== undefined) {
+      customPlaceholder = document.createElement(options.placeholder)
+    }
+    let placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass)
 
     _data(sortableElement, 'items', options.items)
     placeholderMap.set(sortableElement, placeholder)
