@@ -168,17 +168,13 @@ var _isCopyActive = function (sortable) {
  * @param {Array} items
  * @param {selector} handle
  */
-var _getHandles = function (items, handle) {
-  var result = []
-  var handles
-  if (!handle) {
+var _getHandles = function (items: Element[], handle: string) {
+  if (typeof handle !== 'string') {
     return items
   }
-  for (var i = 0; i < items.length; ++i) {
-    handles = items[i].querySelectorAll(handle)
-    result = result.concat(Array.prototype.slice.call(handles))
-  }
-  return result
+  return items.map((item) => {
+    return item.querySelector(handle)
+  })
 }
 /**
  * Is {Element} a sortable.
