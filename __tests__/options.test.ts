@@ -7,7 +7,20 @@ describe('Test options from sortable', () => {
     // init sortable & get first one
     let sortableElement = sortable(div, undefined)[0]
     // test a default value to check if they stay the same
-    expect(sortableElement.h5s.data.opts.draggingClass).toEqual('sortable-dragging')
+    expect(sortableElement.h5s.data.opts).toEqual({
+      connectWith: false,
+      acceptFrom: null,
+      copy: false,
+      placeholder: null,
+      disableIEFix: false,
+      placeholderClass: 'sortable-placeholder',
+      draggingClass: 'sortable-dragging',
+      hoverClass: false,
+      debounce: 0,
+      maxItems: 0,
+      itemSerializer: undefined,
+      containerSerializer: undefined
+    })
   })
 
   test('options: method string', () => {
