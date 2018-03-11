@@ -4,7 +4,7 @@
  * @returns {boolean}
  */
 export default (element: Element): boolean => {
-  if (!element || element.nodeType !== 1) {
+  if (!(element instanceof Element)) {
     throw new Error('Element is not a node element.')
   }
 
