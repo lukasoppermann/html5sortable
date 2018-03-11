@@ -1,3 +1,4 @@
+/* eslint-env browser */
 /**
  * create a placeholder element
  * @param {Elememnt} sortableElement a single sortable
@@ -14,9 +15,9 @@ export default (sortableElement: Element, placeholder: Element | undefined, plac
   }
   // if no placeholder element is given
   if (placeholder === undefined) {
-    if (['UL','OL',].includes(sortableElement.tagName)) {
+    if (['UL', 'OL'].includes(sortableElement.tagName)) {
       placeholder = document.createElement('li')
-    } else if(['TABLE','TBODY',].includes(sortableElement.tagName)) {
+    } else if (['TABLE', 'TBODY'].includes(sortableElement.tagName)) {
       placeholder = document.createElement('tr')
       // set colspan to always all rows, otherwise the item can only be dropped in first column
       placeholder.innerHTML = '<td colspan="100"></td>'
@@ -25,7 +26,7 @@ export default (sortableElement: Element, placeholder: Element | undefined, plac
     }
   }
   // add classes to placeholder
-  if (typeof placeholderClass === 'string'){
+  if (typeof placeholderClass === 'string') {
     placeholder.classList.add(...placeholderClass.split(' '))
   }
 

@@ -1,3 +1,4 @@
+/* eslint-env browser */
 /**
  * Test whether element is in DOM
  * @param {Element} element

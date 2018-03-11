@@ -361,7 +361,12 @@ export default function sortable (sortableElements, options) {
     var items = _filter(sortableElement.children, options.items)
     var index
     var startList
-    let placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass)
+    // create element if user defined a placeholder element as a string
+    let customPlaceholder
+    if (options.placeholder !== null && options.placeholder !== undefined) {
+      customPlaceholder = document.createElement(options.placeholder)
+    }
+    let placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass)
 
     _data(sortableElement, 'items', options.items)
     placeholderMap.set(sortableElement, placeholder)
