@@ -324,35 +324,30 @@ var _reloadSortable = function (sortableElement) {
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
  */
-export default function sortable (sortableElements, options) {
+export default function sortable (sortableElements, options: object|string|undefined) {
+  // get method string to see if a method is called
   var method = String(options)
-  options = (function (options) {
-    var result = {
-      connectWith: false,
-      acceptFrom: null,
-      copy: false,
-      placeholder: null,
-      disableIEFix: false,
-      placeholderClass: 'sortable-placeholder',
-      draggingClass: 'sortable-dragging',
-      hoverClass: false,
-      debounce: 0,
-      maxItems: 0,
-      itemSerializer: undefined,
-      containerSerializer: undefined
-    }
-    if (typeof options === 'object') {
-      for (var option in options) {
-        result[option] = options[option]
-      }
-    }
-    return result
-  })(options)
-
+  // merge user options with defaults
+  options = Object.assign({
+    connectWith: false,
+    acceptFrom: null,
+    copy: false,
+    placeholder: null,
+    disableIEFix: false,
+    placeholderClass: 'sortable-placeholder',
+    draggingClass: 'sortable-dragging',
+    hoverClass: false,
+    debounce: 0,
+    maxItems: 0,
+    itemSerializer: undefined,
+    containerSerializer: undefined
+    // if options is an object, merge it, otherwise use empty object
+  }, (typeof options === 'object') ? options : {})
+  // check if the user provided a selector instead of an element
   if (typeof sortableElements === 'string') {
     sortableElements = document.querySelectorAll(sortableElements)
   }
-
+  // if the user provided an element, return it in an array to keep the return value consistant
   if (sortableElements instanceof Element) {
     sortableElements = [sortableElements]
   }
