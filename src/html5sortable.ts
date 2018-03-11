@@ -12,6 +12,8 @@ import isInDom from './isInDom'
 import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
 import _serialize from './serialize'
 import _makePlaceholder from './makePlaceholder'
+import _getElementHeight from './elementHeight'
+
 /*
  * variables global to the plugin
  */
@@ -160,21 +162,6 @@ var _listsConnected = function (curList, destList) {
  */
 var _isCopyActive = function (sortable) {
   return _data(sortable, 'opts').copy === true
-}
-/**
- * Get height of an element including padding
- * @param {Element} sortable a single sortable
- */
-let _getElementHeight = (element) => {
-  // get calculated style of element
-  let style = window.getComputedStyle(element)
-  // pick applicable properties, convert to int and reduce by adding
-  return ['height', 'padding-top', 'padding-bottom']
-    .map((key) => {
-      let int = parseInt(style.getPropertyValue(key), 10)
-      return isNaN(int) ? 0 : int
-    })
-    .reduce((prev, cur) => prev + cur)
 }
 /**
  * get handle or return item
