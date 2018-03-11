@@ -5,7 +5,7 @@
  */
 export default element => {
   if (!(element instanceof Element)) {
-    throw new Error('You must provide a dom element')
+    throw new Error('You must provide a valid dom element')
   }
   // get calculated style of element
   let style = window.getComputedStyle(element)

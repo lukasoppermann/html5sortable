@@ -1,9 +1,10 @@
-/* global describe,test,expect,beforeEach,CustomEvent */
+/* global describe,test,expect */
 import elementHeight from '../src/elementHeight'
 
 describe('Testing elementHeight', () => {
-  test.skip('no valid element', () => {
-
+  test('no valid element', () => {
+    // assert
+    expect(() => { elementHeight('') }).toThrow('You must provide a valid dom element')
   })
 
   test('element is not in DOM', () => {
@@ -14,7 +15,14 @@ describe('Testing elementHeight', () => {
     expect(elementHeight(div)).toEqual(10)
   })
 
-  test.skip('element is in DOM', () => {
-    // with height padding & margin
+  test('element is in DOM', () => {
+    // setup
+    let div = window.document.createElement('div')
+    div.style.height = '10px'
+    div.style.paddingTop = '5px'
+    div.style.paddingBottom = '7px'
+    window.document.body.appendChild(div)
+    // assert
+    expect(elementHeight(document.querySelector('div'))).toEqual(22)
   })
 })
