@@ -346,7 +346,9 @@ export default function sortable (sortableElements, options: object|string|undef
     // create element if user defined a placeholder element as a string
     let customPlaceholder
     if (options.placeholder !== null && options.placeholder !== undefined) {
-      customPlaceholder = document.createElement(options.placeholder)
+      let tempContainer = document.createElement(sortableElement.tagName)
+      tempContainer.innerHTML = options.placeholder
+      customPlaceholder = tempContainer.children[0]
     }
     let placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass)
 
