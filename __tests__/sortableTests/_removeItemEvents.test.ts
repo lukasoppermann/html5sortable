@@ -1,6 +1,7 @@
-/* global describe,test,expect */
-import { mockInnerHTML } from '../testHelpers.ts'
+/* describe,test,expect */
+import { mockInnerHTML } from '../helpers'
 import sortable from '../../src/html5sortable'
+/* eslint-env jest */
 
 describe('_removeItemEvents', () => {
   let ul, allLiElements, li
@@ -9,7 +10,7 @@ describe('_removeItemEvents', () => {
     ul = document.body.querySelector('.sortable')
     sortable(ul, 'destroy')
     // init sortable
-    sortable(ul)
+    sortable(ul, null)
     // get all li elements
     allLiElements = ul.querySelectorAll('li')
     // get first li element
@@ -22,7 +23,7 @@ describe('_removeItemEvents', () => {
     // remove individual events
     // need to add on click so that event object is not removed
     // when all sortable events are removed
-    sortable(ul)
+    sortable(ul, null)
     sortable.__testing._removeItemEvents(li)
     // test individual events
     expect((li.h5s.events || {}).hasOwnProperty('dragover')).toBe(false)

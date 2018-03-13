@@ -1,4 +1,6 @@
-/* global describe,test,expect */
+/* describe,test,expect */
+/* eslint-env jest */
+
 import {insertBefore} from '../src/insertHtmlElements'
 
 describe('Testing insertBefore', () => {
@@ -29,6 +31,6 @@ describe('Testing insertBefore', () => {
     expect(() => { insertBefore(div, 'error') }).toThrow('target and element must be a node')
     expect(() => { insertBefore('error', div) }).toThrow('target and element must be a node')
     expect(() => { insertBefore(undefined, div) }).toThrow('target and element must be a node')
-    expect(() => { insertBefore(div) }).toThrow('target and element must be a node')
+    expect(() => { insertBefore(div, null) }).toThrow('target and element must be a node')
   })
 })

@@ -1,11 +1,10 @@
-/* global describe,test,expect,beforeEach,CustomEvent */
+/* describe,test,expect,beforeEach,CustomEvent */
 import sortable from '../src/html5sortable'
 /* eslint-env jest */
 
 jest.useFakeTimers()
 
 describe('Testing events', () => {
-  const { JSDOM } = require('jsdom')
   const documentHTML = `<!doctype html><html><head><style>
     html, body{
       margin: 0;
@@ -17,9 +16,7 @@ describe('Testing events', () => {
       padding: 0;
     }
   <style></head><body><div id="root"></div></body></html>`
-  global.document = new JSDOM(documentHTML)
-  global.window = document.parentWindow
-  global.body = global.document.querySelector('body')
+  let body = document.querySelector('body')
 
   let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)
   let ul, li, secondLi, ul2, fifthLi, fourthLi
@@ -30,7 +27,7 @@ describe('Testing events', () => {
   var sortstopitem, sortstopStartparent
 
   beforeEach(() => {
-    global.body.innerHTML = `<ul class="sortable">
+    body.innerHTML = `<ul class="sortable">
       <li class="item first-item">Item 1</li>
       <li class="item second-item">Item 2</li>
       <li class="item">Item 3</li>
@@ -42,11 +39,11 @@ describe('Testing events', () => {
       <li class="item fifth-item">Item 5</li>
     </ul>`
 
-    ul = global.body.querySelector('.sortable')
+    ul = body.querySelector('.sortable')
     li = ul.querySelector('.first-item')
     secondLi = ul.querySelector('.second-item')
     fourthLi = ul.querySelector('.fourth-item')
-    ul2 = global.body.querySelector('.sortable2')
+    ul2 = body.querySelector('.sortable2')
     fifthLi = ul2.querySelector('.fifth-item')
 
     li.getClientRects = function () {
@@ -89,11 +86,11 @@ describe('Testing events', () => {
   })
 
   function addEventListener (ul) {
-    sortable(ul)[0].addEventListener('sortstart', function (e) {
+    sortable(ul, null)[0].addEventListener('sortstart', function (e) {
       sortstartitem = e.detail.item
       sortstartparent = e.detail.startparent
     })
-    sortable(ul)[0].addEventListener('sortupdate', function (e) {
+    sortable(ul, null)[0].addEventListener('sortupdate', function (e) {
       sortupdateitem = e.detail.item
       sortupdateitemIndex = e.detail.index
       sortupdateitemOldindex = e.detail.oldindex
@@ -105,7 +102,7 @@ describe('Testing events', () => {
       sortupdateitemNewStartList = e.detail.newStartList
       sortupdateitemOldStartList = e.detail.oldStartList
     })
-    sortable(ul)[0].addEventListener('sortstop', function (e) {
+    sortable(ul, null)[0].addEventListener('sortstop', function (e) {
       sortstopitem = e.detail.item
       sortstopStartparent = e.detail.startparent
     })
@@ -120,7 +117,7 @@ describe('Testing events', () => {
     })
 
     addEventListener(ul)
-    let event = new CustomEvent('dragstart')
+    let event = new CustomEvent('dragstart') as any
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -149,7 +146,7 @@ describe('Testing events', () => {
         draggingClass: 'test-dragging'
       })
       let childcount = li.parentNode.childNodes.length
-      let event = new CustomEvent('dragstart')
+      let event = new CustomEvent('dragstart') as any
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -185,7 +182,7 @@ describe('Testing events', () => {
       draggingClass: 'test-dragging'
     })
     let childcount = li.parentNode.childNodes.length
-    let event = new CustomEvent('dragstart')
+    let event = new CustomEvent('dragstart') as any
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -251,7 +248,7 @@ describe('Testing events', () => {
     addEventListener(ul)
     let originalIndex = getIndex(li, ul.children)
 
-    let event = new CustomEvent('dragstart')
+    let event = new CustomEvent('dragstart') as any
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -312,7 +309,7 @@ describe('Testing events', () => {
       // let originalChildrenLen = ul.children.length
       let originalIndex = getIndex(li, ul.children)
 
-      let event = new CustomEvent('dragstart')
+      let event = new CustomEvent('dragstart') as any
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -350,7 +347,7 @@ describe('Testing events', () => {
 
     let originalIndex = getIndex(li, ul.children)
 
-    let event = new CustomEvent('dragstart')
+    let event = new CustomEvent('dragstart') as any
     event.dataTransfer = {
       setData: function (val) {
         this.data = val
@@ -390,7 +387,7 @@ describe('Testing events', () => {
 
       let originalIndex = getIndex(secondLi, ul.children)
 
-      let event = new CustomEvent('dragstart')
+      let event = new CustomEvent('dragstart') as any
       event.dataTransfer = {
         setData: function (val) {
           this.data = val
@@ -409,11 +406,11 @@ describe('Testing events', () => {
       secondLi.dispatchEvent(event)
       expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
 
-      global.body.dispatchEvent(event)
+      body.dispatchEvent(event)
 
       event = new CustomEvent('drop')
 
-      global.body.dispatchEvent(event)
+      body.dispatchEvent(event)
       expect(getIndex(secondLi, ul.children)).toEqual(originalIndex)
     }
   )
@@ -425,7 +422,7 @@ describe('Testing events', () => {
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     })
-    let event = new CustomEvent('dragstart')
+    let event = new CustomEvent('dragstart') as any
     event.dataTransfer = {
       setData: function (val) {
         this.data = val

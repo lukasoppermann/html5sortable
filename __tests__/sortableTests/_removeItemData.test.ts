@@ -1,6 +1,7 @@
-/* global describe,test,expect */
-import { mockInnerHTML } from '../testHelpers.ts'
+/* describe,test,expect */
+import { mockInnerHTML } from '../helpers'
 import sortable from '../../src/html5sortable'
+/* eslint-env jest */
 
 describe('_removeItemData', () => {
   let ul, allLiElements, li
@@ -9,7 +10,7 @@ describe('_removeItemData', () => {
     ul = document.body.querySelector('.sortable')
     sortable(ul, 'destroy')
     // init sortable
-    sortable(ul)
+    sortable(ul, null)
     // get all li elements
     allLiElements = ul.querySelectorAll('li')
     // get first li element

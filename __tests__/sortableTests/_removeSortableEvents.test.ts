@@ -1,6 +1,7 @@
-/* global describe,test,expect */
-import { mockInnerHTML } from '../testHelpers.ts'
+/* describe,test,expect */
+import { mockInnerHTML } from '../helpers'
 import sortable from '../../src/html5sortable'
+/* eslint-env jest */
 
 describe('_removeSortableEvents', () => {
   let ul
@@ -9,9 +10,9 @@ describe('_removeSortableEvents', () => {
     ul = document.body.querySelector('.sortable')
     sortable(ul, 'destroy')
     // init sortable
-    sortable(ul)
+    sortable(ul, null)
   })
-  test('_removeSortableEvents', () {
+  test('_removeSortableEvents', () => {
     // remove events object
     sortable.__testing._removeSortableEvents(ul)
     // check that events are gone

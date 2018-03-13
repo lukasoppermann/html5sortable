@@ -1,9 +1,11 @@
-/* global describe,test,expect */
+/* describe,test,expect */
+/* eslint-env jest */
+
 import makePlaceholder from '../src/makePlaceholder'
 
 describe('Testing makePlaceholder function', () => {
   test('undefined as sortable', () => {
-    expect(() => { makePlaceholder(undefined) }).toThrow('You must provide a valid element as a sortable.')
+    expect(() => { makePlaceholder(undefined, null) }).toThrow('You must provide a valid element as a sortable.')
   })
 
   test('string as placeholder', () => {
@@ -32,8 +34,8 @@ describe('Testing makePlaceholder function', () => {
     let ul = window.document.createElement('ul')
     let ol = window.document.createElement('ol')
     // assert
-    expect(makePlaceholder(ul).tagName).toEqual('LI')
-    expect(makePlaceholder(ol).tagName).toEqual('LI')
+    expect(makePlaceholder(ul, undefined).tagName).toEqual('LI')
+    expect(makePlaceholder(ol, undefined).tagName).toEqual('LI')
   })
 
   test('List placeholer', () => {
@@ -41,8 +43,8 @@ describe('Testing makePlaceholder function', () => {
     let ul = window.document.createElement('ul')
     let ol = window.document.createElement('ol')
     // assert
-    expect(makePlaceholder(ul).tagName).toEqual('LI')
-    expect(makePlaceholder(ol).tagName).toEqual('LI')
+    expect(makePlaceholder(ul, undefined).tagName).toEqual('LI')
+    expect(makePlaceholder(ol, undefined).tagName).toEqual('LI')
   })
 
   test('Table placeholer', () => {
@@ -50,8 +52,8 @@ describe('Testing makePlaceholder function', () => {
     let table = window.document.createElement('table')
     let tbody = window.document.createElement('tbody')
     // assert
-    expect(makePlaceholder(table).outerHTML).toEqual('<tr class="sortable-placeholder"><td colspan="100"></td></tr>')
-    expect(makePlaceholder(tbody).outerHTML).toEqual('<tr class="sortable-placeholder"><td colspan="100"></td></tr>')
+    expect(makePlaceholder(table, undefined).outerHTML).toEqual('<tr class="sortable-placeholder"><td colspan="100"></td></tr>')
+    expect(makePlaceholder(tbody, undefined).outerHTML).toEqual('<tr class="sortable-placeholder"><td colspan="100"></td></tr>')
   })
 
   test('Default div placeholer', () => {
@@ -59,7 +61,7 @@ describe('Testing makePlaceholder function', () => {
     let div = window.document.createElement('div')
     let menu = window.document.createElement('menu')
     // assert
-    expect(makePlaceholder(div).tagName).toEqual('DIV')
-    expect(makePlaceholder(menu).tagName).toEqual('DIV')
+    expect(makePlaceholder(div, undefined).tagName).toEqual('DIV')
+    expect(makePlaceholder(menu, undefined).tagName).toEqual('DIV')
   })
 })

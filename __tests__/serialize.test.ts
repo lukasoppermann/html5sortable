@@ -1,4 +1,6 @@
-/* global describe,test,expect */
+/* describe,test,expect */
+/* eslint-env jest */
+
 import serialize from '../src/serialize'
 import sortable from '../src/html5sortable'
 

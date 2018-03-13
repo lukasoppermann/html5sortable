@@ -1,4 +1,6 @@
-/* global describe,test,expect */
+/* describe,test,expect */
+/* eslint-env jest */
+
 import index from '../src/index'
 
 describe('Testing index', () => {

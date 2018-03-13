@@ -1,4 +1,6 @@
-/* global describe,test,expect */
+/* describe,test,expect */
+/* eslint-env jest */
+
 import {insertAfter} from '../src/insertHtmlElements'
 
 describe('Testing insertAfter', () => {
@@ -30,6 +32,6 @@ describe('Testing insertAfter', () => {
     expect(() => { insertAfter(div, 'error') }).toThrow('target and element must be a node')
     expect(() => { insertAfter('error', div) }).toThrow('target and element must be a node')
     expect(() => { insertAfter(undefined, div) }).toThrow('target and element must be a node')
-    expect(() => { insertAfter(div) }).toThrow('target and element must be a node')
+    expect(() => { insertAfter(div, null) }).toThrow('target and element must be a node')
   })
 })
