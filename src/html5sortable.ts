@@ -15,6 +15,7 @@ import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
 import _getHandles from './getHandles'
 import setDragImage from './setDragImage'
+import store from './store'
 /*
  * variables global to the plugin
  */
@@ -262,7 +263,8 @@ export default function sortable (sortableElements, options: object|string|undef
     if (/enable|disable|destroy/.test(method)) {
       return sortable[method](sortableElement)
     }
-
+    // init data store for sortable
+    store(sortableElement).config = options
     // get options & set options on sortable
     options = _data(sortableElement, 'opts') || options
     _data(sortableElement, 'opts', options)
