@@ -5,7 +5,7 @@
  * @param {string|undefine} placeholder a string representing an html element
  * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
  */
-export default (sortableElement: Element, placeholder: Element | undefined, placeholderClass: string = 'sortable-placeholder') => {
+export default (sortableElement: Element, placeholder?: Element, placeholderClass: string = 'sortable-placeholder') => {
   if (!(sortableElement instanceof Element)) {
     throw new Error('You must provide a valid element as a sortable.')
   }
