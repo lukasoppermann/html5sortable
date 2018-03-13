@@ -141,7 +141,7 @@ function index (element, elementList) {
 }
 
 function isInDom (element) {
-    if (!element || element.nodeType !== 1) {
+    if (!(element instanceof Element)) {
         throw new Error('Element is not a node element.');
     }
     return element.parentNode !== null;
@@ -207,6 +207,52 @@ function _serialize (sortableContainer, customItemSerializer, customContainerSer
     };
 }
 
+function _makePlaceholder (sortableElement, placeholder, placeholderClass) {
+    if (placeholderClass === void 0) { placeholderClass = 'sortable-placeholder'; }
+    if (!(sortableElement instanceof Element)) {
+        throw new Error('You must provide a valid element as a sortable.');
+    }
+    // if placeholder is not an element
+    if (!(placeholder instanceof Element) && placeholder !== undefined) {
+        throw new Error('You must provide a valid element as a placeholder or set ot to undefined.');
+    }
+    // if no placeholder element is given
+    if (placeholder === undefined) {
+        if (['UL', 'OL'].includes(sortableElement.tagName)) {
+            placeholder = document.createElement('li');
+        }
+        else if (['TABLE', 'TBODY'].includes(sortableElement.tagName)) {
+            placeholder = document.createElement('tr');
+            // set colspan to always all rows, otherwise the item can only be dropped in first column
+            placeholder.innerHTML = '<td colspan="100"></td>';
+        }
+        else {
+            placeholder = document.createElement('div');
+        }
+    }
+    // add classes to placeholder
+    if (typeof placeholderClass === 'string') {
+        (_a = placeholder.classList).add.apply(_a, placeholderClass.split(' '));
+    }
+    return placeholder;
+    var _a;
+}
+
+function _getElementHeight (element) {
+    if (!(element instanceof Element)) {
+        throw new Error('You must provide a valid dom element');
+    }
+    // get calculated style of element
+    var style = window.getComputedStyle(element);
+    // pick applicable properties, convert to int and reduce by adding
+    return ['height', 'padding-top', 'padding-bottom']
+        .map(function (key) {
+        var int = parseInt(style.getPropertyValue(key), 10);
+        return isNaN(int) ? 0 : int;
+    })
+        .reduce(function (sum, value) { return sum + value; });
+}
+
 /* eslint-env browser */
 /*
  * variables global to the plugin
@@ -237,45 +283,6 @@ var _removeSortableEvents = function (sortable) {
     removeEventListener(sortable, 'dragover');
     removeEventListener(sortable, 'dragenter');
     removeEventListener(sortable, 'drop');
-};
-/**
- * create a placeholder element
- * @param {Elememnt} sortableElement a single sortable
- * @param {string|undefine} placeholder a string representing an html element
- * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
- */
-var _makePlaceholder = function (sortableElement, placeholder, placeholderClasses) {
-    if (placeholder === void 0) { placeholder = undefined; }
-    if (placeholderClasses === void 0) { placeholderClasses = 'sortable-placeholder'; }
-    if (typeof placeholder === 'string') {
-        var tempContainer = document.createElement(sortableElement.tagName);
-        tempContainer.innerHTML = placeholder;
-        placeholder = tempContainer.children[0];
-    }
-    else {
-        switch (sortableElement.tagName) {
-            case 'UL':
-                placeholder = document.createElement('li');
-                break;
-            case 'OL':
-                placeholder = document.createElement('li');
-                break;
-            case 'TABLE':
-                placeholder = 'tr';
-                placeholder.innerHTML = '<td colspan="100"></td>';
-                break;
-            case 'TBODY':
-                placeholder = document.createElement('tr');
-                placeholder.innerHTML = '<td colspan="100"></td>';
-                break;
-            default:
-                placeholder = document.createElement('div');
-        }
-    }
-    // add classes to placeholder
-    (_a = placeholder.classList).add.apply(_a, placeholderClasses.split(' '));
-    return placeholder;
-    var _a;
 };
 /**
  * Attach ghost to dataTransfer object
@@ -394,21 +401,6 @@ var _listsConnected = function (curList, destList) {
  */
 var _isCopyActive = function (sortable) {
     return addData(sortable, 'opts').copy === true;
-};
-/**
- * Get height of an element including padding
- * @param {Element} sortable a single sortable
- */
-var _getElementHeight = function (element) {
-    // get calculated style of element
-    var style = window.getComputedStyle(element);
-    // pick applicable properties, convert to int and reduce by adding
-    return ['height', 'padding-top', 'padding-bottom']
-        .map(function (key) {
-        var int = parseInt(style.getPropertyValue(key), 10);
-        return isNaN(int) ? 0 : int;
-    })
-        .reduce(function (prev, cur) { return prev + cur; });
 };
 /**
  * get handle or return item
@@ -538,32 +530,28 @@ var _reloadSortable = function (sortableElement) {
  * @param {object|string} options|method
  */
 function sortable(sortableElements, options) {
+    // get method string to see if a method is called
     var method = String(options);
-    options = (function (options) {
-        var result = {
-            connectWith: false,
-            acceptFrom: null,
-            copy: false,
-            placeholder: null,
-            disableIEFix: false,
-            placeholderClass: 'sortable-placeholder',
-            draggingClass: 'sortable-dragging',
-            hoverClass: false,
-            debounce: 0,
-            maxItems: 0,
-            itemSerializer: undefined,
-            containerSerializer: undefined
-        };
-        if (typeof options === 'object') {
-            for (var option in options) {
-                result[option] = options[option];
-            }
-        }
-        return result;
-    })(options);
+    // merge user options with defaults
+    options = Object.assign({
+        connectWith: false,
+        acceptFrom: null,
+        copy: false,
+        placeholder: null,
+        disableIEFix: false,
+        placeholderClass: 'sortable-placeholder',
+        draggingClass: 'sortable-dragging',
+        hoverClass: false,
+        debounce: 0,
+        maxItems: 0,
+        itemSerializer: undefined,
+        containerSerializer: undefined
+    }, (typeof options === 'object') ? options : {});
+    // check if the user provided a selector instead of an element
     if (typeof sortableElements === 'string') {
         sortableElements = document.querySelectorAll(sortableElements);
     }
+    // if the user provided an element, return it in an array to keep the return value consistant
     if (sortableElements instanceof Element) {
         sortableElements = [sortableElements];
     }
@@ -589,7 +577,14 @@ function sortable(sortableElements, options) {
         var items = filter(sortableElement.children, options.items);
         var index$$1;
         var startList;
-        var placeholder = _makePlaceholder(sortableElement, options.placeholder, options.placeholderClass);
+        // create element if user defined a placeholder element as a string
+        var customPlaceholder;
+        if (options.placeholder !== null && options.placeholder !== undefined) {
+            var tempContainer = document.createElement(sortableElement.tagName);
+            tempContainer.innerHTML = options.placeholder;
+            customPlaceholder = tempContainer.children[0];
+        }
+        var placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass);
         addData(sortableElement, 'items', options.items);
         placeholderMap.set(sortableElement, placeholder);
         if (options.acceptFrom) {
@@ -750,8 +745,7 @@ function sortable(sortableElements, options) {
                     // Dead zone?
                     var deadZone = thisHeight - draggingHeight;
                     var offsetTop = _offset(element).top;
-                    if (placeholderIndex < thisIndex &&
-                        pageY < offsetTop + deadZone) {
+                    if (placeholderIndex < thisIndex && pageY < offsetTop) {
                         return;
                     }
                     if (placeholderIndex > thisIndex &&
