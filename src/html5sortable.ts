@@ -109,7 +109,7 @@ var _listsConnected = function (curList, destList) {
  * @param {Element} sortable a single sortable
  */
 var _isCopyActive = function (sortable) {
-  return _data(sortable, 'opts').copy === true
+  return store(sortable).getConfig('copy') === true
 }
 /**
  * Is {Element} a sortable.
@@ -132,9 +132,8 @@ function findSortable (element) {
  * @param {Element} sortable a single sortable
  * @param {Element} element is that being dragged
  */
-function findDragElement (sortableElement, element) {
-  var options = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, options.items)
+function findDragElement (sortableElement: Element, element: Element) {
+  var items = _filter(sortableElement.children, store(sortable).getConfig('items'))
   var itemlist = items.filter(function (ele) {
     return ele.contains(element)
   })
@@ -254,8 +253,7 @@ export default function sortable (sortableElements, options: object|string|undef
 
   if (/serialize/.test(method)) {
     return sortableElements.map((sortableContainer) => {
-      let opts = _data(sortableContainer, 'opts')
-      return _serialize(sortableContainer, opts.itemSerializer, opts.containerSerializer)
+      return _serialize(sortableContainer, store(sortableContainer).getConfig('itemSerializer'), store(sortableContainer).getConfig('containerSerializer'))
     })
   }
 
@@ -298,8 +296,8 @@ export default function sortable (sortableElements, options: object|string|undef
     _attr(items, 'aria-grabbed', 'false')
 
     // Mouse over class
-    if (typeof options.hoverClass === 'string') {
-      let hoverClasses = options.hoverClass.split(' ')
+    if (typeof store(sortableElement).getConfig('hoverClass') === 'string') {
+      let hoverClasses = store(sortableElement).getConfig('hoverClass').split(' ')
       // add class on hover
       _on(items, 'mouseenter', function (e) {
         e.target.classList.add(...hoverClasses)
