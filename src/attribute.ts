@@ -1,3 +1,5 @@
+/* eslint-env */
+
 /**
  * @param {Array|Element} element
  * @param {string} attribute
