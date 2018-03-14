@@ -1,4 +1,4 @@
-/* describe,test,expect */
+/* global describe,test,expect */
 /* eslint-env jest */
 
 import sortable from '../src/html5sortable'

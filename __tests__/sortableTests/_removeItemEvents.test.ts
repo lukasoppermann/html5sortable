@@ -1,4 +1,4 @@
-/* describe,test,expect */
+/* global describe,test,expect */
 import { mockInnerHTML } from '../helpers'
 import sortable from '../../src/html5sortable'
 /* eslint-env jest */

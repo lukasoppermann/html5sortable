@@ -1,4 +1,4 @@
-/* describe,test,expect,beforeEach,CustomEvent */
+/* global describe,test,expect,beforeEach,CustomEvent */
 import sortable from '../src/html5sortable'
 /* eslint-env jest */
 

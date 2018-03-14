@@ -1,4 +1,4 @@
-/* describe,test,expect */
+/* global describe,test,expect */
 /* eslint-env jest */
 
 import serialize from '../src/serialize'

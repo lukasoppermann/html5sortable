@@ -1,5 +1,5 @@
 /* describe,test,expect */
-/* eslint-env jest */
+/* global eslint-env jest */
 import sortable from '../src/html5sortable'
 
 describe('Testing ghost creation methods', () => {

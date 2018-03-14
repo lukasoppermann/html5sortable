@@ -1,4 +1,4 @@
-/* describe,expect,test,beforeEach,beforeAll */
+/* global describe,expect,test,beforeEach,beforeAll */
 import sortable from '../src/html5sortable'
 /* eslint-env jest */
 
