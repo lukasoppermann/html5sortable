@@ -3,6 +3,7 @@ language: node_js
 node_js:
   - "node"
 install:
+  - npm i -g npm@5.7.1
   - npm ci
 # keep the npm cache around to speed up installs
 cache:
