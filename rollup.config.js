@@ -3,7 +3,7 @@ import typescript from 'rollup-plugin-typescript'
 import strip from 'rollup-plugin-strip-code'
 import pkg from './package.json'
 
-let dir = `${pkg.dist}/`
+let dir = `${pkg.dest}/`
 let banner = `/*
  * HTML5Sortable package
  * https://github.com/lukasoppermann/html5sortable
