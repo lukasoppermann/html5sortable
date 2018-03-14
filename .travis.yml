@@ -2,5 +2,10 @@ sudo: false
 language: node_js
 node_js:
   - "node"
-before_install: npm install
+install:
+  - npm ci
+# keep the npm cache around to speed up installs
+cache:
+  directories:
+    - "$HOME/.npm"
 script: npm run travis
