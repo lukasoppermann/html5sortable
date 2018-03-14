@@ -5,17 +5,6 @@ import sortable from '../src/html5sortable'
 jest.useFakeTimers()
 
 describe('Testing events', () => {
-  const documentHTML = `<!doctype html><html><head><style>
-    html, body{
-      margin: 0;
-    }
-    li{
-      display: block;
-      width: 100%;
-      height: 25px;
-      padding: 0;
-    }
-  <style></head><body><div id="root"></div></body></html>`
   let body = document.querySelector('body')
 
   let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)
@@ -26,17 +15,19 @@ describe('Testing events', () => {
     sortupdateitemNewEndList, sortupdateitemNewStartList, sortupdateitemOldStartList
   var sortstopitem, sortstopStartparent
 
+  let dataTransferObj
+
   beforeEach(() => {
     body.innerHTML = `<ul class="sortable">
-      <li class="item first-item">Item 1</li>
-      <li class="item second-item">Item 2</li>
-      <li class="item">Item 3</li>
-      <li class="item fourth-item"><a href="#" class="handle"><span class='item4'>Item 4</span></a></li>
-      <li class="item"><a href="#" class="notHandle">a clever ruse</a></li>
+    <li class="item first-item">Item 1</li>
+    <li class="item second-item">Item 2</li>
+    <li class="item">Item 3</li>
+    <li class="item fourth-item"><a href="#" class="handle"><span class='item4'>Item 4</span></a></li>
+    <li class="item"><a href="#" class="notHandle">a clever ruse</a></li>
     </ul>
     <ul class="sortable2">
-      <li class="item">Item</li>
-      <li class="item fifth-item">Item 5</li>
+    <li class="item">Item</li>
+    <li class="item fifth-item">Item 5</li>
     </ul>`
 
     ul = body.querySelector('.sortable')
@@ -83,6 +74,12 @@ describe('Testing events', () => {
 
     sortstopitem = null
     sortstopStartparent = null
+
+    dataTransferObj = {
+      setData: function (val) {
+        this.data = val
+      }
+    }
   })
 
   function addEventListener (ul) {
@@ -117,13 +114,9 @@ describe('Testing events', () => {
     })
 
     addEventListener(ul)
-    let event = new CustomEvent('dragstart') as any
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
-    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    let event = new CustomEvent('dragstart')
+    event.dataTransfer = dataTransferObj
+    Object.defineProperty(event, 'target', { value: li, enumerable: true })
     ul.dispatchEvent(event)
 
     expect(li.getAttribute('aria-grabbed')).toEqual('true')
@@ -146,13 +139,9 @@ describe('Testing events', () => {
         draggingClass: 'test-dragging'
       })
       let childcount = li.parentNode.childNodes.length
-      let event = new CustomEvent('dragstart') as any
-      event.dataTransfer = {
-        setData: function (val) {
-          this.data = val
-        }
-      }
-      Object.defineProperty(event, 'target', {value: li, enumerable: true})
+      let event = new CustomEvent('dragstart')
+      event.dataTransfer = dataTransferObj
+      Object.defineProperty(event, 'target', { value: li, enumerable: true })
       ul.dispatchEvent(event)
 
       expect(li.getAttribute('aria-grabbed')).toEqual('false')
@@ -163,11 +152,7 @@ describe('Testing events', () => {
       expect(copyli.classList.contains('test-dragging')).toBe(true)
 
       event = new CustomEvent('dragover')
-      event.dataTransfer = {
-        setData: function (val) {
-          this.data = val
-        }
-      }
+      event.dataTransfer = dataTransferObj
       secondLi.dispatchEvent(event)
       expect(event.dataTransfer.dropEffect).toEqual('copy')
     }
@@ -182,13 +167,9 @@ describe('Testing events', () => {
       draggingClass: 'test-dragging'
     })
     let childcount = li.parentNode.childNodes.length
-    let event = new CustomEvent('dragstart') as any
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
-    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    let event = new CustomEvent('dragstart')
+    event.dataTransfer = dataTransferObj
+    Object.defineProperty(event, 'target', { value: li, enumerable: true })
     ul.dispatchEvent(event)
 
     expect(li.getAttribute('aria-grabbed')).toEqual('true')
@@ -248,20 +229,12 @@ describe('Testing events', () => {
     addEventListener(ul)
     let originalIndex = getIndex(li, ul.children)
 
-    let event = new CustomEvent('dragstart') as any
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
+    let event = new CustomEvent('dragstart')
+    event.dataTransfer = dataTransferObj
     li.dispatchEvent(event)
 
     event = new CustomEvent('dragover')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
+    event.dataTransfer = dataTransferObj
     secondLi.dispatchEvent(event)
     expect(event.dataTransfer.dropEffect).toEqual('move')
 
@@ -309,20 +282,12 @@ describe('Testing events', () => {
       // let originalChildrenLen = ul.children.length
       let originalIndex = getIndex(li, ul.children)
 
-      let event = new CustomEvent('dragstart') as any
-      event.dataTransfer = {
-        setData: function (val) {
-          this.data = val
-        }
-      }
+      let event = new CustomEvent('dragstart')
+      event.dataTransfer = dataTransferObj
       li.dispatchEvent(event)
 
       event = new CustomEvent('dragover')
-      event.dataTransfer = {
-        setData: function (val) {
-          this.data = val
-        }
-      }
+      event.dataTransfer = dataTransferObj
       fifthLi.dispatchEvent(event)
 
       expect(event.dataTransfer.dropEffect).toEqual('move')
@@ -347,22 +312,14 @@ describe('Testing events', () => {
 
     let originalIndex = getIndex(li, ul.children)
 
-    let event = new CustomEvent('dragstart') as any
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
+    let event = new CustomEvent('dragstart')
+    event.dataTransfer = dataTransferObj
 
     li.dispatchEvent(event)
     expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
 
     event = new CustomEvent('dragover')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
+    event.dataTransfer = dataTransferObj
     secondLi.dispatchEvent(event)
     expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
 
@@ -387,22 +344,14 @@ describe('Testing events', () => {
 
       let originalIndex = getIndex(secondLi, ul.children)
 
-      let event = new CustomEvent('dragstart') as any
-      event.dataTransfer = {
-        setData: function (val) {
-          this.data = val
-        }
-      }
+      let event = new CustomEvent('dragstart')
+      event.dataTransfer = dataTransferObj
 
       secondLi.dispatchEvent(event)
       expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
 
       event = new CustomEvent('dragover')
-      event.dataTransfer = {
-        setData: function (val) {
-          this.data = val
-        }
-      }
+      event.dataTransfer = dataTransferObj
       secondLi.dispatchEvent(event)
       expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
 
@@ -422,24 +371,16 @@ describe('Testing events', () => {
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     })
-    let event = new CustomEvent('dragstart') as any
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
-    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    let event = new CustomEvent('dragstart')
+    event.dataTransfer = dataTransferObj
+    Object.defineProperty(event, 'target', { value: li, enumerable: true })
     ul.dispatchEvent(event)
 
     expect(li.getAttribute('aria-grabbed')).toEqual('true')
 
     event = new CustomEvent('dragover')
-    event.dataTransfer = {
-      setData: function (val) {
-        this.data = val
-      }
-    }
-    Object.defineProperty(event, 'target', {value: item4, enumerable: true})
+    event.dataTransfer = dataTransferObj
+    Object.defineProperty(event, 'target', { value: item4, enumerable: true })
     ul.dispatchEvent(event)
     jest.runOnlyPendingTimers()
 

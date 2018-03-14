@@ -1,9 +1,8 @@
-/* describe,test,expect */
-/* global eslint-env jest */
+/* global describe,test,expect */
+/* global */
 import sortable from '../src/html5sortable'
 
 describe('Testing ghost creation methods', () => {
-  const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
   let body = document.querySelector('body')
 
   body.innerHTML = `<ul class="sortable"><li class="first">dragged item</li><li>item 2</li></ul>`
@@ -33,7 +32,7 @@ describe('Testing ghost creation methods', () => {
         e.dataTransfer.x = x
         e.dataTransfer.y = y
       },
-      effectAllowed: ""
+      effectAllowed: ''
     }
   }
 
