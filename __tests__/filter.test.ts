@@ -23,6 +23,6 @@ describe('Testing filter for NodeLists and HTMLCollections', () => {
     let div = window.document.createElement('div')
     div.innerHTML = '<p></p><div></div><span></span>'
     // test missing elements
-    expect(() => { filter(div, 'span') }).toThrow('You must provide a nodeList/HTMLCollection of elements to be filtered.')
+    expect(() => { filter(div, 'span') }).toThrow('You must provide a nodeList/HTMLCollection/Array of elements to be filtered.')
   })
 })
