@@ -341,7 +341,7 @@ export default function sortable (sortableElements, options: object|string|undef
     _reloadSortable(sortableElement)
     // initialize
     var items = _filter(sortableElement.children, options.items)
-    var index
+    var itemStartIndex
     var startList
     // create element if user defined a placeholder element as a string
     let customPlaceholder
@@ -401,7 +401,7 @@ export default function sortable (sortableElements, options: object|string|undef
       dragging = _getDragging(dragitem, sortableElement)
       _attr(dragging, 'aria-grabbed', 'true')
       // grab values
-      index = _index(dragging, dragging.parentElement.children)
+      itemStartIndex = _index(dragging, dragging.parentElement.children)
       startParent = findSortable(e.target)
       startList = _serialize(startParent)
       // dispatch sortstart event on each element in group
@@ -416,7 +416,7 @@ export default function sortable (sortableElements, options: object|string|undef
     })
     // Handle drag events on draggable items
     _on(sortableElement, 'dragend', function (e) {
-      var newParent
+      var endParent
       if (!dragging) {
         return
       }
@@ -433,27 +433,35 @@ export default function sortable (sortableElements, options: object|string|undef
       delete dragging.oldDisplay
 
       placeholderMap.forEach((element) => element.remove())
-      newParent = this.parentElement
+      endParent = this.parentElement
 
-      if (_listsConnected(newParent, startParent)) {
+      if (_listsConnected(endParent, startParent)) {
         sortableElement.dispatchEvent(new CustomEvent('sortstop', {
           detail: {
             item: dragging,
-            startparent: startParent
+            startParent: startParent
           }
         }))
-        if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+        const placeholder = placeholderMap.get(sortableElement)
+        const itemEndIndex = _index(dragging, Array.from(dragging.parentElement.children)
+          .filter(item => item !== placeholder))
+        /*
+        Fire 'sortupdate' on itemIndex or itemParent change
+         */
+        if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
+          const startSortableIndex = items.indexOf(dragging)
+          const endSortableIndex = _index(dragging, _filter(endParent.children, _data(endParent, 'items'))
+            .filter(item => item !== placeholder))
           sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
             detail: {
               item: dragging,
-              index: _filter(newParent.children, _data(newParent, 'items'))
-                .indexOf(dragging),
-              oldindex: items.indexOf(dragging),
-              elementIndex: _index(dragging, dragging.parentElement.children),
-              oldElementIndex: index,
-              startparent: startParent,
-              endparent: newParent,
-              newEndList: _serialize(newParent),
+              startSortableIndex: startSortableIndex,
+              endSortableIndex: endSortableIndex,
+              startIndex: itemStartIndex,
+              endIndex: itemEndIndex,
+              startParent: startParent,
+              endParent: endParent,
+              newEndList: _serialize(endParent),
               newStartList: _serialize(startParent),
               oldStartList: startList
             }
@@ -478,23 +486,31 @@ export default function sortable (sortableElements, options: object|string|undef
       sortableElement.dispatchEvent(new CustomEvent('sortstop', {
         detail: {
           item: dragging,
-          startparent: startParent
+          startParent: startParent
         }
       }))
 
-      let newParent = _isSortable(this) ? this : this.parentElement
-      // fire sortupdate if index or parent changed
-      if (index !== _index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+      let endParent = _isSortable(this) ? this : this.parentElement
+      const placeholder = placeholderMap.get(sortableElement)
+      const itemEndIndex = _index(dragging, Array.from(dragging.parentElement.children)
+        .filter(item => item !== placeholder))
+      /*
+      Fire 'sortupdate' on itemIndex or itemParent change
+       */
+      if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
+        const startSortableIndex = items.indexOf(dragging)
+        const endSortableIndex = _index(dragging, _filter(endParent.children, _data(endParent, 'items'))
+          .filter(item => item !== placeholder))
         sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
           detail: {
             item: dragging,
-            index: _index(dragging, _filter(newParent.children, _data(newParent, 'items'))),
-            oldindex: items.indexOf(dragging),
-            elementIndex: _index(dragging, dragging.parentElement.children),
-            oldElementIndex: index,
-            startparent: startParent,
-            endparent: newParent,
-            newEndList: _serialize(newParent),
+            startSortableIndex: startSortableIndex,
+            endSortableIndex: endSortableIndex,
+            startIndex: itemStartIndex,
+            endIndex: itemEndIndex,
+            startParent: startParent,
+            endParent: endParent,
+            newEndList: _serialize(endParent),
             newStartList: _serialize(startParent),
             oldStartList: startList
           }

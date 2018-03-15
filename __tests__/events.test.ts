@@ -9,9 +9,9 @@ describe('Testing events', () => {
 
   let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)
   let ul, li, secondLi, ul2, fifthLi, fourthLi
-  var sortstartitem, sortstartparent
-  var sortupdateitem, sortupdateitemIndex, sortupdateitemOldindex, sortupdateitemElementIndex,
-    sortupdateitemOldElementIndex, sortupdateitemStartparent, sortupdateitemEndparent,
+  var sortstartitem, sortstartStartParent
+  var sortupdateitem, sortupdateitemEndIndex, sortupdateitemStartIndex, sortupdateitemStartSortableIndex,
+    sortupdateitemEndSortableIndex, sortupdateitemStartParent, sortupdateitemEndParent,
     sortupdateitemNewEndList, sortupdateitemNewStartList, sortupdateitemOldStartList
   var sortstopitem, sortstopStartparent
 
@@ -59,15 +59,15 @@ describe('Testing events', () => {
     }
 
     sortstartitem = null
-    sortstartparent = null
+    sortstartStartParent = null
 
     sortupdateitem = null
-    sortupdateitemIndex = null
-    sortupdateitemOldindex = null
-    sortupdateitemElementIndex = null
-    sortupdateitemOldElementIndex = null
-    sortupdateitemStartparent = null
-    sortupdateitemEndparent = null
+    sortupdateitemEndIndex = null
+    sortupdateitemStartIndex = null
+    sortupdateitemStartSortableIndex = null
+    sortupdateitemEndSortableIndex = null
+    sortupdateitemStartParent = null
+    sortupdateitemEndParent = null
     sortupdateitemNewEndList = null
     sortupdateitemNewStartList = null
     sortupdateitemOldStartList = null
@@ -85,23 +85,23 @@ describe('Testing events', () => {
   function addEventListener (ul) {
     sortable(ul, null)[0].addEventListener('sortstart', function (e) {
       sortstartitem = e.detail.item
-      sortstartparent = e.detail.startparent
+      sortstartStartParent = e.detail.startparent
     })
     sortable(ul, null)[0].addEventListener('sortupdate', function (e) {
       sortupdateitem = e.detail.item
-      sortupdateitemIndex = e.detail.index
-      sortupdateitemOldindex = e.detail.oldindex
-      sortupdateitemElementIndex = e.detail.elementIndex
-      sortupdateitemOldElementIndex = e.detail.oldElementIndex
-      sortupdateitemStartparent = e.detail.startparent
-      sortupdateitemEndparent = e.detail.endparent
+      sortupdateitemEndIndex = e.detail.endSortableIndex
+      sortupdateitemStartIndex = e.detail.startSortableIndex
+      sortupdateitemStartSortableIndex = e.detail.endIndex
+      sortupdateitemEndSortableIndex = e.detail.startIndex
+      sortupdateitemStartParent = e.detail.startParent
+      sortupdateitemEndParent = e.detail.endParent
       sortupdateitemNewEndList = e.detail.newEndList
       sortupdateitemNewStartList = e.detail.newStartList
       sortupdateitemOldStartList = e.detail.oldStartList
     })
     sortable(ul, null)[0].addEventListener('sortstop', function (e) {
       sortstopitem = e.detail.item
-      sortstopStartparent = e.detail.startparent
+      sortstopStartparent = e.detail.startParent
     })
   }
 
@@ -123,7 +123,7 @@ describe('Testing events', () => {
     expect(li.classList.contains('test-dragging')).toBe(true)
 
     expect(sortstartitem).toEqual(li)
-    expect(ul).toEqual(sortstartparent)
+    expect(ul).toEqual(sortstartStartParent)
     expect(null).toEqual(sortupdateitem)
     expect(null).toEqual(sortstopitem)
   })
@@ -247,15 +247,15 @@ describe('Testing events', () => {
     expect(getIndex(li, ul.children)).toEqual(1)
 
     expect(sortstartitem).toEqual(li)
-    expect(ul).toEqual(sortstartparent)
+    expect(ul).toEqual(sortstartStartParent)
 
     expect(li).toEqual(sortupdateitem)
-    expect(1).toEqual(sortupdateitemIndex)
-    expect(0).toEqual(sortupdateitemOldindex)
-    expect(1).toEqual(sortupdateitemElementIndex)
-    expect(0).toEqual(sortupdateitemOldElementIndex)
-    expect(ul).toEqual(sortupdateitemStartparent)
-    expect(ul).toEqual(sortupdateitemEndparent)
+    expect(1).toEqual(sortupdateitemEndIndex)
+    expect(0).toEqual(sortupdateitemStartIndex)
+    expect(1).toEqual(sortupdateitemStartSortableIndex)
+    expect(0).toEqual(sortupdateitemEndSortableIndex)
+    expect(ul).toEqual(sortupdateitemStartParent)
+    expect(ul).toEqual(sortupdateitemEndParent)
     expect(5).toEqual(sortupdateitemNewEndList.length)
     expect(5).toEqual(sortupdateitemNewStartList.length)
     expect(5).toEqual(sortupdateitemOldStartList.length)
