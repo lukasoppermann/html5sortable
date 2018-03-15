@@ -37,8 +37,8 @@ function removeData(element) {
 }
 
 function filter (nodes, selector) {
-    if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection)) {
-        throw new Error('You must provide a nodeList/HTMLCollection of elements to be filtered.');
+    if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection || nodes instanceof Array)) {
+        throw new Error('You must provide a nodeList/HTMLCollection/Array of elements to be filtered.');
     }
     if (typeof selector !== 'string') {
         return Array.from(nodes);
@@ -108,7 +108,7 @@ function removeAttribute(element, attribute) {
     element.removeAttribute(attribute);
 }
 
-function _offset (element) {
+function offset (element) {
     if (!element.parentElement) {
         throw new Error('target element must be part of the dom');
     }
@@ -256,6 +256,64 @@ function _getElementHeight (element) {
         .reduce(function (sum, value) { return sum + value; });
 }
 
+function _getHandles (items, selector) {
+    if (!(items instanceof NodeList || items instanceof HTMLCollection || items instanceof Array)) {
+        throw new Error('You must provide a nodeList/HTMLCollection/Array of elements to be filtered.');
+    }
+    if (typeof selector !== 'string') {
+        return items;
+    }
+    return Array.from(items)
+        .filter(function (item) {
+        return item.querySelector(selector) instanceof Element;
+    })
+        .map(function (item) {
+        return item.querySelector(selector);
+    });
+}
+
+/**
+ * defaultDragImage returns the current item as dragged image
+ * @param {Element} draggedElement - the item that the user drags
+ * @param {object} elementOffset - an object with the offsets top, left, right & bottom
+ * @param {Event} event - the original drag event object
+ * @return {object} with element, posX and posY properties
+ */
+var defaultDragImage = function (draggedElement, elementOffset, event) {
+    return {
+        element: draggedElement,
+        posX: event.pageX - elementOffset.left,
+        posY: event.pageY - elementOffset.top
+    };
+};
+function setDragImage (event, draggedElement, customDragImage) {
+    // check if event is provided
+    if (!(event instanceof Event)) {
+        throw new Error('setDragImage requires a DragEvent as the first argument.');
+    }
+    // check if draggedElement is provided
+    if (!(draggedElement instanceof Element)) {
+        throw new Error('setDragImage requires the dragged element as the second argument.');
+    }
+    // set default function of none provided
+    if (!customDragImage) {
+        customDragImage = defaultDragImage;
+    }
+    // check if setDragImage method is available
+    if (event.dataTransfer && event.dataTransfer.setDragImage) {
+        // get the elements offset
+        var elementOffset = offset(draggedElement);
+        // get the dragImage
+        var dragImage = customDragImage(draggedElement, elementOffset, event);
+        // needs to be set for HTML5 drag & drop to work
+        event.dataTransfer.effectAllowed = 'copyMove';
+        // Firefox requires arbitrary content in setData for the drag & drop functionality to work
+        event.dataTransfer.setData('text', 'arbitrary-content');
+        // set the drag image on the event
+        event.dataTransfer.setDragImage(dragImage.element, dragImage.posX, dragImage.posY);
+    }
+}
+
 /* eslint-env browser */
 /*
  * variables global to the plugin
@@ -286,59 +344,6 @@ var _removeSortableEvents = function (sortable) {
     removeEventListener(sortable, 'dragover');
     removeEventListener(sortable, 'dragenter');
     removeEventListener(sortable, 'drop');
-};
-/**
- * Attach ghost to dataTransfer object
- * @param {Event} original event
- * @param {object} ghost-object with item, x and y coordinates
- */
-var _attachGhost = function (event, ghost) {
-    // this needs to be set for HTML5 drag & drop to work
-    event.dataTransfer.effectAllowed = 'copyMove';
-    // Firefox requires some arbitrary content in the data in order for
-    // the drag & drop functionality to work
-    event.dataTransfer.setData('text', 'arbitrary-content');
-    // check if setDragImage method is available
-    if (event.dataTransfer.setDragImage) {
-        event.dataTransfer.setDragImage(ghost.draggedItem, ghost.x, ghost.y);
-    }
-};
-/**
- * _addGhostPos clones the dragged item and adds it as a Ghost item
- * @param {Event} event - the event fired when dragstart is triggered
- * @param {object} ghost - .draggedItem = Element
- */
-var _addGhostPos = function (event, ghost) {
-    if (!ghost.x) {
-        ghost.x = parseInt(event.pageX - _offset(ghost.draggedItem).left);
-    }
-    if (!ghost.y) {
-        ghost.y = parseInt(event.pageY - _offset(ghost.draggedItem).top);
-    }
-    return ghost;
-};
-/**
- * _makeGhost decides which way to make a ghost and passes it to attachGhost
- * @param {Element} draggedItem - the item that the user drags
- */
-var _makeGhost = function (draggedItem) {
-    return {
-        draggedItem: draggedItem
-    };
-};
-/**
- * _getGhost constructs ghost and attaches it to dataTransfer
- * @param {Event} event - the original drag event object
- * @param {Element} draggedItem - the item that the user drags
- */
-// TODO: could draggedItem be replaced by event.target in all instances
-var _getGhost = function (event, draggedItem) {
-    // add ghost item & draggedItem to ghost object
-    var ghost = _makeGhost(draggedItem);
-    // attach ghost position
-    ghost = _addGhostPos(event, ghost);
-    // attach ghost to dataTransfer
-    _attachGhost(event, ghost);
 };
 /**
  * _getDragging returns the current element to drag or
@@ -404,23 +409,6 @@ var _listsConnected = function (curList, destList) {
  */
 var _isCopyActive = function (sortable) {
     return addData(sortable, 'opts').copy === true;
-};
-/**
- * get handle or return item
- * @param {Array} items
- * @param {selector} handle
- */
-var _getHandles = function (items, handle) {
-    var result = [];
-    var handles;
-    if (!handle) {
-        return items;
-    }
-    for (var i = 0; i < items.length; ++i) {
-        handles = items[i].querySelectorAll(handle);
-        result = result.concat(Array.prototype.slice.call(handles));
-    }
-    return result;
 };
 /**
  * Is {Element} a sortable.
@@ -548,7 +536,8 @@ function sortable(sortableElements, options) {
         debounce: 0,
         maxItems: 0,
         itemSerializer: undefined,
-        containerSerializer: undefined
+        containerSerializer: undefined,
+        customDragImage: null
     }, (typeof options === 'object') ? options : {});
     // check if the user provided a selector instead of an element
     if (typeof sortableElements === 'string') {
@@ -578,7 +567,7 @@ function sortable(sortableElements, options) {
         _reloadSortable(sortableElement);
         // initialize
         var items = filter(sortableElement.children, options.items);
-        var index$$1;
+        var itemStartIndex;
         var startList;
         // create element if user defined a placeholder element as a string
         var customPlaceholder;
@@ -628,14 +617,14 @@ function sortable(sortableElements, options) {
             var sortableElement = findSortable(e.target);
             var dragitem = findDragElement(sortableElement, e.target);
             // add transparent clone or other ghost to cursor
-            _getGhost(e, dragitem);
+            setDragImage(e, dragitem, options.customDragImage);
             // cache selsection & add attr for dragging
             draggingHeight = _getElementHeight(dragitem);
             dragitem.classList.add(options.draggingClass);
             dragging = _getDragging(dragitem, sortableElement);
             addAttribute(dragging, 'aria-grabbed', 'true');
             // grab values
-            index$$1 = index(dragging, dragging.parentElement.children);
+            itemStartIndex = index(dragging, dragging.parentElement.children);
             startParent = findSortable(e.target);
             startList = _serialize(startParent);
             // dispatch sortstart event on each element in group
@@ -643,13 +632,13 @@ function sortable(sortableElements, options) {
                 detail: {
                     item: dragging,
                     placeholder: placeholderMap.get(sortableElement),
-                    startparent: startParent
+                    startParent: startParent
                 }
             }));
         });
         // Handle drag events on draggable items
         addEventListener(sortableElement, 'dragend', function (e) {
-            var newParent;
+            var endParent;
             if (!dragging) {
                 return;
             }
@@ -663,26 +652,34 @@ function sortable(sortableElements, options) {
             dragging.style.display = dragging.oldDisplay;
             delete dragging.oldDisplay;
             placeholderMap.forEach(function (element) { return element.remove(); });
-            newParent = this.parentElement;
-            if (_listsConnected(newParent, startParent)) {
+            endParent = this.parentElement;
+            if (_listsConnected(endParent, startParent)) {
                 sortableElement.dispatchEvent(new CustomEvent('sortstop', {
                     detail: {
                         item: dragging,
-                        startparent: startParent
+                        startParent: startParent
                     }
                 }));
-                if (index$$1 !== index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+                var placeholder_1 = placeholderMap.get(sortableElement);
+                var itemEndIndex = index(dragging, Array.from(dragging.parentElement.children)
+                    .filter(function (item) { return item !== placeholder_1; }));
+                /*
+                Fire 'sortupdate' on itemIndex or itemParent change
+                 */
+                if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
+                    var startSortableIndex = items.indexOf(dragging);
+                    var endSortableIndex = index(dragging, filter(endParent.children, addData(endParent, 'items'))
+                        .filter(function (item) { return item !== placeholder_1; }));
                     sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
                         detail: {
                             item: dragging,
-                            index: filter(newParent.children, addData(newParent, 'items'))
-                                .indexOf(dragging),
-                            oldindex: items.indexOf(dragging),
-                            elementIndex: index(dragging, dragging.parentElement.children),
-                            oldElementIndex: index$$1,
-                            startparent: startParent,
-                            endparent: newParent,
-                            newEndList: _serialize(newParent),
+                            startSortableIndex: startSortableIndex,
+                            endSortableIndex: endSortableIndex,
+                            startIndex: itemStartIndex,
+                            endIndex: itemEndIndex,
+                            startParent: startParent,
+                            endParent: endParent,
+                            newEndList: _serialize(endParent),
                             newStartList: _serialize(startParent),
                             oldStartList: startList
                         }
@@ -706,22 +703,30 @@ function sortable(sortableElements, options) {
             sortableElement.dispatchEvent(new CustomEvent('sortstop', {
                 detail: {
                     item: dragging,
-                    startparent: startParent
+                    startParent: startParent
                 }
             }));
-            var newParent = _isSortable(this) ? this : this.parentElement;
-            // fire sortupdate if index or parent changed
-            if (index$$1 !== index(dragging, dragging.parentElement.children) || startParent !== newParent) {
+            var endParent = _isSortable(this) ? this : this.parentElement;
+            var placeholder = placeholderMap.get(sortableElement);
+            var itemEndIndex = index(dragging, Array.from(dragging.parentElement.children)
+                .filter(function (item) { return item !== placeholder; }));
+            /*
+            Fire 'sortupdate' on itemIndex or itemParent change
+             */
+            if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
+                var startSortableIndex = items.indexOf(dragging);
+                var endSortableIndex = index(dragging, filter(endParent.children, addData(endParent, 'items'))
+                    .filter(function (item) { return item !== placeholder; }));
                 sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
                     detail: {
                         item: dragging,
-                        index: index(dragging, filter(newParent.children, addData(newParent, 'items'))),
-                        oldindex: items.indexOf(dragging),
-                        elementIndex: index(dragging, dragging.parentElement.children),
-                        oldElementIndex: index$$1,
-                        startparent: startParent,
-                        endparent: newParent,
-                        newEndList: _serialize(newParent),
+                        startSortableIndex: startSortableIndex,
+                        endSortableIndex: endSortableIndex,
+                        startIndex: itemStartIndex,
+                        endIndex: itemEndIndex,
+                        startParent: startParent,
+                        endParent: endParent,
+                        newEndList: _serialize(endParent),
                         newStartList: _serialize(startParent),
                         oldStartList: startList
                     }
@@ -747,7 +752,7 @@ function sortable(sortableElements, options) {
                 if (thisHeight > draggingHeight) {
                     // Dead zone?
                     var deadZone = thisHeight - draggingHeight;
-                    var offsetTop = _offset(element).top;
+                    var offsetTop = offset(element).top;
                     if (placeholderIndex < thisIndex && pageY < offsetTop) {
                         return;
                     }

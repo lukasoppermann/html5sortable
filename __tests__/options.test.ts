@@ -13,6 +13,7 @@ describe('Test options from sortable', () => {
       connectWith: false,
       acceptFrom: null,
       copy: false,
+      customDragImage: null,
       placeholder: null,
       disableIEFix: false,
       placeholderClass: 'sortable-placeholder',

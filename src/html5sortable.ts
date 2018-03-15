@@ -14,7 +14,7 @@ import _serialize from './serialize'
 import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
 import _getHandles from './getHandles'
-
+import setDragImage from './setDragImage'
 /*
  * variables global to the plugin
  */
@@ -44,60 +44,6 @@ var _removeSortableEvents = function (sortable) {
   _off(sortable, 'dragover')
   _off(sortable, 'dragenter')
   _off(sortable, 'drop')
-}
-/**
- * Attach ghost to dataTransfer object
- * @param {Event} original event
- * @param {object} ghost-object with item, x and y coordinates
- */
-var _attachGhost = function (event, ghost) {
-  // this needs to be set for HTML5 drag & drop to work
-  event.dataTransfer.effectAllowed = 'copyMove'
-  // Firefox requires some arbitrary content in the data in order for
-  // the drag & drop functionality to work
-  event.dataTransfer.setData('text', 'arbitrary-content')
-
-  // check if setDragImage method is available
-  if (event.dataTransfer.setDragImage) {
-    event.dataTransfer.setDragImage(ghost.draggedItem, ghost.x, ghost.y)
-  }
-}
-/**
- * _addGhostPos clones the dragged item and adds it as a Ghost item
- * @param {Event} event - the event fired when dragstart is triggered
- * @param {object} ghost - .draggedItem = Element
- */
-var _addGhostPos = function (event, ghost) {
-  if (!ghost.x) {
-    ghost.x = parseInt(event.pageX - _offset(ghost.draggedItem).left)
-  }
-  if (!ghost.y) {
-    ghost.y = parseInt(event.pageY - _offset(ghost.draggedItem).top)
-  }
-  return ghost
-}
-/**
- * _makeGhost decides which way to make a ghost and passes it to attachGhost
- * @param {Element} draggedItem - the item that the user drags
- */
-var _makeGhost = function (draggedItem) {
-  return {
-    draggedItem: draggedItem
-  }
-}
-/**
- * _getGhost constructs ghost and attaches it to dataTransfer
- * @param {Event} event - the original drag event object
- * @param {Element} draggedItem - the item that the user drags
- */
-// TODO: could draggedItem be replaced by event.target in all instances
-var _getGhost = function (event, draggedItem) {
-  // add ghost item & draggedItem to ghost object
-  var ghost = _makeGhost(draggedItem)
-  // attach ghost position
-  ghost = _addGhostPos(event, ghost)
-  // attach ghost to dataTransfer
-  _attachGhost(event, ghost)
 }
 /**
  * _getDragging returns the current element to drag or
@@ -290,7 +236,8 @@ export default function sortable (sortableElements, options: object|string|undef
     debounce: 0,
     maxItems: 0,
     itemSerializer: undefined,
-    containerSerializer: undefined
+    containerSerializer: undefined,
+    customDragImage: null
     // if options is an object, merge it, otherwise use empty object
   }, (typeof options === 'object') ? options : {})
   // check if the user provided a selector instead of an element
@@ -378,7 +325,7 @@ export default function sortable (sortableElements, options: object|string|undef
       var sortableElement = findSortable(e.target)
       var dragitem = findDragElement(sortableElement, e.target)
       // add transparent clone or other ghost to cursor
-      _getGhost(e, dragitem)
+      setDragImage(e, dragitem, options.customDragImage)
       // cache selsection & add attr for dragging
       draggingHeight = _getElementHeight(dragitem)
       dragitem.classList.add(options.draggingClass)
@@ -603,10 +550,6 @@ sortable.__testing = {
   _removeItemData: _removeItemData,
   _removeSortableData: _removeSortableData,
   _listsConnected: _listsConnected,
-  _attachGhost: _attachGhost,
-  _addGhostPos: _addGhostPos,
-  _getGhost: _getGhost,
-  _makeGhost: _makeGhost,
   _index: _index,
   _getPlaceholders: () => placeholderMap,
   _resetPlaceholders: () => {
