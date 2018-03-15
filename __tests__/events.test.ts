@@ -85,7 +85,7 @@ describe('Testing events', () => {
   function addEventListener (ul) {
     sortable(ul, null)[0].addEventListener('sortstart', function (e) {
       sortstartitem = e.detail.item
-      sortstartStartParent = e.detail.startparent
+      sortstartStartParent = e.detail.startParent
     })
     sortable(ul, null)[0].addEventListener('sortupdate', function (e) {
       sortupdateitem = e.detail.item
