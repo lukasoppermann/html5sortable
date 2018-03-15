@@ -1,4 +1,5 @@
 /* global describe,test,expect,jest */
+/* eslint-env jest */
 import debounce from '../src/debounce'
 jest.useFakeTimers()
 

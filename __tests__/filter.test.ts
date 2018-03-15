@@ -1,4 +1,5 @@
 /* global describe,test,expect */
+/* eslint-env jest */
 import filter from '../src/filter'
 
 describe('Testing filter for NodeLists and HTMLCollections', () => {

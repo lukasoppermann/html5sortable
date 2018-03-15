@@ -1,4 +1,5 @@
 /* global describe,test,expect */
+/* eslint-env jest */
 import elementHeight from '../src/elementHeight'
 
 describe('Testing elementHeight', () => {

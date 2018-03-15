@@ -1,25 +1,22 @@
 /* global describe,expect,test,beforeEach,beforeAll */
 import sortable from '../src/html5sortable'
+/* eslint-env jest */
 
 describe('Testing api', () => {
-  const { JSDOM } = require('jsdom')
-  const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
-  global.document = new JSDOM(documentHTML)
-  global.window = document.parentWindow
-  global.body = global.document.querySelector('body')
-  // const sortable = require('../_test/html5sortable.cjs.js')
+  document.body.innerHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
+  let body = document.querySelector('body')
   let ul, li, secondLi, thirdLi
 
   describe('Initialization ', () => {
     beforeEach(() => {
-      global.body.innerHTML = `<ul class="sortable">
+      body.innerHTML = `<ul class="sortable">
         <li class="item item-first">Item 1</li>
         <li class="item item-second">Item 2</li>
         <li class="item item-third">Item 3</li>
         <li class="item item-third disabled">Item 3</li>
       </ul><ul class="sortable-2"></ul>`
       // select sortable
-      ul = global.body.querySelector('.sortable')
+      ul = body.querySelector('.sortable')
       li = ul.querySelector('.item-first')
       secondLi = ul.querySelector('.item-second')
       thirdLi = ul.querySelector('.item-second')

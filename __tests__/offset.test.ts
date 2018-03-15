@@ -1,10 +1,12 @@
 /* global describe,test,expect */
+/* eslint-env jest */
+
 import offset from '../src/offset'
 
 describe('Testing offset', () => {
   test('offset element', () => {
     // create mock elements
-    const elementMock = {
+    const elementMock: any = {
       getClientRects: () => [
         {
           left: 10,
@@ -18,7 +20,7 @@ describe('Testing offset', () => {
     Object.defineProperty(window, 'scrollX', {value: 7, writable: false})
     Object.defineProperty(window, 'scrollY', {value: 14, writable: false})
     // run function
-    let offsetResults = offset(elementMock)
+    let offsetResults: any = offset(elementMock)
     // Assertions
     expect(offsetResults.left).toBe(17)
     expect(offsetResults.right).toBe(27)
