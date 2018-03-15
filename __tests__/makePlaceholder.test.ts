@@ -20,6 +20,13 @@ describe('Testing makePlaceholder function', () => {
     expect(makePlaceholder(div, div, 'custom').classList.contains('custom')).toEqual(true)
   })
 
+  test('object placeholder class', () => {
+    // setup
+    let div = window.document.createElement('div')
+    // assert
+    expect(makePlaceholder(div, div, {}).tagName).toEqual('DIV')
+  })
+
   test('List placeholer', () => {
     // setup
     let ul = window.document.createElement('ul')

@@ -2,7 +2,7 @@
   "name": "html5sortable",
   "main": "dist/html5sortable.js",
   "file": "src/html5sortable.ts",
-  "dist": "dist",
+  "dest": "dist",
   "version": "0.8.1",
   "license": "MIT",
   "description": "VanillaJS sortable lists and grids using native HTML5 drag and drop API.",
