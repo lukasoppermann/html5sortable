@@ -1,17 +1,15 @@
 /* global describe,test,expect */
+/* global */
 import sortable from '../src/html5sortable'
 
 describe('Testing ghost creation methods', () => {
-  const { JSDOM } = require('jsdom')
-  const documentHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
-  global.document = new JSDOM(documentHTML)
-  global.window = document.parentWindow
-  global.body = global.document.querySelector('body')
+  let body = document.querySelector('body')
 
-  global.body.innerHTML = `<ul class="sortable"><li class="first">dragged item</li><li>item 2</li></ul>`
+  body.innerHTML = `<ul class="sortable"><li class="first">dragged item</li><li>item 2</li></ul>`
+
   // mock dragged item
-  let draggedItem = global.body.querySelector('.first')
-  draggedItem.getClientRects = function () {
+  let draggedItem = body.querySelector('.first')
+  draggedItem.getClientRects = () => {
     return [{
       left: 5,
       top: 5
@@ -33,7 +31,8 @@ describe('Testing ghost creation methods', () => {
         e.dataTransfer.draggedItem = draggedItem
         e.dataTransfer.x = x
         e.dataTransfer.y = y
-      }
+      },
+      effectAllowed: ''
     }
   }
 

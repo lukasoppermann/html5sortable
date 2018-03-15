@@ -1,6 +1,7 @@
 /* global describe,test,expect */
-import { mockInnerHTML } from '../testHelpers.ts'
+import { mockInnerHTML } from '../helpers'
 import sortable from '../../src/html5sortable'
+/* eslint-env jest */
 
 describe('_getHandles', () => {
   let ul, li, allLiElements
@@ -9,10 +10,11 @@ describe('_getHandles', () => {
     ul = document.body.querySelector('.sortable')
     sortable(ul, 'destroy')
     // init sortable
-    sortable(ul)
+    sortable(ul, null)
     // get all li elements
     allLiElements = ul.querySelectorAll('li')
   })
+  
   test('gets handles array from items', () => {
     let handles = sortable.__testing._getHandles(allLiElements, '.handle')
     expect(handles.length).toEqual(2)
