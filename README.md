@@ -96,8 +96,8 @@ sortable('.sortable')[0].addEventListener('sortstop', function(e) {
 
     This event is triggered when the user stops sorting. The DOM position may have changed.
 
-    e.detail.item contains the element that was dragged.
-    e.detail.startparent contains the element that the dragged item came from.
+    e.detail.item - contains the element that was dragged.
+    e.detail.startParent - contains the element that the dragged item came from.
 
     */
 });
@@ -113,16 +113,16 @@ sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
 
     This event is triggered when the user stopped sorting and the DOM position has changed.
 
-    e.detail.item contains the current dragged element.
-    e.detail.index contains the new index of the dragged element (considering only list items)
-    e.detail.oldindex contains the old index of the dragged element (considering only list items)
-    e.detail.elementIndex contains the new index of the dragged element (considering all items within sortable)
-    e.detail.oldElementIndex contains the old index of the dragged element (considering all items within sortable)
-    e.detail.startparent contains the element that the dragged item comes from
-    e.detail.endparent contains the element that the dragged item was added to (new parent)
-    e.detail.newEndList contains all elements in the list the dragged item was dragged to
-    e.detail.newStartList contains all elements in the list the dragged item was dragged from
-    e.detail.oldStartList contains all elements in the list the dragged item was dragged from BEFORE it was dragged from it
+    e.detail.item - contains the current dragged element.
+    e.detail.startSortableIndex - contains the initial index of the dragged element in sortable list items (see Options => Items)
+    e.detail.endSortableIndex - contains the new index of the dragged element sortable list items (see Options => Items)
+    e.detail.startIndex - contains the initial index of the dragged element in all list items (including non-sortable ones)
+    e.detail.endIndex - contains the new index of the dragged element in all list items (including non-sortable ones)
+    e.detail.startParent - contains the element that the dragged item comes from
+    e.detail.endParent - contains the element that the dragged item was added to (new parent)
+    e.detail.newEndList - contains all elements in the list the dragged item was dragged to
+    e.detail.newStartList - contains all elements in the list the dragged item was dragged from
+    e.detail.oldStartList - contains all elements in the list the dragged item was dragged from BEFORE it was dragged from it
     */
 });
 ```
