@@ -13,6 +13,7 @@ import {insertBefore as _before, insertAfter as _after} from './insertHtmlElemen
 import _serialize from './serialize'
 import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
+import _getHandles from './getHandles'
 
 /*
  * variables global to the plugin
@@ -162,19 +163,6 @@ var _listsConnected = function (curList, destList) {
  */
 var _isCopyActive = function (sortable) {
   return _data(sortable, 'opts').copy === true
-}
-/**
- * get handle or return item
- * @param {Array} items
- * @param {selector} handle
- */
-var _getHandles = function (items: Element[], handle: string) {
-  if (typeof handle !== 'string') {
-    return items
-  }
-  return items.map((item) => {
-    return item.querySelector(handle)
-  })
 }
 /**
  * Is {Element} a sortable.
