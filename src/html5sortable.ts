@@ -410,7 +410,7 @@ export default function sortable (sortableElements, options: object|string|undef
         detail: {
           item: dragging,
           placeholder: placeholderMap.get(sortableElement),
-          startparent: startParent
+          startParent: startParent
         }
       }))
     })
