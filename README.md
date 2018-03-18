@@ -237,6 +237,31 @@ sortable('.sortable', {
 });
 ```
 
+### customDragImage
+You can provide a function as a `customDragImage` property on the options object which will be used to create the item and position of the drag image (the half transparent item you see when dragging an element).
+
+The function gets three parameters, the dragged element, an offset object with the offset values for the offset of the item and the `dragstart` event. The function **MUST** return an object with an `element` property with an html element as well as a `posX` and `posY` property with has the x and y offset for the dragImage.
+
+``` javascript
+sortable('.sortable', {
+  customDragImage: (draggedElement, elementOffset, event) => {
+    return {
+      element: draggedElement,
+      posX: event.pageX - elementOffset.left,
+      posY: event.pageY - elementOffset.top
+    }
+  }
+});
+
+// elementOffset object that is received in the customDragImage function
+{
+  left: rect.left + window.scrollX,
+  right: rect.right + window.scrollX,
+  top: rect.top + window.scrollY,
+  bottom: rect.bottom + window.scrollY
+}
+```
+
 ## Methods
 
 ### destroy
@@ -291,7 +316,7 @@ sortable('.sortable');
 ## Sorting table rows
 
  * Initialize plugin on `tbody` element (browsers automatically add `tbody` if you don't)
- * Keep in mind that different browsers may display different ghost image of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`. This may or may not be fixed by setting the `td` to be `position: relative;`
+ * Keep in mind that different browsers may display different drag images of the row during the drag action. Webkit browsers seem to hide entire contents of `td` cell if there are any inline elements inside the `td`. This may or may not be fixed by setting the `td` to be `position: relative;`
  * If you add a custom `placeholder` you must use a `tr` e.g. `placeholder: "<tr><td colspan="3">The row will appear here</td></tr>"`, otherwise you will only be able to drop items when hovering the first column.
 
 ## Contributing

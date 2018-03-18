@@ -1,8 +1,14 @@
+export interface offsetObject { // eslint-disable-line no-undef
+  'left': number,
+  'right': number,
+  'top': number,
+  'bottom': number
+}
 /**
  * @param {Element} element
  * @returns {Object}
  */
-export default (element: Element): object => {
+export default (element: Element): offsetObject => {
   if (!element.parentElement) {
     throw new Error('target element must be part of the dom')
   }
