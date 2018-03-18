@@ -13,11 +13,8 @@ export default (nodes: NodeList|HTMLCollection|Array, selector: string): Array<E
     return Array.from(nodes)
   }
   return Array.from(nodes).filter((item) => {
-    /*
-    Type changed when converted into an array, eslint warning as the matches method
-    does not exist on type Node. Best/worst fix is likely to create a custom
-    nodelist with custom nodes
-    */
     return item.nodeType === 1 && item.matches(selector)
   })
 }
+
+// if (item instanceof element) {

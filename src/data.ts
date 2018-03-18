@@ -1,12 +1,17 @@
 /* eslint-env */
 /**
  * Get or set data on element
- * @param {CustomElement} element
+ * @param {Element} element
  * @param {string} key
  * @param {*} value
  * @return {*}
  */
-function addData (element, key: string, value?: any) {
+function addData (element: Element, key: string, value?: any) {
+  if (element.h5s) {
+    if (element.h5s.data) {
+      console.log(element.h5s.data)
+    }
+  }
   if (value === undefined) {
     return element && element.h5s && element.h5s.data && element.h5s.data[key]
   } else {
@@ -17,7 +22,7 @@ function addData (element, key: string, value?: any) {
 }
 /**
  * Remove data from element
- * @param {CustomElement} element
+ * @param {Element} element
  */
 function removeData (element) {
   if (element.h5s) {

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "esnext"
+    "target": "esnext",
+    "strictNullChecks": true,
+    "noImplicitAny": true
   }
 }
