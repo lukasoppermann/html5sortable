@@ -73,6 +73,7 @@
     "cover": "jest --colors --coverage --coverageReporters=text-lcov | coveralls",
     "preversion": "npm test",
     "version": "npm run build && git add -A dist docs",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "tsc": "tsc ./src/*.ts --pretty --diagnostics --noEmit --watch"
   }
 }
