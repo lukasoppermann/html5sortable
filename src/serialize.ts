@@ -22,7 +22,7 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
   let options = _data(sortableContainer, 'opts')
   // serialize container
   let items: Element[] | Node[] = filter(sortableContainer.children, options.items)
-  let mappedItems: Item[] = items.map((item: Item) => {
+  let mappedItems = items.map((item) => {
     if (item instanceof Element) {
       return {
         parent: sortableContainer,

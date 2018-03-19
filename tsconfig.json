@@ -2,7 +2,6 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "esnext",
-    "strictNullChecks": true,
-    "noImplicitAny": true
+    "strictNullChecks": true
   }
 }

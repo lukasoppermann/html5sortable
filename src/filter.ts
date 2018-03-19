@@ -16,5 +16,3 @@ export default (nodes: NodeList|HTMLCollection|Array, selector: string): Array<E
     return item.nodeType === 1 && item.matches(selector)
   })
 }
-
-// if (item instanceof element) {
