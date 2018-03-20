@@ -7,6 +7,7 @@ let store = new Map()
  */
 export class Store {
   private _config: Map<string, any> = new Map(Object.entries(defaultConfiguration)) // eslint-disable-line no-undef
+  private _placeholder: Element|null = null // eslint-disable-line no-undef
   /**
    * set the configuration of a class instance
    * @method config
@@ -60,7 +61,26 @@ export class Store {
     }
     return this._config.get(key)
   }
-
+  /**
+   * get the placeholder for a class instance
+   * @method placeholder
+   * @return {Element|null}
+   */
+  get placeholder (): Element|null {
+    return this._placeholder
+  }
+  /**
+   * set the placeholder for a class instance
+   * @method placeholder
+   * @param {Element} placeholder
+   * @return {void}
+   */
+  set placeholder (placeholder: Element): void {
+    if (!(placeholder instanceof Element) && placeholder !== null) {
+      throw new Error('A placeholder must be an html element or null.')
+    }
+    this._placeholder = placeholder
+  }
   setData (key: string, value: any) {
 
   }

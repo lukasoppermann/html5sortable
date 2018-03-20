@@ -551,11 +551,6 @@ sortable.__testing = {
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
   _removeSortableData: _removeSortableData,
-  _listsConnected: _listsConnected,
-  _index: _index,
-  _getPlaceholders: () => placeholderMap,
-  _resetPlaceholders: () => {
-    placeholderMap.clear()
-  }
+  _listsConnected: _listsConnected
 }
 /* END.TESTS_ONLY */

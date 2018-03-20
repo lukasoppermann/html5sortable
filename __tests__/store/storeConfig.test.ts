@@ -2,20 +2,7 @@
 import {default as store, Store as StoreClass} from '../../src/store'
 import defaultConfiguration from '../../src/defaultConfiguration'
 
-describe('Testing data store', () => {
-  test('no sortable provided', () => {
-    // assert before
-    expect(() => { store() }).toThrow('Please provide a sortable to the store function.')
-    expect(() => { store('fake') }).toThrow('Please provide a sortable to the store function.')
-  })
-
-  test('should create store if none exists', () => {
-    // setup
-    let div = window.document.createElement('div')
-    // assert before
-    expect(store(div)).toBeInstanceOf(StoreClass)
-  })
-
+describe('Testing config store', () => {
   test('create store & add custom config', () => {
     // setup
     let div = window.document.createElement('div')
@@ -42,7 +29,7 @@ describe('Testing data store', () => {
     store(div).config = {
       maxItems: 5,
     }
-    // assert before
+    // assert
     expect(store(div).config instanceof Object).toBe(true)
     expect(Object.keys(store(div).config).length).toBe(Object.keys(defaultConfiguration).length)
   })
@@ -59,16 +46,14 @@ describe('Testing data store', () => {
   test('setting invalid config item', () => {
     // setup
     let div = window.document.createElement('div')
-    // assert before
-
+    // assert
     expect(() => { store(div).setConfig('fake',5) }).toThrowError('Trying to set invalid configuration item: fake')
   })
 
   test('getting invalid config item', () => {
     // setup
     let div = window.document.createElement('div')
-    // assert before
-
+    // assert
     expect(() => { store(div).getConfig('fake') }).toThrowError('Invalid configuration item requested: fake')
   })
 })
