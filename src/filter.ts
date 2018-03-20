@@ -5,7 +5,7 @@
  * @param {String} selector
  * @returns {Array}
  */
-export default (nodes: NodeList|HTMLCollection|Array, selector: string): Array<Element> => {
+export default (nodes: NodeList|HTMLCollection|Array<HTMLElement>, selector: string): Array<HTMLElement> => {
   if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection || nodes instanceof Array)) {
     throw new Error('You must provide a nodeList/HTMLCollection/Array of elements to be filtered.')
   }
