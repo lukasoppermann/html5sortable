@@ -2,10 +2,11 @@
  * Get or set data on element
  * @param {Element} element
  * @param {string} key
- * @param {*} value
+ * @param {string} value
  * @return {*}
  */
-function addData (element: Element, key: string, value?: any) {
+
+function addData (element: Element, key: string, value?: string): Element|opts|string|void {
   if (value === undefined) {
     return element && element.h5s && element.h5s.data && element.h5s.data[key]
   } else {

@@ -3,7 +3,7 @@
  * Get height of an element including padding
  * @param {Element} element an dom element
  */
-export default element => {
+export default (element: Element) => {
   if (!(element instanceof Element)) {
     throw new Error('You must provide a valid dom element')
   }

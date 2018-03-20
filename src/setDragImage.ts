@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import {default as offset, offsetObject} from './offset' // eslint-disable-line no-unused-vars
+import {default as offset} from './offset' // eslint-disable-line no-unused-vars
 /**
  * defaultDragImage returns the current item as dragged image
  * @param {Element} draggedElement - the item that the user drags

@@ -19,9 +19,20 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
   }
   // get options
   let options = _data(sortableContainer, 'opts')
+
+  // Type guard to check if opts key/value was recieved
+  function isOpts (object: any): object is opts {
+    return 'items' in object
+  }
+
+  let item: string|undefined
+  if (isOpts(options)) {
+    item = options.items
+  }
+
   // serialize container
-  let items = filter(sortableContainer.children, options.items)
-  items = items.map((item) => {
+  let items = filter(sortableContainer.children, item)
+  let serializedItems: serializedItems[] = items.map((item) => {
     return {
       parent: sortableContainer,
       node: item,
@@ -32,11 +43,11 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
   // serialize container
   let container = {
     node: sortableContainer,
-    itemCount: items.length
+    itemCount: serializedItems.length
   }
 
   return {
     container: customContainerSerializer(container),
-    items: items.map((item: object) => customItemSerializer(item, sortableContainer))
+    items: serializedItems.map((item: object) => customItemSerializer(item, sortableContainer))
   }
 }

@@ -1,9 +1,4 @@
-export interface offsetObject { // eslint-disable-line no-undef
-  'left': number,
-  'right': number,
-  'top': number,
-  'bottom': number
-}
+// eslint-disable-line no-undef
 /**
  * @param {Element} element
  * @returns {Object}

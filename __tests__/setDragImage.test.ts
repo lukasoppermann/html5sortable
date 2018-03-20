@@ -19,6 +19,7 @@ describe('Testing setDragImage', () => {
   class DragEvent extends Event {
   /* eslint-disable constructor-super */
     constructor (name, data = null) {
+      super(name)
       this.pageX = 100 // eslint-disable-line no-this-before-super
       this.pageY = 200 // eslint-disable-line no-this-before-super
       this.dataTransfer = { // eslint-disable-line no-this-before-super

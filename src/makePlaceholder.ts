@@ -2,7 +2,7 @@
 /**
  * create a placeholder element
  * @param {Elememnt} sortableElement a single sortable
- * @param {string|undefine} placeholder a string representing an html element
+ * @param {string|undefined} placeholder a string representing an html element
  * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
  */
 export default (sortableElement: Element, placeholder?: Element, placeholderClass: string = 'sortable-placeholder') => {
