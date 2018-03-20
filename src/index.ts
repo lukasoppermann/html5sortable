@@ -4,7 +4,7 @@
  * @param {Element} element
  * @returns {number}
  */
-export default (element: Element, elementList: HTMLCollection | NodeList | Array): number => {
+export default (element: Element, elementList: HTMLCollection | NodeList | Array<Element> | Array<Node>): number => {
   if (!(element instanceof Element) || !(elementList instanceof NodeList || elementList instanceof HTMLCollection || elementList instanceof Array)) {
     throw new Error('You must provide an element and a list of elements.')
   }

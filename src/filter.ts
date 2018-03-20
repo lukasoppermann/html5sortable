@@ -3,7 +3,7 @@
  * Filter only wanted nodes
  * @param {NodeList|HTMLCollection|Array} nodes
  * @param {String} selector
- * @returns {Array}
+ * @returns {Node[]|Element[]}
  */
 export default (nodes: NodeList|HTMLCollection|Array, selector: string): Array<Element> => {
   if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection || nodes instanceof Array)) {
@@ -12,6 +12,7 @@ export default (nodes: NodeList|HTMLCollection|Array, selector: string): Array<E
   if (typeof selector !== 'string') {
     return Array.from(nodes)
   }
-
-  return Array.from(nodes).filter((item) => item.nodeType === 1 && item.matches(selector))
+  return Array.from(nodes).filter((item) => {
+    return item.nodeType === 1 && item.matches(selector)
+  })
 }
