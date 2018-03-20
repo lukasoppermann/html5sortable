@@ -239,7 +239,7 @@ describe('Testing events', () => {
     expect(event.dataTransfer.dropEffect).toEqual('move')
 
     // Object.defineProperty(event, 'target', {value: secondLi, enumerable: true})
-    sortable.__testing._getPlaceholders()[0].dispatchEvent(new CustomEvent('drop'))
+    document.querySelector('.test-placeholder').dispatchEvent(new CustomEvent('drop'))
 
     li.dispatchEvent(new CustomEvent('dragend'))
 
@@ -316,16 +316,16 @@ describe('Testing events', () => {
     event.dataTransfer = dataTransferObj
 
     li.dispatchEvent(event)
-    expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
+    expect(getIndex(document.querySelector('.test-placeholder'), ul.children)).toEqual(-1)
 
     event = new CustomEvent('dragover')
     event.dataTransfer = dataTransferObj
     secondLi.dispatchEvent(event)
-    expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
+    expect(getIndex(document.querySelector('.test-placeholder'), ul.children)).not.toEqual(originalIndex)
 
     secondLi.dispatchEvent(event)
     event = new CustomEvent('drop')
-    sortable.__testing._getPlaceholders()[0].dispatchEvent(event)
+    document.querySelector('.test-placeholder').dispatchEvent(event)
 
     event = new CustomEvent('dragend')
     li.dispatchEvent(event)
@@ -348,12 +348,12 @@ describe('Testing events', () => {
       event.dataTransfer = dataTransferObj
 
       secondLi.dispatchEvent(event)
-      expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).toEqual(-1)
+      expect(getIndex(document.querySelector('.test-placeholder'), ul.children)).toEqual(-1)
 
       event = new CustomEvent('dragover')
       event.dataTransfer = dataTransferObj
       secondLi.dispatchEvent(event)
-      expect(getIndex(sortable.__testing._getPlaceholders()[0], ul.children)).not.toEqual(originalIndex)
+      expect(getIndex(document.querySelector('.test-placeholder'), ul.children)).not.toEqual(originalIndex)
 
       body.dispatchEvent(event)
 

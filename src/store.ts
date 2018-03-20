@@ -1,13 +1,14 @@
 /* eslint-env browser */
+import StoreInterface from './types/store.d' // eslint-disable-line no-unused-vars
 import defaultConfiguration from './defaultConfiguration'
-let store = new Map()
+export let stores: Map<Element, StoreInterface> = new Map()
 /**
  * Stores data & configurations per Sortable
  * @param {Object} config
  */
-export class Store {
+export class Store implements StoreInterface {
   private _config: Map<string, any> = new Map(Object.entries(defaultConfiguration)) // eslint-disable-line no-undef
-  private _placeholder: Element|null = null // eslint-disable-line no-undef
+  private _placeholder?: Element = null // eslint-disable-line no-undef
   /**
    * set the configuration of a class instance
    * @method config
@@ -66,7 +67,7 @@ export class Store {
    * @method placeholder
    * @return {Element|null}
    */
-  get placeholder (): Element|null {
+  get placeholder (): Element {
     return this._placeholder
   }
   /**
@@ -81,34 +82,35 @@ export class Store {
     }
     this._placeholder = placeholder
   }
-  setData (key: string, value: any) {
-
-  }
-
-  getData (key: string) {
-
-  }
-
-  setEvent (key: string, event: any) {
-
-  }
-
-  getEvent (key: string) {
-
-  }
+  // setData (key: string, value: any) {
+  //
+  // }
+  //
+  // getData (key: string) {
+  //
+  // }
+  //
+  // setEvent (key: string, event: any) {
+  //
+  // }
+  //
+  // getEvent (key: string) {
+  //
+  // }
 }
 /**
  * @param {Element} sortableElement
  * @returns {Class: Store}
  */
-export default (sortableElement: Element) => {
+export default (sortableElement: Element): StoreInterface => {
+  // if sortableElement is wrong type
   if (!(sortableElement instanceof Element)) {
     throw new Error('Please provide a sortable to the store function.')
   }
   // create new instance if not avilable
-  if (!store.has(sortableElement)) {
-    store.set(sortableElement, new Store())
+  if (!stores.has(sortableElement)) {
+    stores.set(sortableElement, new Store())
   }
   // return instance
-  return store.get(sortableElement)
+  return stores.get(sortableElement)
 }
