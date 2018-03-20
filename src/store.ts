@@ -1,14 +1,14 @@
 /* eslint-env browser */
 import StoreInterface from './types/store.d' // eslint-disable-line no-unused-vars
 import defaultConfiguration from './defaultConfiguration'
-export let stores: Map<Element, StoreInterface> = new Map()
+export let stores: Map<HTMLElement, StoreInterface> = new Map()
 /**
  * Stores data & configurations per Sortable
  * @param {Object} config
  */
 export class Store implements StoreInterface {
   private _config: Map<string, any> = new Map(Object.entries(defaultConfiguration)) // eslint-disable-line no-undef
-  private _placeholder?: Element = null // eslint-disable-line no-undef
+  private _placeholder?: HTMLElement = null // eslint-disable-line no-undef
   /**
    * set the configuration of a class instance
    * @method config
@@ -65,19 +65,19 @@ export class Store implements StoreInterface {
   /**
    * get the placeholder for a class instance
    * @method placeholder
-   * @return {Element|null}
+   * @return {HTMLElement|null}
    */
-  get placeholder (): Element {
+  get placeholder (): HTMLElement | null {
     return this._placeholder
   }
   /**
    * set the placeholder for a class instance
    * @method placeholder
-   * @param {Element} placeholder
+   * @param {HTMLElement} placeholder
    * @return {void}
    */
-  set placeholder (placeholder: Element): void {
-    if (!(placeholder instanceof Element) && placeholder !== null) {
+  set placeholder (placeholder: HTMLElement): void {
+    if (!(placeholder instanceof HTMLElement) && placeholder !== null) {
       throw new Error('A placeholder must be an html element or null.')
     }
     this._placeholder = placeholder
@@ -99,12 +99,12 @@ export class Store implements StoreInterface {
   // }
 }
 /**
- * @param {Element} sortableElement
+ * @param {HTMLElement} sortableElement
  * @returns {Class: Store}
  */
-export default (sortableElement: Element): StoreInterface => {
+export default (sortableElement: HTMLElement): StoreInterface => {
   // if sortableElement is wrong type
-  if (!(sortableElement instanceof Element)) {
+  if (!(sortableElement instanceof HTMLElement)) {
     throw new Error('Please provide a sortable to the store function.')
   }
   // create new instance if not avilable
