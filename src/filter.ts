@@ -9,10 +9,9 @@ export default (nodes: NodeList|HTMLCollection|Array<HTMLElement>, selector: str
   if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection || nodes instanceof Array)) {
     throw new Error('You must provide a nodeList/HTMLCollection/Array of elements to be filtered.')
   }
-  let elArray:Element[] = Array.from(nodes)
   if (typeof selector !== 'string') {
-    return elArray
+    return Array.from(nodes)
   }
 
-  return elArray.filter((item) => item.nodeType === 1 && item.matches(selector))
+  return Array.from(nodes).filter((item) => item.nodeType === 1 && item.matches(selector))
 }

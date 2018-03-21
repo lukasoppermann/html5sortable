@@ -1,11 +1,11 @@
 import store from './store'
 /**
- * @param {Array|Element} element
+ * @param {Array|HTMLElement} element
  * @param {string} event
  * @param {Function} callback
  */
 
-function addEventListener (element: Array<Element>|Element, event:string, callback: () => void) {
+function addEventListener (element: Array<HTMLElement>|HTMLElement, event:string, callback: () => void) {
   if (element instanceof Array) {
     for (var i = 0; i < element.length; ++i) {
       addEventListener(element[i], event, callback)
@@ -16,10 +16,10 @@ function addEventListener (element: Array<Element>|Element, event:string, callba
   store(element).setData(`event${event}`, callback)
 }
 /**
- * @param {Array|Element} element
- * @param {Array|string} event
+ * @param {Array<HTMLElement>|HTMLElement} element
+ * @param {Array<HTMLElement>|string} event
  */
-function removeEventListener (element: Element, event: string) {
+function removeEventListener (element: HTMLElement, event: string) {
   if (element instanceof Array) {
     for (var i = 0; i < element.length; ++i) {
       removeEventListener(element[i], event)

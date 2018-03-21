@@ -1,4 +1,10 @@
-declare interface opts {
+/*
+ * For default interfaces that are frequently used and extensions:
+ *   - HTMLElement: h5s and its inner objects.
+ *   - Extension of objects that are external to the library.
+*/
+
+interface opts {
     connectWith: boolean,
     acceptFrom: void,
     copy: boolean,
@@ -14,7 +20,8 @@ declare interface opts {
     items: string
 }
 
-declare interface events {
+// Can these functions be better defined?
+interface events {
     [index:string]: Function
     dragStart: () => void,
     dragEnd: () => void,
@@ -24,7 +31,7 @@ declare interface events {
 }
 
 
-declare interface data {
+interface data {
     [index:string]: string|opts,
     opts: opts,
     _disabled: string,
@@ -32,32 +39,21 @@ declare interface data {
     connectWith: string
 }
 
-declare interface h5s {
+interface h5s {
     events: events,
     data: data
 }
-
-declare interface offsetObject {
-    'left': number,
-    'right': number,
-    'top': number,
-    'bottom': number
-}
-
-declare interface serializedItems {
-    parent: Element,
-    node: Element,
-    html: string,
-    index: number
-}
-
-// https://www.typescriptlang.org/docs/handbook/declaration-merging.html
-declare interface Element {
+/* 
+ * typescriptlang.org/docs/handbook/declaration-merging.html
+ * ie. if this is done new properties can be 
+ * added to previously defined objects
+*/
+interface HTMLElement {
     isSortable: boolean,
     h5s: h5s
 }
 
-declare interface Node {
+interface Node {
     querySelector: Function
 }
 
