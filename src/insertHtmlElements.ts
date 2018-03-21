@@ -1,12 +1,12 @@
 /* eslint-env browser */
 /**
  * Insert node before or after target
- * @param {Element} referenceNode - reference element
- * @param {Element} newElement - element to be inserted
+ * @param {HTMLElement} referenceNode - reference element
+ * @param {HTMLElement} newElement - element to be inserted
  * @param {String} position - insert before or after reference element
  */
-let insertNode = (referenceNode: Element, newElement: Element, position: String) => {
-  if (!(referenceNode instanceof Element) || !(referenceNode.parentElement instanceof Element)) {
+let insertNode = (referenceNode: HTMLElement, newElement: HTMLElement, position: String) => {
+  if (!(referenceNode instanceof HTMLElement) || !(referenceNode.parentElement instanceof HTMLElement)) {
     throw new Error('target and element must be a node')
   }
   referenceNode.parentElement.insertBefore(
@@ -16,15 +16,15 @@ let insertNode = (referenceNode: Element, newElement: Element, position: String)
 }
 /**
  * Insert before target
- * @param {Element} target
- * @param {Element} element
+ * @param {HTMLElement} target
+ * @param {HTMLElement} element
  */
-let insertBefore = (target, element) => insertNode(target, element, 'before')
+let insertBefore = (target: HTMLElement, element: HTMLElement) => insertNode(target, element, 'before')
 /**
  * Insert after target
- * @param {Element} target
- * @param {Element} element
+ * @param {HTMLElement} target
+ * @param {HTMLElement} element
  */
-let insertAfter = (target, element) => insertNode(target, element, 'after')
+let insertAfter = (target: HTMLElement, element: HTMLElement) => insertNode(target, element, 'after')
 
 export { insertBefore, insertAfter }
