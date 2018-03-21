@@ -18,6 +18,7 @@ If you would like to add an adapter to the list, please [create an issue](https:
 - **Polymer:** https://github.com/trofrigo/polymer-html5sortable
 
 # Installation
+We recommend installing the package via npm.
 
 ```
 npm install html5sortable --save
@@ -25,12 +26,12 @@ npm install html5sortable --save
 
 Once you install the package using `npm` or [downloading the latest release](https://github.com/lukasoppermann/html5sortable/releases/latest) (don't use the master branch), load file you need **from the `dist/` directory**, e.g. `dist/html.sortable.min.js` for the minified iife version.
 
-- iffe (loading file via script tag): `dist/html5sortable.js` or `dist/html5sortable.min.js`
-- ES6 Module: `dist/html5sortable.es.js`
-- CommonJS Module: `dist/html5sortable.cjs.js`
-- AMD Module: `dist/html5sortable.amd.js`
+- **iffe** (loading file via script tag): `dist/html5sortable.js` or `dist/html5sortable.min.js`
+- **ES6 Module**: `dist/html5sortable.es.js`
+- **CommonJS Module**: `dist/html5sortable.cjs.js`
+- **AMD Module**: `dist/html5sortable.amd.js`
 
-Still using **bower**? [Look here](https://github.com/lukasoppermann/html5sortable/wiki/Installation#bower).
+Still using **bower**? `bower install https://github.com/lukasoppermann/html5sortable.git`
 
 # Examples
 You can find the **[examples online](https://lukasoppermann.github.io/html5sortable/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
