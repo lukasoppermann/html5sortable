@@ -67,7 +67,7 @@ export class Store implements StoreInterface {
    * @method placeholder
    * @return {HTMLElement|null}
    */
-  get placeholder (): HTMLElement | null {
+  get placeholder (): HTMLElement {
     return this._placeholder
   }
   /**
