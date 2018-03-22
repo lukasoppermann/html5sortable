@@ -9,6 +9,7 @@ export let stores: Map<HTMLElement, StoreInterface> = new Map()
 export class Store implements StoreInterface {
   private _config: Map<string, any> = new Map(Object.entries(defaultConfiguration)) // eslint-disable-line no-undef
   private _placeholder?: HTMLElement = null // eslint-disable-line no-undef
+  private _data: Map<string, any> = new Map() // eslint-disable-line no-undef
   /**
    * set the configuration of a class instance
    * @method config
@@ -51,8 +52,8 @@ export class Store implements StoreInterface {
     this._config.set(key, value)
   }
   /**
-   * set individual configuration of a class instance
-   * @method setConfig
+   * get an individual configuration of a class instance
+   * @method getConfig
    * @param  key valid configuration key
    * @return any configuration value
    */
@@ -90,13 +91,40 @@ export class Store implements StoreInterface {
   //
   // }
   //
-  // setEvent (key: string, event: any) {
-  //
-  // }
-  //
-  // getEvent (key: string) {
-  //
-  // }
+  /**
+   * set an data entry
+   * @method setData
+   * @param {string} key
+   * @param {any} value
+   * @return {void}
+   */
+  setData (key: string, value: Function): void {
+    this._data.set(key, value)
+  }
+  /**
+   * get an event callback
+   * @method getEvent
+   * @param {string} eventName an existing event name
+   * @return {Function}
+   */
+  getEvent (eventName: string): Function {
+    if (!this._events.has(eventName)) {
+      throw new Error(`The event ${eventName} does not exist for this element.`)
+    }
+    return this._events.get(eventName)
+  }
+  /**
+   * delete an event callback
+   * @method deleteEvent
+   * @param {string} eventName an existing event name
+   * @return {void}
+   */
+  deleteEvent (eventName: string): void {
+    if (!this._events.has(eventName)) {
+      throw new Error(`The event ${eventName} does not exist for this element.`)
+    }
+    this._events.delete(eventName)
+  }
 }
 /**
  * @param {HTMLElement} sortableElement

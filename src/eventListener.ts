@@ -1,3 +1,4 @@
+import store from './store'
 /**
  * @param {Array|Element} element
  * @param {Array|string} event
@@ -11,9 +12,7 @@ function addEventListener (element, event, callback) {
     return
   }
   element.addEventListener(event, callback)
-  element.h5s = element.h5s || {}
-  element.h5s.events = element.h5s.events || {}
-  element.h5s.events[event] = callback
+  store(element).setEvent(event, callback)
 }
 /**
  * @param {Array|Element} element
@@ -27,8 +26,8 @@ function removeEventListener (element, event) {
     return
   }
   if (element.h5s && element.h5s.events && element.h5s.events[event]) {
-    element.removeEventListener(event, element.h5s.events[event])
-    delete element.h5s.events[event]
+    element.removeEventListener(event, store(element).getEvent(event))
+    delete store(element).deleteEvent(event)
   }
 }
 
