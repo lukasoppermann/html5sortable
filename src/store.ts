@@ -1,12 +1,14 @@
 /* eslint-env browser */
+import StoreInterface from './types/store.d' // eslint-disable-line no-unused-vars
 import defaultConfiguration from './defaultConfiguration'
-let store = new Map()
+export let stores: Map<HTMLElement, StoreInterface> = new Map()
 /**
  * Stores data & configurations per Sortable
  * @param {Object} config
  */
-export class Store {
+export class Store implements StoreInterface {
   private _config: Map<string, any> = new Map(Object.entries(defaultConfiguration)) // eslint-disable-line no-undef
+  private _placeholder?: HTMLElement = null // eslint-disable-line no-undef
   /**
    * set the configuration of a class instance
    * @method config
@@ -60,35 +62,55 @@ export class Store {
     }
     return this._config.get(key)
   }
-
-  setData (key: string, value: any) {
-
+  /**
+   * get the placeholder for a class instance
+   * @method placeholder
+   * @return {HTMLElement|null}
+   */
+  get placeholder (): HTMLElement {
+    return this._placeholder
   }
-
-  getData (key: string) {
-
+  /**
+   * set the placeholder for a class instance
+   * @method placeholder
+   * @param {HTMLElement} placeholder
+   * @return {void}
+   */
+  set placeholder (placeholder: HTMLElement): void {
+    if (!(placeholder instanceof HTMLElement) && placeholder !== null) {
+      throw new Error('A placeholder must be an html element or null.')
+    }
+    this._placeholder = placeholder
   }
-
-  setEvent (key: string, event: any) {
-
-  }
-
-  getEvent (key: string) {
-
-  }
+  // setData (key: string, value: any) {
+  //
+  // }
+  //
+  // getData (key: string) {
+  //
+  // }
+  //
+  // setEvent (key: string, event: any) {
+  //
+  // }
+  //
+  // getEvent (key: string) {
+  //
+  // }
 }
 /**
- * @param {Element} sortableElement
+ * @param {HTMLElement} sortableElement
  * @returns {Class: Store}
  */
-export default (sortableElement: Element) => {
-  if (!(sortableElement instanceof Element)) {
+export default (sortableElement: HTMLElement): StoreInterface => {
+  // if sortableElement is wrong type
+  if (!(sortableElement instanceof HTMLElement)) {
     throw new Error('Please provide a sortable to the store function.')
   }
   // create new instance if not avilable
-  if (!store.has(sortableElement)) {
-    store.set(sortableElement, new Store())
+  if (!stores.has(sortableElement)) {
+    stores.set(sortableElement, new Store())
   }
   // return instance
-  return store.get(sortableElement)
+  return stores.get(sortableElement)
 }

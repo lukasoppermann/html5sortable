@@ -15,13 +15,12 @@ import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
 import _getHandles from './getHandles'
 import setDragImage from './setDragImage'
-import store from './store'
+import {default as store, stores} from './store'
 /*
  * variables global to the plugin
  */
 var dragging
 var draggingHeight
-var placeholderMap = new Map()
 let startParent
 /**
  * remove event handlers from items
@@ -229,8 +228,8 @@ export default function sortable (sortableElements, options: object|string|undef
     connectWith: false,
     acceptFrom: null,
     copy: false,
-    placeholder: null,
     disableIEFix: false,
+    placeholder: null,
     placeholderClass: 'sortable-placeholder',
     draggingClass: 'sortable-dragging',
     hoverClass: false,
@@ -283,10 +282,11 @@ export default function sortable (sortableElements, options: object|string|undef
       tempContainer.innerHTML = options.placeholder
       customPlaceholder = tempContainer.children[0]
     }
-    let placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass)
+    // add placeholder
+    store(sortableElement).placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass)
 
     _data(sortableElement, 'items', options.items)
-    placeholderMap.set(sortableElement, placeholder)
+
     if (options.acceptFrom) {
       _data(sortableElement, 'acceptFrom', options.acceptFrom)
     } else if (options.connectWith) {
@@ -342,7 +342,7 @@ export default function sortable (sortableElements, options: object|string|undef
       sortableElement.dispatchEvent(new CustomEvent('sortstart', {
         detail: {
           item: dragging,
-          placeholder: placeholderMap.get(sortableElement),
+          placeholder: store(sortableElement).placeholder,
           startParent: startParent
         }
       }))
@@ -364,8 +364,10 @@ export default function sortable (sortableElements, options: object|string|undef
 
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
-
-      placeholderMap.forEach((element) => element.remove())
+      // get placeholders from all stores and remove them from dom
+      Array.from(stores.values()).map((data) => {
+        return data.placeholder
+      }).forEach((element) => element.remove())
       endParent = this.parentElement
 
       if (_listsConnected(endParent, startParent)) {
@@ -375,16 +377,15 @@ export default function sortable (sortableElements, options: object|string|undef
             startParent: startParent
           }
         }))
-        const placeholder = placeholderMap.get(sortableElement)
         const itemEndIndex = _index(dragging, Array.from(dragging.parentElement.children)
-          .filter(item => item !== placeholder))
+          .filter(item => item !== store(sortableElement).placeholder))
         /*
         Fire 'sortupdate' on itemIndex or itemParent change
          */
         if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
           const startSortableIndex = items.indexOf(dragging)
           const endSortableIndex = _index(dragging, _filter(endParent.children, _data(endParent, 'items'))
-            .filter(item => item !== placeholder))
+            .filter(item => item !== store(sortableElement).placeholder))
           sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
             detail: {
               item: dragging,
@@ -413,7 +414,11 @@ export default function sortable (sortableElements, options: object|string|undef
       e.stopPropagation()
 
       _data(dragging, 'dropped', 'true')
-      var visiblePlaceholder = Array.from(placeholderMap.values()).filter(isInDom)[0]
+      // get the one placeholder that is currently visible
+      var visiblePlaceholder = Array.from(stores.values()).map((data) => {
+        return data.placeholder
+      }).filter(isInDom)[0]
+      // attach element after placeholder
       _after(visiblePlaceholder, dragging)
       // fire sortstop
       sortableElement.dispatchEvent(new CustomEvent('sortstop', {
@@ -424,16 +429,15 @@ export default function sortable (sortableElements, options: object|string|undef
       }))
 
       let endParent = _isSortable(this) ? this : this.parentElement
-      const placeholder = placeholderMap.get(sortableElement)
       const itemEndIndex = _index(dragging, Array.from(dragging.parentElement.children)
-        .filter(item => item !== placeholder))
+        .filter(item => item !== store(sortableElement).placeholder))
       /*
       Fire 'sortupdate' on itemIndex or itemParent change
        */
       if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
         const startSortableIndex = items.indexOf(dragging)
         const endSortableIndex = _index(dragging, _filter(endParent.children, _data(endParent, 'items'))
-          .filter(item => item !== placeholder))
+          .filter(item => item !== store(sortableElement).placeholder))
         sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
           detail: {
             item: dragging,
@@ -456,16 +460,16 @@ export default function sortable (sortableElements, options: object|string|undef
         return
       }
 
-      var placeholder = placeholderMap.get(sortableElement)
+      // var placeholder = store(sortableElement).placeholder
       // set placeholder height if forcePlaceholderSize option is set
       if (options.forcePlaceholderSize) {
-        placeholder.style.height = draggingHeight + 'px'
+        store(sortableElement).placeholder.style.height = draggingHeight + 'px'
       }
       // if element the draggedItem is dragged onto is within the array of all elements in list
       // (not only items, but also disabled, etc.)
       if (Array.from(sortableElement.children).indexOf(element) > -1) {
         let thisHeight = _getElementHeight(element)
-        var placeholderIndex = _index(placeholder, element.parentElement.children)
+        var placeholderIndex = _index(store(sortableElement).placeholder, element.parentElement.children)
         var thisIndex = _index(element, element.parentElement.children)
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight) {
@@ -489,20 +493,27 @@ export default function sortable (sortableElements, options: object|string|undef
           dragging.style.display = 'none'
         }
         if (placeholderIndex < thisIndex) {
-          _after(element, placeholder)
+          _after(element, store(sortableElement).placeholder)
         } else {
-          _before(element, placeholder)
+          _before(element, store(sortableElement).placeholder)
         }
-        // Intentionally violated chaining, it is more complex otherwise
-        Array.from(placeholderMap.values())
-          .filter(function (element) { return element !== placeholder })
-          .forEach((element) => element.remove())
+        // get placeholders from all stores & remove all but current one
+        Array.from(stores.values()).map((data) => {
+          // if placeholder is outside current sorableContainer -> remove from DOM
+          if (data.placeholder !== store(sortableElement).placeholder) {
+            data.placeholder.remove()
+          }
+        })
       } else {
-        if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
+        if (Array.from(stores.values()).map((data) => {
+          return data.placeholder
+        }).indexOf(element) === -1 &&
             sortableElement === element &&
             !_filter(element.children, options.items).length) {
-          placeholderMap.forEach((element) => element.remove())
-          element.appendChild(placeholder)
+          Array.from(stores.values()).map((data) => {
+            return data.placeholder
+          }).forEach((element) => element.remove())
+          element.appendChild(store(sortableElement).placeholder)
         }
       }
     }, options.debounce)
@@ -551,11 +562,6 @@ sortable.__testing = {
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
   _removeSortableData: _removeSortableData,
-  _listsConnected: _listsConnected,
-  _index: _index,
-  _getPlaceholders: () => placeholderMap,
-  _resetPlaceholders: () => {
-    placeholderMap.clear()
-  }
+  _listsConnected: _listsConnected
 }
 /* END.TESTS_ONLY */
