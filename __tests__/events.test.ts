@@ -2,8 +2,6 @@
 import sortable from '../src/html5sortable'
 /* eslint-env jest */
 
-jest.useFakeTimers()
-
 describe('Testing events', () => {
   let body = document.querySelector('body')
 
@@ -382,10 +380,8 @@ describe('Testing events', () => {
     event.dataTransfer = dataTransferObj
     Object.defineProperty(event, 'target', { value: item4, enumerable: true })
     ul.dispatchEvent(event)
-    jest.runOnlyPendingTimers()
 
     expect(event.dataTransfer.dropEffect).toEqual('move')
     expect(ul.querySelector('.test-placeholder')).not.toBe(undefined)
-    expect(ul.querySelector('.test-placeholder')).not.toBe(null)
   })
 })

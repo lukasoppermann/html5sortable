@@ -9,6 +9,7 @@ export let stores: Map<HTMLElement, StoreInterface> = new Map()
 export class Store implements StoreInterface {
   private _config: Map<string, any> = new Map(Object.entries(defaultConfiguration)) // eslint-disable-line no-undef
   private _placeholder?: HTMLElement = null // eslint-disable-line no-undef
+  private _data: Map<string, any> = new Map() // eslint-disable-line no-undef
   /**
    * set the configuration of a class instance
    * @method config
@@ -51,8 +52,8 @@ export class Store implements StoreInterface {
     this._config.set(key, value)
   }
   /**
-   * set individual configuration of a class instance
-   * @method setConfig
+   * get an individual configuration of a class instance
+   * @method getConfig
    * @param  key valid configuration key
    * @return any configuration value
    */
@@ -90,13 +91,43 @@ export class Store implements StoreInterface {
   //
   // }
   //
-  // setEvent (key: string, event: any) {
-  //
-  // }
-  //
-  // getEvent (key: string) {
-  //
-  // }
+  /**
+   * set an data entry
+   * @method setData
+   * @param {string} key
+   * @param {any} value
+   * @return {void}
+   */
+  setData (key: string, value: Function): void {
+    if (typeof key !== 'string') {
+      throw new Error(`The key must be a string.`)
+    }
+    this._data.set(key, value)
+  }
+  /**
+   * get an data entry
+   * @method getData
+   * @param {string} key an existing key
+   * @return {any}
+   */
+  getData (key: string): any {
+    if (typeof key !== 'string') {
+      throw new Error(`The key must be a string.`)
+    }
+    return this._data.get(key)
+  }
+  /**
+   * delete an data entry
+   * @method deleteData
+   * @param {string} key an existing key
+   * @return {boolean}
+   */
+  deleteData (key: string): boolean {
+    if (typeof key !== 'string') {
+      throw new Error(`The key must be a string.`)
+    }
+    return this._data.delete(key)
+  }
 }
 /**
  * @param {HTMLElement} sortableElement

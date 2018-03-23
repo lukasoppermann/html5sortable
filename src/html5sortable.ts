@@ -29,21 +29,11 @@ let startParent
 var _removeItemEvents = function (items) {
   _off(items, 'dragstart')
   _off(items, 'dragend')
-  _off(items, 'selectstart')
   _off(items, 'dragover')
   _off(items, 'dragenter')
   _off(items, 'drop')
   _off(items, 'mouseenter')
   _off(items, 'mouseleave')
-}
-/**
- * Remove event handlers from sortable
- * @param {Element} sortable a single sortable
- */
-var _removeSortableEvents = function (sortable) {
-  _off(sortable, 'dragover')
-  _off(sortable, 'dragenter')
-  _off(sortable, 'drop')
 }
 /**
  * _getDragging returns the current element to drag or
@@ -148,8 +138,11 @@ var _destroySortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts') || {}
   var items = _filter(sortableElement.children, opts.items)
   var handles = _getHandles(items, opts.handle)
-  // remove event handlers & data from sortable
-  _removeSortableEvents(sortableElement)
+  // remove event handlers from sortable
+  _off(sortableElement, 'dragover')
+  _off(sortableElement, 'dragenter')
+  _off(sortableElement, 'drop')
+  // remove event data from sortable
   _removeSortableData(sortableElement)
   // remove event handlers & data from items
   _off(handles, 'mousedown')
@@ -212,7 +205,9 @@ var _reloadSortable = function (sortableElement) {
   _removeItemEvents(items)
   _off(handles, 'mousedown')
   // remove event handlers from sortable
-  _removeSortableEvents(sortableElement)
+  _off(sortableElement, 'dragover')
+  _off(sortableElement, 'dragenter')
+  _off(sortableElement, 'drop')
 }
 
 /**
@@ -365,9 +360,12 @@ export default function sortable (sortableElements, options: object|string|undef
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
       // get placeholders from all stores and remove them from dom
-      Array.from(stores.values()).map((data) => {
-        return data.placeholder
-      }).forEach((element) => element.remove())
+      Array.from(stores.values())
+        .forEach((data) => {
+          if (data.placeholder instanceof HTMLElement) {
+            data.placeholder.remove()
+          }
+        })
       endParent = this.parentElement
 
       if (_listsConnected(endParent, startParent)) {
@@ -417,9 +415,15 @@ export default function sortable (sortableElements, options: object|string|undef
       // get the one placeholder that is currently visible
       var visiblePlaceholder = Array.from(stores.values()).map((data) => {
         return data.placeholder
-      }).filter(isInDom)[0]
+      })
+        // filter only HTMLElements
+        .filter(placeholder => placeholder instanceof HTMLElement)
+        // filter only elements in DOM
+        .filter(isInDom)[0]
       // attach element after placeholder
       _after(visiblePlaceholder, dragging)
+      // remove placeholder from dom
+      visiblePlaceholder.remove()
       // fire sortstop
       sortableElement.dispatchEvent(new CustomEvent('sortstop', {
         detail: {
@@ -498,21 +502,25 @@ export default function sortable (sortableElements, options: object|string|undef
           _before(element, store(sortableElement).placeholder)
         }
         // get placeholders from all stores & remove all but current one
-        Array.from(stores.values()).map((data) => {
-          // if placeholder is outside current sorableContainer -> remove from DOM
-          if (data.placeholder !== store(sortableElement).placeholder) {
-            data.placeholder.remove()
-          }
-        })
+        Array.from(stores.values())
+          // remove empty values
+          .filter(data => data.placeholder !== null)
+          // foreach placeholder in array if outside of current sorableContainer -> remove from DOM
+          .forEach((data) => {
+            if (data.placeholder !== store(sortableElement).placeholder) {
+              data.placeholder.remove()
+            }
+          })
       } else {
-        if (Array.from(stores.values()).map((data) => {
-          return data.placeholder
-        }).indexOf(element) === -1 &&
-            sortableElement === element &&
-            !_filter(element.children, options.items).length) {
-          Array.from(stores.values()).map((data) => {
+        // get all placeholders from store
+        let placeholders = Array.from(stores.values())
+          .filter((data) => data.placeholder !== null)
+          .map((data) => {
             return data.placeholder
-          }).forEach((element) => element.remove())
+          })
+        // check if element is not in placeholders
+        if (placeholders.indexOf(element) === -1 && sortableElement === element && !_filter(element.children, options.items).length) {
+          placeholders.forEach((element) => element.remove())
           element.appendChild(store(sortableElement).placeholder)
         }
       }
@@ -558,7 +566,6 @@ sortable.disable = function (sortableElement) {
 sortable.__testing = {
   // add internal methods here for testing purposes
   _data: _data,
-  _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
   _removeSortableData: _removeSortableData,
