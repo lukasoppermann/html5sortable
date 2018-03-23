@@ -512,14 +512,15 @@ export default function sortable (sortableElements, options: object|string|undef
             }
           })
       } else {
-        if (Array.from(stores.values()).map((data) => {
-          return data.placeholder
-        }).indexOf(element) === -1 &&
-            sortableElement === element &&
-            !_filter(element.children, options.items).length) {
-          Array.from(stores.values()).map((data) => {
+        // get all placeholders from store
+        let placeholders = Array.from(stores.values())
+          .filter((data) => data.placeholder !== null)
+          .map((data) => {
             return data.placeholder
-          }).forEach((element) => element.remove())
+          })
+        // check if element is not in placeholders
+        if (placeholders.indexOf(element) === -1 && sortableElement === element && !_filter(element.children, options.items).length) {
+          placeholders.forEach((element) => element.remove())
           element.appendChild(store(sortableElement).placeholder)
         }
       }
