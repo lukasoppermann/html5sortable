@@ -1,5 +1,6 @@
 /* global describe,expect,test,beforeEach,beforeAll */
 import sortable from '../src/html5sortable'
+import store from '../src/store'
 /* eslint-env jest */
 
 describe('Testing api', () => {
@@ -66,24 +67,16 @@ describe('Testing api', () => {
     })
 
     test('sortable should have correct event attached', () => {
-      // general jQuery event object
-      expect(ul.h5s.events).toBeDefined()
       // individual events
-      expect(ul.h5s.events.hasOwnProperty('dragover')).toBeDefined()
-      expect(ul.h5s.events.hasOwnProperty('dragenter')).toBeDefined()
-      expect(ul.h5s.events.hasOwnProperty('drop')).toBeDefined()
+      expect(store(ul).getData('eventdragover')).toBeDefined()
+      expect(store(ul).getData('eventdragenter')).toBeDefined()
+      expect(store(ul).getData('eventdrop')).toBeDefined()
     })
 
     test('sortable item should have correct event attached', () => {
-      // general jQuery event object
-      expect(li.h5s.events).toBeDefined()
       // individual events
-      expect(li.h5s.events.hasOwnProperty('dragover')).toBeDefined()
-      expect(li.h5s.events.hasOwnProperty('dragenter')).toBeDefined()
-      expect(li.h5s.events.hasOwnProperty('drop')).toBeDefined()
-      expect(li.h5s.events.hasOwnProperty('dragstart')).toBeDefined()
-      expect(li.h5s.events.hasOwnProperty('dragend')).toBeDefined()
-      expect(li.h5s.events.hasOwnProperty('selectstart')).toBeDefined()
+      expect(store(li).getData('eventdragover')).toBeDefined()
+      expect(store(li).getData('eventdragenter')).toBeDefined()
     })
 
     test('string placehodler', () => {

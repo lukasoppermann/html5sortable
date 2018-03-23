@@ -29,21 +29,11 @@ let startParent
 var _removeItemEvents = function (items) {
   _off(items, 'dragstart')
   _off(items, 'dragend')
-  _off(items, 'selectstart')
   _off(items, 'dragover')
   _off(items, 'dragenter')
   _off(items, 'drop')
   _off(items, 'mouseenter')
   _off(items, 'mouseleave')
-}
-/**
- * Remove event handlers from sortable
- * @param {Element} sortable a single sortable
- */
-var _removeSortableEvents = function (sortable) {
-  _off(sortable, 'dragover')
-  _off(sortable, 'dragenter')
-  _off(sortable, 'drop')
 }
 /**
  * _getDragging returns the current element to drag or
@@ -148,8 +138,11 @@ var _destroySortable = function (sortableElement) {
   var opts = _data(sortableElement, 'opts') || {}
   var items = _filter(sortableElement.children, opts.items)
   var handles = _getHandles(items, opts.handle)
-  // remove event handlers & data from sortable
-  _removeSortableEvents(sortableElement)
+  // remove event handlers from sortable
+  _off(sortableElement, 'dragover')
+  _off(sortableElement, 'dragenter')
+  _off(sortableElement, 'drop')
+  // remove event data from sortable
   _removeSortableData(sortableElement)
   // remove event handlers & data from items
   _off(handles, 'mousedown')
@@ -212,7 +205,9 @@ var _reloadSortable = function (sortableElement) {
   _removeItemEvents(items)
   _off(handles, 'mousedown')
   // remove event handlers from sortable
-  _removeSortableEvents(sortableElement)
+  _off(sortableElement, 'dragover')
+  _off(sortableElement, 'dragenter')
+  _off(sortableElement, 'drop')
 }
 
 /**
@@ -558,7 +553,6 @@ sortable.disable = function (sortableElement) {
 sortable.__testing = {
   // add internal methods here for testing purposes
   _data: _data,
-  _removeSortableEvents: _removeSortableEvents,
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
   _removeSortableData: _removeSortableData,
