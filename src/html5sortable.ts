@@ -360,9 +360,12 @@ export default function sortable (sortableElements, options: object|string|undef
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
       // get placeholders from all stores and remove them from dom
-      Array.from(stores.values()).map((data) => {
-        return data.placeholder
-      }).forEach((element) => element.remove())
+      Array.from(stores.values())
+      .forEach((data) => {
+        if (data.placeholder instanceof HTMLElement) {
+          data.placeholder.remove()
+        }
+      })
       endParent = this.parentElement
 
       if (_listsConnected(endParent, startParent)) {
@@ -412,9 +415,15 @@ export default function sortable (sortableElements, options: object|string|undef
       // get the one placeholder that is currently visible
       var visiblePlaceholder = Array.from(stores.values()).map((data) => {
         return data.placeholder
-      }).filter(isInDom)[0]
+      })
+      // filter only HTMLElements
+      .filter(placeholder => placeholder instanceof HTMLElement)
+      // filter only elements in DOM
+      .filter(isInDom)[0]
       // attach element after placeholder
       _after(visiblePlaceholder, dragging)
+      // remove placeholder from dom
+      visiblePlaceholder.remove()
       // fire sortstop
       sortableElement.dispatchEvent(new CustomEvent('sortstop', {
         detail: {
@@ -493,8 +502,11 @@ export default function sortable (sortableElements, options: object|string|undef
           _before(element, store(sortableElement).placeholder)
         }
         // get placeholders from all stores & remove all but current one
-        Array.from(stores.values()).map((data) => {
-          // if placeholder is outside current sorableContainer -> remove from DOM
+        Array.from(stores.values())
+        // remove empty values
+        .filter(data => data.placeholder !== null)
+        // foreach placeholder in array if outside of current sorableContainer -> remove from DOM
+        .forEach((data) => {
           if (data.placeholder !== store(sortableElement).placeholder) {
             data.placeholder.remove()
           }
