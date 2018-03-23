@@ -361,11 +361,11 @@ export default function sortable (sortableElements, options: object|string|undef
       delete dragging.oldDisplay
       // get placeholders from all stores and remove them from dom
       Array.from(stores.values())
-      .forEach((data) => {
-        if (data.placeholder instanceof HTMLElement) {
-          data.placeholder.remove()
-        }
-      })
+        .forEach((data) => {
+          if (data.placeholder instanceof HTMLElement) {
+            data.placeholder.remove()
+          }
+        })
       endParent = this.parentElement
 
       if (_listsConnected(endParent, startParent)) {
@@ -416,10 +416,10 @@ export default function sortable (sortableElements, options: object|string|undef
       var visiblePlaceholder = Array.from(stores.values()).map((data) => {
         return data.placeholder
       })
-      // filter only HTMLElements
-      .filter(placeholder => placeholder instanceof HTMLElement)
-      // filter only elements in DOM
-      .filter(isInDom)[0]
+        // filter only HTMLElements
+        .filter(placeholder => placeholder instanceof HTMLElement)
+        // filter only elements in DOM
+        .filter(isInDom)[0]
       // attach element after placeholder
       _after(visiblePlaceholder, dragging)
       // remove placeholder from dom
@@ -503,14 +503,14 @@ export default function sortable (sortableElements, options: object|string|undef
         }
         // get placeholders from all stores & remove all but current one
         Array.from(stores.values())
-        // remove empty values
-        .filter(data => data.placeholder !== null)
-        // foreach placeholder in array if outside of current sorableContainer -> remove from DOM
-        .forEach((data) => {
-          if (data.placeholder !== store(sortableElement).placeholder) {
-            data.placeholder.remove()
-          }
-        })
+          // remove empty values
+          .filter(data => data.placeholder !== null)
+          // foreach placeholder in array if outside of current sorableContainer -> remove from DOM
+          .forEach((data) => {
+            if (data.placeholder !== store(sortableElement).placeholder) {
+              data.placeholder.remove()
+            }
+          })
       } else {
         if (Array.from(stores.values()).map((data) => {
           return data.placeholder
