@@ -12,7 +12,7 @@ function addEventListener (element, event, callback) {
     return
   }
   element.addEventListener(event, callback)
-  store(element).setEvent(event, callback)
+  store(element).setData(`event${event}`, callback)
 }
 /**
  * @param {Array|Element} element
@@ -25,10 +25,8 @@ function removeEventListener (element, event) {
     }
     return
   }
-  if (element.h5s && element.h5s.events && element.h5s.events[event]) {
-    element.removeEventListener(event, store(element).getEvent(event))
-    delete store(element).deleteEvent(event)
-  }
+  element.removeEventListener(event, store(element).getData(`event${event}`))
+  delete store(element).deleteData(`event${event}`)
 }
 
 export { addEventListener, removeEventListener }

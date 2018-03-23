@@ -99,31 +99,34 @@ export class Store implements StoreInterface {
    * @return {void}
    */
   setData (key: string, value: Function): void {
+    if (typeof key !== 'string') {
+      throw new Error(`The key must be a string.`)
+    }
     this._data.set(key, value)
   }
   /**
-   * get an event callback
-   * @method getEvent
-   * @param {string} eventName an existing event name
-   * @return {Function}
+   * get an data entry
+   * @method getData
+   * @param {string} key an existing key
+   * @return {any}
    */
-  getEvent (eventName: string): Function {
-    if (!this._events.has(eventName)) {
-      throw new Error(`The event ${eventName} does not exist for this element.`)
+  getData (key: string): any {
+    if (typeof key !== 'string') {
+      throw new Error(`The key must be a string.`)
     }
-    return this._events.get(eventName)
+    return this._data.get(key)
   }
   /**
-   * delete an event callback
-   * @method deleteEvent
-   * @param {string} eventName an existing event name
-   * @return {void}
+   * delete an data entry
+   * @method deleteData
+   * @param {string} key an existing key
+   * @return {boolean}
    */
-  deleteEvent (eventName: string): void {
-    if (!this._events.has(eventName)) {
-      throw new Error(`The event ${eventName} does not exist for this element.`)
+  deleteData (key: string): boolean {
+    if (typeof key !== 'string') {
+      throw new Error(`The key must be a string.`)
     }
-    this._events.delete(eventName)
+    return this._data.delete(key)
   }
 }
 /**
