@@ -395,7 +395,7 @@ export default function sortable (sortableElements, options: object|string|undef
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
 
-      const visiblePlaceholder = Array.from(stores.values()).map( data => data.placeholder )
+      const visiblePlaceholder = Array.from(stores.values()).map(data => data.placeholder)
         .filter(placeholder => placeholder instanceof HTMLElement)
         .filter(isInDom)[0]
       visiblePlaceholder.remove()
