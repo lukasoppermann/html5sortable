@@ -1,8 +1,8 @@
 import store from './store'
 /**
  * @param {Array|HTMLElement} element
- * @param {string} event
  * @param {Function} callback
+ * @param {string} event
  */
 
 function addEventListener (element: Array<HTMLElement>|HTMLElement, event:string, callback: () => void) {

@@ -5,7 +5,7 @@
     "strictNullChecks": true
   },
   "typeRoots": [
-    "./src/interfaces",
+    "./src/types",
     "./node_modules/@types"
   ]
 }

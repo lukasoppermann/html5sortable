@@ -6,7 +6,7 @@
  * @return {*}
  */
 
-function addData (element: HTMLElement, key: string, value?: any): HTMLElement|opts|string|void {
+function addData (element: HTMLElement, key: string, value?: any): HTMLElement|configuration|string|void {
   if (value === undefined) {
     return element && element.h5s && element.h5s.data && element.h5s.data[key]
   } else {
