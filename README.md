@@ -80,10 +80,12 @@ sortable('.sortable')[0].addEventListener('sortstart', function(e) {
 
     This event is triggered when the user starts sorting and the DOM position has not yet changed.
 
-    e.detail.item contains the current dragged element
-    e.detail.placeholder contains the placeholder element
-    e.detail.startparent contains the element that the dragged item comes from
-
+    e.detail.item - {HTMLElement} dragged element
+    
+    Origin Container Data
+    e.detail.origin.index - {Integer} Index of the element within Sortable Items Only
+    e.detail.origin.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
+    e.detail.origin.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
     */
 });
 ```
@@ -95,11 +97,14 @@ Use the `sortstop` event if you want to do something when sorting stops:
 sortable('.sortable')[0].addEventListener('sortstop', function(e) {
     /*
 
-    This event is triggered when the user stops sorting. The DOM position may have changed.
+    This event is triggered when the user stops sorting and the DOM position has not yet changed.
 
-    e.detail.item - contains the element that was dragged.
-    e.detail.startParent - contains the element that the dragged item came from.
-
+    e.detail.item - {HTMLElement} dragged element
+    
+    Origin Container Data
+    e.detail.origin.index - {Integer} Index of the element within Sortable Items Only
+    e.detail.origin.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
+    e.detail.origin.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
     */
 });
 ```
@@ -110,20 +115,27 @@ Use `sortupdate` event if you want to do something when the order changes (e.g. 
 
 ``` javascript
 sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
+
+    console.log(e.detail);
+
     /*
-
     This event is triggered when the user stopped sorting and the DOM position has changed.
-
-    e.detail.item - contains the current dragged element.
-    e.detail.startSortableIndex - contains the initial index of the dragged element in sortable list items (see Options => Items)
-    e.detail.endSortableIndex - contains the new index of the dragged element sortable list items (see Options => Items)
-    e.detail.startIndex - contains the initial index of the dragged element in all list items (including non-sortable ones)
-    e.detail.endIndex - contains the new index of the dragged element in all list items (including non-sortable ones)
-    e.detail.startParent - contains the element that the dragged item comes from
-    e.detail.endParent - contains the element that the dragged item was added to (new parent)
-    e.detail.newEndList - contains all elements in the list the dragged item was dragged to
-    e.detail.newStartList - contains all elements in the list the dragged item was dragged from
-    e.detail.oldStartList - contains all elements in the list the dragged item was dragged from BEFORE it was dragged from it
+     
+    e.detail.item - {HTMLElement} dragged element
+    
+    Origin Container Data
+    e.detail.origin.index - {Integer} Index of the element within Sortable Items Only
+    e.detail.origin.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
+    e.detail.origin.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
+    e.detail.origin.itemsBeforeUpdate - {Array} Sortable Items before the move
+    e.detail.origin.items - {Array} Sortable Items after the move
+    
+    Destination Container Data
+    e.detail.destination.index - {Integer} Index of the element within Sortable Items Only
+    e.detail.destination.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
+    e.detail.destination.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
+    e.detail.destination.itemsBeforeUpdate - {Array} Sortable Items before the move
+    e.detail.destination.items - {Array} Sortable Items after the move
     */
 });
 ```

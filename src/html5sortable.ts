@@ -344,25 +344,25 @@ export default function sortable (sortableElements, options: object|string|undef
         return
       }
 
-      const sortableList = findSortable(e.target)
-      const dragItem = findDragElement(sortableList, e.target)
+      const sortableContainer = findSortable(e.target)
+      const dragItem = findDragElement(sortableContainer, e.target)
 
       // grab values
-      originItemsBeforeUpdate = _filter(sortableList.children, options.items)
+      originItemsBeforeUpdate = _filter(sortableContainer.children, options.items)
       originIndex = originItemsBeforeUpdate.indexOf(dragItem)
-      originElementIndex = _index(dragItem, sortableList.children)
-      originContainer = sortableList
+      originElementIndex = _index(dragItem, sortableContainer.children)
+      originContainer = sortableContainer
 
       // add transparent clone or other ghost to cursor
       setDragImage(e, dragItem, options.customDragImage)
       // cache selsection & add attr for dragging
       draggingHeight = _getElementHeight(dragItem)
       dragItem.classList.add(options.draggingClass)
-      dragging = _getDragging(dragItem, sortableList)
+      dragging = _getDragging(dragItem, sortableContainer)
       _attr(dragging, 'aria-grabbed', 'true')
 
       // dispatch sortstart event on each element in group
-      sortableList.dispatchEvent(new CustomEvent('sortstart', {
+      sortableContainer.dispatchEvent(new CustomEvent('sortstart', {
         detail: {
           origin: {
             elementIndex: originElementIndex,
@@ -375,15 +375,14 @@ export default function sortable (sortableElements, options: object|string|undef
     })
 
     /*
-     We are capturing targetSortable data with 'dragover' event
+     We are capturing targetSortable before modifications with 'dragenter' event
     */
-    _on(sortableElement, 'dragover', (e) => {
-      // TODO - rename _isSortable into isNotSortable
+    _on(sortableElement, 'dragenter', (e) => {
       if (_isSortable(e.target)) {
         return
       }
-      const sortableList = findSortable(e.target)
-      destinationItemsBeforeUpdate = _filter(sortableList.children, _data(sortableList, 'items'))
+      const sortableContainer = findSortable(e.target)
+      destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
         .filter(item => item !== placeholder)
     })
     /*
@@ -463,8 +462,9 @@ export default function sortable (sortableElements, options: object|string|undef
         }
       }))
 
-      const originItems = _filter(originContainer.children, options.items)
       const placeholder = placeholderMap.get(sortableElement)
+      const originItems = _filter(originContainer.children, options.items)
+        .filter(item => item !== placeholder)
       const destinationContainer = _isSortable(this) ? this : this.parentElement
       const destinationItems = _filter(destinationContainer.children, _data(destinationContainer, 'items'))
         .filter(item => item !== placeholder)
