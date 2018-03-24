@@ -398,7 +398,10 @@ export default function sortable (sortableElements, options: object|string|undef
       const visiblePlaceholder = Array.from(stores.values()).map(data => data.placeholder)
         .filter(placeholder => placeholder instanceof HTMLElement)
         .filter(isInDom)[0]
-      visiblePlaceholder.remove()
+
+      if (visiblePlaceholder) {
+        visiblePlaceholder.remove()
+      }
 
       // dispatch sortstart event on each element in group
       sortableElement.dispatchEvent(new CustomEvent('sortstop', {
