@@ -1,16 +1,16 @@
 /* eslint-env browser */
 /**
  * create a placeholder element
- * @param {Elememnt} sortableElement a single sortable
- * @param {string|undefine} placeholder a string representing an html element
+ * @param {HTMLElement} sortableElement a single sortable
+ * @param {string|undefined} placeholder a string representing an html element
  * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
  */
-export default (sortableElement: Element, placeholder?: Element, placeholderClass: string = 'sortable-placeholder') => {
-  if (!(sortableElement instanceof Element)) {
+export default (sortableElement: HTMLElement, placeholder?: HTMLElement, placeholderClass: string = 'sortable-placeholder') => {
+  if (!(sortableElement instanceof HTMLElement)) {
     throw new Error('You must provide a valid element as a sortable.')
   }
   // if placeholder is not an element
-  if (!(placeholder instanceof Element) && placeholder !== undefined) {
+  if (!(placeholder instanceof HTMLElement) && placeholder !== undefined) {
     throw new Error('You must provide a valid element as a placeholder or set ot to undefined.')
   }
   // if no placeholder element is given

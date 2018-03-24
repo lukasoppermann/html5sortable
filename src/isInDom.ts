@@ -1,11 +1,11 @@
 /* eslint-env browser */
 /**
  * Test whether element is in DOM
- * @param {Element} element
+ * @param {HTMLElement} element
  * @returns {boolean}
  */
-export default (element: Element): boolean => {
-  if (!(element instanceof Element)) {
+export default (element: HTMLElement): boolean => {
+  if (!(element instanceof HTMLElement)) {
     throw new Error('Element is not a node element.')
   }
 

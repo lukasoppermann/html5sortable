@@ -1,11 +1,12 @@
 /**
  * Get or set data on element
- * @param {Element} element
+ * @param {HTMLElement} element
  * @param {string} key
- * @param {*} value
+ * @param {any} value
  * @return {*}
  */
-function addData (element: Element, key: string, value?: any) {
+
+function addData (element: HTMLElement, key: string, value?: any): HTMLElement|configuration|string|void {
   if (value === undefined) {
     return element && element.h5s && element.h5s.data && element.h5s.data[key]
   } else {
@@ -16,9 +17,9 @@ function addData (element: Element, key: string, value?: any) {
 }
 /**
  * Remove data from element
- * @param {Element} element
+ * @param {HTMLElement} element
  */
-function removeData (element: Element) {
+function removeData (element: HTMLElement) {
   if (element.h5s) {
     delete element.h5s.data
   }

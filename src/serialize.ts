@@ -4,13 +4,13 @@ import filter from './filter'
 import index from './index'
 /**
  * Filter only wanted nodes
- * @param {Element} sortableContainer
+ * @param {HTMLElement} sortableContainer
  * @param {Function} customSerializer
  * @returns {Array}
  */
-export default (sortableContainer: Element, customItemSerializer: Function = (serializedItem: object, sortableContainer: Element) => serializedItem, customContainerSerializer: Function = (serializedContainer: object) => serializedContainer): object => {
+export default (sortableContainer: HTMLElement, customItemSerializer: Function = (serializedItem: serializedItem, sortableContainer: HTMLElement) => serializedItem, customContainerSerializer: Function = (serializedContainer: object) => serializedContainer): object => {
   // check for valid sortableContainer
-  if (!(sortableContainer instanceof Element) || !sortableContainer.isSortable === true) {
+  if (!(sortableContainer instanceof HTMLElement) || !sortableContainer.isSortable === true) {
     throw new Error('You need to provide a sortableContainer to be serialized.')
   }
   // check for valid serializers
@@ -19,9 +19,12 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
   }
   // get options
   let options = _data(sortableContainer, 'opts')
+
+  let item: string|undefined = options.items
+
   // serialize container
-  let items = filter(sortableContainer.children, options.items)
-  items = items.map((item) => {
+  let items = filter(sortableContainer.children, item)
+  let serializedItems: serializedItem[] = items.map((item) => {
     return {
       parent: sortableContainer,
       node: item,
@@ -32,11 +35,11 @@ export default (sortableContainer: Element, customItemSerializer: Function = (se
   // serialize container
   let container = {
     node: sortableContainer,
-    itemCount: items.length
+    itemCount: serializedItems.length
   }
 
   return {
     container: customContainerSerializer(container),
-    items: items.map((item: object) => customItemSerializer(item, sortableContainer))
+    items: serializedItems.map((item: object) => customItemSerializer(item, sortableContainer))
   }
 }

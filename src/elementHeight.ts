@@ -1,10 +1,10 @@
 /* eslint-env browser */
 /**
  * Get height of an element including padding
- * @param {Element} element an dom element
+ * @param {HTMLElement} element an dom element
  */
-export default element => {
-  if (!(element instanceof Element)) {
+export default (element: HTMLElement) => {
+  if (!(element instanceof HTMLElement)) {
     throw new Error('You must provide a valid dom element')
   }
   // get calculated style of element
