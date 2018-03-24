@@ -46,6 +46,177 @@ function filter (nodes, selector) {
     return Array.from(nodes).filter(function (item) { return item.nodeType === 1 && item.matches(selector); });
 }
 
+var defaultConfiguration = {
+    items: null,
+    // deprecated
+    connectWith: false,
+    // deprecated
+    disableIEFix: false,
+    acceptFrom: null,
+    copy: false,
+    placeholder: null,
+    placeholderClass: 'sortable-placeholder',
+    draggingClass: 'sortable-dragging',
+    hoverClass: false,
+    debounce: 0,
+    maxItems: 0,
+    itemSerializer: undefined,
+    containerSerializer: undefined,
+    customDragImage: null
+};
+
+var stores = new Map();
+/**
+ * Stores data & configurations per Sortable
+ * @param {Object} config
+ */
+var Store = (function () {
+    function Store() {
+        this._config = new Map(Object.entries(defaultConfiguration)); // eslint-disable-line no-undef
+        this._placeholder = null; // eslint-disable-line no-undef
+        this._data = new Map(); // eslint-disable-line no-undef
+    }
+    Object.defineProperty(Store.prototype, "config", {
+        /**
+         * get the configuration map of a class instance
+         * @method config
+         * @return {object}
+         */
+        get: function () {
+            // transform Map to object
+            var config = {};
+            this._config.forEach(function (value, key) {
+                config[key] = value;
+            });
+            // return object
+            return config;
+        },
+        /**
+         * set the configuration of a class instance
+         * @method config
+         * @param {object} config object of configurations
+         */
+        set: function (config) {
+            if (typeof config !== 'object') {
+                throw new Error('You must provide a valid configuration object to the config setter.');
+            }
+            // combine config with default
+            var mergedConfig = Object.assign({}, defaultConfiguration, config);
+            // add config to map
+            this._config = new Map(Object.entries(mergedConfig));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * set individual configuration of a class instance
+     * @method setConfig
+     * @param  key valid configuration key
+     * @param  value any value
+     * @return void
+     */
+    Store.prototype.setConfig = function (key, value) {
+        if (!this._config.has(key)) {
+            throw new Error("Trying to set invalid configuration item: " + key);
+        }
+        this._config.set(key, value);
+    };
+    /**
+     * get an individual configuration of a class instance
+     * @method getConfig
+     * @param  key valid configuration key
+     * @return any configuration value
+     */
+    Store.prototype.getConfig = function (key) {
+        if (!this._config.has(key)) {
+            throw new Error("Invalid configuration item requested: " + key);
+        }
+        return this._config.get(key);
+    };
+    Object.defineProperty(Store.prototype, "placeholder", {
+        /**
+         * get the placeholder for a class instance
+         * @method placeholder
+         * @return {HTMLElement|null}
+         */
+        get: function () {
+            return this._placeholder;
+        },
+        /**
+         * set the placeholder for a class instance
+         * @method placeholder
+         * @param {HTMLElement} placeholder
+         * @return {void}
+         */
+        set: function (placeholder) {
+            if (!(placeholder instanceof HTMLElement) && placeholder !== null) {
+                throw new Error('A placeholder must be an html element or null.');
+            }
+            this._placeholder = placeholder;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    // setData (key: string, value: any) {
+    //
+    // }
+    //
+    // getData (key: string) {
+    //
+    // }
+    //
+    /**
+     * set an data entry
+     * @method setData
+     * @param {string} key
+     * @param {any} value
+     * @return {void}
+     */
+    Store.prototype.setData = function (key, value) {
+        if (typeof key !== 'string') {
+            throw new Error("The key must be a string.");
+        }
+        this._data.set(key, value);
+    };
+    /**
+     * get an data entry
+     * @method getData
+     * @param {string} key an existing key
+     * @return {any}
+     */
+    Store.prototype.getData = function (key) {
+        if (typeof key !== 'string') {
+            throw new Error("The key must be a string.");
+        }
+        return this._data.get(key);
+    };
+    /**
+     * delete an data entry
+     * @method deleteData
+     * @param {string} key an existing key
+     * @return {boolean}
+     */
+    Store.prototype.deleteData = function (key) {
+        if (typeof key !== 'string') {
+            throw new Error("The key must be a string.");
+        }
+        return this._data.delete(key);
+    };
+    return Store;
+}());
+function store (sortableElement) {
+    // if sortableElement is wrong type
+    if (!(sortableElement instanceof HTMLElement)) {
+        throw new Error('Please provide a sortable to the store function.');
+    }
+    // create new instance if not avilable
+    if (!stores.has(sortableElement)) {
+        stores.set(sortableElement, new Store());
+    }
+    // return instance
+    return stores.get(sortableElement);
+}
+
 /**
  * @param {Array|Element} element
  * @param {Array|string} event
@@ -59,9 +230,7 @@ function addEventListener(element, event, callback) {
         return;
     }
     element.addEventListener(event, callback);
-    element.h5s = element.h5s || {};
-    element.h5s.events = element.h5s.events || {};
-    element.h5s.events[event] = callback;
+    store(element).setData("event" + event, callback);
 }
 /**
  * @param {Array|Element} element
@@ -74,10 +243,8 @@ function removeEventListener(element, event) {
         }
         return;
     }
-    if (element.h5s && element.h5s.events && element.h5s.events[event]) {
-        element.removeEventListener(event, element.h5s.events[event]);
-        delete element.h5s.events[event];
-    }
+    element.removeEventListener(event, store(element).getData("event" + event));
+    delete store(element).deleteData("event" + event);
 }
 
 /**
@@ -137,7 +304,7 @@ function _debounce (func, wait) {
 }
 
 function index (element, elementList) {
-    if (!(element instanceof Element) || !(elementList instanceof NodeList || elementList instanceof HTMLCollection || elementList instanceof Array)) {
+    if (!(element instanceof HTMLElement) || !(elementList instanceof NodeList || elementList instanceof HTMLCollection || elementList instanceof Array)) {
         throw new Error('You must provide an element and a list of elements.');
     }
     return Array.from(elementList).indexOf(element);
@@ -153,26 +320,26 @@ function isInDom (element) {
 /* eslint-env browser */
 /**
  * Insert node before or after target
- * @param {Element} referenceNode - reference element
- * @param {Element} newElement - element to be inserted
+ * @param {HTMLElement} referenceNode - reference element
+ * @param {HTMLElement} newElement - element to be inserted
  * @param {String} position - insert before or after reference element
  */
 var insertNode = function (referenceNode, newElement, position) {
-    if (!(referenceNode instanceof Element) || !(referenceNode.parentElement instanceof Element)) {
+    if (!(referenceNode instanceof HTMLElement) || !(referenceNode.parentElement instanceof HTMLElement)) {
         throw new Error('target and element must be a node');
     }
     referenceNode.parentElement.insertBefore(newElement, (position === 'before' ? referenceNode : referenceNode.nextElementSibling));
 };
 /**
  * Insert before target
- * @param {Element} target
- * @param {Element} element
+ * @param {HTMLElement} target
+ * @param {HTMLElement} element
  */
 var insertBefore = function (target, element) { return insertNode(target, element, 'before'); };
 /**
  * Insert after target
- * @param {Element} target
- * @param {Element} element
+ * @param {HTMLElement} target
+ * @param {HTMLElement} element
  */
 var insertAfter = function (target, element) { return insertNode(target, element, 'after'); };
 
@@ -257,15 +424,15 @@ function _getElementHeight (element) {
 }
 
 function _getHandles (items, selector) {
-    if (!(items instanceof NodeList || items instanceof HTMLCollection || items instanceof Array)) {
-        throw new Error('You must provide a nodeList/HTMLCollection/Array of elements to be filtered.');
+    if (!(items instanceof Array)) {
+        throw new Error('You must provide a Array of HTMLElements to be filtered.');
     }
     if (typeof selector !== 'string') {
         return items;
     }
-    return Array.from(items)
+    return items
         .filter(function (item) {
-        return item.querySelector(selector) instanceof Element;
+        return item.querySelector(selector) instanceof HTMLElement;
     })
         .map(function (item) {
         return item.querySelector(selector);
@@ -305,6 +472,10 @@ function setDragImage (event, draggedElement, customDragImage) {
         var elementOffset = offset(draggedElement);
         // get the dragImage
         var dragImage = customDragImage(draggedElement, elementOffset, event);
+        // check if custom function returns correct values
+        if (!(dragImage.element instanceof Element) || typeof dragImage.posX !== 'number' || typeof dragImage.posY !== 'number') {
+            throw new Error('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].');
+        }
         // needs to be set for HTML5 drag & drop to work
         event.dataTransfer.effectAllowed = 'copyMove';
         // Firefox requires arbitrary content in setData for the drag & drop functionality to work
@@ -320,8 +491,17 @@ function setDragImage (event, draggedElement, customDragImage) {
  */
 var dragging;
 var draggingHeight;
-var placeholderMap = new Map();
-var startParent;
+/*
+ * Keeps track of the initialy selected list, where 'dragstart' event was triggered
+ * It allows us to move the data in between individual Sortable List instances
+ */
+// Origin List - data from before any item was changed
+var originContainer;
+var originIndex;
+var originElementIndex;
+var originItemsBeforeUpdate;
+// Destination List - data from before any item was changed
+var destinationItemsBeforeUpdate;
 /**
  * remove event handlers from items
  * @param {Array|NodeList} items
@@ -329,21 +509,11 @@ var startParent;
 var _removeItemEvents = function (items) {
     removeEventListener(items, 'dragstart');
     removeEventListener(items, 'dragend');
-    removeEventListener(items, 'selectstart');
     removeEventListener(items, 'dragover');
     removeEventListener(items, 'dragenter');
     removeEventListener(items, 'drop');
     removeEventListener(items, 'mouseenter');
     removeEventListener(items, 'mouseleave');
-};
-/**
- * Remove event handlers from sortable
- * @param {Element} sortable a single sortable
- */
-var _removeSortableEvents = function (sortable) {
-    removeEventListener(sortable, 'dragover');
-    removeEventListener(sortable, 'dragenter');
-    removeEventListener(sortable, 'drop');
 };
 /**
  * _getDragging returns the current element to drag or
@@ -412,14 +582,14 @@ var _isCopyActive = function (sortable) {
 };
 /**
  * Is {Element} a sortable.
- * @param {Element} sortable a single sortable
+ * @param {Element} element a single sortable
  */
 function _isSortable(element) {
     return element !== undefined && element != null && addData(element, 'opts') !== undefined;
 }
 /**
  * find sortable from element. travels up parent element until found or null.
- * @param {Element} sortable a single sortable
+ * @param {Element} element a single sortable
  */
 function findSortable(element) {
     while ((element = element.parentElement) && !_isSortable(element))
@@ -429,7 +599,7 @@ function findSortable(element) {
 /**
  * Dragging event is on the sortable element. finds the top child that
  * contains the element.
- * @param {Element} sortable a single sortable
+ * @param {Element} sortableElement a single sortable
  * @param {Element} element is that being dragged
  */
 function findDragElement(sortableElement, element) {
@@ -449,7 +619,10 @@ var _destroySortable = function (sortableElement) {
     var items = filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     // remove event handlers & data from sortable
-    _removeSortableEvents(sortableElement);
+    removeEventListener(sortableElement, 'dragover');
+    removeEventListener(sortableElement, 'dragenter');
+    removeEventListener(sortableElement, 'drop');
+    // remove event data from sortable
     _removeSortableData(sortableElement);
     // remove event handlers & data from items
     removeEventListener(handles, 'mousedown');
@@ -513,7 +686,9 @@ var _reloadSortable = function (sortableElement) {
     _removeItemEvents(items);
     removeEventListener(handles, 'mousedown');
     // remove event handlers from sortable
-    _removeSortableEvents(sortableElement);
+    removeEventListener(sortableElement, 'dragover');
+    removeEventListener(sortableElement, 'dragenter');
+    removeEventListener(sortableElement, 'drop');
 };
 /**
  * Public sortable object
@@ -523,7 +698,7 @@ var _reloadSortable = function (sortableElement) {
 function sortable(sortableElements, options) {
     // get method string to see if a method is called
     var method = String(options);
-    // merge user options with defaults
+    // merge user options with defaultss
     options = Object.assign({
         connectWith: false,
         acceptFrom: null,
@@ -558,6 +733,8 @@ function sortable(sortableElements, options) {
         if (/enable|disable|destroy/.test(method)) {
             return sortable[method](sortableElement);
         }
+        // init data store for sortable
+        store(sortableElement).config = options;
         // get options & set options on sortable
         options = addData(sortableElement, 'opts') || options;
         addData(sortableElement, 'opts', options);
@@ -566,9 +743,7 @@ function sortable(sortableElements, options) {
         // reset sortable
         _reloadSortable(sortableElement);
         // initialize
-        var items = filter(sortableElement.children, options.items);
-        var itemStartIndex;
-        var startList;
+        var listItems = filter(sortableElement.children, options.items);
         // create element if user defined a placeholder element as a string
         var customPlaceholder;
         if (options.placeholder !== null && options.placeholder !== undefined) {
@@ -576,9 +751,9 @@ function sortable(sortableElements, options) {
             tempContainer.innerHTML = options.placeholder;
             customPlaceholder = tempContainer.children[0];
         }
-        var placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass);
+        // add placeholder
+        store(sortableElement).placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass);
         addData(sortableElement, 'items', options.items);
-        placeholderMap.set(sortableElement, placeholder);
         if (options.acceptFrom) {
             addData(sortableElement, 'acceptFrom', options.acceptFrom);
         }
@@ -586,25 +761,28 @@ function sortable(sortableElements, options) {
             addData(sortableElement, 'connectWith', options.connectWith);
         }
         _enableSortable(sortableElement);
-        addAttribute(items, 'role', 'option');
-        addAttribute(items, 'aria-grabbed', 'false');
+        addAttribute(listItems, 'role', 'option');
+        addAttribute(listItems, 'aria-grabbed', 'false');
         // Mouse over class
+        // TODO - only assign hoverClass if not dragging
         if (typeof options.hoverClass === 'string') {
             var hoverClasses_1 = options.hoverClass.split(' ');
             // add class on hover
-            addEventListener(items, 'mouseenter', function (e) {
+            addEventListener(listItems, 'mouseenter', function (e) {
                 (_a = e.target.classList).add.apply(_a, hoverClasses_1);
                 var _a;
             });
             // remove class on leave
-            addEventListener(items, 'mouseleave', function (e) {
+            addEventListener(listItems, 'mouseleave', function (e) {
                 (_a = e.target.classList).remove.apply(_a, hoverClasses_1);
                 var _a;
             });
         }
-        // Handle drag events on draggable items
-        // Handle set at sortableelement level as it will bubble up
-        // from the item
+        /*
+         Handle drag events on draggable items
+         Handle is set at the sortableElement level as it will bubble up
+         from the item
+         */
         addEventListener(sortableElement, 'dragstart', function (e) {
             // ignore dragstart events
             if (_isSortable(e.target)) {
@@ -614,36 +792,52 @@ function sortable(sortableElements, options) {
             if ((options.handle && !e.target.matches(options.handle)) || e.target.getAttribute('draggable') === 'false') {
                 return;
             }
-            var sortableElement = findSortable(e.target);
-            var dragitem = findDragElement(sortableElement, e.target);
-            // add transparent clone or other ghost to cursor
-            setDragImage(e, dragitem, options.customDragImage);
-            // cache selsection & add attr for dragging
-            draggingHeight = _getElementHeight(dragitem);
-            dragitem.classList.add(options.draggingClass);
-            dragging = _getDragging(dragitem, sortableElement);
-            addAttribute(dragging, 'aria-grabbed', 'true');
+            var sortableContainer = findSortable(e.target);
+            var dragItem = findDragElement(sortableContainer, e.target);
             // grab values
-            itemStartIndex = index(dragging, dragging.parentElement.children);
-            startParent = findSortable(e.target);
-            startList = _serialize(startParent);
+            originItemsBeforeUpdate = filter(sortableContainer.children, options.items);
+            originIndex = originItemsBeforeUpdate.indexOf(dragItem);
+            originElementIndex = index(dragItem, sortableContainer.children);
+            originContainer = sortableContainer;
+            // add transparent clone or other ghost to cursor
+            setDragImage(e, dragItem, options.customDragImage);
+            // cache selsection & add attr for dragging
+            draggingHeight = _getElementHeight(dragItem);
+            dragItem.classList.add(options.draggingClass);
+            dragging = _getDragging(dragItem, sortableContainer);
+            addAttribute(dragging, 'aria-grabbed', 'true');
             // dispatch sortstart event on each element in group
-            sortableElement.dispatchEvent(new CustomEvent('sortstart', {
+            sortableContainer.dispatchEvent(new CustomEvent('sortstart', {
                 detail: {
-                    item: dragging,
-                    placeholder: placeholderMap.get(sortableElement),
-                    startParent: startParent
+                    origin: {
+                        elementIndex: originElementIndex,
+                        index: originIndex,
+                        container: originContainer
+                    },
+                    item: dragging
                 }
             }));
         });
-        // Handle drag events on draggable items
+        /*
+         We are capturing targetSortable before modifications with 'dragenter' event
+        */
+        addEventListener(sortableElement, 'dragenter', function (e) {
+            if (_isSortable(e.target)) {
+                return;
+            }
+            var sortableContainer = findSortable(e.target);
+            destinationItemsBeforeUpdate = filter(sortableContainer.children, addData(sortableContainer, 'items'))
+                .filter(function (item) { return item !== store(sortableElement).placeholder; });
+        });
+        /*
+         * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
+         * Fires each time dragEvent end, or ESC pressed
+         * We are using it to clean up any draggable elements and placeholders
+         */
         addEventListener(sortableElement, 'dragend', function (e) {
-            var endParent;
             if (!dragging) {
                 return;
             }
-            var sortableElement = findSortable(e.target);
-            // remove dragging attributes and show item
             dragging.classList.remove(options.draggingClass);
             addAttribute(dragging, 'aria-grabbed', 'false');
             if (dragging.getAttribute('aria-copied') === 'true' && addData(dragging, 'dropped') !== 'true') {
@@ -651,45 +845,24 @@ function sortable(sortableElements, options) {
             }
             dragging.style.display = dragging.oldDisplay;
             delete dragging.oldDisplay;
-            placeholderMap.forEach(function (element) { return element.remove(); });
-            endParent = this.parentElement;
-            if (_listsConnected(endParent, startParent)) {
-                sortableElement.dispatchEvent(new CustomEvent('sortstop', {
-                    detail: {
-                        item: dragging,
-                        startParent: startParent
-                    }
-                }));
-                var placeholder_1 = placeholderMap.get(sortableElement);
-                var itemEndIndex = index(dragging, Array.from(dragging.parentElement.children)
-                    .filter(function (item) { return item !== placeholder_1; }));
-                /*
-                Fire 'sortupdate' on itemIndex or itemParent change
-                 */
-                if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
-                    var startSortableIndex = items.indexOf(dragging);
-                    var endSortableIndex = index(dragging, filter(endParent.children, addData(endParent, 'items'))
-                        .filter(function (item) { return item !== placeholder_1; }));
-                    sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
-                        detail: {
-                            item: dragging,
-                            startSortableIndex: startSortableIndex,
-                            endSortableIndex: endSortableIndex,
-                            startIndex: itemStartIndex,
-                            endIndex: itemEndIndex,
-                            startParent: startParent,
-                            endParent: endParent,
-                            newEndList: _serialize(endParent),
-                            newStartList: _serialize(startParent),
-                            oldStartList: startList
-                        }
-                    }));
+            // dispatch sortstart event on each element in group
+            sortableElement.dispatchEvent(new CustomEvent('sortstop', {
+                detail: {
+                    origin: {
+                        elementIndex: originElementIndex,
+                        index: originIndex,
+                        container: originContainer
+                    },
+                    item: dragging
                 }
-            }
+            }));
             dragging = null;
             draggingHeight = null;
         });
-        // Handle drop event on sortable & placeholder
+        /*
+         * Drop Event - https://developer.mozilla.org/en-US/docs/Web/Events/drop
+         * Fires when valid drop target area is hit
+         */
         addEventListener(sortableElement, 'drop', function (e) {
             if (!_listsConnected(sortableElement, dragging.parentElement)) {
                 return;
@@ -697,38 +870,60 @@ function sortable(sortableElements, options) {
             e.preventDefault();
             e.stopPropagation();
             addData(dragging, 'dropped', 'true');
-            var visiblePlaceholder = Array.from(placeholderMap.values()).filter(isInDom)[0];
+            // get the one placeholder that is currently visible
+            var visiblePlaceholder = Array.from(stores.values()).map(function (data) {
+                return data.placeholder;
+            })
+                .filter(function (placeholder) { return placeholder instanceof HTMLElement; })
+                .filter(isInDom)[0];
+            // attach element after placeholder
             insertAfter(visiblePlaceholder, dragging);
-            // fire sortstop
+            // remove placeholder from dom
+            visiblePlaceholder.remove();
+            /*
+             * Fires Custom Event - 'sortstop'
+             */
             sortableElement.dispatchEvent(new CustomEvent('sortstop', {
                 detail: {
-                    item: dragging,
-                    startParent: startParent
+                    origin: {
+                        elementIndex: originElementIndex,
+                        index: originIndex,
+                        container: originContainer
+                    },
+                    item: dragging
                 }
             }));
-            var endParent = _isSortable(this) ? this : this.parentElement;
-            var placeholder = placeholderMap.get(sortableElement);
-            var itemEndIndex = index(dragging, Array.from(dragging.parentElement.children)
+            var placeholder = store(sortableElement).placeholder;
+            var originItems = filter(originContainer.children, options.items)
+                .filter(function (item) { return item !== placeholder; });
+            var destinationContainer = _isSortable(this) ? this : this.parentElement;
+            var destinationItems = filter(destinationContainer.children, addData(destinationContainer, 'items'))
+                .filter(function (item) { return item !== placeholder; });
+            var destinationElementIndex = index(dragging, Array.from(dragging.parentElement.children)
                 .filter(function (item) { return item !== placeholder; }));
+            var destinationIndex = index(dragging, destinationItems);
             /*
-            Fire 'sortupdate' on itemIndex or itemParent change
+             * When a list item changed container lists or index within a list
+             * Fires Custom Event - 'sortupdate'
              */
-            if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
-                var startSortableIndex = items.indexOf(dragging);
-                var endSortableIndex = index(dragging, filter(endParent.children, addData(endParent, 'items'))
-                    .filter(function (item) { return item !== placeholder; }));
+            if (originElementIndex !== destinationElementIndex || originContainer !== destinationContainer) {
                 sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
                     detail: {
-                        item: dragging,
-                        startSortableIndex: startSortableIndex,
-                        endSortableIndex: endSortableIndex,
-                        startIndex: itemStartIndex,
-                        endIndex: itemEndIndex,
-                        startParent: startParent,
-                        endParent: endParent,
-                        newEndList: _serialize(endParent),
-                        newStartList: _serialize(startParent),
-                        oldStartList: startList
+                        origin: {
+                            elementIndex: originElementIndex,
+                            index: originIndex,
+                            container: originContainer,
+                            itemsBeforeUpdate: originItemsBeforeUpdate,
+                            items: originItems
+                        },
+                        destination: {
+                            index: destinationIndex,
+                            elementIndex: destinationElementIndex,
+                            container: destinationContainer,
+                            itemsBeforeUpdate: destinationItemsBeforeUpdate,
+                            items: destinationItems
+                        },
+                        item: dragging
                     }
                 }));
             }
@@ -737,16 +932,15 @@ function sortable(sortableElements, options) {
             if (!dragging) {
                 return;
             }
-            var placeholder = placeholderMap.get(sortableElement);
             // set placeholder height if forcePlaceholderSize option is set
             if (options.forcePlaceholderSize) {
-                placeholder.style.height = draggingHeight + 'px';
+                store(sortableElement).placeholder.style.height = draggingHeight + 'px';
             }
             // if element the draggedItem is dragged onto is within the array of all elements in list
             // (not only items, but also disabled, etc.)
             if (Array.from(sortableElement.children).indexOf(element) > -1) {
                 var thisHeight = _getElementHeight(element);
-                var placeholderIndex = index(placeholder, element.parentElement.children);
+                var placeholderIndex = index(store(sortableElement).placeholder, element.parentElement.children);
                 var thisIndex = index(element, element.parentElement.children);
                 // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
                 if (thisHeight > draggingHeight) {
@@ -768,22 +962,31 @@ function sortable(sortableElements, options) {
                     dragging.style.display = 'none';
                 }
                 if (placeholderIndex < thisIndex) {
-                    insertAfter(element, placeholder);
+                    insertAfter(element, store(sortableElement).placeholder);
                 }
                 else {
-                    insertBefore(element, placeholder);
+                    insertBefore(element, store(sortableElement).placeholder);
                 }
-                // Intentionally violated chaining, it is more complex otherwise
-                Array.from(placeholderMap.values())
-                    .filter(function (element) { return element !== placeholder; })
-                    .forEach(function (element) { return element.remove(); });
+                // get placeholders from all stores & remove all but current one
+                Array.from(stores.values())
+                    .filter(function (data) { return data.placeholder !== null; })
+                    .forEach(function (data) {
+                    if (data.placeholder !== store(sortableElement).placeholder) {
+                        data.placeholder.remove();
+                    }
+                });
             }
             else {
-                if (Array.from(placeholderMap.values()).indexOf(element) === -1 &&
-                    sortableElement === element &&
-                    !filter(element.children, options.items).length) {
-                    placeholderMap.forEach(function (element) { return element.remove(); });
-                    element.appendChild(placeholder);
+                // get all placeholders from store
+                var placeholders = Array.from(stores.values())
+                    .filter(function (data) { return data.placeholder !== null; })
+                    .map(function (data) {
+                    return data.placeholder;
+                });
+                // check if element is not in placeholders
+                if (placeholders.indexOf(element) === -1 && sortableElement === element && !filter(element.children, options.items).length) {
+                    placeholders.forEach(function (element) { return element.remove(); });
+                    element.appendChild(store(sortableElement).placeholder);
                 }
             }
         }, options.debounce);
@@ -804,8 +1007,8 @@ function sortable(sortableElements, options) {
             e.dataTransfer.dropEffect = _isCopyActive(sortableElement) ? 'copy' : 'move';
             debouncedDragOverEnter(sortableElement, element, e.pageY);
         };
-        addEventListener(items.concat(sortableElement), 'dragover', onDragOverEnter);
-        addEventListener(items.concat(sortableElement), 'dragenter', onDragOverEnter);
+        addEventListener(listItems.concat(sortableElement), 'dragover', onDragOverEnter);
+        addEventListener(listItems.concat(sortableElement), 'dragenter', onDragOverEnter);
     });
     return sortableElements;
 }
