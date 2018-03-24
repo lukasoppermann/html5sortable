@@ -50,15 +50,6 @@ const _removeItemEvents = function (items) {
   _off(items, 'mouseleave')
 }
 /**
- * Remove event handlers from sortable
- * @param {Element} sortable a single sortable
- */
-const _removeSortableEvents = function (sortable) {
-  _off(sortable, 'dragover')
-  _off(sortable, 'dragenter')
-  _off(sortable, 'drop')
-}
-/**
  * _getDragging returns the current element to drag or
  * a copy of the element.
  * Is Copy Active for sortable
