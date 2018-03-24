@@ -229,11 +229,10 @@ const _reloadSortable = function (sortableElement) {
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
  */
-export default function sortable (sortableElements, options: object|string|undefined) {
-  // get method string to see if a method is called
-  const method = String(options)
-  // merge user options with defaultss
-  options = Object.assign({
+export default class sortable {
+  sortableElements: any
+  options: configuration
+  defaultOptions: configuration    = {
     connectWith: false,
     acceptFrom: null,
     copy: false,
@@ -247,67 +246,96 @@ export default function sortable (sortableElements, options: object|string|undef
     itemSerializer: undefined,
     containerSerializer: undefined,
     customDragImage: null
-    // if options is an object, merge it, otherwise use empty object
-  }, (typeof options === 'object') ? options : {})
-  // check if the user provided a selector instead of an element
-  if (typeof sortableElements === 'string') {
-    sortableElements = document.querySelectorAll(sortableElements)
   }
-  // if the user provided an element, return it in an array to keep the return value consistant
-  if (sortableElements instanceof HTMLElement) {
-    sortableElements = [sortableElements]
+  constructor(sortableElements, options: configuration) {
+    this.sortableElements = sortableElements
+    this.options = options
   }
 
-  sortableElements = Array.prototype.slice.call(sortableElements)
-
-  if (/serialize/.test(method)) {
-    return sortableElements.map((sortableContainer) => {
-      let opts = _data(sortableContainer, 'opts')
-      return _serialize(sortableContainer, opts.itemSerializer, opts.containerSerializer)
-    })
+  serialize(method) {
+    if (/serialize/.test(method)) {
+      return this.sortableElements.map((sortableContainer) => {
+        let configuration = _data(sortableContainer, 'opts')
+        return _serialize(sortableContainer, configuration.itemSerializer, configuration.containerSerializer)
+      })
+    }
   }
 
-  sortableElements.forEach(function (sortableElement) {
+  checkForSpecificMethod(method, sortableElement) {
     if (/enable|disable|destroy/.test(method)) {
       return sortable[method](sortableElement)
     }
-    // init data store for sortable
-    store(sortableElement).config = options
-    // get options & set options on sortable
-    options = _data(sortableElement, 'opts') || options
-    _data(sortableElement, 'opts', options)
-    // property to define as sortable
-    sortableElement.isSortable = true
-    // reset sortable
-    _reloadSortable(sortableElement)
-    // initialize
-    const listItems = _filter(sortableElement.children, options.items)
-    // create element if user defined a placeholder element as a string
-    let customPlaceholder
-    if (options.placeholder !== null && options.placeholder !== undefined) {
+  }
+
+  createCustomPlaceholder(sortableElement) {
+    if (this.options.placeholder !== null && this.options.placeholder !== undefined) {
       let tempContainer = document.createElement(sortableElement.tagName)
-      tempContainer.innerHTML = options.placeholder
-      customPlaceholder = tempContainer.children[0]
+      tempContainer.innerHTML = this.options.placeholder
+      return tempContainer.children[0]
     }
-    // add placeholder
-    store(sortableElement).placeholder = _makePlaceholder(sortableElement, customPlaceholder, options.placeholderClass)
+  }
 
-    _data(sortableElement, 'items', options.items)
-
-    if (options.acceptFrom) {
-      _data(sortableElement, 'acceptFrom', options.acceptFrom)
-    } else if (options.connectWith) {
-      _data(sortableElement, 'connectWith', options.connectWith)
+  alterData(sortableElement) {
+    _data(sortableElement, 'items', this.options.items)
+    if (this.options.acceptFrom) {
+      _data(sortableElement, 'acceptFrom', this.options.acceptFrom)
+    } else if (this.options.connectWith) {
+      _data(sortableElement, 'connectWith', this.options.connectWith)
     }
+  }
+
+  main() {
+    // get method string to see if a method is called
+    const method = String(this.options)
+    // merge user this.options with defaults
+    this.options = Object.assign(this.defaultOptions, 
+      // if this.options is an object, merge it, otherwise use empty object
+      (typeof this.options === 'object') ? this.options : {})
+    
+    // check if the user provided a selector instead of an element
+    if (typeof this.sortableElements === 'string') {
+      this.sortableElements = document.querySelectorAll(this.sortableElements)
+    }
+    console.log(this.sortableElements instanceof HTMLElement, typeof this.sortableElements)
+    // if the user provided an element, return it in an array to keep the return value consistant
+    if (this.sortableElements instanceof HTMLElement) {
+      this.sortableElements = [this.sortableElements]
+    }
+    this.sortableElements = Array.prototype.slice.call(this.sortableElements)
+
+    this.serialize(method)
+    this.sortableElements.forEach((sortableElement) => {
+      this.checkForSpecificMethod(method, sortableElement)
+      // init data store for sortable
+      store(sortableElement).config = this.options
+      // get this.options & set this.options on sortable
+      this.options = _data(sortableElement, 'opts') || this.options
+      _data(sortableElement, 'opts', this.options)
+      // property to define as sortable
+      sortableElement.isSortable = true
+      // reset sortable
+      _reloadSortable(sortableElement)
+      // initialize
+      const items = _filter(sortableElement.children, this.options.items)
+      const itemStartIndex
+      const startList
+      // create element if user defined a placeholder element as a string
+      let customPlaceholder = this.createCustomPlaceholder(sortableElement)
+      // add placeholder
+      store(sortableElement).placeholder = _makePlaceholder(sortableElement, customPlaceholder, this.options.placeholderClass)
+      this.alterData(sortableElement)
+    }
+  }
+
+  this.sortableElements.forEach(function (sortableElement) {
 
     _enableSortable(sortableElement)
     _attr(listItems, 'role', 'option')
     _attr(listItems, 'aria-grabbed', 'false')
 
     // Mouse over class
-    // TODO - only assign hoverClass if not dragging
-    if (typeof options.hoverClass === 'string') {
-      let hoverClasses = options.hoverClass.split(' ')
+    if (typeof this.options.hoverClass === 'string') {
+      let hoverClasses = this.options.hoverClass.split(' ')
       // add class on hover
       _on(listItems, 'mouseenter', function (e) {
         e.target.classList.add(...hoverClasses)
@@ -330,7 +358,7 @@ export default function sortable (sortableElements, options: object|string|undef
       }
       e.stopImmediatePropagation()
 
-      if ((options.handle && !e.target.matches(options.handle)) || e.target.getAttribute('draggable') === 'false') {
+      if ((this.options.handle && !e.target.matches(this.options.handle)) || e.target.getAttribute('draggable') === 'false') {
         return
       }
 
@@ -344,11 +372,11 @@ export default function sortable (sortableElements, options: object|string|undef
       originContainer = sortableContainer
 
       // add transparent clone or other ghost to cursor
-      setDragImage(e, dragItem, options.customDragImage)
+      setDragImage(e, dragitem, this.options.customDragImage)
       // cache selsection & add attr for dragging
-      draggingHeight = _getElementHeight(dragItem)
-      dragItem.classList.add(options.draggingClass)
-      dragging = _getDragging(dragItem, sortableContainer)
+      draggingHeight = _getElementHeight(dragitem)
+      dragitem.classList.add(this.options.draggingClass)
+      dragging = _getDragging(dragitem, sortableElement)
       _attr(dragging, 'aria-grabbed', 'true')
 
       // dispatch sortstart event on each element in group
@@ -385,7 +413,7 @@ export default function sortable (sortableElements, options: object|string|undef
         return
       }
 
-      dragging.classList.remove(options.draggingClass)
+      dragging.classList.remove(this.options.draggingClass)
       _attr(dragging, 'aria-grabbed', 'false')
 
       if (dragging.getAttribute('aria-copied') === 'true' && _data(dragging, 'dropped') !== 'true') {
@@ -501,7 +529,7 @@ export default function sortable (sortableElements, options: object|string|undef
       }
 
       // set placeholder height if forcePlaceholderSize option is set
-      if (options.forcePlaceholderSize) {
+      if (this.options.forcePlaceholderSize) {
         store(sortableElement).placeholder.style.height = draggingHeight + 'px'
       }
       // if element the draggedItem is dragged onto is within the array of all elements in list
@@ -554,12 +582,12 @@ export default function sortable (sortableElements, options: object|string|undef
             return data.placeholder
           })
         // check if element is not in placeholders
-        if (placeholders.indexOf(element) === -1 && sortableElement === element && !_filter(element.children, options.items).length) {
+        if (placeholders.indexOf(element) === -1 && sortableElement === element && !_filter(element.children, this.options.items).length) {
           placeholders.forEach((element) => element.remove())
           element.appendChild(store(sortableElement).placeholder)
         }
       }
-    }, options.debounce)
+    }, this.options.debounce)
     // Handle dragover and dragenter events on draggable items
     const onDragOverEnter = function (e) {
       let element = e.target
@@ -568,8 +596,8 @@ export default function sortable (sortableElements, options: object|string|undef
       if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
       }
-      const options = _data(sortableElement, 'opts')
-      if (parseInt(options.maxItems) && _filter(sortableElement.children, _data(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
+      var this.options = _data(sortableElement, 'opts')
+      if (parseInt(this.options.maxItems) && _filter(sortableElement.children, _data(sortableElement, 'items')).length >= parseInt(this.options.maxItems)) {
         return
       }
       e.preventDefault()
@@ -581,9 +609,11 @@ export default function sortable (sortableElements, options: object|string|undef
     _on(listItems.concat(sortableElement), 'dragover', onDragOverEnter)
     _on(listItems.concat(sortableElement), 'dragenter', onDragOverEnter)
   })
-
-  return sortableElements
+  return this.sortableElements
 }
+
+
+
 
 sortable.destroy = function (sortableElement) {
   _destroySortable(sortableElement)

@@ -2,7 +2,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ESNext",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "lib": ["dom", "es6", "scripthost"]
   },
   "typeRoots": [
     "./src/types",
