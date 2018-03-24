@@ -9,7 +9,7 @@ import _offset from './offset'
 import _debounce from './debounce'
 import _index from './index'
 import isInDom from './isInDom'
-import {insertBefore as _before, insertAfter as _after} from './insertHtmlElements'
+import { insertBefore as _before, insertAfter as _after } from './insertHtmlElements'
 import _serialize from './serialize'
 import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
@@ -19,14 +19,28 @@ import {default as store, stores} from './store'
 /*
  * variables global to the plugin
  */
-var dragging
-var draggingHeight
-let startParent
+let dragging
+let draggingHeight
+
+/*
+ * Keeps track of the initialy selected list, where 'dragstart' event was triggered
+ * It allows us to move the data in between individual Sortable List instances
+ */
+
+// Origin List - data from before any item was changed
+let originContainer
+let originIndex
+let originElementIndex
+let originItemsBeforeUpdate
+
+// Destination List - data from before any item was changed
+let destinationItemsBeforeUpdate
+
 /**
  * remove event handlers from items
  * @param {Array|NodeList} items
  */
-var _removeItemEvents = function (items) {
+const _removeItemEvents = function (items) {
   _off(items, 'dragstart')
   _off(items, 'dragend')
   _off(items, 'dragover')
@@ -42,8 +56,8 @@ var _removeItemEvents = function (items) {
  * @param {HTMLElement} draggedItem - the item that the user drags
  * @param {HTMLElement} sortable a single sortable
  */
-var _getDragging = function (draggedItem, sortable) {
-  var ditem = draggedItem
+const _getDragging = function (draggedItem, sortable) {
+  let ditem = draggedItem
   if (_isCopyActive(sortable)) {
     ditem = draggedItem.cloneNode(true)
     _attr(ditem, 'aria-copied', 'true')
@@ -57,7 +71,7 @@ var _getDragging = function (draggedItem, sortable) {
  * Remove data from sortable
  * @param {HTMLElement} sortable a single sortable
  */
-var _removeSortableData = function (sortable) {
+const _removeSortableData = function (sortable) {
   _removeData(sortable)
   _removeAttr(sortable, 'aria-dropeffect')
 }
@@ -65,7 +79,7 @@ var _removeSortableData = function (sortable) {
  * Remove data from items
  * @param {Array<HTMLElement>|HTMLElement} items
  */
-var _removeItemData = function (items) {
+const _removeItemData = function (items) {
   _removeAttr(items, 'aria-grabbed')
   _removeAttr(items, 'aria-copied')
   _removeAttr(items, 'draggable')
@@ -76,9 +90,9 @@ var _removeItemData = function (items) {
  * @param {HTMLElement} curList
  * @param {HTMLElement} destList
  */
-var _listsConnected = function (curList, destList) {
+const _listsConnected = function (curList, destList) {
   if (_isSortable(curList)) {
-    var acceptFrom = _data(curList, 'opts').acceptFrom
+    const acceptFrom = _data(curList, 'opts').acceptFrom
     if (acceptFrom !== null) {
       return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
         return sel.length > 0 && destList.matches(sel)
@@ -97,19 +111,19 @@ var _listsConnected = function (curList, destList) {
  * Is Copy Active for sortable
  * @param {HTMLElement} sortable a single sortable
  */
-var _isCopyActive = function (sortable) {
+const _isCopyActive = function (sortable) {
   return _data(sortable, 'opts').copy === true
 }
 /**
  * Is {HTMLElement} a sortable.
- * @param {HTMLElement} sortable a single sortable
+ * @param {HTMLElement} element a single sortable
  */
 function _isSortable (element) {
   return element !== undefined && element != null && _data(element, 'opts') !== undefined
 }
 /**
  * find sortable from element. travels up parent element until found or null.
- * @param {HTMLElement} sortable a single sortable
+ * @param {HTMLElement} element a single sortable
  */
 function findSortable (element) {
   while ((element = element.parentElement) && !_isSortable(element));
@@ -118,13 +132,13 @@ function findSortable (element) {
 /**
  * Dragging event is on the sortable element. finds the top child that
  * contains the element.
- * @param {HTMLElement} sortable a single sortable
+ * @param {HTMLElement} sortableElement a single sortable
  * @param {HTMLElement} element is that being dragged
  */
 function findDragElement (sortableElement, element) {
-  var options = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, options.items)
-  var itemlist = items.filter(function (ele) {
+  const options = _data(sortableElement, 'opts')
+  const items = _filter(sortableElement.children, options.items)
+  const itemlist = items.filter(function (ele) {
     return ele.contains(element)
   })
 
@@ -134,11 +148,11 @@ function findDragElement (sortableElement, element) {
  * Destroy the sortable
  * @param {HTMLElement} sortableElement a single sortable
  */
-var _destroySortable = function (sortableElement) {
-  var opts = _data(sortableElement, 'opts') || {}
-  var items = _filter(sortableElement.children, opts.items)
-  var handles = _getHandles(items, opts.handle)
-  // remove event handlers from sortable
+const _destroySortable = function (sortableElement) {
+  const opts = _data(sortableElement, 'opts') || {}
+  const items = _filter(sortableElement.children, opts.items)
+  const handles = _getHandles(items, opts.handle)
+  // remove event handlers & data from sortable
   _off(sortableElement, 'dragover')
   _off(sortableElement, 'dragenter')
   _off(sortableElement, 'drop')
@@ -153,23 +167,23 @@ var _destroySortable = function (sortableElement) {
  * Enable the sortable
  * @param {HTMLElement} sortableElement a single sortable
  */
-var _enableSortable = function (sortableElement) {
-  var opts = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, opts.items)
-  var handles = _getHandles(items, opts.handle)
+const _enableSortable = function (sortableElement) {
+  const opts = _data(sortableElement, 'opts')
+  const items = _filter(sortableElement.children, opts.items)
+  const handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'move')
   _data(sortableElement, '_disabled', 'false')
   _attr(handles, 'draggable', 'true')
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
   // (e.g. click) will be ignored
-  var spanEl = (document || window.document).createElement('span')
+  const spanEl = (document || window.document).createElement('span')
   if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
     _on(handles, 'mousedown', function () {
       if (items.indexOf(this) !== -1) {
         this.dragDrop()
       } else {
-        var parent = this.parentElement
+        let parent = this.parentElement
         while (items.indexOf(parent) === -1) {
           parent = parent.parentElement
         }
@@ -182,10 +196,10 @@ var _enableSortable = function (sortableElement) {
  * Disable the sortable
  * @param {HTMLElement} sortableElement a single sortable
  */
-var _disableSortable = function (sortableElement) {
-  var opts = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, opts.items)
-  var handles = _getHandles(items, opts.handle)
+const _disableSortable = function (sortableElement) {
+  const opts = _data(sortableElement, 'opts')
+  const items = _filter(sortableElement.children, opts.items)
+  const handles = _getHandles(items, opts.handle)
   _attr(sortableElement, 'aria-dropeffect', 'none')
   _data(sortableElement, '_disabled', 'true')
   _attr(handles, 'draggable', 'false')
@@ -196,10 +210,10 @@ var _disableSortable = function (sortableElement) {
  * @param {HTMLElement} sortableElement a single sortable
  * @description events need to be removed to not be double bound
  */
-var _reloadSortable = function (sortableElement) {
-  var opts = _data(sortableElement, 'opts')
-  var items = _filter(sortableElement.children, opts.items)
-  var handles = _getHandles(items, opts.handle)
+const _reloadSortable = function (sortableElement) {
+  const opts = _data(sortableElement, 'opts')
+  const items = _filter(sortableElement.children, opts.items)
+  const handles = _getHandles(items, opts.handle)
   _data(sortableElement, '_disabled', 'false')
   // remove event handlers from items
   _removeItemEvents(items)
@@ -217,14 +231,14 @@ var _reloadSortable = function (sortableElement) {
  */
 export default function sortable (sortableElements, options: object|string|undefined) {
   // get method string to see if a method is called
-  var method = String(options)
-  // merge user options with defaults
+  const method = String(options)
+  // merge user options with defaultss
   options = Object.assign({
     connectWith: false,
     acceptFrom: null,
     copy: false,
-    disableIEFix: false,
     placeholder: null,
+    disableIEFix: false,
     placeholderClass: 'sortable-placeholder',
     draggingClass: 'sortable-dragging',
     hoverClass: false,
@@ -267,9 +281,7 @@ export default function sortable (sortableElements, options: object|string|undef
     // reset sortable
     _reloadSortable(sortableElement)
     // initialize
-    var items = _filter(sortableElement.children, options.items)
-    var itemStartIndex
-    var startList
+    const listItems = _filter(sortableElement.children, options.items)
     // create element if user defined a placeholder element as a string
     let customPlaceholder
     if (options.placeholder !== null && options.placeholder !== undefined) {
@@ -289,25 +301,28 @@ export default function sortable (sortableElements, options: object|string|undef
     }
 
     _enableSortable(sortableElement)
-    _attr(items, 'role', 'option')
-    _attr(items, 'aria-grabbed', 'false')
+    _attr(listItems, 'role', 'option')
+    _attr(listItems, 'aria-grabbed', 'false')
 
     // Mouse over class
+    // TODO - only assign hoverClass if not dragging
     if (typeof options.hoverClass === 'string') {
       let hoverClasses = options.hoverClass.split(' ')
       // add class on hover
-      _on(items, 'mouseenter', function (e) {
+      _on(listItems, 'mouseenter', function (e) {
         e.target.classList.add(...hoverClasses)
       })
       // remove class on leave
-      _on(items, 'mouseleave', function (e) {
+      _on(listItems, 'mouseleave', function (e) {
         e.target.classList.remove(...hoverClasses)
       })
     }
 
-    // Handle drag events on draggable items
-    // Handle set at sortableelement level as it will bubble up
-    // from the item
+    /*
+     Handle drag events on draggable items
+     Handle is set at the sortableElement level as it will bubble up
+     from the item
+     */
     _on(sortableElement, 'dragstart', function (e) {
       // ignore dragstart events
       if (_isSortable(e.target)) {
@@ -319,37 +334,57 @@ export default function sortable (sortableElements, options: object|string|undef
         return
       }
 
-      var sortableElement = findSortable(e.target)
-      var dragitem = findDragElement(sortableElement, e.target)
-      // add transparent clone or other ghost to cursor
-      setDragImage(e, dragitem, options.customDragImage)
-      // cache selsection & add attr for dragging
-      draggingHeight = _getElementHeight(dragitem)
-      dragitem.classList.add(options.draggingClass)
-      dragging = _getDragging(dragitem, sortableElement)
-      _attr(dragging, 'aria-grabbed', 'true')
-      // grab values
-      itemStartIndex = _index(dragging, dragging.parentElement.children)
-      startParent = findSortable(e.target)
-      startList = _serialize(startParent)
-      // dispatch sortstart event on each element in group
+      const sortableContainer = findSortable(e.target)
+      const dragItem = findDragElement(sortableContainer, e.target)
 
-      sortableElement.dispatchEvent(new CustomEvent('sortstart', {
+      // grab values
+      originItemsBeforeUpdate = _filter(sortableContainer.children, options.items)
+      originIndex = originItemsBeforeUpdate.indexOf(dragItem)
+      originElementIndex = _index(dragItem, sortableContainer.children)
+      originContainer = sortableContainer
+
+      // add transparent clone or other ghost to cursor
+      setDragImage(e, dragItem, options.customDragImage)
+      // cache selsection & add attr for dragging
+      draggingHeight = _getElementHeight(dragItem)
+      dragItem.classList.add(options.draggingClass)
+      dragging = _getDragging(dragItem, sortableContainer)
+      _attr(dragging, 'aria-grabbed', 'true')
+
+      // dispatch sortstart event on each element in group
+      sortableContainer.dispatchEvent(new CustomEvent('sortstart', {
         detail: {
-          item: dragging,
-          placeholder: store(sortableElement).placeholder,
-          startParent: startParent
+          origin: {
+            elementIndex: originElementIndex,
+            index: originIndex,
+            container: originContainer
+          },
+          item: dragging
         }
       }))
     })
-    // Handle drag events on draggable items
+
+    /*
+     We are capturing targetSortable before modifications with 'dragenter' event
+    */
+    _on(sortableElement, 'dragenter', (e) => {
+      if (_isSortable(e.target)) {
+        return
+      }
+      const sortableContainer = findSortable(e.target)
+      destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
+        .filter(item => item !== store(sortableElement).placeholder)
+    })
+    /*
+     * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
+     * Fires each time dragEvent end, or ESC pressed
+     * We are using it to clean up any draggable elements and placeholders
+     */
     _on(sortableElement, 'dragend', function (e) {
-      var endParent
       if (!dragging) {
         return
       }
-      var sortableElement = findSortable(e.target)
-      // remove dragging attributes and show item
+
       dragging.classList.remove(options.draggingClass)
       _attr(dragging, 'aria-grabbed', 'false')
 
@@ -359,51 +394,35 @@ export default function sortable (sortableElements, options: object|string|undef
 
       dragging.style.display = dragging.oldDisplay
       delete dragging.oldDisplay
-      // get placeholders from all stores and remove them from dom
-      Array.from(stores.values())
-        .forEach((data) => {
-          if (data.placeholder instanceof HTMLElement) {
-            data.placeholder.remove()
-          }
-        })
-      endParent = this.parentElement
 
-      if (_listsConnected(endParent, startParent)) {
-        sortableElement.dispatchEvent(new CustomEvent('sortstop', {
-          detail: {
-            item: dragging,
-            startParent: startParent
-          }
-        }))
-        const itemEndIndex = _index(dragging, Array.from(dragging.parentElement.children)
-          .filter(item => item !== store(sortableElement).placeholder))
-        /*
-        Fire 'sortupdate' on itemIndex or itemParent change
-         */
-        if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
-          const startSortableIndex = items.indexOf(dragging)
-          const endSortableIndex = _index(dragging, _filter(endParent.children, _data(endParent, 'items'))
-            .filter(item => item !== store(sortableElement).placeholder))
-          sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
-            detail: {
-              item: dragging,
-              startSortableIndex: startSortableIndex,
-              endSortableIndex: endSortableIndex,
-              startIndex: itemStartIndex,
-              endIndex: itemEndIndex,
-              startParent: startParent,
-              endParent: endParent,
-              newEndList: _serialize(endParent),
-              newStartList: _serialize(startParent),
-              oldStartList: startList
-            }
-          }))
-        }
+      const visiblePlaceholder = Array.from(stores.values()).map(data => data.placeholder)
+        .filter(placeholder => placeholder instanceof HTMLElement)
+        .filter(isInDom)[0]
+
+      if (visiblePlaceholder) {
+        visiblePlaceholder.remove()
       }
+
+      // dispatch sortstart event on each element in group
+      sortableElement.dispatchEvent(new CustomEvent('sortstop', {
+        detail: {
+          origin: {
+            elementIndex: originElementIndex,
+            index: originIndex,
+            container: originContainer
+          },
+          item: dragging
+        }
+      }))
+
       dragging = null
       draggingHeight = null
     })
-    // Handle drop event on sortable & placeholder
+
+    /*
+     * Drop Event - https://developer.mozilla.org/en-US/docs/Web/Events/drop
+     * Fires when valid drop target area is hit
+     */
     _on(sortableElement, 'drop', function (e) {
       if (!_listsConnected(sortableElement, dragging.parentElement)) {
         return
@@ -413,7 +432,7 @@ export default function sortable (sortableElements, options: object|string|undef
 
       _data(dragging, 'dropped', 'true')
       // get the one placeholder that is currently visible
-      var visiblePlaceholder = Array.from(stores.values()).map((data) => {
+      const visiblePlaceholder = Array.from(stores.values()).map((data) => {
         return data.placeholder
       })
         // filter only HTMLElements
@@ -424,47 +443,63 @@ export default function sortable (sortableElements, options: object|string|undef
       _after(visiblePlaceholder, dragging)
       // remove placeholder from dom
       visiblePlaceholder.remove()
-      // fire sortstop
+
+      /*
+       * Fires Custom Event - 'sortstop'
+       */
       sortableElement.dispatchEvent(new CustomEvent('sortstop', {
         detail: {
-          item: dragging,
-          startParent: startParent
+          origin: {
+            elementIndex: originElementIndex,
+            index: originIndex,
+            container: originContainer
+          },
+          item: dragging
         }
       }))
 
-      let endParent = _isSortable(this) ? this : this.parentElement
-      const itemEndIndex = _index(dragging, Array.from(dragging.parentElement.children)
-        .filter(item => item !== store(sortableElement).placeholder))
+      const placeholder = store(sortableElement).placeholder
+      const originItems = _filter(originContainer.children, options.items)
+        .filter(item => item !== placeholder)
+      const destinationContainer = _isSortable(this) ? this : this.parentElement
+      const destinationItems = _filter(destinationContainer.children, _data(destinationContainer, 'items'))
+        .filter(item => item !== placeholder)
+      const destinationElementIndex = _index(dragging, Array.from(dragging.parentElement.children)
+        .filter(item => item !== placeholder))
+      const destinationIndex = _index(dragging, destinationItems)
+
       /*
-      Fire 'sortupdate' on itemIndex or itemParent change
+       * When a list item changed container lists or index within a list
+       * Fires Custom Event - 'sortupdate'
        */
-      if (itemStartIndex !== itemEndIndex || startParent !== endParent) {
-        const startSortableIndex = items.indexOf(dragging)
-        const endSortableIndex = _index(dragging, _filter(endParent.children, _data(endParent, 'items'))
-          .filter(item => item !== store(sortableElement).placeholder))
+      if (originElementIndex !== destinationElementIndex || originContainer !== destinationContainer) {
         sortableElement.dispatchEvent(new CustomEvent('sortupdate', {
           detail: {
-            item: dragging,
-            startSortableIndex: startSortableIndex,
-            endSortableIndex: endSortableIndex,
-            startIndex: itemStartIndex,
-            endIndex: itemEndIndex,
-            startParent: startParent,
-            endParent: endParent,
-            newEndList: _serialize(endParent),
-            newStartList: _serialize(startParent),
-            oldStartList: startList
+            origin: {
+              elementIndex: originElementIndex,
+              index: originIndex,
+              container: originContainer,
+              itemsBeforeUpdate: originItemsBeforeUpdate,
+              items: originItems
+            },
+            destination: {
+              index: destinationIndex,
+              elementIndex: destinationElementIndex,
+              container: destinationContainer,
+              itemsBeforeUpdate: destinationItemsBeforeUpdate,
+              items: destinationItems
+            },
+            item: dragging
           }
         }))
       }
     })
 
-    var debouncedDragOverEnter = _debounce((sortableElement, element, pageY) => {
+    const debouncedDragOverEnter = _debounce((sortableElement, element, pageY) => {
       if (!dragging) {
         return
       }
 
-      // var placeholder = store(sortableElement).placeholder
       // set placeholder height if forcePlaceholderSize option is set
       if (options.forcePlaceholderSize) {
         store(sortableElement).placeholder.style.height = draggingHeight + 'px'
@@ -472,14 +507,14 @@ export default function sortable (sortableElements, options: object|string|undef
       // if element the draggedItem is dragged onto is within the array of all elements in list
       // (not only items, but also disabled, etc.)
       if (Array.from(sortableElement.children).indexOf(element) > -1) {
-        let thisHeight = _getElementHeight(element)
-        var placeholderIndex = _index(store(sortableElement).placeholder, element.parentElement.children)
-        var thisIndex = _index(element, element.parentElement.children)
+        const thisHeight = _getElementHeight(element)
+        const placeholderIndex = _index(store(sortableElement).placeholder, element.parentElement.children)
+        const thisIndex = _index(element, element.parentElement.children)
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight) {
           // Dead zone?
-          var deadZone = thisHeight - draggingHeight
-          var offsetTop = _offset(element).top
+          const deadZone = thisHeight - draggingHeight
+          const offsetTop = _offset(element).top
           if (placeholderIndex < thisIndex && pageY < offsetTop) {
             return
           }
@@ -526,14 +561,14 @@ export default function sortable (sortableElements, options: object|string|undef
       }
     }, options.debounce)
     // Handle dragover and dragenter events on draggable items
-    var onDragOverEnter = function (e) {
-      var element = e.target
-      var sortableElement = _isSortable(element) ? element : findSortable(element)
+    const onDragOverEnter = function (e) {
+      let element = e.target
+      const sortableElement = _isSortable(element) ? element : findSortable(element)
       element = findDragElement(sortableElement, element)
       if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
       }
-      var options = _data(sortableElement, 'opts')
+      const options = _data(sortableElement, 'opts')
       if (parseInt(options.maxItems) && _filter(sortableElement.children, _data(sortableElement, 'items')).length >= parseInt(options.maxItems)) {
         return
       }
@@ -543,8 +578,8 @@ export default function sortable (sortableElements, options: object|string|undef
       debouncedDragOverEnter(sortableElement, element, e.pageY)
     }
 
-    _on(items.concat(sortableElement), 'dragover', onDragOverEnter)
-    _on(items.concat(sortableElement), 'dragenter', onDragOverEnter)
+    _on(listItems.concat(sortableElement), 'dragover', onDragOverEnter)
+    _on(listItems.concat(sortableElement), 'dragenter', onDragOverEnter)
   })
 
   return sortableElements
