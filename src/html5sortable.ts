@@ -229,7 +229,7 @@ const _reloadSortable = function (sortableElement) {
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
  */
-export default function sortable (sortableElements, options: object|string|undefined) {
+export default function sortable (sortableElements, options?: configuration|string) {
   // get method string to see if a method is called
   const method = String(options)
   // merge user options with defaultss
