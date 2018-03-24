@@ -4,30 +4,29 @@ import store from './store'
  * @param {Function} callback
  * @param {string} event
  */
-
-function addEventListener (element: Array<HTMLElement>|HTMLElement, event:string, callback: () => void) {
+function addEventListener (element: Array<HTMLElement>|HTMLElement, eventName:string, callback: () => void) {
   if (element instanceof Array) {
     for (var i = 0; i < element.length; ++i) {
-      addEventListener(element[i], event, callback)
+      addEventListener(element[i], eventName, callback)
     }
     return
   }
-  element.addEventListener(event, callback)
-  store(element).setData(`event${event}`, callback)
+  element.addEventListener(eventName, callback)
+  store(element).setData(`event${eventName}`, callback)
 }
 /**
  * @param {Array<HTMLElement>|HTMLElement} element
- * @param {Array<HTMLElement>|string} event
+ * @param {string} eventName
  */
-function removeEventListener (element: HTMLElement, event: string) {
+function removeEventListener (element: Array<HTMLElement>|HTMLElement, eventName: string) {
   if (element instanceof Array) {
     for (var i = 0; i < element.length; ++i) {
-      removeEventListener(element[i], event)
+      removeEventListener(element[i], eventName)
     }
     return
   }
-  element.removeEventListener(event, store(element).getData(`event${event}`))
-  delete store(element).deleteData(`event${event}`)
+  element.removeEventListener(eventName, store(element).getData(`event${eventName}`))
+  delete store(element).deleteData(`event${eventName}`)
 }
 
 export { addEventListener, removeEventListener }
