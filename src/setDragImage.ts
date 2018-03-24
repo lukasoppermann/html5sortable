@@ -1,13 +1,13 @@
 /* eslint-env browser */
-import {default as offset, offsetObject} from './offset' // eslint-disable-line no-unused-vars
+import {default as offset} from './offset'
 /**
  * defaultDragImage returns the current item as dragged image
- * @param {Element} draggedElement - the item that the user drags
+ * @param {HTMLElement} draggedElement - the item that the user drags
  * @param {object} elementOffset - an object with the offsets top, left, right & bottom
  * @param {Event} event - the original drag event object
  * @return {object} with element, posX and posY properties
  */
-let defaultDragImage = (draggedElement: Element, elementOffset: offsetObject, event: DragEvent): object => {
+let defaultDragImage = (draggedElement: HTMLElement, elementOffset: offsetObject, event: DragEvent): object => {
   return {
     element: draggedElement,
     posX: event.pageX - elementOffset.left,
@@ -17,17 +17,17 @@ let defaultDragImage = (draggedElement: Element, elementOffset: offsetObject, ev
 /**
  * attaches an element as the drag image to an event
  * @param {Event} event - the original drag event object
- * @param {Element} draggedElement - the item that the user drags
+ * @param {HTMLElement} draggedElement - the item that the user drags
  * @param {Function} customDragImage - function to create a custom dragImage
  * @return void
  */
-export default (event: DragEvent, draggedElement: Element, customDragImage: Function): void => {
+export default (event: DragEvent, draggedElement: HTMLElement, customDragImage: Function): void => {
   // check if event is provided
   if (!(event instanceof Event)) {
     throw new Error('setDragImage requires a DragEvent as the first argument.')
   }
   // check if draggedElement is provided
-  if (!(draggedElement instanceof Element)) {
+  if (!(draggedElement instanceof HTMLElement)) {
     throw new Error('setDragImage requires the dragged element as the second argument.')
   }
   // set default function of none provided
@@ -41,7 +41,7 @@ export default (event: DragEvent, draggedElement: Element, customDragImage: Func
     // get the dragImage
     let dragImage = customDragImage(draggedElement, elementOffset, event)
     // check if custom function returns correct values
-    if (!(dragImage.element instanceof Element) || typeof dragImage.posX !== 'number' || typeof dragImage.posY !== 'number') {
+    if (!(dragImage.element instanceof HTMLElement) || typeof dragImage.posX !== 'number' || typeof dragImage.posY !== 'number') {
       throw new Error('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')
     }
     // needs to be set for HTML5 drag & drop to work

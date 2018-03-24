@@ -53,8 +53,8 @@ const _removeItemEvents = function (items) {
  * _getDragging returns the current element to drag or
  * a copy of the element.
  * Is Copy Active for sortable
- * @param {Element} draggedItem - the item that the user drags
- * @param {Element} sortable a single sortable
+ * @param {HTMLElement} draggedItem - the item that the user drags
+ * @param {HTMLElement} sortable a single sortable
  */
 const _getDragging = function (draggedItem, sortable) {
   let ditem = draggedItem
@@ -69,7 +69,7 @@ const _getDragging = function (draggedItem, sortable) {
 }
 /**
  * Remove data from sortable
- * @param {Element} sortable a single sortable
+ * @param {HTMLElement} sortable a single sortable
  */
 const _removeSortableData = function (sortable) {
   _removeData(sortable)
@@ -77,7 +77,7 @@ const _removeSortableData = function (sortable) {
 }
 /**
  * Remove data from items
- * @param {Array|Element} items
+ * @param {Array<HTMLElement>|HTMLElement} items
  */
 const _removeItemData = function (items) {
   _removeAttr(items, 'aria-grabbed')
@@ -87,8 +87,8 @@ const _removeItemData = function (items) {
 }
 /**
  * Check if two lists are connected
- * @param {Element} curList
- * @param {Element} destList
+ * @param {HTMLElement} curList
+ * @param {HTMLElement} destList
  */
 const _listsConnected = function (curList, destList) {
   if (_isSortable(curList)) {
@@ -109,21 +109,21 @@ const _listsConnected = function (curList, destList) {
 }
 /**
  * Is Copy Active for sortable
- * @param {Element} sortable a single sortable
+ * @param {HTMLElement} sortable a single sortable
  */
 const _isCopyActive = function (sortable) {
   return _data(sortable, 'opts').copy === true
 }
 /**
- * Is {Element} a sortable.
- * @param {Element} element a single sortable
+ * Is {HTMLElement} a sortable.
+ * @param {HTMLElement} element a single sortable
  */
 function _isSortable (element) {
   return element !== undefined && element != null && _data(element, 'opts') !== undefined
 }
 /**
  * find sortable from element. travels up parent element until found or null.
- * @param {Element} element a single sortable
+ * @param {HTMLElement} element a single sortable
  */
 function findSortable (element) {
   while ((element = element.parentElement) && !_isSortable(element));
@@ -132,8 +132,8 @@ function findSortable (element) {
 /**
  * Dragging event is on the sortable element. finds the top child that
  * contains the element.
- * @param {Element} sortableElement a single sortable
- * @param {Element} element is that being dragged
+ * @param {HTMLElement} sortableElement a single sortable
+ * @param {HTMLElement} element is that being dragged
  */
 function findDragElement (sortableElement, element) {
   const options = _data(sortableElement, 'opts')
@@ -146,7 +146,7 @@ function findDragElement (sortableElement, element) {
 }
 /**
  * Destroy the sortable
- * @param {Element} sortableElement a single sortable
+ * @param {HTMLElement} sortableElement a single sortable
  */
 const _destroySortable = function (sortableElement) {
   const opts = _data(sortableElement, 'opts') || {}
@@ -165,7 +165,7 @@ const _destroySortable = function (sortableElement) {
 }
 /**
  * Enable the sortable
- * @param {Element} sortableElement a single sortable
+ * @param {HTMLElement} sortableElement a single sortable
  */
 const _enableSortable = function (sortableElement) {
   const opts = _data(sortableElement, 'opts')
@@ -194,7 +194,7 @@ const _enableSortable = function (sortableElement) {
 }
 /**
  * Disable the sortable
- * @param {Element} sortableElement a single sortable
+ * @param {HTMLElement} sortableElement a single sortable
  */
 const _disableSortable = function (sortableElement) {
   const opts = _data(sortableElement, 'opts')
@@ -207,7 +207,7 @@ const _disableSortable = function (sortableElement) {
 }
 /**
  * Reload the sortable
- * @param {Element} sortableElement a single sortable
+ * @param {HTMLElement} sortableElement a single sortable
  * @description events need to be removed to not be double bound
  */
 const _reloadSortable = function (sortableElement) {
@@ -254,7 +254,7 @@ export default function sortable (sortableElements, options: object|string|undef
     sortableElements = document.querySelectorAll(sortableElements)
   }
   // if the user provided an element, return it in an array to keep the return value consistant
-  if (sortableElements instanceof Element) {
+  if (sortableElements instanceof HTMLElement) {
     sortableElements = [sortableElements]
   }
 

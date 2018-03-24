@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
-    "module": "commonjs"
-  }
+    "module": "commonjs",
+    "target": "ESNext",
+    "strictNullChecks": true
+  },
+  "typeRoots": [
+    "./src/types",
+    "./node_modules/@types"
+  ]
 }
