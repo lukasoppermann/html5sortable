@@ -7,11 +7,11 @@ describe('Testing events', () => {
 
   let getIndex = (item, NodeList) => Array.prototype.indexOf.call(NodeList, item)
   let ul, li, secondLi, ul2, fifthLi, fourthLi
-  var sortstartitem, sortstartStartParent
-  var sortupdateitem, sortupdateitemEndIndex, sortupdateitemStartIndex, sortupdateitemStartSortableIndex,
+  let startEventOriginItem, startEventOriginContainer
+  let sortupdateitem, sortupdateitemEndIndex, sortupdateitemStartIndex, sortupdateitemStartSortableIndex,
     sortupdateitemEndSortableIndex, sortupdateitemStartParent, sortupdateitemEndParent,
     sortupdateitemNewEndList, sortupdateitemNewStartList, sortupdateitemOldStartList
-  var sortstopitem, sortstopStartparent
+  let sortstopitem, sortstopStartparent
 
   let dataTransferObj
 
@@ -56,8 +56,8 @@ describe('Testing events', () => {
       }]
     }
 
-    sortstartitem = null
-    sortstartStartParent = null
+    startEventOriginItem = null
+    startEventOriginContainer = null
 
     sortupdateitem = null
     sortupdateitemEndIndex = null
@@ -82,8 +82,8 @@ describe('Testing events', () => {
 
   function addEventListener (ul) {
     sortable(ul, null)[0].addEventListener('sortstart', function (e) {
-      sortstartitem = e.detail.item
-      sortstartStartParent = e.detail.startParent
+      startEventOriginItem = e.detail.item
+      startEventOriginContainer = e.detail.origin.container
     })
     sortable(ul, null)[0].addEventListener('sortupdate', function (e) {
       sortupdateitem = e.detail.item
@@ -120,8 +120,8 @@ describe('Testing events', () => {
     expect(li.getAttribute('aria-grabbed')).toEqual('true')
     expect(li.classList.contains('test-dragging')).toBe(true)
 
-    expect(sortstartitem).toEqual(li)
-    expect(ul).toEqual(sortstartStartParent)
+    expect(startEventOriginItem).toEqual(li)
+    expect(ul).toEqual(startEventOriginContainer)
     expect(null).toEqual(sortupdateitem)
     expect(null).toEqual(sortstopitem)
   })
@@ -244,8 +244,8 @@ describe('Testing events', () => {
     expect(getIndex(li, ul.children)).not.toEqual(originalIndex)
     expect(getIndex(li, ul.children)).toEqual(1)
 
-    expect(sortstartitem).toEqual(li)
-    expect(ul).toEqual(sortstartStartParent)
+    expect(startEventOriginItem).toEqual(li)
+    expect(ul).toEqual(startEventOriginContainer)
 
     expect(li).toEqual(sortupdateitem)
     expect(1).toEqual(sortupdateitemEndIndex)
