@@ -249,7 +249,8 @@ export default function sortable (sortableElements, options: object|string|undef
     maxItems: 0,
     itemSerializer: undefined,
     containerSerializer: undefined,
-    customDragImage: null
+    customDragImage: null,
+    items: null
     // if options is an object, merge it, otherwise use empty object
   }, (typeof options === 'object') ? options : {})
   // check if the user provided a selector instead of an element

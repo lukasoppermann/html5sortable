@@ -1,7 +1,7 @@
 /* global describe,test,expect */
 /* eslint-env jest */
-
 import sortable from '../src/html5sortable'
+import defaultConfig from '../src/defaultConfiguration'
 
 describe('Test options from sortable', () => {
   test('options: undefined', () => {
@@ -9,21 +9,7 @@ describe('Test options from sortable', () => {
     // init sortable & get first one
     let sortableElement = sortable(div, undefined)[0]
     // test a default value to check if they stay the same
-    expect(sortableElement.h5s.data.opts).toEqual({
-      connectWith: false,
-      acceptFrom: null,
-      copy: false,
-      customDragImage: null,
-      placeholder: null,
-      disableIEFix: false,
-      placeholderClass: 'sortable-placeholder',
-      draggingClass: 'sortable-dragging',
-      hoverClass: false,
-      debounce: 0,
-      maxItems: 0,
-      itemSerializer: undefined,
-      containerSerializer: undefined
-    })
+    expect(sortableElement.h5s.data.opts).toEqual(defaultConfig)
   })
 
   test('options: method string', () => {
