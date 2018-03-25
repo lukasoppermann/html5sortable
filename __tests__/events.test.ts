@@ -1,6 +1,7 @@
 /* global describe,test,expect,beforeEach,CustomEvent */
-import sortable from '../src/html5sortable'
+import Sortable from '../src/html5sortable'
 /* eslint-env jest */
+/* eslint-disable no-new */
 
 describe('Testing events', () => {
   let body = document.querySelector('body')
@@ -81,11 +82,11 @@ describe('Testing events', () => {
   })
 
   function addEventListener (ul) {
-    sortable(ul, null)[0].addEventListener('sortstart', function (e) {
+    new Sortable(ul, null)[0].addEventListener('sortstart', function (e) {
       startEventOriginItem = e.detail.item
       startEventOriginContainer = e.detail.origin.container
     })
-    sortable(ul, null)[0].addEventListener('sortupdate', function (e) {
+    new Sortable(ul, null)[0].addEventListener('sortupdate', function (e) {
       sortupdateitem = e.detail.item
       sortupdateitemEndIndex = e.detail.endSortableIndex
       sortupdateitemStartIndex = e.detail.startSortableIndex
@@ -97,14 +98,14 @@ describe('Testing events', () => {
       sortupdateitemNewStartList = e.detail.newStartList
       sortupdateitemOldStartList = e.detail.oldStartList
     })
-    sortable(ul, null)[0].addEventListener('sortstop', function (e) {
+    new Sortable(ul, null)[0].addEventListener('sortstop', function (e) {
       sortstopitem = e.detail.item
       sortstopStartparent = e.detail.startParent
     })
   }
 
   test('should correctly run dragstart event', () => {
-    sortable(ul, {
+    new Sortable(ul, {
       items: 'li',
       connectWith: '.test',
       placeholderClass: 'test-placeholder',
@@ -129,7 +130,7 @@ describe('Testing events', () => {
   test(
     'should correctly copy element on run dragstart/dragover event',
     () => {
-      sortable(ul, {
+      new Sortable(ul, {
         items: 'li',
         copy: true,
         connectWith: '.test',
@@ -157,7 +158,7 @@ describe('Testing events', () => {
   )
 
   test('dragstart/dragover event with maxitems', () => {
-    sortable(ul, {
+    new Sortable(ul, {
       items: 'li',
       maxItems: 1,
       connectWith: '.test',
@@ -178,7 +179,7 @@ describe('Testing events', () => {
   })
 
   test('should not add class on hover event', () => {
-    sortable(ul, {
+    new Sortable(ul, {
       items: 'li',
       hoverClass: false
     })
@@ -188,7 +189,7 @@ describe('Testing events', () => {
     expect(li.classList.contains('sortable-over')).toBe(false)
   })
   test('should correctly add class on hover event', () => {
-    sortable(ul, {
+    new Sortable(ul, {
       'items': 'li',
       hoverClass: 'sortable-item-over'
     })
@@ -203,7 +204,7 @@ describe('Testing events', () => {
   test(
     'should correctly add and remove both classes on hover event',
     () => {
-      sortable(ul, {
+      new Sortable(ul, {
         'items': 'li',
         hoverClass: 'sortable-item-over sortable-item-over-second'
       })
@@ -219,7 +220,7 @@ describe('Testing events', () => {
   )
 
   test.skip('should correctly place moved item into correct index', () => {
-    sortable(ul, {
+    new Sortable(ul, {
       items: 'li',
       placeholderClass: 'test-placeholder'
     })
@@ -265,13 +266,13 @@ describe('Testing events', () => {
   test.skip(
     'should correctly place moved item into correct index using acceptFrom',
     () => {
-      sortable(ul, {
+      new Sortable(ul, {
         items: 'li',
         acceptFrom: false,
         placeholderClass: 'test-placeholder'
       })
 
-      sortable(ul2, {
+      new Sortable(ul2, {
         items: 'li',
         acceptFrom: '.sortable',
         placeholderClass: 'test-placeholder2'
@@ -303,7 +304,7 @@ describe('Testing events', () => {
   )
 
   test.skip('should correctly place non-moved item into correct index', () => {
-    sortable(ul, {
+    new Sortable(ul, {
       items: 'li',
       placeholderClass: 'test-placeholder'
     })
@@ -335,7 +336,7 @@ describe('Testing events', () => {
   test(
     'should revert item into correct index when dropped outside',
     () => {
-      sortable(ul, {
+      new Sortable(ul, {
         'items': 'li',
         placeholderClass: 'test-placeholder'
       })
@@ -364,7 +365,7 @@ describe('Testing events', () => {
 
   test('should find sortable child dragover event', () => {
     var item4 = ul.querySelector('.item4')
-    sortable(ul, {
+    new Sortable(ul, {
       items: 'li',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'

@@ -2,7 +2,7 @@
 /* eslint-env jest */
 
 import serialize from '../src/serialize'
-import sortable from '../src/html5sortable'
+import Sortable from '../src/html5sortable'
 
 describe('Testing serialize', () => {
   test('serialize: sortableContainer is not an element', () => {
@@ -18,7 +18,7 @@ describe('Testing serialize', () => {
 
   test('serialize: element that is not part of the DOM', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    let isASortable = new Sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(serialize(isASortable)).toEqual(expect.objectContaining({
       items: expect.any(Array),
@@ -28,7 +28,7 @@ describe('Testing serialize', () => {
 
   test('serialize: empty sortableContainer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    let isASortable = new Sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(serialize(isASortable)).toEqual(expect.objectContaining({
       items: expect.arrayContaining([]),
@@ -41,7 +41,7 @@ describe('Testing serialize', () => {
 
   test('serialize: with elements', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {
+    let isASortable = new Sortable(window.document.createElement('div'), {
       items: 'div'
     })[0]
     isASortable.innerHTML = '<div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'
@@ -72,7 +72,7 @@ describe('Testing serialize', () => {
 
   test('serialize: with elements that are not items sortable', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {
+    let isASortable = new Sortable(window.document.createElement('div'), {
       items: 'div'
     })[0]
     isASortable.innerHTML = '<span>Title</span><div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'
@@ -103,21 +103,21 @@ describe('Testing serialize', () => {
 
   test('serialize: with invalid customItemSerializer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    let isASortable = new Sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(() => { serialize(isASortable, 'fake') }).toThrow('You need to provide a valid serializer for items and the container.')
   })
 
   test('serialize: with invalid customContainerSerializer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    let isASortable = new Sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(() => { serialize(isASortable, () => {}, 'fake') }).toThrow('You need to provide a valid serializer for items and the container.')
   })
 
   test('serialize: with custom serializer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {
+    let isASortable = new Sortable(window.document.createElement('div'), {
       items: 'div'
     })[0]
     isASortable.innerHTML = '<div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'

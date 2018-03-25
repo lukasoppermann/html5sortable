@@ -1,6 +1,6 @@
 /* global describe,test,expect */
 import { mockInnerHTML } from '../helpers'
-import sortable from '../../src/html5sortable'
+import Sortable from '../../src/html5sortable'
 /* eslint-env jest */
 
 describe('_removeItemData', () => {
@@ -8,9 +8,9 @@ describe('_removeItemData', () => {
   beforeEach(() => {
     document.body.innerHTML = mockInnerHTML
     ul = document.body.querySelector('.sortable')
-    sortable(ul, 'destroy')
+    new Sortable(ul, 'destroy')
     // init sortable
-    sortable(ul, null)
+    new Sortable(ul, null)
     // get all li elements
     allLiElements = ul.querySelectorAll('li')
     // get first li element
@@ -18,12 +18,12 @@ describe('_removeItemData', () => {
   })
   test('should remove the role, draggable, and aria-grabbed attributes', () => {
     // destroy, so it does not use old values
-    sortable(ul, 'destroy')
-    sortable(ul, {
+    new Sortable(ul, 'destroy')
+    new Sortable(ul, {
       items: 'li',
       connectWith: '.test'
     })
-    sortable.__testing._removeItemData(li)
+    Sortable.__testing._removeItemData(li)
     expect(li.getAttribute('role')).toBeNull()
     expect(li.getAttribute('draggable')).toBeNull()
     expect(li.getAttribute('aria-grabbed')).toBeNull()

@@ -4,7 +4,7 @@ import store from './store'
  * @param {Function} callback
  * @param {string} event
  */
-function addEventListener (element: Array<HTMLElement>|HTMLElement, eventName:string, callback: () => void) {
+function addEventListener (element: Array<HTMLElement>|HTMLElement, eventName:string, callback: (() => void)|void) {
   if (element instanceof Array) {
     for (var i = 0; i < element.length; ++i) {
       addEventListener(element[i], eventName, callback)

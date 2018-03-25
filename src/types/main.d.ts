@@ -6,9 +6,9 @@
 
 interface configuration {
     connectWith: boolean,
-    acceptFrom: void,
+    acceptFrom: null,
     copy: boolean,
-    placeholder: void,
+    placeholder: null,
     disableIEFix: boolean,
     placeholderClass: string,
     draggingClass: string,
@@ -17,7 +17,9 @@ interface configuration {
     maxItems: number,
     itemSerializer: void,
     containerSerializer: void,
-    items: string
+    items?: string,
+    customDragImage: null,
+    forcePlaceholderSize?: any
 }
 
 interface data {
