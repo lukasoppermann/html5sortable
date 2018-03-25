@@ -166,7 +166,7 @@ sortable('.sortable', {
 });
 ```
 
-### connectWith [![deprecated](https://img.shields.io/badge/feature-deprecated-yellow.svg?longCache=true&style=flat-square)]
+### connectWith ![deprecated](https://img.shields.io/badge/feature-deprecated-yellow.svg?longCache=true&style=flat-square)
 **Use [`acceptFrom`](#acceptFrom) instead.** The `connectWith` option allows you to create a connected lists:
 
 ``` javascript
