@@ -22,7 +22,7 @@ export class Store implements StoreInterface {
     // log deprecation
     ['connectWith', 'disableIEFix'].forEach((configKey) => {
       if (config.hasOwnProperty(configKey)){
-        console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.`)
+        console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
       }
     })
     // combine config with default
@@ -57,7 +57,7 @@ export class Store implements StoreInterface {
     }
     // log deprecation
     if (['connectWith', 'disableIEFix'].indexOf(key) > -1){
-      console.warn(`HTML5Sortable: You are using the deprecated configuration "${key}". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.`)
+      console.warn(`HTML5Sortable: You are using the deprecated configuration "${key}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
     }
     // set config
     this._config.set(key, value)

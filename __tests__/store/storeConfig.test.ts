@@ -30,10 +30,10 @@ describe('Testing config store', () => {
     let div = window.document.createElement('div')
     // assert connectWith
     store(div).config = {'connectWith':'Test'}
-    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "connectWith". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.')
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "connectWith". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
     // assert IEFix
     store(div).config = {'disableIEFix':'Test'}
-    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "disableIEFix". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.')
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "disableIEFix". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
   })
 
   test('get entire config from store', () => {
@@ -65,10 +65,10 @@ describe('Testing config store', () => {
     let div = window.document.createElement('div')
     // assert connectWith
     store(div).setConfig('connectWith','Test')
-    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "connectWith". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.')
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "connectWith". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
     // assert IEFix
     store(div).setConfig('disableIEFix','Test')
-    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "disableIEFix". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.')
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "disableIEFix". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
   })
 
   test('setting invalid config item', () => {
