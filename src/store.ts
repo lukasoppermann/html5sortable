@@ -15,10 +15,16 @@ export class Store implements StoreInterface {
    * @method config
    * @param {object} config object of configurations
    */
-  set config (config?: object): void {
+  set config (config?: configuration): void {
     if (typeof config !== 'object') {
       throw new Error('You must provide a valid configuration object to the config setter.')
     }
+    // log deprecation
+    ['connectWith', 'disableIEFix'].forEach((configKey) => {
+      if (config.hasOwnProperty(configKey)){
+        console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.`)
+      }
+    })
     // combine config with default
     let mergedConfig = Object.assign({}, defaultConfiguration, config)
     // add config to map
@@ -49,6 +55,11 @@ export class Store implements StoreInterface {
     if (!this._config.has(key)) {
       throw new Error(`Trying to set invalid configuration item: ${key}`)
     }
+    // log deprecation
+    if (['connectWith', 'disableIEFix'].indexOf(key) > -1){
+      console.warn(`HTML5Sortable: You are using the deprecated configuration "${key}". This will be removed in an upcoming version, make sure to migrate to the new methods when updating.`)
+    }
+    // set config
     this._config.set(key, value)
   }
   /**
