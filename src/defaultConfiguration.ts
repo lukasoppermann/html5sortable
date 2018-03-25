@@ -4,9 +4,9 @@
 export default {
   items: null,
   // deprecated
-  connectWith: false,
+  connectWith: null,
   // deprecated
-  disableIEFix: false,
+  disableIEFix: null,
   acceptFrom: null,
   copy: false,
   placeholder: null,
