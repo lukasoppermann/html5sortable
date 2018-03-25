@@ -18,7 +18,8 @@ interface configuration {
     itemSerializer: void,
     containerSerializer: void,
     items?: string,
-    customDragImage: null
+    customDragImage: null,
+    forcePlaceholderSize?: any
 }
 
 interface data {
