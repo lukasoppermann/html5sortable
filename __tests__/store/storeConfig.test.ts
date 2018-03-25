@@ -59,6 +59,7 @@ describe('Testing config store', () => {
   test('setting config item', () => {
     // setup
     let div = window.document.createElement('div')
+    store(div).config = {}
     // assert before
     expect(store(div).getConfig('maxItems')).toBe(0)
     store(div).setConfig('maxItems',5)

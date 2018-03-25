@@ -7,7 +7,7 @@ export let stores: Map<HTMLElement, StoreInterface> = new Map()
  * @param {Object} config
  */
 export class Store implements StoreInterface {
-  private _config: Map<string, any> = new Map(Object.entries(defaultConfiguration)) // eslint-disable-line no-undef
+  private _config: Map<string, any> = new Map() // eslint-disable-line no-undef
   private _placeholder?: HTMLElement = null // eslint-disable-line no-undef
   private _data: Map<string, any> = new Map() // eslint-disable-line no-undef
   /**

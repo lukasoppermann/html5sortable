@@ -16,6 +16,7 @@ import _getElementHeight from './elementHeight'
 import _getHandles from './getHandles'
 import setDragImage from './setDragImage'
 import {default as store, stores} from './store'
+import _listsConnected from './isConnected'
 /*
  * variables global to the plugin
  */
@@ -84,28 +85,6 @@ const _removeItemData = function (items) {
   _removeAttr(items, 'aria-copied')
   _removeAttr(items, 'draggable')
   _removeAttr(items, 'role')
-}
-/**
- * Check if two lists are connected
- * @param {HTMLElement} curList
- * @param {HTMLElement} destList
- */
-const _listsConnected = function (curList, destList) {
-  if (_isSortable(curList)) {
-    const acceptFrom = _data(curList, 'opts').acceptFrom
-    if (acceptFrom !== null) {
-      return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
-        return sel.length > 0 && destList.matches(sel)
-      }).length > 0
-    }
-    if (curList === destList) {
-      return true
-    }
-    if (_data(curList, 'connectWith') !== undefined && _data(curList, 'connectWith') !== null) {
-      return _data(curList, 'connectWith') === _data(destList, 'connectWith')
-    }
-  }
-  return false
 }
 /**
  * Is Copy Active for sortable
