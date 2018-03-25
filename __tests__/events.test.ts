@@ -106,7 +106,6 @@ describe('Testing events', () => {
   test('should correctly run dragstart event', () => {
     sortable(ul, {
       items: 'li',
-      connectWith: '.test',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     })
@@ -132,7 +131,6 @@ describe('Testing events', () => {
       sortable(ul, {
         items: 'li',
         copy: true,
-        connectWith: '.test',
         placeholderClass: 'test-placeholder',
         draggingClass: 'test-dragging'
       })
@@ -160,7 +158,6 @@ describe('Testing events', () => {
     sortable(ul, {
       items: 'li',
       maxItems: 1,
-      connectWith: '.test',
       placeholderClass: 'test-placeholder',
       draggingClass: 'test-dragging'
     })

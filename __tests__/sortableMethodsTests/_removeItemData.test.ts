@@ -20,8 +20,7 @@ describe('_removeItemData', () => {
     // destroy, so it does not use old values
     sortable(ul, 'destroy')
     sortable(ul, {
-      items: 'li',
-      connectWith: '.test'
+      items: 'li'
     })
     sortable.__testing._removeItemData(li)
     expect(li.getAttribute('role')).toBeNull()

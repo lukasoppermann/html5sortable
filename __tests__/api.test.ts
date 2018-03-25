@@ -24,7 +24,6 @@ describe('Testing api', () => {
 
       sortable(ul, {
         'items': 'li',
-        'connectWith': '.test',
         placeholderClass: 'test-placeholder',
         draggingClass: 'test-dragging'
       })
@@ -37,7 +36,6 @@ describe('Testing api', () => {
     test('should have correct options set on options object', () => {
       let opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li')
-      expect(opts.connectWith).toEqual('.test')
       expect(opts.placeholderClass).toEqual('test-placeholder')
       expect(opts.draggingClass).toEqual('test-dragging')
     })
@@ -48,10 +46,6 @@ describe('Testing api', () => {
 
     test('should have a data-items object', () => {
       expect(typeof sortable.__testing._data(ul, 'items')).toBe('string')
-    })
-
-    test('should have a h5s.connectWith object', () => {
-      expect(typeof sortable.__testing._data(ul, 'connectWith')).toBe('string')
     })
 
     test('should have aria-grabbed attributes', () => {
@@ -78,23 +72,12 @@ describe('Testing api', () => {
       expect(store(li).getData('eventdragover')).toBeDefined()
       expect(store(li).getData('eventdragenter')).toBeDefined()
     })
-
-    test('string placehodler', () => {
-      sortable(ul, {
-        'items': 'li',
-        'connectWith': '.test',
-        placeholderClass: 'test-placeholder',
-        draggingClass: 'test-dragging',
-        placeholder: '<div/>'
-      })
-    })
   })
 
   describe('Destroy', () => {
     beforeEach(() => {
       sortable(ul, {
-        'items': 'li',
-        'connectWith': '.test'
+        'items': 'li'
       })
       sortable(ul, 'destroy')
     })
@@ -109,10 +92,6 @@ describe('Testing api', () => {
 
     test('should not have a data-items object', () => {
       expect(sortable.__testing._data(ul, 'items')).not.toBeDefined()
-    })
-
-    test('should not have a h5s.connectWith object', () => {
-      expect(sortable.__testing._data(ul, 'connectWith')).not.toBeDefined()
     })
 
     test('should not have an aria-grabbed attribute', () => {
@@ -132,7 +111,6 @@ describe('Testing api', () => {
     beforeAll(function () {
       sortable(ul, {
         'items': 'li:not(.disabled)',
-        'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
       sortable(ul, 'reload')
@@ -141,7 +119,6 @@ describe('Testing api', () => {
     test('should keep the options of the sortable', () => {
       let opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li:not(.disabled)')
-      expect(opts.connectWith).toEqual('.test')
       expect(opts.placeholderClass).toEqual('test-placeholder')
     })
 
@@ -149,18 +126,12 @@ describe('Testing api', () => {
       let items = sortable.__testing._data(ul, 'items')
       expect(items).toEqual('li:not(.disabled)')
     })
-
-    test('should keep connectWith attribute of the sortable', () => {
-      let connectWith = sortable.__testing._data(ul, 'connectWith')
-      expect(connectWith).toEqual('.test')
-    })
   })
 
   describe('Disable', () => {
     beforeAll(function () {
       sortable(ul, {
         'items': 'li:not(.disabled)',
-        'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
       sortable(ul, 'disable')
@@ -188,7 +159,6 @@ describe('Testing api', () => {
     beforeAll(function () {
       sortable(ul, {
         'items': 'li:not(.disabled)',
-        'connectWith': '.test',
         placeholderClass: 'test-placeholder'
       })
       sortable(ul, 'disable')

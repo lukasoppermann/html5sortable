@@ -22,12 +22,6 @@ describe('_removeSortableEvents', () => {
 
     connectedUl = document.body.querySelector('.sortable2')
     notConnectedUl = document.body.querySelector('.sortable3')
-
-    // create additional sortables
-    sortable(connectedUl, {
-      connectWith: '.sortable'
-    })
-    sortable(notConnectedUl, null)
   })
 
   test('each sortable ul should connect with itself by default', () => {
@@ -36,6 +30,12 @@ describe('_removeSortableEvents', () => {
   })
 
   test('connectWith: both uls must connect to a class at instantiation to be connected', () => {
+    global.console.warn = (input) => {}
+    // create additional sortables
+    sortable(connectedUl, {
+      connectWith: '.sortable'
+    })
+    sortable(notConnectedUl, null)
     // because ul was never instantiated with connectWith: '.sortable' they are not connected, so all should be false
     expect(sortable.__testing._listsConnected(ul, connectedUl)).toEqual(false)
     expect(sortable.__testing._listsConnected(connectedUl, ul)).toEqual(false)
@@ -48,6 +48,10 @@ describe('_removeSortableEvents', () => {
     sortable(ul, {
       connectWith: '.sortable'
     })
+    sortable(connectedUl, {
+      connectWith: '.sortable'
+    })
+    sortable(notConnectedUl, null)
     // as both were instantiated with connectWith these should be true
     expect(sortable.__testing._listsConnected(connectedUl, ul)).toEqual(true)
     expect(sortable.__testing._listsConnected(ul, connectedUl)).toEqual(true)
