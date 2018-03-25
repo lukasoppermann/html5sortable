@@ -1,6 +1,5 @@
 # HTML5Sortable
-[![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![Greenkeeper badge](https://badges.greenkeeper.io/lukasoppermann/html5sortable.svg)](https://greenkeeper.io/) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
-[![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable)
+[![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![Greenkeeper badge](https://badges.greenkeeper.io/lukasoppermann/html5sortable.svg)](https://greenkeeper.io/) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md) [![Code of Conduct](https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
 
 > **Lightweight vanillajs micro-library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
@@ -81,7 +80,7 @@ sortable('.sortable')[0].addEventListener('sortstart', function(e) {
     This event is triggered when the user starts sorting and the DOM position has not yet changed.
 
     e.detail.item - {HTMLElement} dragged element
-    
+
     Origin Container Data
     e.detail.origin.index - {Integer} Index of the element within Sortable Items Only
     e.detail.origin.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
@@ -100,7 +99,7 @@ sortable('.sortable')[0].addEventListener('sortstop', function(e) {
     This event is triggered when the user stops sorting and the DOM position has not yet changed.
 
     e.detail.item - {HTMLElement} dragged element
-    
+
     Origin Container Data
     e.detail.origin.index - {Integer} Index of the element within Sortable Items Only
     e.detail.origin.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
@@ -120,16 +119,16 @@ sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
 
     /*
     This event is triggered when the user stopped sorting and the DOM position has changed.
-     
+
     e.detail.item - {HTMLElement} dragged element
-    
+
     Origin Container Data
     e.detail.origin.index - {Integer} Index of the element within Sortable Items Only
     e.detail.origin.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
     e.detail.origin.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
     e.detail.origin.itemsBeforeUpdate - {Array} Sortable Items before the move
     e.detail.origin.items - {Array} Sortable Items after the move
-    
+
     Destination Container Data
     e.detail.destination.index - {Integer} Index of the element within Sortable Items Only
     e.detail.destination.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
@@ -167,7 +166,7 @@ sortable('.sortable', {
 });
 ```
 
-### connectWith (deprecated)
+### connectWith [![deprecated](https://img.shields.io/badge/feature-deprecated-yellow.svg?longCache=true&style=flat-square)]
 **Use [`acceptFrom`](#acceptFrom) instead.** The `connectWith` option allows you to create a connected lists:
 
 ``` javascript
