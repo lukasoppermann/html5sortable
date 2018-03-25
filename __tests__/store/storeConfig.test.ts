@@ -1,7 +1,11 @@
 /* global global,describe,test,expect */
-import {default as store, Store as StoreClass} from '../../src/store'
+import {default as store, stores as stores} from '../../src/store'
 import defaultConfiguration from '../../src/defaultConfiguration'
 describe('Testing config store', () => {
+  beforeEach(() => {
+    // remove old store
+    stores.clear()
+  })
 
   test('create store & add custom config', () => {
     // setup
@@ -34,6 +38,10 @@ describe('Testing config store', () => {
     // assert IEFix
     store(div).config = {'disableIEFix':'Test'}
     expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "disableIEFix". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
+    // non-deprecated
+    spy.mockReset()
+    store(div).config = {'copy':'Test'}
+    expect(spy).not.toBeCalled()
   })
 
   test('get entire config from store', () => {
