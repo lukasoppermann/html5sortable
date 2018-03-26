@@ -1,6 +1,5 @@
 /* eslint-env browser */
 import StoreInterface from './types/store.d' // eslint-disable-line no-unused-vars
-import defaultConfiguration from './defaultConfiguration'
 export let stores: Map<HTMLElement, StoreInterface> = new Map()
 /**
  * Stores data & configurations per Sortable
@@ -19,14 +18,8 @@ export class Store implements StoreInterface {
     if (typeof config !== 'object') {
       throw new Error('You must provide a valid configuration object to the config setter.')
     }
-    // log deprecation
-    ['connectWith', 'disableIEFix'].forEach((configKey) => {
-      if (config.hasOwnProperty(configKey) && config[configKey] !== null) {
-        console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
-      }
-    })
     // combine config with default
-    let mergedConfig = Object.assign({}, defaultConfiguration, config)
+    let mergedConfig = Object.assign({}, config)
     // add config to map
     this._config = new Map(Object.entries(mergedConfig))
   }
@@ -54,10 +47,6 @@ export class Store implements StoreInterface {
   setConfig (key: string, value: any): void {
     if (!this._config.has(key)) {
       throw new Error(`Trying to set invalid configuration item: ${key}`)
-    }
-    // log deprecation
-    if (['connectWith', 'disableIEFix'].indexOf(key) > -1) {
-      console.warn(`HTML5Sortable: You are using the deprecated configuration "${key}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
     }
     // set config
     this._config.set(key, value)

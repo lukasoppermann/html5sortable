@@ -17,6 +17,7 @@ import _getHandles from './getHandles'
 import setDragImage from './setDragImage'
 import {default as store, stores} from './store'
 import _listsConnected from './isConnected'
+import defaultConfiguration from './defaultConfiguration'
 /*
  * variables global to the plugin
  */
@@ -254,6 +255,14 @@ export default function sortable (sortableElements, options: object|string|undef
     if (/enable|disable|destroy/.test(method)) {
       return sortable[method](sortableElement)
     }
+    // log deprecation
+    ['connectWith', 'disableIEFix'].forEach((configKey) => {
+      if (options.hasOwnProperty(configKey) && options[configKey] !== null) {
+        console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
+      }
+    })
+    // merge options with default options
+    options = Object.assign({}, defaultConfiguration, options)
     // init data store for sortable
     store(sortableElement).config = options
     // get options & set options on sortable
