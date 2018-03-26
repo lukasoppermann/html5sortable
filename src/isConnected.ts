@@ -4,13 +4,15 @@ import store from './store'
  * @param {HTMLElement} curList
  * @param {HTMLElement} destList
  */
- function _isSortable (element) {
-   return element !== undefined && element != null && typeof store(element).config !== 'object'
- }
+function _isSortable (element) {
+  console.log('REPLACE _isSortable function')
+  return element !== undefined && element !== null && typeof store(element).config === 'object'
+}
 export default (curList, destList) => {
   // check if valid sortable
   if (_isSortable(curList)) {
     const acceptFrom = store(curList).getConfig('acceptFrom')
+
     if (acceptFrom !== null) {
       return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
         return sel.length > 0 && destList.matches(sel)
