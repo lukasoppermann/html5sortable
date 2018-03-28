@@ -1,8 +1,12 @@
-/* global describe,test,expect */
-import {default as store, Store as StoreClass} from '../../src/store'
+/* global global,describe,test,expect */
+import {default as store, stores as stores} from '../../src/store'
 import defaultConfiguration from '../../src/defaultConfiguration'
-
 describe('Testing config store', () => {
+  beforeEach(() => {
+    // remove old store
+    stores.clear()
+  })
+
   test('create store & add custom config', () => {
     // setup
     let div = window.document.createElement('div')
@@ -20,6 +24,24 @@ describe('Testing config store', () => {
     let div = window.document.createElement('div')
     // assert
     expect( () => { store(div).config = 'maxitems' }).toThrowError('You must provide a valid configuration object to the config setter.')
+  })
+
+  test('set deprecated config', () => {
+    // fake console.warn to avoid logs in test
+    global.console.warn = (input) => {}
+    const spy = jest.spyOn(global.console, 'warn')
+    // setup
+    let div = window.document.createElement('div')
+    // assert connectWith
+    store(div).config = {'connectWith':'Test'}
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "connectWith". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
+    // assert IEFix
+    store(div).config = {'disableIEFix':'Test'}
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "disableIEFix". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
+    // non-deprecated
+    spy.mockReset()
+    store(div).config = {'copy':'Test'}
+    expect(spy).not.toBeCalled()
   })
 
   test('get entire config from store', () => {
@@ -41,6 +63,20 @@ describe('Testing config store', () => {
     expect(store(div).getConfig('maxItems')).toBe(0)
     store(div).setConfig('maxItems',5)
     expect(store(div).getConfig('maxItems')).toBe(5)
+  })
+
+  test('set deprecated config with setConfig', () => {
+    // fake console.warn to avoid logs in test
+    global.console.warn = (input) => {}
+    const spy = jest.spyOn(global.console, 'warn')
+    // setup
+    let div = window.document.createElement('div')
+    // assert connectWith
+    store(div).setConfig('connectWith','Test')
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "connectWith". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
+    // assert IEFix
+    store(div).setConfig('disableIEFix','Test')
+    expect(spy).toBeCalledWith('HTML5Sortable: You are using the deprecated configuration "disableIEFix". This will be removed in an upcoming version, make sure to migrate to the new options when updating.')
   })
 
   test('setting invalid config item', () => {

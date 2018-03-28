@@ -101,7 +101,7 @@ const _listsConnected = function (curList, destList) {
     if (curList === destList) {
       return true
     }
-    if (_data(curList, 'connectWith') !== undefined) {
+    if (_data(curList, 'connectWith') !== undefined && _data(curList, 'connectWith') !== null) {
       return _data(curList, 'connectWith') === _data(destList, 'connectWith')
     }
   }
@@ -174,22 +174,25 @@ const _enableSortable = function (sortableElement) {
   _attr(sortableElement, 'aria-dropeffect', 'move')
   _data(sortableElement, '_disabled', 'false')
   _attr(handles, 'draggable', 'true')
+  // @todo: remove this fix
   // IE FIX for ghost
   // can be disabled as it has the side effect that other events
   // (e.g. click) will be ignored
-  const spanEl = (document || window.document).createElement('span')
-  if (typeof spanEl.dragDrop === 'function' && !opts.disableIEFix) {
-    _on(handles, 'mousedown', function () {
-      if (items.indexOf(this) !== -1) {
-        this.dragDrop()
-      } else {
-        let parent = this.parentElement
-        while (items.indexOf(parent) === -1) {
-          parent = parent.parentElement
+  if (opts.disableIEFix === false) {
+    const spanEl = (document || window.document).createElement('span')
+    if (typeof spanEl.dragDrop === 'function') {
+      _on(handles, 'mousedown', function () {
+        if (items.indexOf(this) !== -1) {
+          this.dragDrop()
+        } else {
+          let parent = this.parentElement
+          while (items.indexOf(parent) === -1) {
+            parent = parent.parentElement
+          }
+          parent.dragDrop()
         }
-        parent.dragDrop()
-      }
-    })
+      })
+    }
   }
 }
 /**
@@ -234,11 +237,11 @@ export default function sortable (sortableElements, options: object|string|undef
   const method = String(options)
   // merge user options with defaultss
   options = Object.assign({
-    connectWith: false,
+    connectWith: null,
     acceptFrom: null,
     copy: false,
     placeholder: null,
-    disableIEFix: false,
+    disableIEFix: null,
     placeholderClass: 'sortable-placeholder',
     draggingClass: 'sortable-dragging',
     hoverClass: false,
@@ -246,7 +249,8 @@ export default function sortable (sortableElements, options: object|string|undef
     maxItems: 0,
     itemSerializer: undefined,
     containerSerializer: undefined,
-    customDragImage: null
+    customDragImage: null,
+    items: null
     // if options is an object, merge it, otherwise use empty object
   }, (typeof options === 'object') ? options : {})
   // check if the user provided a selector instead of an element
