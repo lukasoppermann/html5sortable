@@ -314,7 +314,9 @@ export default function sortable (sortableElements, options: object|string|undef
       let hoverClasses = options.hoverClass.split(' ')
       // add class on hover
       _on(listItems, 'mouseenter', function (e) {
-        e.target.classList.add(...hoverClasses)
+        if (!dragging) {
+          e.target.classList.add(...hoverClasses)
+        }
       })
       // remove class on leave
       _on(listItems, 'mouseleave', function (e) {
