@@ -531,7 +531,7 @@ export default function sortable (sortableElements, options: object|string|undef
         // get placeholders from all stores & remove all but current one
         Array.from(stores.values())
           // remove empty values
-          .filter(data => data.placeholder !== null)
+          .filter(data => data.placeholder !== undefined)
           // foreach placeholder in array if outside of current sorableContainer -> remove from DOM
           .forEach((data) => {
             if (data.placeholder !== store(sortableElement).placeholder) {
@@ -541,7 +541,7 @@ export default function sortable (sortableElements, options: object|string|undef
       } else {
         // get all placeholders from store
         let placeholders = Array.from(stores.values())
-          .filter((data) => data.placeholder !== null)
+          .filter((data) => data.placeholder !== undefined)
           .map((data) => {
             return data.placeholder
           })
