@@ -1,20 +1,19 @@
 /* eslint-env browser */
-import StoreInterface from './types/store.d' // eslint-disable-line no-unused-vars
-export let stores: Map<HTMLElement, StoreInterface> = new Map()
+export let stores: Map<HTMLElement, Store> = new Map()
 /**
  * Stores data & configurations per Sortable
  * @param {Object} config
  */
-export class Store implements StoreInterface {
+export class Store implements Store {
   private _config: Map<string, any> = new Map() // eslint-disable-line no-undef
-  private _placeholder?: HTMLElement = null // eslint-disable-line no-undef
+  private _placeholder?: HTMLElement = undefined // eslint-disable-line no-undef
   private _data: Map<string, any> = new Map() // eslint-disable-line no-undef
   /**
    * set the configuration of a class instance
    * @method config
    * @param {object} config object of configurations
    */
-  set config (config?: configuration): void {
+  set config (config: configuration) {
     if (typeof config !== 'object') {
       throw new Error('You must provide a valid configuration object to the config setter.')
     }
@@ -28,7 +27,7 @@ export class Store implements StoreInterface {
    * @method config
    * @return {object}
    */
-  get config (): object {
+  get config (): configuration {
     // transform Map to object
     let config = {}
     this._config.forEach((value, key) => {
@@ -83,14 +82,6 @@ export class Store implements StoreInterface {
     }
     this._placeholder = placeholder
   }
-  // setData (key: string, value: any) {
-  //
-  // }
-  //
-  // getData (key: string) {
-  //
-  // }
-  //
   /**
    * set an data entry
    * @method setData
@@ -133,7 +124,7 @@ export class Store implements StoreInterface {
  * @param {HTMLElement} sortableElement
  * @returns {Class: Store}
  */
-export default (sortableElement: HTMLElement): StoreInterface => {
+export default (sortableElement: HTMLElement): Store => {
   // if sortableElement is wrong type
   if (!(sortableElement instanceof HTMLElement)) {
     throw new Error('Please provide a sortable to the store function.')
