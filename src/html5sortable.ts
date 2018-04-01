@@ -585,7 +585,6 @@ sortable.__testing = {
   _data: _data,
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
-  _removeSortableData: _removeSortableData,
-  _listsConnected: _listsConnected
+  _removeSortableData: _removeSortableData
 }
 /* END.TESTS_ONLY */
