@@ -8,7 +8,7 @@ describe('Testing placeholder store', () => {
     let div = window.document.createElement('div')
     store(div)
     // assert
-    expect(store(div).placeholder).toBe(null)
+    expect(store(div).placeholder).toBe(undefined)
   })
 
   test('set & get invalid placeholder', () => {

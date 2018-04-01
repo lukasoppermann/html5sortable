@@ -1,4 +1,4 @@
-export default interface Store {
+interface Store {
   placeholder: HTMLElement
   config: object
   getConfig(key: string): any

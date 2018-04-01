@@ -16,6 +16,8 @@ import _getElementHeight from './elementHeight'
 import _getHandles from './getHandles'
 import setDragImage from './setDragImage'
 import {default as store, stores} from './store'
+import _listsConnected from './isConnected'
+import defaultConfiguration from './defaultConfiguration'
 /*
  * variables global to the plugin
  */
@@ -84,28 +86,6 @@ const _removeItemData = function (items) {
   _removeAttr(items, 'aria-copied')
   _removeAttr(items, 'draggable')
   _removeAttr(items, 'role')
-}
-/**
- * Check if two lists are connected
- * @param {HTMLElement} curList
- * @param {HTMLElement} destList
- */
-const _listsConnected = function (curList, destList) {
-  if (_isSortable(curList)) {
-    const acceptFrom = _data(curList, 'opts').acceptFrom
-    if (acceptFrom !== null) {
-      return acceptFrom !== false && acceptFrom.split(',').filter(function (sel) {
-        return sel.length > 0 && destList.matches(sel)
-      }).length > 0
-    }
-    if (curList === destList) {
-      return true
-    }
-    if (_data(curList, 'connectWith') !== undefined && _data(curList, 'connectWith') !== null) {
-      return _data(curList, 'connectWith') === _data(destList, 'connectWith')
-    }
-  }
-  return false
 }
 /**
  * Is Copy Active for sortable
@@ -232,7 +212,7 @@ const _reloadSortable = function (sortableElement) {
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
  */
-export default function sortable (sortableElements, options: object|string|undefined) {
+export default function sortable (sortableElements, options: object|string|undefined): sortable {
   // get method string to see if a method is called
   const method = String(options)
   // merge user options with defaultss
@@ -275,6 +255,14 @@ export default function sortable (sortableElements, options: object|string|undef
     if (/enable|disable|destroy/.test(method)) {
       return sortable[method](sortableElement)
     }
+    // log deprecation
+    ['connectWith', 'disableIEFix'].forEach((configKey) => {
+      if (options.hasOwnProperty(configKey) && options[configKey] !== null) {
+        console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
+      }
+    })
+    // merge options with default options
+    options = Object.assign({}, defaultConfiguration, options)
     // init data store for sortable
     store(sortableElement).config = options
     // get options & set options on sortable
@@ -545,7 +533,7 @@ export default function sortable (sortableElements, options: object|string|undef
         // get placeholders from all stores & remove all but current one
         Array.from(stores.values())
           // remove empty values
-          .filter(data => data.placeholder !== null)
+          .filter(data => data.placeholder !== undefined)
           // foreach placeholder in array if outside of current sorableContainer -> remove from DOM
           .forEach((data) => {
             if (data.placeholder !== store(sortableElement).placeholder) {
@@ -555,7 +543,7 @@ export default function sortable (sortableElements, options: object|string|undef
       } else {
         // get all placeholders from store
         let placeholders = Array.from(stores.values())
-          .filter((data) => data.placeholder !== null)
+          .filter((data) => data.placeholder !== undefined)
           .map((data) => {
             return data.placeholder
           })
