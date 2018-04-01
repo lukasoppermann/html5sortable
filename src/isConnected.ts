@@ -4,13 +4,9 @@ import store from './store'
  * @param {HTMLElement} curList
  * @param {HTMLElement} destList
  */
-function _isSortable (element) {
-  console.log('REPLACE _isSortable function')
-  return element !== undefined && element !== null && typeof store(element).config === 'object'
-}
-export default (curList, destList) => {
+export default (curList: sortable, destList: sortable) => {
   // check if valid sortable
-  if (_isSortable(curList)) {
+  if (curList.isSortable === true) {
     const acceptFrom = store(curList).getConfig('acceptFrom')
 
     if (acceptFrom !== null) {
@@ -18,9 +14,11 @@ export default (curList, destList) => {
         return sel.length > 0 && destList.matches(sel)
       }).length > 0
     }
+    // drop in same list
     if (curList === destList) {
       return true
     }
+    // check if lists are connected with connectWith
     if (store(curList).getConfig('connectWith') !== undefined && store(curList).getConfig('connectWith') !== null) {
       return store(curList).getConfig('connectWith') === store(destList).getConfig('connectWith')
     }
