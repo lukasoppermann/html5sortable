@@ -1,7 +1,7 @@
 /* global describe,test,expect */
-import { mockInnerHTML } from '../helpers'
-import isConnected from '../../src/isConnected'
-import sortable from '../../src/html5sortable'
+import { mockInnerHTML } from './helpers'
+import isConnected from '../src/isConnected'
+import sortable from '../src/html5sortable'
 /* eslint-env jest */
 
 describe('Testing isConnected modules', () => {
@@ -109,5 +109,4 @@ describe('Testing isConnected modules', () => {
     expect(isConnected(secondSortable, secondSortable)).toEqual(true)
     expect(isConnected(secondSortable, sortableElement)).toEqual(false)
   })
-
 })
