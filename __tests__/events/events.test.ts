@@ -1,5 +1,5 @@
 /* global describe,test,expect,beforeEach,CustomEvent */
-import sortable from '../src/html5sortable'
+import sortable from '../../src/html5sortable'
 /* eslint-env jest */
 
 describe('Testing events', () => {
@@ -102,43 +102,6 @@ describe('Testing events', () => {
       sortstopStartparent = e.detail.startParent
     })
   }
-
-  test('should not add class on hover event', () => {
-    sortable(ul, {
-      items: 'li',
-      hoverClass: false
-    })
-
-    let event = new CustomEvent('mouseenter')
-    li.dispatchEvent(event)
-    expect(li.classList.contains('sortable-over')).toBe(false)
-  })
-  test('should correctly add class on hover event', () => {
-    sortable(ul, {
-      'items': 'li',
-      hoverClass: 'sortable-item-over'
-    })
-    // class is added on hover
-    li.dispatchEvent(new CustomEvent('mouseenter'))
-    expect(li.classList.contains('sortable-item-over')).toBe(true)
-    // class is removed on leave
-    li.dispatchEvent(new CustomEvent('mouseleave'))
-    expect(li.classList.contains('sortable-item-over')).toBe(false)
-  })
-  test('should correctly add and remove both classes on hover event', () => {
-    sortable(ul, {
-      'items': 'li',
-      hoverClass: 'sortable-item-over sortable-item-over-second'
-    })
-    // classes are added on hover
-    li.dispatchEvent(new CustomEvent('mouseenter'))
-    expect(li.classList.contains('sortable-item-over')).toBe(true)
-    expect(li.classList.contains('sortable-item-over-second')).toBe(true)
-    // class are removed on leave
-    li.dispatchEvent(new CustomEvent('mouseleave'))
-    expect(li.classList.contains('sortable-item-over')).toBe(false)
-    expect(li.classList.contains('sortable-item-over-second')).toBe(false)
-  })
 
   test('should correctly run dragstart event', () => {
     sortable(ul, {
