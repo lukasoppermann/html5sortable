@@ -113,6 +113,7 @@ describe('Testing events', () => {
     li.dispatchEvent(event)
     expect(li.classList.contains('sortable-over')).toBe(false)
   })
+
   test('should correctly add class on hover event', () => {
     sortable(ul, {
       'items': 'li',
@@ -125,20 +126,24 @@ describe('Testing events', () => {
     li.dispatchEvent(new CustomEvent('mouseleave'))
     expect(li.classList.contains('sortable-item-over')).toBe(false)
   })
-  test('should correctly add and remove both classes on hover event', () => {
-    sortable(ul, {
-      'items': 'li',
-      hoverClass: 'sortable-item-over sortable-item-over-second'
-    })
-    // classes are added on hover
-    li.dispatchEvent(new CustomEvent('mouseenter'))
-    expect(li.classList.contains('sortable-item-over')).toBe(true)
-    expect(li.classList.contains('sortable-item-over-second')).toBe(true)
-    // class are removed on leave
-    li.dispatchEvent(new CustomEvent('mouseleave'))
-    expect(li.classList.contains('sortable-item-over')).toBe(false)
-    expect(li.classList.contains('sortable-item-over-second')).toBe(false)
-  })
+
+  test(
+    'should correctly add and remove both classes on hover event',
+    () => {
+      sortable(ul, {
+        'items': 'li',
+        hoverClass: 'sortable-item-over sortable-item-over-second'
+      })
+      // classes are added on hover
+      li.dispatchEvent(new CustomEvent('mouseenter'))
+      expect(li.classList.contains('sortable-item-over')).toBe(true)
+      expect(li.classList.contains('sortable-item-over-second')).toBe(true)
+      // class are removed on leave
+      li.dispatchEvent(new CustomEvent('mouseleave'))
+      expect(li.classList.contains('sortable-item-over')).toBe(false)
+      expect(li.classList.contains('sortable-item-over-second')).toBe(false)
+    }
+  )
 
   test('should correctly run dragstart event', () => {
     sortable(ul, {
