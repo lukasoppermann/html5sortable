@@ -60,7 +60,7 @@ const _removeItemEvents = function (items) {
  */
 const _getDragging = function (draggedItem, sortable) {
   let ditem = draggedItem
-  if (_isCopyActive(sortable)) {
+  if (store(sortable).getConfig('copy') === true) {
     ditem = draggedItem.cloneNode(true)
     _attr(ditem, 'aria-copied', 'true')
     draggedItem.parentElement.appendChild(ditem)
@@ -88,25 +88,13 @@ const _removeItemData = function (items) {
   _removeAttr(items, 'role')
 }
 /**
- * Is Copy Active for sortable
- * @param {HTMLElement} sortable a single sortable
- */
-const _isCopyActive = function (sortable) {
-  return _data(sortable, 'opts').copy === true
-}
-/**
- * Is {HTMLElement} a sortable.
- * @param {HTMLElement} element a single sortable
- */
-function _isSortable (element) {
-  return element !== undefined && element != null && _data(element, 'opts') !== undefined
-}
-/**
  * find sortable from element. travels up parent element until found or null.
  * @param {HTMLElement} element a single sortable
  */
 function findSortable (element) {
-  while ((element = element.parentElement) && !_isSortable(element));
+  while (element.isSortable !== true) {
+    element = element.parentElement
+  }
   return element
 }
 /**
@@ -319,7 +307,7 @@ export default function sortable (sortableElements, options: object|string|undef
      */
     _on(sortableElement, 'dragstart', function (e) {
       // ignore dragstart events
-      if (_isSortable(e.target)) {
+      if (e.target.isSortable === true) {
         return
       }
       e.stopImmediatePropagation()
@@ -362,7 +350,7 @@ export default function sortable (sortableElements, options: object|string|undef
      We are capturing targetSortable before modifications with 'dragenter' event
     */
     _on(sortableElement, 'dragenter', (e) => {
-      if (_isSortable(e.target)) {
+      if (e.target.isSortable === true) {
         return
       }
       const sortableContainer = findSortable(e.target)
@@ -455,7 +443,7 @@ export default function sortable (sortableElements, options: object|string|undef
       const placeholder = store(sortableElement).placeholder
       const originItems = _filter(originContainer.children, options.items)
         .filter(item => item !== placeholder)
-      const destinationContainer = _isSortable(this) ? this : this.parentElement
+      const destinationContainer = this.isSortable === true ? this : this.parentElement
       const destinationItems = _filter(destinationContainer.children, _data(destinationContainer, 'items'))
         .filter(item => item !== placeholder)
       const destinationElementIndex = _index(dragging, Array.from(dragging.parentElement.children)
@@ -557,7 +545,7 @@ export default function sortable (sortableElements, options: object|string|undef
     // Handle dragover and dragenter events on draggable items
     const onDragOverEnter = function (e) {
       let element = e.target
-      const sortableElement = _isSortable(element) ? element : findSortable(element)
+      const sortableElement = element.isSortable === true ? element : findSortable(element)
       element = findDragElement(sortableElement, element)
       if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
@@ -568,7 +556,7 @@ export default function sortable (sortableElements, options: object|string|undef
       }
       e.preventDefault()
       e.stopPropagation()
-      e.dataTransfer.dropEffect = _isCopyActive(sortableElement) ? 'copy' : 'move'
+      e.dataTransfer.dropEffect = store(sortableElement).getConfig('copy') === true ? 'copy' : 'move'
       debouncedDragOverEnter(sortableElement, element, e.pageY)
     }
 
