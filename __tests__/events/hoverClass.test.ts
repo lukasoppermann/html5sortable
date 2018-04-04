@@ -5,7 +5,6 @@ import {mockInnerHTML} from '../helpers'
 
 describe('Testing mouseenter and mouseleave events for hoverClass', () => {
   let ul, li, liSecond
-  jest.useFakeTimers()
   // setup html
   beforeEach(() => {
     document.body.innerHTML = mockInnerHTML
@@ -76,7 +75,6 @@ describe('Testing mouseenter and mouseleave events for hoverClass', () => {
       buttons: 0,
       target: liSecond
     }))
-    jest.advanceTimersByTime(1000)
     // assert that class was removed
     expect(liSecond.classList.contains('hover-class')).toBe(true)
     expect(li.classList.contains('hover-class')).toBe(false)
