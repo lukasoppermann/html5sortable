@@ -16,7 +16,7 @@ export default (sortableContainer: sortable, listItems, enable: boolean) => {
     if (enable === true) {
       _on(sortableContainer, 'mousemove', _throttle((event) => {
         // check of no mouse button was pressed when mousemove started == no drag
-        if (event.buttons === 0) { // maybe not event needed as mousemove does not do hover
+        if (event.buttons === 0) {
           _filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(item => {
             if (item !== event.target) {
               item.classList.remove(...hoverClasses)
@@ -27,7 +27,7 @@ export default (sortableContainer: sortable, listItems, enable: boolean) => {
         }
       }, 100))
       // remove class on leave
-      _on(sortableContainer, 'mouseleave', (event) => {
+      _on(sortableContainer, 'mouseleave', () => {
         _filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(item => {
           item.classList.remove(...hoverClasses)
         })
