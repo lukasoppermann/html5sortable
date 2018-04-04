@@ -18,6 +18,7 @@ import setDragImage from './setDragImage'
 import {default as store, stores} from './store'
 import _listsConnected from './isConnected'
 import defaultConfiguration from './defaultConfiguration'
+import enableHoverClass from './hoverClass'
 /*
  * variables global to the plugin
  */
@@ -283,23 +284,8 @@ export default function sortable (sortableElements, options: object|string|undef
     _enableSortable(sortableElement)
     _attr(listItems, 'role', 'option')
     _attr(listItems, 'aria-grabbed', 'false')
-
-    // Mouse over class
-    // TODO - only assign hoverClass if not dragging
-    if (typeof options.hoverClass === 'string') {
-      let hoverClasses = options.hoverClass.split(' ')
-      // add class on hover
-      _on(listItems, 'mouseenter', function (e) {
-        if (!dragging) {
-          e.target.classList.add(...hoverClasses)
-        }
-      })
-      // remove class on leave
-      _on(listItems, 'mouseleave', function (e) {
-        e.target.classList.remove(...hoverClasses)
-      })
-    }
-
+    // enable hover class
+    enableHoverClass(sortableElement, listItems, true)
     /*
      Handle drag events on draggable items
      Handle is set at the sortableElement level as it will bubble up

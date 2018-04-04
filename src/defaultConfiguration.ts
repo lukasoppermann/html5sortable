@@ -14,6 +14,7 @@ export default {
   draggingClass: 'sortable-dragging',
   hoverClass: false,
   debounce: 0,
+  throttleTime: 100,
   maxItems: 0,
   itemSerializer: undefined,
   containerSerializer: undefined,
