@@ -285,7 +285,7 @@ export default function sortable (sortableElements, options: object|string|undef
     _attr(listItems, 'role', 'option')
     _attr(listItems, 'aria-grabbed', 'false')
     // enable hover class
-    enableHoverClass(sortableElement, listItems, true)
+    enableHoverClass(sortableElement, true)
     /*
      Handle drag events on draggable items
      Handle is set at the sortableElement level as it will bubble up

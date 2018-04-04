@@ -35,7 +35,7 @@ function removeData(element) {
     }
 }
 
-function filter (nodes, selector) {
+function _filter (nodes, selector) {
     if (!(nodes instanceof NodeList || nodes instanceof HTMLCollection || nodes instanceof Array)) {
         throw new Error('You must provide a nodeList/HTMLCollection/Array of elements to be filtered.');
     }
@@ -332,7 +332,7 @@ function _serialize (sortableContainer, customItemSerializer, customContainerSer
     var options = addData(sortableContainer, 'opts');
     var item = options.items;
     // serialize container
-    var items = filter(sortableContainer.children, item);
+    var items = _filter(sortableContainer.children, item);
     var serializedItems = items.map(function (item) {
         return {
             parent: sortableContainer,
@@ -498,11 +498,77 @@ var defaultConfiguration = {
     draggingClass: 'sortable-dragging',
     hoverClass: false,
     debounce: 0,
+    throttleTime: 100,
     maxItems: 0,
     itemSerializer: undefined,
     containerSerializer: undefined,
     customDragImage: null
 };
+
+/**
+ * make sure a function is only called once within the given amount of time
+ * @param {Function} fn the function to throttle
+ * @param {number} threshold time limit for throttling
+ */
+// must use function to keep this context
+function _throttle (fn, threshold) {
+    var _this = this;
+    if (threshold === void 0) { threshold = 250; }
+    // check function
+    if (typeof fn !== 'function') {
+        throw new Error('You must provide a function as the first argument for throttle.');
+    }
+    // check threshold
+    if (typeof threshold !== 'number') {
+        throw new Error('You must provide a number as the second argument for throttle.');
+    }
+    var lastEventTimestamp = null;
+    return function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        var now = Date.now();
+        if (lastEventTimestamp === null || now - lastEventTimestamp >= threshold) {
+            lastEventTimestamp = now;
+            fn.apply(_this, args);
+        }
+    };
+}
+
+function enableHoverClass (sortableContainer, enable) {
+    if (typeof store(sortableContainer).getConfig('hoverClass') === 'string') {
+        var hoverClasses_1 = store(sortableContainer).getConfig('hoverClass').split(' ');
+        // add class on hover
+        if (enable === true) {
+            addEventListener(sortableContainer, 'mousemove', _throttle(function (event) {
+                // check of no mouse button was pressed when mousemove started == no drag
+                if (event.buttons === 0) {
+                    _filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(function (item) {
+                        if (item !== event.target) {
+                            (_a = item.classList).remove.apply(_a, hoverClasses_1);
+                        }
+                        else {
+                            (_b = item.classList).add.apply(_b, hoverClasses_1);
+                        }
+                        var _a, _b;
+                    });
+                }
+            }, store(sortableContainer).getConfig('throttleTime')));
+            // remove class on leave
+            addEventListener(sortableContainer, 'mouseleave', function () {
+                _filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(function (item) {
+                    (_a = item.classList).remove.apply(_a, hoverClasses_1);
+                    var _a;
+                });
+            });
+        }
+        else {
+            removeEventListener(sortableContainer, 'mousemove');
+            removeEventListener(sortableContainer, 'mouseleave');
+        }
+    }
+}
 
 /* eslint-env browser */
 /*
@@ -588,7 +654,7 @@ function findSortable(element) {
  */
 function findDragElement(sortableElement, element) {
     var options = addData(sortableElement, 'opts');
-    var items = filter(sortableElement.children, options.items);
+    var items = _filter(sortableElement.children, options.items);
     var itemlist = items.filter(function (ele) {
         return ele.contains(element);
     });
@@ -600,7 +666,7 @@ function findDragElement(sortableElement, element) {
  */
 var _destroySortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts') || {};
-    var items = filter(sortableElement.children, opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     // remove event handlers & data from sortable
     removeEventListener(sortableElement, 'dragover');
@@ -619,7 +685,7 @@ var _destroySortable = function (sortableElement) {
  */
 var _enableSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = filter(sortableElement.children, opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addAttribute(sortableElement, 'aria-dropeffect', 'move');
     addData(sortableElement, '_disabled', 'false');
@@ -652,7 +718,7 @@ var _enableSortable = function (sortableElement) {
  */
 var _disableSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = filter(sortableElement.children, opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addAttribute(sortableElement, 'aria-dropeffect', 'none');
     addData(sortableElement, '_disabled', 'true');
@@ -666,7 +732,7 @@ var _disableSortable = function (sortableElement) {
  */
 var _reloadSortable = function (sortableElement) {
     var opts = addData(sortableElement, 'opts');
-    var items = filter(sortableElement.children, opts.items);
+    var items = _filter(sortableElement.children, opts.items);
     var handles = _getHandles(items, opts.handle);
     addData(sortableElement, '_disabled', 'false');
     // remove event handlers from items
@@ -739,7 +805,7 @@ function sortable(sortableElements, options) {
         // reset sortable
         _reloadSortable(sortableElement);
         // initialize
-        var listItems = filter(sortableElement.children, options.items);
+        var listItems = _filter(sortableElement.children, options.items);
         // create element if user defined a placeholder element as a string
         var customPlaceholder;
         if (options.placeholder !== null && options.placeholder !== undefined) {
@@ -759,23 +825,8 @@ function sortable(sortableElements, options) {
         _enableSortable(sortableElement);
         addAttribute(listItems, 'role', 'option');
         addAttribute(listItems, 'aria-grabbed', 'false');
-        // Mouse over class
-        // TODO - only assign hoverClass if not dragging
-        if (typeof options.hoverClass === 'string') {
-            var hoverClasses_1 = options.hoverClass.split(' ');
-            // add class on hover
-            addEventListener(listItems, 'mouseenter', function (e) {
-                if (!dragging) {
-                    (_a = e.target.classList).add.apply(_a, hoverClasses_1);
-                }
-                var _a;
-            });
-            // remove class on leave
-            addEventListener(listItems, 'mouseleave', function (e) {
-                (_a = e.target.classList).remove.apply(_a, hoverClasses_1);
-                var _a;
-            });
-        }
+        // enable hover class
+        enableHoverClass(sortableElement, true);
         /*
          Handle drag events on draggable items
          Handle is set at the sortableElement level as it will bubble up
@@ -793,7 +844,7 @@ function sortable(sortableElements, options) {
             var sortableContainer = findSortable(e.target);
             var dragItem = findDragElement(sortableContainer, e.target);
             // grab values
-            originItemsBeforeUpdate = filter(sortableContainer.children, options.items);
+            originItemsBeforeUpdate = _filter(sortableContainer.children, options.items);
             originIndex = originItemsBeforeUpdate.indexOf(dragItem);
             originElementIndex = index(dragItem, sortableContainer.children);
             originContainer = sortableContainer;
@@ -824,7 +875,7 @@ function sortable(sortableElements, options) {
                 return;
             }
             var sortableContainer = findSortable(e.target);
-            destinationItemsBeforeUpdate = filter(sortableContainer.children, addData(sortableContainer, 'items'))
+            destinationItemsBeforeUpdate = _filter(sortableContainer.children, addData(sortableContainer, 'items'))
                 .filter(function (item) { return item !== store(sortableElement).placeholder; });
         });
         /*
@@ -898,10 +949,10 @@ function sortable(sortableElements, options) {
                 }
             }));
             var placeholder = store(sortableElement).placeholder;
-            var originItems = filter(originContainer.children, options.items)
+            var originItems = _filter(originContainer.children, options.items)
                 .filter(function (item) { return item !== placeholder; });
             var destinationContainer = this.isSortable === true ? this : this.parentElement;
-            var destinationItems = filter(destinationContainer.children, addData(destinationContainer, 'items'))
+            var destinationItems = _filter(destinationContainer.children, addData(destinationContainer, 'items'))
                 .filter(function (item) { return item !== placeholder; });
             var destinationElementIndex = index(dragging, Array.from(dragging.parentElement.children)
                 .filter(function (item) { return item !== placeholder; }));
@@ -988,7 +1039,7 @@ function sortable(sortableElements, options) {
                     return data.placeholder;
                 });
                 // check if element is not in placeholders
-                if (placeholders.indexOf(element) === -1 && sortableElement === element && !filter(element.children, options.items).length) {
+                if (placeholders.indexOf(element) === -1 && sortableElement === element && !_filter(element.children, options.items).length) {
                     placeholders.forEach(function (element) { return element.remove(); });
                     element.appendChild(store(sortableElement).placeholder);
                 }
@@ -1003,7 +1054,7 @@ function sortable(sortableElements, options) {
                 return;
             }
             var options = addData(sortableElement, 'opts');
-            if (parseInt(options.maxItems) && filter(sortableElement.children, addData(sortableElement, 'items')).length >= parseInt(options.maxItems) && dragging.parentElement !== sortableElement) {
+            if (parseInt(options.maxItems) && _filter(sortableElement.children, addData(sortableElement, 'items')).length >= parseInt(options.maxItems) && dragging.parentElement !== sortableElement) {
                 return;
             }
             e.preventDefault();
