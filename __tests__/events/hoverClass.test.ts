@@ -82,5 +82,37 @@ describe('Testing mouseenter and mouseleave events for hoverClass', () => {
     expect(li.classList.contains('hover-class')).toBe(false)
   })
 
+  test('should remove class when leaving sortable', () => {
+    // trigger mouse event
+    li.dispatchEvent(new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      buttons: 0,
+      target: li
+    }))
+    // assert that class was added
+    expect(li.classList.contains('hover-class')).toBe(true)
+    // trigger mouseleave events
+    ul.dispatchEvent(new MouseEvent('mouseleave', {
+      bubbles: true,
+      cancelable: true,
+      buttons: 0,
+      target: ul
+    }))
+    // assert that class was removed
+    expect(li.classList.contains('hover-class')).toBe(false)
+  })
+  
+  test('should not fire when button is pressed', () => {
+    // trigger mouse event
+    li.dispatchEvent(new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      buttons: 1
+      target: li
+    }))
+    // assert that class was added
+    expect(li.classList.contains('hover-class')).toBe(false)
+  })
   
 })
