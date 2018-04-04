@@ -14,7 +14,7 @@ describe('Testing throttle', () => {
     // assert
     expect(value).toBe(1)
   })
-  
+
   test('throttle should allow functions to be called multiple times after the timeframe', () => {
     let value = 0
     let fn = _throttle(() => {
