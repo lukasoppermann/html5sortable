@@ -28,4 +28,14 @@ describe('Testing throttle', () => {
     // assert
     expect(value).toBe(2)
   })
+
+  test('throttle should fail if no functin is provided', () => {
+    // assert
+    expect(() => { _throttle('test', 10) }).toThrowError('You must provide a function as the first argument for throttle.')
+  })
+
+  test('throttle should fail if threshold is not a number', () => {
+    // assert
+    expect(() => { _throttle(() => { }, '10') }).toThrowError('You must provide a number as the second argument for throttle.')
+  })
 })
