@@ -7,7 +7,7 @@ describe('Testing throttle', () => {
     let value = 0
     let fn = _throttle(() => {
       value++
-    }, 100)
+    })
     // call function twice immeditatly
     fn()
     fn()
