@@ -6,7 +6,7 @@ export const mockInnerHTML: string = `
     <span class="handle"></span>
       item
   </li>
-  <li>
+  <li class="li-second">
     <span class="another-handle"></span>
     item 2
   </li>

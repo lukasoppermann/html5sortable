@@ -9,7 +9,7 @@ import { addEventListener as _on, removeEventListener as _off } from './eventLis
  * @param {boolean} enable enable or disable event
  */
 // export default (sortableContainer: sortable, enable: boolean) => {
-export default (sortableContainer: sortable, listItems, enable: boolean) => {
+export default (sortableContainer: sortable, enable: boolean) => {
   if (typeof store(sortableContainer).getConfig('hoverClass') === 'string') {
     let hoverClasses = store(sortableContainer).getConfig('hoverClass').split(' ')
     // add class on hover
@@ -25,7 +25,7 @@ export default (sortableContainer: sortable, listItems, enable: boolean) => {
             }
           })
         }
-      }, 100))
+      }, store(sortableContainer).getConfig('throttleTime')))
       // remove class on leave
       _on(sortableContainer, 'mouseleave', () => {
         _filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(item => {
