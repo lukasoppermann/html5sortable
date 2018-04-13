@@ -26,7 +26,7 @@ function removeEventListener (element: Array<HTMLElement>|HTMLElement, eventName
     return
   }
   element.removeEventListener(eventName, store(element).getData(`event${eventName}`))
-  delete store(element).deleteData(`event${eventName}`)
+  store(element).deleteData(`event${eventName}`)
 }
 
 export { addEventListener, removeEventListener }
