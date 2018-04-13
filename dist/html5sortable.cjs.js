@@ -218,7 +218,7 @@ function removeEventListener(element, eventName) {
         return;
     }
     element.removeEventListener(eventName, store(element).getData("event" + eventName));
-    delete store(element).deleteData("event" + eventName);
+    store(element).deleteData("event" + eventName);
 }
 
 /**
