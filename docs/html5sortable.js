@@ -455,7 +455,7 @@ function setDragImage (event, draggedElement, customDragImage) {
         // needs to be set for HTML5 drag & drop to work
         event.dataTransfer.effectAllowed = 'copyMove';
         // Firefox requires arbitrary content in setData for the drag & drop functionality to work
-        event.dataTransfer.setData('text', 'arbitrary-content');
+        event.dataTransfer.setData('text/plain', 'arbitrary');
         // set the drag image on the event
         event.dataTransfer.setDragImage(dragImage.element, dragImage.posX, dragImage.posY);
     }
