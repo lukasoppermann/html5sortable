@@ -70,7 +70,7 @@ describe('Testing setDragImage', () => {
     setDragImage(event, element)
     // assert
     expect(event.dataTransfer.effectAllowed).toEqual('copyMove')
-    expect(event.data).toEqual('text')
+    expect(event.data).toEqual('text/plain')
     expect(event.dragItem.element).toEqual(element)
     expect(event.dragItem.posX).toEqual(90)
     expect(event.dragItem.posY).toEqual(193)
@@ -95,7 +95,7 @@ describe('Testing setDragImage', () => {
     setDragImage(event, element, mockCustomDragImageFn)
     // assert
     expect(event.dataTransfer.effectAllowed).toEqual('copyMove')
-    expect(event.data).toEqual('text')
+    expect(event.data).toEqual('text/plain')
     // custom function to be called once
     expect(mockCustomDragImageFn.mock.calls.length).toBe(1)
     // first argument in call
