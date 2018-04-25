@@ -38,7 +38,7 @@
     "standard": "^11.0.1",
     "ts-jest": "^22.4.0",
     "typescript": "^2.7.2",
-    "typescript-eslint-parser": "^14.0.0"
+    "typescript-eslint-parser": "^15.0.0"
   },
   "jest": {
     "collectCoverage": false,
