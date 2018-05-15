@@ -1,6 +1,7 @@
 /* eslint-env browser */
 'use strict'
 
+import './polyfill';
 import { addData as _data, removeData as _removeData } from './data'
 import _filter from './filter'
 import { addEventListener as _on, removeEventListener as _off } from './eventListener'
