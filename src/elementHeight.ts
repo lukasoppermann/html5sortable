@@ -10,7 +10,8 @@ export default (element: HTMLElement) => {
   // get calculated style of element
   let style = window.getComputedStyle(element)
   // pick applicable properties, convert to int and reduce by adding
-  return ['height', 'padding-top', 'padding-bottom']
+  let isBorderBox = style.getPropertyValue('box-sizing') === 'border-box'
+  return (isBorderBox ? ['height'] : ['height', 'padding-top', 'padding-bottom'])
     .map((key) => {
       let int = parseInt(style.getPropertyValue(key), 10)
       return isNaN(int) ? 0 : int
