@@ -26,4 +26,17 @@ describe('Testing elementHeight', () => {
     // assert
     expect(elementHeight(document.querySelector('div'))).toEqual(22)
   })
+  
+  test('element is border-box box-sizing', () => {
+    // setup
+    let div = window.document.createElement('div')
+    div.style.height = '10px'
+    div.style.paddingTop = '5px'
+    div.style.paddingBottom = '7px'
+    div.style.boxSizing = 'border-box'
+    window.document.body.appendChild(div)
+    // assert
+    expect(elementHeight(document.querySelector('div'))).toEqual(10)
+  })
+
 })
