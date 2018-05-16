@@ -30,13 +30,13 @@ describe('Testing elementHeight', () => {
   test('element is border-box box-sizing', () => {
     // setup
     let div = window.document.createElement('div')
+    div.className = 'borderBox'
     div.style.height = '10px'
     div.style.paddingTop = '5px'
     div.style.paddingBottom = '7px'
     div.style.boxSizing = 'border-box'
     window.document.body.appendChild(div)
     // assert
-    expect(elementHeight(document.querySelector('div'))).toEqual(10)
+    expect(elementHeight(document.querySelector('div.borderBox'))).toEqual(10)
   })
-
 })
