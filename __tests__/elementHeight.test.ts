@@ -26,7 +26,7 @@ describe('Testing elementHeight', () => {
     // assert
     expect(elementHeight(document.querySelector('div'))).toEqual(22)
   })
-  
+
   test('element is border-box box-sizing', () => {
     // setup
     let div = window.document.createElement('div')
