@@ -1014,7 +1014,11 @@ function sortable(sortableElements, options) {
                 if (dragging.style.display !== 'none') {
                     dragging.style.display = 'none';
                 }
-                if (placeholderIndex < thisIndex) {
+                // To avoid flicker, determine where to position the placeholder
+                // based on where the mouse pointer is relative to the elements
+                // vertical center.
+                var elementMiddle = offset(element).top + element.offsetHeight / 2;
+                if (pageY >= elementMiddle) {
                     insertAfter(element, store(sortableElement).placeholder);
                 }
                 else {
