@@ -502,11 +502,12 @@ export default function sortable (sortableElements, options: object|string|undef
         // To avoid flicker, determine where to position the placeholder
         // based on where the mouse pointer is relative to the elements
         // vertical center.
-        try{
+        let placeAfter = false
+        try {
           let elementMiddle = _offset(element).top + element.offsetHeight / 2
-          let placeAfter = pageY >= elementMiddle
-        } catch(e) {
-          let placeAfter = placeholderIndex < thisIndex
+          placeAfter = pageY >= elementMiddle
+        } catch (e) {
+          placeAfter = placeholderIndex < thisIndex
         }
 
         if (placeAfter) {
