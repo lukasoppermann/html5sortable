@@ -499,7 +499,11 @@ export default function sortable (sortableElements, options: object|string|undef
         if (dragging.style.display !== 'none') {
           dragging.style.display = 'none'
         }
-        if (placeholderIndex < thisIndex) {
+        // To avoid flicker, determine where to position the placeholder
+        // based on where the mouse pointer is relative to the elements
+        // vertical center.
+        var elementMiddle = _offset(element).top + element.offsetHeight / 2
+        if (pageY >= elementMiddle) {
           _after(element, store(sortableElement).placeholder)
         } else {
           _before(element, store(sortableElement).placeholder)
