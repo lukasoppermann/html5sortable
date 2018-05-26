@@ -1017,12 +1017,13 @@ function sortable(sortableElements, options) {
                 // To avoid flicker, determine where to position the placeholder
                 // based on where the mouse pointer is relative to the elements
                 // vertical center.
+                var placeAfter = false;
                 try {
                     var elementMiddle = offset(element).top + element.offsetHeight / 2;
-                    var placeAfter = pageY >= elementMiddle;
+                    placeAfter = pageY >= elementMiddle;
                 }
                 catch (e) {
-                    var placeAfter = placeholderIndex < thisIndex;
+                    placeAfter = placeholderIndex < thisIndex;
                 }
                 if (placeAfter) {
                     insertAfter(element, store(sortableElement).placeholder);
