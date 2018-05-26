@@ -3,7 +3,7 @@
  * @returns {Object}
  */
 export default (element: HTMLElement): offsetObject => {
-  if (!element.parentElement) {
+  if (!element.parentElement || element.getClientRects().length === 0) {
     throw new Error('target element must be part of the dom')
   }
 
