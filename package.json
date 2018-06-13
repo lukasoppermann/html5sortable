@@ -24,7 +24,7 @@
     "url": "http://github.com/lukasoppermann/html5sortable/issues"
   },
   "devDependencies": {
-    "@types/jest": "^22.2.3",
+    "@types/jest": "^23.0.0",
     "coveralls": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-plugin-typescript": "^0.12.0",
