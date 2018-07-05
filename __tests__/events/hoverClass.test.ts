@@ -37,7 +37,7 @@ describe('Testing mouseenter and mouseleave events for hoverClass', () => {
     // assert that class list lenght did not change
     expect(li.classList.length).toBe(classListLength)
   })
-  
+
   test('should not add class on hover event hoverClass is null', () => {
     // disable hover class
     enableHoverClass(ul, false)
@@ -55,7 +55,7 @@ describe('Testing mouseenter and mouseleave events for hoverClass', () => {
     // assert that class list lenght did not change
     expect(li.classList.length).toBe(classListLength)
   })
-  
+
   test('should correctly add class on hover event, and remove on hover other element', () => {
     expect(li.classList.contains('hover-class')).toBe(false)
     // trigger mouse event
@@ -67,7 +67,7 @@ describe('Testing mouseenter and mouseleave events for hoverClass', () => {
     }))
     // assert that class was added
     expect(li.classList.contains('hover-class')).toBe(true)
-    
+
     // trigger mouseleave events
     liSecond.dispatchEvent(new MouseEvent('mousemove', {
       bubbles: true,
@@ -100,17 +100,17 @@ describe('Testing mouseenter and mouseleave events for hoverClass', () => {
     // assert that class was removed
     expect(li.classList.contains('hover-class')).toBe(false)
   })
-  
+
   test('should not fire when button is pressed', () => {
     // trigger mouse event
     li.dispatchEvent(new MouseEvent('mousemove', {
       bubbles: true,
       cancelable: true,
-      buttons: 1
+      buttons: 1,
       target: li
     }))
     // assert that class was added
     expect(li.classList.contains('hover-class')).toBe(false)
   })
-  
+
 })
