@@ -3,6 +3,9 @@
 
 > **Lightweight vanillajs micro-library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
+## Looking for Co-Maintainer
+If you are interested in actively helping with maintaining & improving this project please send me a message via twitter [@lukasoppermann](https://twitter.com/lukasoppermann) or email oppermann.lukas@gmail.com with a short text of what you would like to do on the project. This may be something small like sorting issues and helping with questions and small bugs (if you have little time or are not that experienced) or something big like tackling big features.
+
 ## Features
 * Only 2KB (minified and gzipped).
 * Built using native HTML5 drag and drop API. No dependencies.

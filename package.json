@@ -24,21 +24,21 @@
     "url": "http://github.com/lukasoppermann/html5sortable/issues"
   },
   "devDependencies": {
-    "@types/jest": "^22.2.3",
+    "@types/jest": "^23.0.0",
     "coveralls": "^3.0.0",
-    "eslint": "^4.19.1",
+    "eslint": "^5.0.0",
     "eslint-plugin-typescript": "^0.12.0",
     "jest": "^22.4.3",
-    "rollup": "^0.59.0",
+    "rollup": "^0.61.0",
     "rollup-plugin-strip-code": "^0.2.5",
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-plugin-uglify": "^4.0.0",
     "rollup-watch": "^4.3.1",
     "snazzy": "^7.1.1",
     "standard": "^11.0.1",
-    "ts-jest": "^22.4.4",
+    "ts-jest": "^23.0.0",
     "typescript": "^2.8.3",
-    "typescript-eslint-parser": "^15.0.0"
+    "typescript-eslint-parser": "^16.0.0"
   },
   "jest": {
     "collectCoverage": false,
