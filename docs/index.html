@@ -71,18 +71,18 @@
 							forcePlaceholderSize: true,
 							placeholderClass: 'mb1 bg-navy border border-yellow',
 							hoverClass: 'bg-maroon yellow',
-              itemSerializer: (item, container) => {
+              itemSerializer: function (item, container) {
                 item.parent = '[parentNode]'
                 item.node = '[Node]'
                 item.html = item.html.replace('<','&lt;')
                 return item
               },
-              containerSerializer: (container) => {
+              containerSerializer: function (container) {
                 container.node = '[Node]'
                 return container
               }
 						})
-            document.querySelector('.js-serialize-button').addEventListener('click', () => {
+            document.querySelector('.js-serialize-button').addEventListener('click', function () {
               let serialized = sortable('.js-sortable', 'serialize')
               document.querySelector('.serialized-content').innerHTML = JSON.stringify(serialized, null, ' ')
             })
@@ -182,8 +182,8 @@
 						let eventsConsole = document.querySelector('#eventsConsole')
 						let sortableWithEvents = document.querySelector('.js-sortable-disabled')
 						let events = ['sortstart','sortstop','sortupdate']
-						events.forEach((eventName) => {
-							sortableWithEvents.addEventListener(eventName, (e) => {
+						events.forEach(function (eventName) {
+							sortableWithEvents.addEventListener(eventName, function (e) {
 								console.log('Fired: ', eventName)
 								eventTitle.innerHTML = eventName
 								eventsConsole.innerHTML = JSON.stringify(e.detail, null, ' ')
@@ -403,7 +403,7 @@
           forcePlaceholderSize: true,
           acceptFrom: '.js-sortable-oneway,.js-sortable-oneway-receive',
           placeholderClass: 'mb1 bg-navy border border-yellow',
-          customDragImage: (draggedElement, elementOffset, event) => {
+          customDragImage: function (draggedElement, elementOffset, event) {
             draggedElement.style.border = "5px solid white"
             return{
               element: draggedElement,
