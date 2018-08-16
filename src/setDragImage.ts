@@ -46,8 +46,8 @@ export default (event: DragEvent, draggedElement: HTMLElement, customDragImage: 
     }
     // needs to be set for HTML5 drag & drop to work
     event.dataTransfer.effectAllowed = 'copyMove'
-    // Firefox requires arbitrary content in setData for the drag & drop functionality to work
-    event.dataTransfer.setData('text/plain', 'arbitrary')
+    // Firefox requires it to use the event target's id for the data
+    event.dataTransfer.setData('text/plain', event.target.id)
     // set the drag image on the event
     event.dataTransfer.setDragImage(dragImage.element, dragImage.posX, dragImage.posY)
   }
