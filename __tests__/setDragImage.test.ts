@@ -40,6 +40,12 @@ describe('Testing setDragImage', () => {
     get () {
       return this
     }
+
+    get target ():any {
+      return {
+        id: 1
+      }
+    }
   }
 
   test('No event provided', () => {
