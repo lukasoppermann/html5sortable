@@ -17,8 +17,8 @@ describe('Testing offset', () => {
       ],
       parentElement: () => 'fakeParent'
     }
-    Object.defineProperty(window, 'scrollX', {value: 7, writable: false})
-    Object.defineProperty(window, 'scrollY', {value: 14, writable: false})
+    Object.defineProperty(window, 'pageXOffset', {value: 7, writable: false})
+    Object.defineProperty(window, 'pageYOffset', {value: 14, writable: false})
     // run function
     let offsetResults: any = offset(elementMock)
     // Assertions
