@@ -9,9 +9,9 @@ export default (element: HTMLElement): offsetObject => {
 
   let rect = element.getClientRects()[0]
   return {
-    left: rect.left + window.scrollX,
-    right: rect.right + window.scrollX,
-    top: rect.top + window.scrollY,
-    bottom: rect.bottom + window.scrollY
+    left: rect.left + window.pageXOffset,
+    right: rect.right + window.pageXOffset,
+    top: rect.top + window.pageYOffset,
+    bottom: rect.bottom + window.pageYOffset
   }
 }
