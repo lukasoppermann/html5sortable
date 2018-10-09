@@ -75,8 +75,5 @@
     "version": "npm run build && git add -A dist docs",
     "postversion": "git push && git push --tags",
     "tsc": "tsc ./src/*.ts --pretty --diagnostics --noEmit --watch"
-  },
-  "dependencies": {
-    "fsevents": "^1.2.4"
   }
 }
