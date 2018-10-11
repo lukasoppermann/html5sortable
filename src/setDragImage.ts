@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import {default as offset} from './offset'
+import offset from './offset'
 /**
  * defaultDragImage returns the current item as dragged image
  * @param {HTMLElement} draggedElement - the item that the user drags

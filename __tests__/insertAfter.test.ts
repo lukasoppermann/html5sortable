@@ -1,7 +1,7 @@
 /* global describe,test,expect */
 /* eslint-env jest */
 
-import {insertAfter} from '../src/insertHtmlElements'
+import { insertAfter } from '../src/insertHtmlElements'
 
 describe('Testing insertAfter', () => {
   test('insertAfter element', () => {

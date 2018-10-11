@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import {addData as _data} from './data' // yuk, data really needs to be refactored
+import { addData as _data } from './data' // yuk, data really needs to be refactored
 import filter from './filter'
 import index from './index'
 /**

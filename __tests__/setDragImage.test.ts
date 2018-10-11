@@ -1,6 +1,6 @@
 /* global describe,test,expect,jest,Event */
 import setDragImage from '../src/setDragImage'
-import {mockInnerHTML} from './helpers'
+import { mockInnerHTML } from './helpers'
 
 describe('Testing setDragImage', () => {
   // setup test html

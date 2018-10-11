@@ -1,7 +1,7 @@
 /* global describe,test,expect */
 /* eslint-env jest */
 
-import {insertBefore} from '../src/insertHtmlElements'
+import { insertBefore } from '../src/insertHtmlElements'
 
 describe('Testing insertBefore', () => {
   test('insertBefore element', () => {

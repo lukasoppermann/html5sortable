@@ -123,8 +123,8 @@ describe('Testing serialize', () => {
     isASortable.innerHTML = '<div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'
     // assert
     expect(serialize(isASortable,
-      (item, sortable) => { return {index: item.index, container: sortable} },
-      (container) => { return {itemCount: container.itemCount + 1} }
+      (item, sortable) => { return { index: item.index, container: sortable } },
+      (container) => { return { itemCount: container.itemCount + 1 } }
     )).toEqual({
       items: [{
         index: 0,

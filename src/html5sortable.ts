@@ -15,7 +15,7 @@ import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
 import _getHandles from './getHandles'
 import setDragImage from './setDragImage'
-import {default as store, stores} from './store'
+import { default as store, stores } from './store' /* eslint-disable-line */
 import _listsConnected from './isConnected'
 import defaultConfiguration from './defaultConfiguration'
 import enableHoverClass from './hoverClass'
