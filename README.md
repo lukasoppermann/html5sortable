@@ -13,7 +13,7 @@ If you are interested in actively helping with maintaining & improving this proj
 * Only 2KB (minified and gzipped).
 * Built using native HTML5 drag and drop API. No dependencies.
 * Supports both list and grid style layouts.
-* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera, Edge), [IE11+ (Polyfill required)](#polyfills)
+* Supported Browsers: Current versions of all major browsers (Chrome, Firefox, Safari, Opera, Edge), [IE11+ (Polyfill required)](#polyfills-facing-towards-the-future-instead-of-the-past)
 * Available as ES6 Module, AMD, CommonJS and iffe with `sortable` global
 
 **Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/index.html)**
