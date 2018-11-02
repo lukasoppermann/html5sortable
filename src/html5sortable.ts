@@ -204,24 +204,7 @@ const _reloadSortable = function (sortableElement) {
 export default function sortable (sortableElements, options: object|string|undefined): sortable {
   // get method string to see if a method is called
   const method = String(options)
-  // merge user options with defaultss
-  options = Object.assign({
-    connectWith: null,
-    acceptFrom: null,
-    copy: false,
-    placeholder: null,
-    disableIEFix: null,
-    placeholderClass: 'sortable-placeholder',
-    draggingClass: 'sortable-dragging',
-    hoverClass: false,
-    debounce: 0,
-    maxItems: 0,
-    itemSerializer: undefined,
-    containerSerializer: undefined,
-    customDragImage: null,
-    items: null
-    // if options is an object, merge it, otherwise use empty object
-  }, (typeof options === 'object') ? options : {})
+  options = options || {}
   // check if the user provided a selector instead of an element
   if (typeof sortableElements === 'string') {
     sortableElements = document.querySelectorAll(sortableElements)
@@ -251,11 +234,10 @@ export default function sortable (sortableElements, options: object|string|undef
       }
     })
     // merge options with default options
-    options = Object.assign({}, defaultConfiguration, options)
+    options = Object.assign({}, defaultConfiguration, store(sortableElement).config, options)
     // init data store for sortable
     store(sortableElement).config = options
-    // get options & set options on sortable
-    options = _data(sortableElement, 'opts') || options
+    // set options on sortable
     _data(sortableElement, 'opts', options)
     // property to define as sortable
     sortableElement.isSortable = true
