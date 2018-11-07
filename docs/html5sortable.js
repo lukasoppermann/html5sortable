@@ -503,7 +503,8 @@ var sortable = (function () {
         maxItems: 0,
         itemSerializer: undefined,
         containerSerializer: undefined,
-        customDragImage: null
+        customDragImage: null,
+        isValidTarget: function (dragging, sortableElement) { return true; }
     };
 
     /**
@@ -1028,6 +1029,15 @@ var sortable = (function () {
                     catch (e) {
                         placeAfter = placeholderIndex < thisIndex;
                     }
+                    // check if dragging can be dropped inside sortableElement
+                    // (default true, but method can be overwritten by user)
+                    // 
+                    // don't move the placeholder and abort here if not, so that
+                    // we treat the sortableElement as an invalid dropzone for
+                    // this dragging element
+                    if (!options.isValidTarget(dragging, sortableElement)) {
+                        return;
+                    }
                     if (placeAfter) {
                         insertAfter(element, store(sortableElement).placeholder);
                     }
@@ -1044,6 +1054,11 @@ var sortable = (function () {
                     });
                 }
                 else {
+                    // check if dragging can be dropped inside sortableElement
+                    // (default true, but method can be overwritten by user)
+                    if (!options.isValidTarget(dragging, sortableElement)) {
+                        return;
+                    }
                     // get all placeholders from store
                     var placeholders = Array.from(stores.values())
                         .filter(function (data) { return data.placeholder !== undefined; })

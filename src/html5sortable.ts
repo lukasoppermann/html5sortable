@@ -510,6 +510,16 @@ export default function sortable (sortableElements, options: object|string|undef
           placeAfter = placeholderIndex < thisIndex
         }
 
+        // check if dragging can be dropped inside sortableElement
+        // (default true, but method can be overwritten by user)
+        //
+        // don't move the placeholder and abort here if not, so that
+        // we treat the sortableElement as an invalid dropzone for
+        // this dragging element
+        if (!options.isValidTarget(dragging, sortableElement)) {
+          return
+        }
+
         if (placeAfter) {
           _after(element, store(sortableElement).placeholder)
         } else {
@@ -526,6 +536,12 @@ export default function sortable (sortableElements, options: object|string|undef
             }
           })
       } else {
+        // check if dragging can be dropped inside sortableElement
+        // (default true, but method can be overwritten by user)
+        if (!options.isValidTarget(dragging, sortableElement)) {
+          return
+        }
+
         // get all placeholders from store
         let placeholders = Array.from(stores.values())
           .filter((data) => data.placeholder !== undefined)

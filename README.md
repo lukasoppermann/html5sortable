@@ -192,6 +192,17 @@ sortable('.sortable', {
 
 If you want to be able to move items between to sortables, the `acceptFrom` option must be present on both of them.
 
+### isValidTarget
+Use the 'isValidTarget' option to define a custom method to choose on the fly if you want to treat the currently hovered over element as a dropzone for the element your a dragging. This option acts as a more detailed addition to `acceptFrom` and `connectWith` and is not meant to replace these.
+
+``` javascript
+sortable('.sortable', {
+  isValidTarget: function(dragging, sortableElement) {
+    return !sortableElement.classList.contains('ignore-as-dropzone');
+  }
+});
+```
+
 ### placeholder
 Use the `placeholder` option to specify the markup of the placeholder:
 

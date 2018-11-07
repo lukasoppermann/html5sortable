@@ -18,5 +18,13 @@ export default {
   maxItems: 0,
   itemSerializer: undefined,
   containerSerializer: undefined,
-  customDragImage: null
+  customDragImage: null,
+  /*
+  * Checks if the dragging element is allowed to be dropped
+  * in sortableElement. If false is returned, it acts as if
+  * the sortableElement did not have a dropzone.
+  * @param: {Element} dragging
+  * @param: {Element} sortableElement
+  */
+  isValidTarget: function (dragging, sortableElement) { return true }
 }
