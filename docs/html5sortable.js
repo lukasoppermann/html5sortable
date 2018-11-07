@@ -504,6 +504,13 @@ var sortable = (function () {
         itemSerializer: undefined,
         containerSerializer: undefined,
         customDragImage: null,
+        /*
+        * Checks if the dragging element is allowed to be dropped
+        * in sortableElement. If false is returned, it acts as if
+        * the sortableElement did not have a dropzone.
+        * @param: {Element} dragging
+        * @param: {Element} sortableElement
+        */
         isValidTarget: function (dragging, sortableElement) { return true; }
     };
 
@@ -1031,7 +1038,7 @@ var sortable = (function () {
                     }
                     // check if dragging can be dropped inside sortableElement
                     // (default true, but method can be overwritten by user)
-                    // 
+                    //
                     // don't move the placeholder and abort here if not, so that
                     // we treat the sortableElement as an invalid dropzone for
                     // this dragging element

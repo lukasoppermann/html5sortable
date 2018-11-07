@@ -502,7 +502,15 @@ define(function () { 'use strict';
         maxItems: 0,
         itemSerializer: undefined,
         containerSerializer: undefined,
-        customDragImage: null
+        customDragImage: null,
+        /*
+        * Checks if the dragging element is allowed to be dropped
+        * in sortableElement. If false is returned, it acts as if
+        * the sortableElement did not have a dropzone.
+        * @param: {Element} dragging
+        * @param: {Element} sortableElement
+        */
+        isValidTarget: function (dragging, sortableElement) { return true; }
     };
 
     /**
@@ -1027,6 +1035,15 @@ define(function () { 'use strict';
                     catch (e) {
                         placeAfter = placeholderIndex < thisIndex;
                     }
+                    // check if dragging can be dropped inside sortableElement
+                    // (default true, but method can be overwritten by user)
+                    //
+                    // don't move the placeholder and abort here if not, so that
+                    // we treat the sortableElement as an invalid dropzone for
+                    // this dragging element
+                    if (!options.isValidTarget(dragging, sortableElement)) {
+                        return;
+                    }
                     if (placeAfter) {
                         insertAfter(element, store(sortableElement).placeholder);
                     }
@@ -1043,6 +1060,11 @@ define(function () { 'use strict';
                     });
                 }
                 else {
+                    // check if dragging can be dropped inside sortableElement
+                    // (default true, but method can be overwritten by user)
+                    if (!options.isValidTarget(dragging, sortableElement)) {
+                        return;
+                    }
                     // get all placeholders from store
                     var placeholders = Array.from(stores.values())
                         .filter(function (data) { return data.placeholder !== undefined; })
