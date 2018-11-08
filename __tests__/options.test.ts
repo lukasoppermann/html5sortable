@@ -33,4 +33,28 @@ describe('Test options from sortable', () => {
     // also test a default value to check if they stay the same
     expect(sortableElement.h5s.data.opts.draggingClass).toEqual('sortable-dragging')
   })
+
+  test("options: don't overwrite on reload", () => {
+    let div = window.document.createElement('div')
+    // init sortable & get first one
+    let sortableElement = sortable(div, {
+      maxItems: 6,
+      draggingClass: 'dragging'
+    })[0]
+    // check whether the options have been set
+    expect(sortableElement.h5s.data.opts.draggingClass).toEqual('dragging')
+    expect(sortableElement.h5s.data.opts.maxItems).toEqual(6)
+    // reload sortable
+    sortableElement = sortable(div)[0]
+    // check whether the options are still the same
+    expect(sortableElement.h5s.data.opts.draggingClass).toEqual('dragging')
+    expect(sortableElement.h5s.data.opts.maxItems).toEqual(6)
+    // change an option
+    sortableElement = sortable(div, {
+      maxItems: 7
+    })[0]
+    // check whether only that one option changed
+    expect(sortableElement.h5s.data.opts.draggingClass).toEqual('dragging')
+    expect(sortableElement.h5s.data.opts.maxItems).toEqual(7)
+  })
 })
