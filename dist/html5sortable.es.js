@@ -749,23 +749,7 @@ var _reloadSortable = function (sortableElement) {
 function sortable(sortableElements, options) {
     // get method string to see if a method is called
     var method = String(options);
-    // merge user options with defaultss
-    options = Object.assign({
-        connectWith: null,
-        acceptFrom: null,
-        copy: false,
-        placeholder: null,
-        disableIEFix: null,
-        placeholderClass: 'sortable-placeholder',
-        draggingClass: 'sortable-dragging',
-        hoverClass: false,
-        debounce: 0,
-        maxItems: 0,
-        itemSerializer: undefined,
-        containerSerializer: undefined,
-        customDragImage: null,
-        items: null
-    }, (typeof options === 'object') ? options : {});
+    options = options || {};
     // check if the user provided a selector instead of an element
     if (typeof sortableElements === 'string') {
         sortableElements = document.querySelectorAll(sortableElements);
@@ -792,11 +776,10 @@ function sortable(sortableElements, options) {
             }
         });
         // merge options with default options
-        options = Object.assign({}, defaultConfiguration, options);
+        options = Object.assign({}, defaultConfiguration, store(sortableElement).config, options);
         // init data store for sortable
         store(sortableElement).config = options;
-        // get options & set options on sortable
-        options = addData(sortableElement, 'opts') || options;
+        // set options on sortable
         addData(sortableElement, 'opts', options);
         // property to define as sortable
         sortableElement.isSortable = true;
