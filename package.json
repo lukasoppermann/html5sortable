@@ -32,7 +32,7 @@
     "rollup": "^0.68.0",
     "rollup-plugin-strip-code": "^0.2.6",
     "rollup-plugin-typescript": "^0.8.1",
-    "rollup-plugin-uglify": "^4.0.0",
+    "rollup-plugin-uglify": "^6.0.1",
     "rollup-watch": "^4.3.1",
     "snazzy": "^8.0.0",
     "standard": "^12.0.1",
