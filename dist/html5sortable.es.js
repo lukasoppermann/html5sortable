@@ -396,6 +396,12 @@ function _getElementHeight (element) {
         .reduce(function (sum, value) { return sum + value; });
 }
 
+/* eslint-env browser */
+/**
+ * get handle or return item
+ * @param {Array<HTMLElement>} items
+ * @param {string} selector
+ */
 function _getHandles (items, selector) {
     if (!(items instanceof Array)) {
         throw new Error('You must provide a Array of HTMLElements to be filtered.');
@@ -405,11 +411,16 @@ function _getHandles (items, selector) {
     }
     return items
         .filter(function (item) {
-        return item.querySelector(selector) instanceof HTMLElement;
+        return item.querySelector(selector) instanceof HTMLElement ||
+            (item.shadowRoot && item.shadowRoot.querySelector(selector) instanceof HTMLElement);
     })
         .map(function (item) {
-        return item.querySelector(selector);
+        return item.querySelector(selector) || (item.shadowRoot && item.shadowRoot.querySelector(selector));
     });
+}
+
+function getEventTarget (event) {
+    return (event.composedPath && event.composedPath()[0]) || event.target;
 }
 
 /**
@@ -452,7 +463,7 @@ function setDragImage (event, draggedElement, customDragImage) {
         // needs to be set for HTML5 drag & drop to work
         event.dataTransfer.effectAllowed = 'copyMove';
         // Firefox requires it to use the event target's id for the data
-        event.dataTransfer.setData('text/plain', event.target.id);
+        event.dataTransfer.setData('text/plain', getEventTarget(event).id);
         // set the drag image on the event
         event.dataTransfer.setDragImage(dragImage.element, dragImage.posX, dragImage.posY);
     }
@@ -637,8 +648,13 @@ var _removeItemData = function (items) {
 /**
  * find sortable from element. travels up parent element until found or null.
  * @param {HTMLElement} element a single sortable
+ * @param {Event} event - the current event. We need to pass it to be able to
+ * find Sortable whith shadowRoot (document fragment has no parent)
  */
-function findSortable(element) {
+function findSortable(element, event) {
+    if (event.composedPath) {
+        return event.composedPath().find(function (el) { return el.isSortable; });
+    }
     while (element.isSortable !== true) {
         element = element.parentElement;
     }
@@ -654,7 +670,7 @@ function findDragElement(sortableElement, element) {
     var options = addData(sortableElement, 'opts');
     var items = _filter(sortableElement.children, options.items);
     var itemlist = items.filter(function (ele) {
-        return ele.contains(element);
+        return ele.contains(element) || (ele.shadowRoot && ele.shadowRoot.contains(element));
     });
     return itemlist.length > 0 ? itemlist[0] : element;
 }
@@ -815,15 +831,16 @@ function sortable(sortableElements, options) {
          */
         addEventListener(sortableElement, 'dragstart', function (e) {
             // ignore dragstart events
-            if (e.target.isSortable === true) {
+            var target = getEventTarget(e);
+            if (target.isSortable === true) {
                 return;
             }
             e.stopImmediatePropagation();
-            if ((options.handle && !e.target.matches(options.handle)) || e.target.getAttribute('draggable') === 'false') {
+            if ((options.handle && !target.matches(options.handle)) || target.getAttribute('draggable') === 'false') {
                 return;
             }
-            var sortableContainer = findSortable(e.target);
-            var dragItem = findDragElement(sortableContainer, e.target);
+            var sortableContainer = findSortable(target, e);
+            var dragItem = findDragElement(sortableContainer, target);
             // grab values
             originItemsBeforeUpdate = _filter(sortableContainer.children, options.items);
             originIndex = originItemsBeforeUpdate.indexOf(dragItem);
@@ -852,10 +869,11 @@ function sortable(sortableElements, options) {
          We are capturing targetSortable before modifications with 'dragenter' event
         */
         addEventListener(sortableElement, 'dragenter', function (e) {
-            if (e.target.isSortable === true) {
+            var target = getEventTarget(e);
+            if (target.isSortable === true) {
                 return;
             }
-            var sortableContainer = findSortable(e.target);
+            var sortableContainer = findSortable(target, e);
             destinationItemsBeforeUpdate = _filter(sortableContainer.children, addData(sortableContainer, 'items'))
                 .filter(function (item) { return item !== store(sortableElement).placeholder; });
         });
@@ -1040,7 +1058,7 @@ function sortable(sortableElements, options) {
         // Handle dragover and dragenter events on draggable items
         var onDragOverEnter = function (e) {
             var element = e.target;
-            var sortableElement = element.isSortable === true ? element : findSortable(element);
+            var sortableElement = element.isSortable === true ? element : findSortable(element, e);
             element = findDragElement(sortableElement, element);
             if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || addData(sortableElement, '_disabled') === 'true') {
                 return;

@@ -1,5 +1,6 @@
 /* eslint-env browser */
 import offset from './offset'
+import getEventTarget from './getEventTarget'
 /**
  * defaultDragImage returns the current item as dragged image
  * @param {HTMLElement} draggedElement - the item that the user drags
@@ -47,7 +48,7 @@ export default (event: DragEvent, draggedElement: HTMLElement, customDragImage: 
     // needs to be set for HTML5 drag & drop to work
     event.dataTransfer.effectAllowed = 'copyMove'
     // Firefox requires it to use the event target's id for the data
-    event.dataTransfer.setData('text/plain', event.target.id)
+    event.dataTransfer.setData('text/plain', getEventTarget(event).id)
     // set the drag image on the event
     event.dataTransfer.setDragImage(dragImage.element, dragImage.posX, dragImage.posY)
   }
