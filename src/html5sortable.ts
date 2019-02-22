@@ -255,7 +255,11 @@ export default function sortable (sortableElements, options: object|string|undef
     let customPlaceholder
     if (options.placeholder !== null && options.placeholder !== undefined) {
       let tempContainer = document.createElement(sortableElement.tagName)
-      tempContainer.innerHTML = options.placeholder
+      if (options.placeholder instanceof HTMLElement) {
+        tempContainer.appendChild(options.placeholder)
+      } else {
+        tempContainer.innerHTML = options.placeholder
+      }
       customPlaceholder = tempContainer.children[0]
     }
     // add placeholder
