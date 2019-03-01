@@ -14,6 +14,7 @@ import _serialize from './serialize'
 import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
 import _getHandles from './getHandles'
+import getEventTarget from './getEventTarget'
 import setDragImage from './setDragImage'
 import { default as store, stores } from './store' /* eslint-disable-line */
 import _listsConnected from './isConnected'
@@ -91,8 +92,13 @@ const _removeItemData = function (items) {
 /**
  * find sortable from element. travels up parent element until found or null.
  * @param {HTMLElement} element a single sortable
+ * @param {Event} event - the current event. We need to pass it to be able to
+ * find Sortable whith shadowRoot (document fragment has no parent)
  */
-function findSortable (element) {
+function findSortable (element, event) {
+  if (event.composedPath) {
+    return event.composedPath().find(el => el.isSortable)
+  }
   while (element.isSortable !== true) {
     element = element.parentElement
   }
@@ -108,7 +114,7 @@ function findDragElement (sortableElement, element) {
   const options = _data(sortableElement, 'opts')
   const items = _filter(sortableElement.children, options.items)
   const itemlist = items.filter(function (ele) {
-    return ele.contains(element)
+    return ele.contains(element) || (ele.shadowRoot && ele.shadowRoot.contains(element))
   })
 
   return itemlist.length > 0 ? itemlist[0] : element
@@ -279,17 +285,18 @@ export default function sortable (sortableElements, options: object|string|undef
      */
     _on(sortableElement, 'dragstart', function (e) {
       // ignore dragstart events
-      if (e.target.isSortable === true) {
+      const target = getEventTarget(e)
+      if (target.isSortable === true) {
         return
       }
       e.stopImmediatePropagation()
 
-      if ((options.handle && !e.target.matches(options.handle)) || e.target.getAttribute('draggable') === 'false') {
+      if ((options.handle && !target.matches(options.handle)) || target.getAttribute('draggable') === 'false') {
         return
       }
 
-      const sortableContainer = findSortable(e.target)
-      const dragItem = findDragElement(sortableContainer, e.target)
+      const sortableContainer = findSortable(target, e)
+      const dragItem = findDragElement(sortableContainer, target)
 
       // grab values
       originItemsBeforeUpdate = _filter(sortableContainer.children, options.items)
@@ -322,10 +329,11 @@ export default function sortable (sortableElements, options: object|string|undef
      We are capturing targetSortable before modifications with 'dragenter' event
     */
     _on(sortableElement, 'dragenter', (e) => {
-      if (e.target.isSortable === true) {
+      const target = getEventTarget(e)
+      if (target.isSortable === true) {
         return
       }
-      const sortableContainer = findSortable(e.target)
+      const sortableContainer = findSortable(target, e)
       destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
         .filter(item => item !== store(sortableElement).placeholder)
     })
@@ -528,7 +536,7 @@ export default function sortable (sortableElements, options: object|string|undef
     // Handle dragover and dragenter events on draggable items
     const onDragOverEnter = function (e) {
       let element = e.target
-      const sortableElement = element.isSortable === true ? element : findSortable(element)
+      const sortableElement = element.isSortable === true ? element : findSortable(element, e)
       element = findDragElement(sortableElement, element)
       if (!dragging || !_listsConnected(sortableElement, dragging.parentElement) || _data(sortableElement, '_disabled') === 'true') {
         return
