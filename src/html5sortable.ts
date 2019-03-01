@@ -400,6 +400,7 @@ export default function sortable (sortableElements, options: object|string|undef
         }
       }))
 
+      previousContainer = null
       dragging = null
       draggingHeight = null
     })
