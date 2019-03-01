@@ -39,6 +39,10 @@ let originItemsBeforeUpdate
 // Destination List - data from before any item was changed
 let destinationItemsBeforeUpdate
 
+// Previous Sortable Container - we dispatch as sortenter event when a 
+// dragged item enters a sortableContainer for the first time
+let previousContainer
+
 /**
  * remove event handlers from items
  * @param {Array|NodeList} items
@@ -324,6 +328,25 @@ export default function sortable (sortableElements, options: object|string|undef
       const sortableContainer = findSortable(e.target)
       destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
         .filter(item => item !== store(sortableElement).placeholder)
+
+      if(sortableContainer !== previousContainer) {
+        // dispatch sortenter event on each element in group
+        sortableContainer.dispatchEvent(new CustomEvent('sortenter', {
+            detail: {
+                origin: {
+                    elementIndex: originElementIndex,
+                    index: originIndex,
+                    container: originContainer
+                },
+                destination: {
+                    container: sortableContainer,
+                    itemsBeforeUpdate: destinationItemsBeforeUpdate
+                },
+                item: dragging
+            }
+        }));    
+      }
+      previousContainer = sortableContainer
     })
     /*
      * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
