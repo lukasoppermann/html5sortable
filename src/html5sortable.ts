@@ -324,7 +324,8 @@ export default function sortable (sortableElements, options: object|string|undef
             index: originIndex,
             container: originContainer
           },
-          item: dragging
+          item: dragging,
+          originalTarget: target
         }
       }))
     })
@@ -354,7 +355,8 @@ export default function sortable (sortableElements, options: object|string|undef
                     container: sortableContainer,
                     itemsBeforeUpdate: destinationItemsBeforeUpdate
                 },
-                item: dragging
+                item: dragging,
+                originalTarget: target
             }
         }));    
       }
