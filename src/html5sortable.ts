@@ -336,6 +336,22 @@ export default function sortable (sortableElements, options: object|string|undef
       const sortableContainer = findSortable(target, e)
       destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
         .filter(item => item !== store(sortableElement).placeholder)
+
+      // dispatch sortenter event on each element in group
+      sortableContainer.dispatchEvent(new CustomEvent('sortenter', {
+          detail: {
+              origin: {
+                  elementIndex: originElementIndex,
+                  index: originIndex,
+                  container: originContainer
+              },
+              destination: {
+                  container: sortableContainer,
+                  itemsBeforeUpdate: destinationItemsBeforeUpdate
+              },
+              item: dragging
+          }
+      }));  
     })
     /*
      * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
