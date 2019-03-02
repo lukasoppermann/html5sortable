@@ -55,7 +55,12 @@
     },
     "testMatch": [
       "**/__tests__/**/*.test.(ts|js)"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": false
+      }
+    }
   },
   "standard": {
     "parser": "typescript-eslint-parser",
