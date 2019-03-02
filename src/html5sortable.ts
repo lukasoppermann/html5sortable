@@ -37,6 +37,10 @@ let originIndex
 let originElementIndex
 let originItemsBeforeUpdate
 
+// Previous Sortable Container - we dispatch as sortenter event when a 
+// dragged item enters a sortableContainer for the first time
+let previousContainer
+
 // Destination List - data from before any item was changed
 let destinationItemsBeforeUpdate
 
@@ -320,7 +324,8 @@ export default function sortable (sortableElements, options: object|string|undef
             index: originIndex,
             container: originContainer
           },
-          item: dragging
+          item: dragging,
+          originalTarget: target
         }
       }))
     })
@@ -330,12 +335,31 @@ export default function sortable (sortableElements, options: object|string|undef
     */
     _on(sortableElement, 'dragenter', (e) => {
       const target = getEventTarget(e)
-      if (target.isSortable === true) {
-        return
-      }
       const sortableContainer = findSortable(target, e)
-      destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
-        .filter(item => item !== store(sortableElement).placeholder)
+
+      if(sortableContainer && sortableContainer !== previousContainer) {
+      
+        destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
+          .filter(item => item !== store(sortableElement).placeholder)
+
+        sortableContainer.dispatchEvent(new CustomEvent('sortenter', {
+            detail: {
+                origin: {
+                    elementIndex: originElementIndex,
+                    index: originIndex,
+                    container: originContainer
+                },
+                destination: {
+                    container: sortableContainer,
+                    itemsBeforeUpdate: destinationItemsBeforeUpdate
+                },
+                item: dragging,
+                originalTarget: target
+            }
+        }));    
+      }
+
+      previousContainer = sortableContainer  
     })
     /*
      * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
@@ -377,6 +401,7 @@ export default function sortable (sortableElements, options: object|string|undef
         }
       }))
 
+      previousContainer = null
       dragging = null
       draggingHeight = null
     })
