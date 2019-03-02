@@ -3,7 +3,6 @@ language: node_js
 node_js:
   - "node"
 before_install:
-  - npm i -g npm@5.7.1
   - npm install -g greenkeeper-lockfile@1
   - greenkeeper-lockfile-update
 install:
