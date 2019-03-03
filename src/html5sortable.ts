@@ -37,7 +37,7 @@ let originIndex
 let originElementIndex
 let originItemsBeforeUpdate
 
-// Previous Sortable Container - we dispatch as sortenter event when a 
+// Previous Sortable Container - we dispatch as sortenter event when a
 // dragged item enters a sortableContainer for the first time
 let previousContainer
 
@@ -337,30 +337,30 @@ export default function sortable (sortableElements, options: object|string|undef
       const target = getEventTarget(e)
       const sortableContainer = findSortable(target, e)
 
-      if(sortableContainer && sortableContainer !== previousContainer) {
-      
+      if (sortableContainer && sortableContainer !== previousContainer) {
         destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
           .filter(item => item !== store(sortableElement).placeholder)
 
         sortableContainer.dispatchEvent(new CustomEvent('sortenter', {
-            detail: {
-                origin: {
-                    elementIndex: originElementIndex,
-                    index: originIndex,
-                    container: originContainer
-                },
-                destination: {
-                    container: sortableContainer,
-                    itemsBeforeUpdate: destinationItemsBeforeUpdate
-                },
-                item: dragging,
-                originalTarget: target
-            }
-        }));    
+          detail: {
+            origin: {
+              elementIndex: originElementIndex,
+              index: originIndex,
+              container: originContainer
+            },
+            destination: {
+              container: sortableContainer,
+              itemsBeforeUpdate: destinationItemsBeforeUpdate
+            },
+            item: dragging,
+            originalTarget: target
+          }
+        }))
       }
 
-      previousContainer = sortableContainer  
+      previousContainer = sortableContainer
     })
+
     /*
      * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
      * Fires each time dragEvent end, or ESC pressed
