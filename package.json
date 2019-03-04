@@ -3,8 +3,9 @@
   "main": "dist/html5sortable.js",
   "file": "src/html5sortable.ts",
   "files": [
-    "src/**/*",
-    "dist/*"
+    "src/types/*.d.ts",
+    "src/*.ts",
+    "dist/*.js"
   ],
   "dest": "dist",
   "version": "0.9.10",
