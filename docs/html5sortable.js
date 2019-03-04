@@ -597,6 +597,9 @@ var sortable = (function () {
     var originIndex;
     var originElementIndex;
     var originItemsBeforeUpdate;
+    // Previous Sortable Container - we dispatch as sortenter event when a
+    // dragged item enters a sortableContainer for the first time
+    var previousContainer;
     // Destination List - data from before any item was changed
     var destinationItemsBeforeUpdate;
     /**
@@ -869,7 +872,8 @@ var sortable = (function () {
                             index: originIndex,
                             container: originContainer
                         },
-                        item: dragging
+                        item: dragging,
+                        originalTarget: target
                     }
                 }));
             });
@@ -878,12 +882,27 @@ var sortable = (function () {
             */
             addEventListener(sortableElement, 'dragenter', function (e) {
                 var target = getEventTarget(e);
-                if (target.isSortable === true) {
-                    return;
-                }
                 var sortableContainer = findSortable(target, e);
-                destinationItemsBeforeUpdate = _filter(sortableContainer.children, addData(sortableContainer, 'items'))
-                    .filter(function (item) { return item !== store(sortableElement).placeholder; });
+                if (sortableContainer && sortableContainer !== previousContainer) {
+                    destinationItemsBeforeUpdate = _filter(sortableContainer.children, addData(sortableContainer, 'items'))
+                        .filter(function (item) { return item !== store(sortableElement).placeholder; });
+                    sortableContainer.dispatchEvent(new CustomEvent('sortenter', {
+                        detail: {
+                            origin: {
+                                elementIndex: originElementIndex,
+                                index: originIndex,
+                                container: originContainer
+                            },
+                            destination: {
+                                container: sortableContainer,
+                                itemsBeforeUpdate: destinationItemsBeforeUpdate
+                            },
+                            item: dragging,
+                            originalTarget: target
+                        }
+                    }));
+                }
+                previousContainer = sortableContainer;
             });
             /*
              * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
@@ -918,6 +937,7 @@ var sortable = (function () {
                         item: dragging
                     }
                 }));
+                previousContainer = null;
                 dragging = null;
                 draggingHeight = null;
             });
