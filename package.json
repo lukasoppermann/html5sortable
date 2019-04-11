@@ -34,7 +34,7 @@
     "eslint": "^5.6.1",
     "eslint-plugin-typescript": "^0.14.0",
     "jest": "^23.5.0",
-    "rollup": "^1.2.0",
+    "rollup": "^1.10.0",
     "rollup-plugin-strip-code": "^0.2.6",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.1",
