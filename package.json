@@ -82,9 +82,7 @@
     "standard": "standard 'src/*.ts' '__tests__/*.ts' | snazzy",
     "travis": "npm run cover && npm run standard",
     "cover": "jest --colors --coverage --coverageReporters=text-lcov | coveralls",
-    "preversion": "npm test",
-    "version": "npm run build && git add -A docs",
-    "postversion": "git push && git push --tags",
+    "postversion": "npm run release",
     "tsc": "tsc ./src/*.ts --pretty --diagnostics --noEmit --watch"
   }
 }
