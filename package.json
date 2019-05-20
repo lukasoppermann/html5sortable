@@ -8,7 +8,7 @@
     "dist/*.js"
   ],
   "dest": "dist",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "license": "MIT",
   "description": "VanillaJS sortable lists and grids using native HTML5 drag and drop API.",
   "author": {
@@ -78,12 +78,11 @@
     "test": "jest && npm run standard",
     "coverage": "jest --coverage && npm run standard",
     "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
+    "release": "sh make-release.sh",
     "standard": "standard 'src/*.ts' '__tests__/*.ts' | snazzy",
     "travis": "npm run cover && npm run standard",
     "cover": "jest --colors --coverage --coverageReporters=text-lcov | coveralls",
-    "preversion": "npm test",
-    "version": "npm run build && git add -A docs",
-    "postversion": "git push && git push --tags",
+    "postversion": "npm run release",
     "tsc": "tsc ./src/*.ts --pretty --diagnostics --noEmit --watch"
   }
 }
