@@ -401,8 +401,8 @@ var sortable = (function () {
    * @param {string} placeholderClasses a string representing the classes that should be added to the placeholder
    */
   var _makePlaceholder = (function (sortableElement, placeholder, placeholderClass) {
-      if (placeholderClass === void 0) { placeholderClass = 'sortable-placeholder'; }
       var _a;
+      if (placeholderClass === void 0) { placeholderClass = 'sortable-placeholder'; }
       if (!(sortableElement instanceof HTMLElement)) {
           throw new Error('You must provide a valid element as a sortable.');
       }
