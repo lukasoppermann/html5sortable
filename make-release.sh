@@ -33,4 +33,4 @@ git checkout master
 git tag "$releaseVersion" lastest-release
 git push origin "$releaseVersion"
 git push origin lastest-release
-npm publish "https://github.com/lukasoppermann/html5sortable/archive/$releaseVersion.tar.gz"
+#npm publish "https://github.com/lukasoppermann/html5sortable/archive/$releaseVersion.tar.gz"
