@@ -11,9 +11,9 @@ git checkout -b lastest-release
 
 # Ensure we have the latest version of things
 rm -rf node_modules # package-lock.json <-- may want to remove this file too if it suits your project.
-npm install 
+npm install
 
-# Test validity 
+# Test validity
 npm test
 
 # Build and update docs
@@ -33,3 +33,4 @@ git checkout master
 git tag "$releaseVersion" lastest-release
 git push origin "$releaseVersion"
 git push origin lastest-release
+npm publish "https://github.com/lukasoppermann/html5sortable/archive/$releaseVersion.tar.gz"
