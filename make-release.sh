@@ -29,7 +29,7 @@ echo "$newIgnore" > .gitignore # the redirect here is put into a spereate step t
 git add -A && git commit -m "[BUILD] $releaseVersion"
 
 # Make a new tag off of the latest build
-git tag "$releaseVersion" latest-release
+git tag "$releaseVersion" latest-release -f
 git push origin "$releaseVersion"
 git push origin latest-release
 git checkout master
