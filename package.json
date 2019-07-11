@@ -40,7 +40,7 @@
     "rollup-plugin-uglify": "^6.0.2",
     "rollup-watch": "^4.3.1",
     "snazzy": "^8.0.0",
-    "standard": "^12.0.1",
+    "standard": "^13.0.1",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.5",
     "typescript-eslint-parser": "^22.0.0"
