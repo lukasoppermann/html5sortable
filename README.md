@@ -229,7 +229,7 @@ sortable('.sortable', {
 ```
 
 ### orientation
-Use the `orientation` option to specify the orientation of your list and fix the hover behaviour. Defaults to `'vertical'`.
+Use the `orientation` option to specify the orientation of your list and fix incorrect hover behaviour. Defaults to `'vertical'`.
 
 ``` javascript
 sortable('.sortable', {
