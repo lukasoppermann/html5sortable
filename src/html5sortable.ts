@@ -511,14 +511,14 @@ export default function sortable (sortableElements, options: configuration|objec
           const deadZoneHorizontal = thisWidth - draggingWidth
           const offsetTop = _offset(element).top
           const offsetLeft = _offset(element).left
-          if (placeholderIndex < thisIndex
-              && (orientation === 'vertical' && pageY < offsetTop
-                  || orientation === 'horizontal' && pageX < offsetLeft)) {
+          if (placeholderIndex < thisIndex &&
+              (options.orientation === 'vertical' && pageY < offsetTop ||
+                  options.orientation === 'horizontal' && pageX < offsetLeft)) {
             return
           }
           if (placeholderIndex > thisIndex &&
-              (orientation === 'vertical' && pageY > offsetTop + thisHeight - deadZoneVertical
-              || orientation === 'horizontal' && pageX > offsetLeft + thisWidth - deadZoneHorizontal)) {
+              (options.orientation === 'vertical' && pageY > offsetTop + thisHeight - deadZoneVertical ||
+                  options.orientation === 'horizontal' && pageX > offsetLeft + thisWidth - deadZoneHorizontal)) {
             return
           }
         }
@@ -537,8 +537,8 @@ export default function sortable (sortableElements, options: configuration|objec
         try {
           let elementMiddleVertical = _offset(element).top + element.offsetHeight / 2
           let elementMiddleHorizontal = _offset(element).left + element.offsetWidth / 2
-          placeAfter = options.orientation === 'vertical' && (pageY >= elementMiddleVertical)
-              || options.orientation === 'horizontal' && (pageX >= elementMiddleHorizontal)
+          placeAfter = options.orientation === 'vertical' && (pageY >= elementMiddleVertical) ||
+              options.orientation === 'horizontal' && (pageX >= elementMiddleHorizontal)
         } catch (e) {
           placeAfter = placeholderIndex < thisIndex
         }
