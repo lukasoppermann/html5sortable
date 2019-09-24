@@ -4,8 +4,8 @@ import store from '../src/store'
 /* eslint-env jest */
 
 describe('Testing api', () => {
-  document.body.innerHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
-  let body = document.querySelector('body')
+  document.body.innerHTML = '<!doctype html><html><body><div id="root"></div></body></html>'
+  const body = document.querySelector('body')
   let ul, li, secondLi, thirdLi
 
   describe('Initialization ', () => {
@@ -23,7 +23,7 @@ describe('Testing api', () => {
       thirdLi = ul.querySelector('.item-second')
 
       sortable(ul, {
-        'items': 'li',
+        items: 'li',
         placeholderClass: 'test-placeholder',
         draggingClass: 'test-dragging'
       })
@@ -34,7 +34,7 @@ describe('Testing api', () => {
     })
 
     test('should have correct options set on options object', () => {
-      let opts = sortable.__testing._data(ul, 'opts')
+      const opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li')
       expect(opts.placeholderClass).toEqual('test-placeholder')
       expect(opts.draggingClass).toEqual('test-dragging')
@@ -77,7 +77,7 @@ describe('Testing api', () => {
   describe('Destroy', () => {
     beforeEach(() => {
       sortable(ul, {
-        'items': 'li'
+        items: 'li'
       })
       sortable(ul, 'destroy')
     })
@@ -110,20 +110,20 @@ describe('Testing api', () => {
   describe('Reload', () => {
     beforeAll(function () {
       sortable(ul, {
-        'items': 'li:not(.disabled)',
+        items: 'li:not(.disabled)',
         placeholderClass: 'test-placeholder'
       })
       sortable(ul, 'reload')
     })
 
     test('should keep the options of the sortable', () => {
-      let opts = sortable.__testing._data(ul, 'opts')
+      const opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li:not(.disabled)')
       expect(opts.placeholderClass).toEqual('test-placeholder')
     })
 
     test('should keep items attribute of the sortable', () => {
-      let items = sortable.__testing._data(ul, 'items')
+      const items = sortable.__testing._data(ul, 'items')
       expect(items).toEqual('li:not(.disabled)')
     })
   })
@@ -131,7 +131,7 @@ describe('Testing api', () => {
   describe('Disable', () => {
     beforeAll(function () {
       sortable(ul, {
-        'items': 'li:not(.disabled)',
+        items: 'li:not(.disabled)',
         placeholderClass: 'test-placeholder'
       })
       sortable(ul, 'disable')
@@ -148,17 +148,17 @@ describe('Testing api', () => {
 
     test.skip('should remove mousedown event', () => {
       // @TODO: TEST is wrong, no handle in sortable
-      let handle = li
+      const handle = li
       expect(handle.h5s.events).toBeDefined()
-      expect(handle.h5s.events.hasOwnProperty('mousedown')).toBe(false)
-      expect(handle.h5s.events.hasOwnProperty('mousedown.h5s')).toBe(false)
+      expect(Object.prototype.hasOwnProperty.call(handle.h5s.events, 'mousedown')).toBe(false)
+      expect(Object.prototype.hasOwnProperty.call(handle.h5s.events, 'mousedown.h5s')).toBe(false)
     })
   })
 
   describe('Enable', () => {
     beforeAll(function () {
       sortable(ul, {
-        'items': 'li:not(.disabled)',
+        items: 'li:not(.disabled)',
         placeholderClass: 'test-placeholder'
       })
       sortable(ul, 'disable')
@@ -176,10 +176,10 @@ describe('Testing api', () => {
 
     test.skip('should remove mousedown event', () => {
       // @TODO: TEST is wrong, no handle in sortable
-      let handle = li
+      const handle = li
       expect(handle.h5s.events).toBeDefined()
-      expect(handle.h5s.events.hasOwnProperty('mousedown')).toBeDefined()
-      expect(handle.h5s.events.hasOwnProperty('mousedown.h5s')).toBeDefined()
+      expect(Object.prototype.hasOwnProperty.call(handle.h5s.events, 'mousedown')).toBeDefined()
+      expect(Object.prototype.hasOwnProperty.call(handle.h5s.events, 'mousedown.h5s')).toBeDefined()
     })
   })
 })

@@ -5,15 +5,15 @@ import defaultConfig from '../src/defaultConfiguration'
 
 describe('Test options from sortable', () => {
   test('options: undefined', () => {
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     // init sortable & get first one
-    let sortableElement = sortable(div, undefined)[0]
+    const sortableElement = sortable(div, undefined)[0]
     // test a default value to check if they stay the same
     expect(sortableElement.h5s.data.opts).toEqual(defaultConfig)
   })
 
   test('options: method string', () => {
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     // init sortable & get first one
     let sortableElement = sortable(div, null)
     sortableElement = sortable(div, 'enable')[0]
@@ -23,9 +23,9 @@ describe('Test options from sortable', () => {
 
   test('options: object', () => {
     // fake sortable
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     // init sortable & get first one
-    let sortableElement = sortable(div, {
+    const sortableElement = sortable(div, {
       maxItems: 5
     })[0]
     // assert
@@ -35,7 +35,7 @@ describe('Test options from sortable', () => {
   })
 
   test("options: don't overwrite on reload", () => {
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     // init sortable & get first one
     let sortableElement = sortable(div, {
       maxItems: 6,

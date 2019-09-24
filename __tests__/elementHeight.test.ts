@@ -10,7 +10,7 @@ describe('Testing elementHeight', () => {
 
   test('element is not in DOM', () => {
     // setup
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     div.style.height = '10px'
     // assert
     expect(elementHeight(div)).toEqual(10)
@@ -18,7 +18,7 @@ describe('Testing elementHeight', () => {
 
   test('element is in DOM', () => {
     // setup
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     div.style.height = '10px'
     div.style.paddingTop = '5px'
     div.style.paddingBottom = '7px'

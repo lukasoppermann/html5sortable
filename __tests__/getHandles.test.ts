@@ -10,7 +10,7 @@ describe('Test getHandles function to return handles or items if no handles spec
 
   test('returns items if no handle selector is provided', () => {
     document.body.innerHTML = mockInnerHTML
-    let items = Array.from(document.querySelector('.sortable').children)
+    const items = Array.from(document.querySelector('.sortable').children)
     expect(getHandles(items).length).toEqual(3)
     expect(getHandles(items, []).length).toEqual(3)
     expect(getHandles(items)[0].nodeName).toEqual('LI')
@@ -18,7 +18,7 @@ describe('Test getHandles function to return handles or items if no handles spec
 
   test('gets handles array from items', () => {
     document.body.innerHTML = mockInnerHTML
-    let items = Array.from(document.querySelector('.sortable').children)
+    const items = Array.from(document.querySelector('.sortable').children)
     expect(getHandles(items, '.handle').length).toEqual(2)
     expect(getHandles(items, '.handle')[0].outerHTML).toEqual('<span class="handle"></span>')
   })
