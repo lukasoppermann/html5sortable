@@ -239,7 +239,7 @@ export default function sortable (sortableElements, options: object|string|undef
     }
     // log deprecation
     ['connectWith', 'disableIEFix'].forEach((configKey) => {
-      if (options.hasOwnProperty(configKey) && options[configKey] !== null) {
+      if (Object.prototype.hasOwnProperty.call(options, configKey) && options[configKey] !== null) {
         console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
       }
     })

@@ -36,6 +36,7 @@ describe('Testing setDragImage', () => {
         }
       }
     }
+
     /* eslint-enable constructor-super */
     get () {
       return this
