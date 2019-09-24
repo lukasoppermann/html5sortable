@@ -228,7 +228,7 @@ export default function sortable (sortableElements, options: object|string|undef
 
   if (/serialize/.test(method)) {
     return sortableElements.map((sortableContainer) => {
-      let opts = _data(sortableContainer, 'opts')
+      const opts = _data(sortableContainer, 'opts')
       return _serialize(sortableContainer, opts.itemSerializer, opts.containerSerializer)
     })
   }
@@ -258,7 +258,7 @@ export default function sortable (sortableElements, options: object|string|undef
     // create element if user defined a placeholder element as a string
     let customPlaceholder
     if (options.placeholder !== null && options.placeholder !== undefined) {
-      let tempContainer = document.createElement(sortableElement.tagName)
+      const tempContainer = document.createElement(sortableElement.tagName)
       if (options.placeholder instanceof HTMLElement) {
         tempContainer.appendChild(options.placeholder)
       } else {
@@ -523,7 +523,7 @@ export default function sortable (sortableElements, options: object|string|undef
         // vertical center.
         let placeAfter = false
         try {
-          let elementMiddle = _offset(element).top + element.offsetHeight / 2
+          const elementMiddle = _offset(element).top + element.offsetHeight / 2
           placeAfter = pageY >= elementMiddle
         } catch (e) {
           placeAfter = placeholderIndex < thisIndex
@@ -546,7 +546,7 @@ export default function sortable (sortableElements, options: object|string|undef
           })
       } else {
         // get all placeholders from store
-        let placeholders = Array.from(stores.values())
+        const placeholders = Array.from(stores.values())
           .filter((data) => data.placeholder !== undefined)
           .map((data) => {
             return data.placeholder

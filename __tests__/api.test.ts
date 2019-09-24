@@ -4,8 +4,8 @@ import store from '../src/store'
 /* eslint-env jest */
 
 describe('Testing api', () => {
-  document.body.innerHTML = `<!doctype html><html><body><div id="root"></div></body></html>`
-  let body = document.querySelector('body')
+  document.body.innerHTML = `<!doctype html><html><body><div id='root'></div></body></html>`
+  const body = document.querySelector('body')
   let ul, li, secondLi, thirdLi
 
   describe('Initialization ', () => {
@@ -34,7 +34,7 @@ describe('Testing api', () => {
     })
 
     test('should have correct options set on options object', () => {
-      let opts = sortable.__testing._data(ul, 'opts')
+      const opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li')
       expect(opts.placeholderClass).toEqual('test-placeholder')
       expect(opts.draggingClass).toEqual('test-dragging')
@@ -117,13 +117,13 @@ describe('Testing api', () => {
     })
 
     test('should keep the options of the sortable', () => {
-      let opts = sortable.__testing._data(ul, 'opts')
+      const opts = sortable.__testing._data(ul, 'opts')
       expect(opts.items).toEqual('li:not(.disabled)')
       expect(opts.placeholderClass).toEqual('test-placeholder')
     })
 
     test('should keep items attribute of the sortable', () => {
-      let items = sortable.__testing._data(ul, 'items')
+      const items = sortable.__testing._data(ul, 'items')
       expect(items).toEqual('li:not(.disabled)')
     })
   })
@@ -148,7 +148,7 @@ describe('Testing api', () => {
 
     test.skip('should remove mousedown event', () => {
       // @TODO: TEST is wrong, no handle in sortable
-      let handle = li
+      const handle = li
       expect(handle.h5s.events).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown')).toBe(false)
       expect(handle.h5s.events.hasOwnProperty('mousedown.h5s')).toBe(false)
@@ -176,7 +176,7 @@ describe('Testing api', () => {
 
     test.skip('should remove mousedown event', () => {
       // @TODO: TEST is wrong, no handle in sortable
-      let handle = li
+      const handle = li
       expect(handle.h5s.events).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown')).toBeDefined()
       expect(handle.h5s.events.hasOwnProperty('mousedown.h5s')).toBeDefined()

@@ -8,7 +8,7 @@ import getEventTarget from './getEventTarget'
  * @param {Event} event - the original drag event object
  * @return {object} with element, posX and posY properties
  */
-let defaultDragImage = (draggedElement: HTMLElement, elementOffset: offsetObject, event: DragEvent): object => {
+const defaultDragImage = (draggedElement: HTMLElement, elementOffset: offsetObject, event: DragEvent): object => {
   return {
     element: draggedElement,
     posX: event.pageX - elementOffset.left,
@@ -38,9 +38,9 @@ export default (event: DragEvent, draggedElement: HTMLElement, customDragImage: 
   // check if setDragImage method is available
   if (event.dataTransfer && event.dataTransfer.setDragImage) {
     // get the elements offset
-    let elementOffset = offset(draggedElement)
+    const elementOffset = offset(draggedElement)
     // get the dragImage
-    let dragImage = customDragImage(draggedElement, elementOffset, event)
+    const dragImage = customDragImage(draggedElement, elementOffset, event)
     // check if custom function returns correct values
     if (!(dragImage.element instanceof HTMLElement) || typeof dragImage.posX !== 'number' || typeof dragImage.posY !== 'number') {
       throw new Error('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')

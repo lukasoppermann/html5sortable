@@ -5,7 +5,7 @@
  * @param {HTMLElement} newElement - element to be inserted
  * @param {String} position - insert before or after reference element
  */
-let insertNode = (referenceNode: HTMLElement, newElement: HTMLElement, position: String) => {
+const insertNode = (referenceNode: HTMLElement, newElement: HTMLElement, position: String) => {
   if (!(referenceNode instanceof HTMLElement) || !(referenceNode.parentElement instanceof HTMLElement)) {
     throw new Error('target and element must be a node')
   }
@@ -19,12 +19,12 @@ let insertNode = (referenceNode: HTMLElement, newElement: HTMLElement, position:
  * @param {HTMLElement} target
  * @param {HTMLElement} element
  */
-let insertBefore = (target: HTMLElement, element: HTMLElement) => insertNode(target, element, 'before')
+const insertBefore = (target: HTMLElement, element: HTMLElement) => insertNode(target, element, 'before')
 /**
  * Insert after target
  * @param {HTMLElement} target
  * @param {HTMLElement} element
  */
-let insertAfter = (target: HTMLElement, element: HTMLElement) => insertNode(target, element, 'after')
+const insertAfter = (target: HTMLElement, element: HTMLElement) => insertNode(target, element, 'after')
 
 export { insertBefore, insertAfter }
