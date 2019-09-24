@@ -1,6 +1,6 @@
 /* eslint-env browser */
 /**
- * Get height of an element including padding
+ * Get width of an element including padding
  * @param {HTMLElement} element an dom element
  */
 export default (element: HTMLElement) => {
