@@ -231,7 +231,7 @@ export default function sortable (sortableElements, options: configuration|objec
 
   if (/serialize/.test(method)) {
     return sortableElements.map((sortableContainer) => {
-      let opts = _data(sortableContainer, 'opts')
+      const opts = _data(sortableContainer, 'opts')
       return _serialize(sortableContainer, opts.itemSerializer, opts.containerSerializer)
     })
   }
@@ -242,7 +242,7 @@ export default function sortable (sortableElements, options: configuration|objec
     }
     // log deprecation
     ['connectWith', 'disableIEFix'].forEach((configKey) => {
-      if (options.hasOwnProperty(configKey) && options[configKey] !== null) {
+      if (Object.prototype.hasOwnProperty.call(options, configKey) && options[configKey] !== null) {
         console.warn(`HTML5Sortable: You are using the deprecated configuration "${configKey}". This will be removed in an upcoming version, make sure to migrate to the new options when updating.`)
       }
     })
@@ -261,7 +261,7 @@ export default function sortable (sortableElements, options: configuration|objec
     // create element if user defined a placeholder element as a string
     let customPlaceholder
     if (options.placeholder !== null && options.placeholder !== undefined) {
-      let tempContainer = document.createElement(sortableElement.tagName)
+      const tempContainer = document.createElement(sortableElement.tagName)
       if (options.placeholder instanceof HTMLElement) {
         tempContainer.appendChild(options.placeholder)
       } else {
@@ -560,7 +560,7 @@ export default function sortable (sortableElements, options: configuration|objec
           })
       } else {
         // get all placeholders from store
-        let placeholders = Array.from(stores.values())
+        const placeholders = Array.from(stores.values())
           .filter((data) => data.placeholder !== undefined)
           .map((data) => {
             return data.placeholder

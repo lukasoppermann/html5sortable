@@ -8,11 +8,11 @@ export default (element: HTMLElement) => {
     throw new Error('You must provide a valid dom element')
   }
   // get calculated style of element
-  let style = window.getComputedStyle(element)
+  const style = window.getComputedStyle(element)
   // pick applicable properties, convert to int and reduce by adding
   return ['height', 'padding-top', 'padding-bottom']
     .map((key) => {
-      let int = parseInt(style.getPropertyValue(key), 10)
+      const int = parseInt(style.getPropertyValue(key), 10)
       return isNaN(int) ? 0 : int
     })
     .reduce((sum, value) => sum + value)

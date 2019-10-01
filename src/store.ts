@@ -1,5 +1,5 @@
 /* eslint-env browser */
-export let stores: Map<HTMLElement, Store> = new Map()
+export const stores: Map<HTMLElement, Store> = new Map()
 /**
  * Stores data & configurations per Sortable
  * @param {Object} config
@@ -18,7 +18,7 @@ export class Store implements Store {
       throw new Error('You must provide a valid configuration object to the config setter.')
     }
     // combine config with default
-    let mergedConfig = Object.assign({}, config)
+    const mergedConfig = Object.assign({}, config)
     // add config to map
     this._config = new Map(Object.entries(mergedConfig))
   }
@@ -27,15 +27,17 @@ export class Store implements Store {
    * @method config
    * @return {object}
    */
+
   get config (): configuration {
     // transform Map to object
-    let config = {}
+    const config = {}
     this._config.forEach((value, key) => {
       config[key] = value
     })
     // return object
     return config
   }
+
   /**
    * set individual configuration of a class instance
    * @method setConfig
@@ -50,6 +52,7 @@ export class Store implements Store {
     // set config
     this._config.set(key, value)
   }
+
   /**
    * get an individual configuration of a class instance
    * @method getConfig
@@ -62,6 +65,7 @@ export class Store implements Store {
     }
     return this._config.get(key)
   }
+
   /**
    * get the placeholder for a class instance
    * @method placeholder
@@ -70,6 +74,7 @@ export class Store implements Store {
   get placeholder (): HTMLElement {
     return this._placeholder
   }
+
   /**
    * set the placeholder for a class instance
    * @method placeholder
@@ -82,6 +87,7 @@ export class Store implements Store {
     }
     this._placeholder = placeholder
   }
+
   /**
    * set an data entry
    * @method setData
@@ -91,10 +97,11 @@ export class Store implements Store {
    */
   setData (key: string, value: Function): void {
     if (typeof key !== 'string') {
-      throw new Error(`The key must be a string.`)
+      throw new Error('The key must be a string.')
     }
     this._data.set(key, value)
   }
+
   /**
    * get an data entry
    * @method getData
@@ -103,10 +110,11 @@ export class Store implements Store {
    */
   getData (key: string): any {
     if (typeof key !== 'string') {
-      throw new Error(`The key must be a string.`)
+      throw new Error('The key must be a string.')
     }
     return this._data.get(key)
   }
+
   /**
    * delete an data entry
    * @method deleteData
@@ -115,7 +123,7 @@ export class Store implements Store {
    */
   deleteData (key: string): boolean {
     if (typeof key !== 'string') {
-      throw new Error(`The key must be a string.`)
+      throw new Error('The key must be a string.')
     }
     return this._data.delete(key)
   }

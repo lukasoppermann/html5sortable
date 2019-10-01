@@ -5,7 +5,7 @@ import _throttle from '../src/throttle'
 describe('Testing throttle', () => {
   test('throttle should not allow functions to be called multiple times within the timeframe', () => {
     let value = 0
-    let fn = _throttle(() => {
+    const fn = _throttle(() => {
       value++
     })
     // call function twice immeditatly
@@ -17,7 +17,7 @@ describe('Testing throttle', () => {
 
   test('throttle should allow functions to be called multiple times after the timeframe', () => {
     let value = 0
-    let fn = _throttle(() => {
+    const fn = _throttle(() => {
       value++
     }, 10)
     // call function twice immeditatly

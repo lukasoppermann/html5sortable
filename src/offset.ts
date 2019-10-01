@@ -7,7 +7,7 @@ export default (element: HTMLElement): offsetObject => {
     throw new Error('target element must be part of the dom')
   }
 
-  let rect = element.getClientRects()[0]
+  const rect = element.getClientRects()[0]
   return {
     left: rect.left + window.pageXOffset,
     right: rect.right + window.pageXOffset,

@@ -6,9 +6,9 @@ import { insertBefore } from '../src/insertHtmlElements'
 describe('Testing insertBefore', () => {
   test('insertBefore element', () => {
     // setup
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     div.innerHTML = '<p>test</p>'
-    let span = window.document.createElement('span')
+    const span = window.document.createElement('span')
     // assert before
     expect(div.children[0].tagName).toBe('P')
     // insert span
@@ -19,14 +19,14 @@ describe('Testing insertBefore', () => {
   })
 
   test('try to insertBefore element which is not in dom', () => {
-    let div = window.document.createElement('div')
-    let span = window.document.createElement('span')
+    const div = window.document.createElement('div')
+    const span = window.document.createElement('span')
     // test missing elements
     expect(() => { insertBefore(div, span) }).toThrow('target and element must be a node')
   })
 
   test('try to insertBefore text', () => {
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     // test missing elements
     expect(() => { insertBefore(div, 'error') }).toThrow('target and element must be a node')
     expect(() => { insertBefore('error', div) }).toThrow('target and element must be a node')
