@@ -228,6 +228,15 @@ sortable('.sortable', {
 });
 ```
 
+### orientation
+Use the `orientation` option to specify the orientation of your list and fix incorrect hover behaviour. Defaults to `'vertical'`.
+
+``` javascript
+sortable('.sortable', {
+  orientation: 'horizontal' // Defaults to 'vertical'
+});
+```
+
 ### itemSerializer
 You can provide a `function` that will be applied to every item in the `items` array ([see serialize](#serialize)). The function receives two arguments: `serializedItem: object`, `sortableContainer: Element`. This function can be used to change the output for the items. Defaults to `undefined`.
 

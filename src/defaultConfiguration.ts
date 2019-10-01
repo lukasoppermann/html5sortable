@@ -18,5 +18,6 @@ export default {
   maxItems: 0,
   itemSerializer: undefined,
   containerSerializer: undefined,
-  customDragImage: null
+  customDragImage: null,
+  orientation: 'vertical'
 }

@@ -13,6 +13,7 @@ import { insertBefore as _before, insertAfter as _after } from './insertHtmlElem
 import _serialize from './serialize'
 import _makePlaceholder from './makePlaceholder'
 import _getElementHeight from './elementHeight'
+import _getElementWidth from './elementWidth'
 import _getHandles from './getHandles'
 import getEventTarget from './getEventTarget'
 import setDragImage from './setDragImage'
@@ -20,11 +21,13 @@ import { default as store, stores } from './store' /* eslint-disable-line */
 import _listsConnected from './isConnected'
 import defaultConfiguration from './defaultConfiguration'
 import enableHoverClass from './hoverClass'
+
 /*
  * variables global to the plugin
  */
 let dragging
 let draggingHeight
+let draggingWidth
 
 /*
  * Keeps track of the initialy selected list, where 'dragstart' event was triggered
@@ -211,7 +214,7 @@ const _reloadSortable = function (sortableElement) {
  * @param {Array|NodeList} sortableElements
  * @param {object|string} options|method
  */
-export default function sortable (sortableElements, options: object|string|undefined): sortable {
+export default function sortable (sortableElements, options: configuration|object|string|undefined): sortable {
   // get method string to see if a method is called
   const method = String(options)
   options = options || {}
@@ -312,6 +315,7 @@ export default function sortable (sortableElements, options: object|string|undef
       setDragImage(e, dragItem, options.customDragImage)
       // cache selsection & add attr for dragging
       draggingHeight = _getElementHeight(dragItem)
+      draggingWidth = _getElementWidth(dragItem)
       dragItem.classList.add(options.draggingClass)
       dragging = _getDragging(dragItem, sortableContainer)
       _attr(dragging, 'aria-grabbed', 'true')
@@ -404,6 +408,7 @@ export default function sortable (sortableElements, options: object|string|undef
       previousContainer = null
       dragging = null
       draggingHeight = null
+      draggingWidth = null
     })
 
     /*
@@ -482,7 +487,7 @@ export default function sortable (sortableElements, options: object|string|undef
       }
     })
 
-    const debouncedDragOverEnter = _debounce((sortableElement, element, pageY) => {
+    const debouncedDragOverEnter = _debounce((sortableElement, element, pageX, pageY) => {
       if (!dragging) {
         return
       }
@@ -490,23 +495,30 @@ export default function sortable (sortableElements, options: object|string|undef
       // set placeholder height if forcePlaceholderSize option is set
       if (options.forcePlaceholderSize) {
         store(sortableElement).placeholder.style.height = draggingHeight + 'px'
+        store(sortableElement).placeholder.style.width = draggingWidth + 'px'
       }
       // if element the draggedItem is dragged onto is within the array of all elements in list
       // (not only items, but also disabled, etc.)
       if (Array.from(sortableElement.children).indexOf(element) > -1) {
         const thisHeight = _getElementHeight(element)
+        const thisWidth = _getElementWidth(element)
         const placeholderIndex = _index(store(sortableElement).placeholder, element.parentElement.children)
         const thisIndex = _index(element, element.parentElement.children)
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
-        if (thisHeight > draggingHeight) {
+        if (thisHeight > draggingHeight || thisWidth > draggingWidth) {
           // Dead zone?
-          const deadZone = thisHeight - draggingHeight
+          const deadZoneVertical = thisHeight - draggingHeight
+          const deadZoneHorizontal = thisWidth - draggingWidth
           const offsetTop = _offset(element).top
-          if (placeholderIndex < thisIndex && pageY < offsetTop) {
+          const offsetLeft = _offset(element).left
+          if (placeholderIndex < thisIndex &&
+              ((options.orientation === 'vertical' && pageY < offsetTop) ||
+                  (options.orientation === 'horizontal' && pageX < offsetLeft))) {
             return
           }
           if (placeholderIndex > thisIndex &&
-              pageY > offsetTop + thisHeight - deadZone) {
+              ((options.orientation === 'vertical' && pageY > offsetTop + thisHeight - deadZoneVertical) ||
+                  (options.orientation === 'horizontal' && pageX > offsetLeft + thisWidth - deadZoneHorizontal))) {
             return
           }
         }
@@ -523,8 +535,10 @@ export default function sortable (sortableElements, options: object|string|undef
         // vertical center.
         let placeAfter = false
         try {
-          const elementMiddle = _offset(element).top + element.offsetHeight / 2
-          placeAfter = pageY >= elementMiddle
+          const elementMiddleVertical = _offset(element).top + element.offsetHeight / 2
+          const elementMiddleHorizontal = _offset(element).left + element.offsetWidth / 2
+          placeAfter = (options.orientation === 'vertical' && (pageY >= elementMiddleVertical)) ||
+              (options.orientation === 'horizontal' && (pageX >= elementMiddleHorizontal))
         } catch (e) {
           placeAfter = placeholderIndex < thisIndex
         }
@@ -573,7 +587,7 @@ export default function sortable (sortableElements, options: object|string|undef
       e.preventDefault()
       e.stopPropagation()
       e.dataTransfer.dropEffect = store(sortableElement).getConfig('copy') === true ? 'copy' : 'move'
-      debouncedDragOverEnter(sortableElement, element, e.pageY)
+      debouncedDragOverEnter(sortableElement, element, e.pageX, e.pageY)
     }
 
     _on(listItems.concat(sortableElement), 'dragover', onDragOverEnter)
