@@ -535,8 +535,8 @@ export default function sortable (sortableElements, options: configuration|objec
         // vertical center.
         let placeAfter = false
         try {
-          let elementMiddleVertical = _offset(element).top + element.offsetHeight / 2
-          let elementMiddleHorizontal = _offset(element).left + element.offsetWidth / 2
+          const elementMiddleVertical = _offset(element).top + element.offsetHeight / 2
+          const elementMiddleHorizontal = _offset(element).left + element.offsetWidth / 2
           placeAfter = (options.orientation === 'vertical' && (pageY >= elementMiddleVertical)) ||
               (options.orientation === 'horizontal' && (pageX >= elementMiddleHorizontal))
         } catch (e) {
