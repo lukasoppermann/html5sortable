@@ -144,6 +144,8 @@ const _destroySortable = function (sortableElement) {
   _off(handles, 'mousedown')
   _removeItemEvents(items)
   _removeItemData(items)
+  // clear sortable flag
+  sortableElement.isSortable = false
 }
 /**
  * Enable the sortable
