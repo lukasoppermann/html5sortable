@@ -137,6 +137,8 @@ const _destroySortable = function (sortableElement) {
   // remove event handlers & data from sortable
   _off(sortableElement, 'dragover')
   _off(sortableElement, 'dragenter')
+  _off(sortableElement, 'dragstart')
+  _off(sortableElement, 'dragend')
   _off(sortableElement, 'drop')
   // remove event data from sortable
   _removeSortableData(sortableElement)
@@ -144,6 +146,8 @@ const _destroySortable = function (sortableElement) {
   _off(handles, 'mousedown')
   _removeItemEvents(items)
   _removeItemData(items)
+  // clear sortable flag
+  sortableElement.isSortable = false
 }
 /**
  * Enable the sortable
