@@ -138,7 +138,7 @@ sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
     Destination Container Data
     e.detail.destination.index - {Integer} Index of the element within Sortable Items Only
     e.detail.destination.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
-    e.detail.destination.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
+    e.detail.destination.container - {HTMLElement} Sortable Container that element is moved into (or copied into)
     e.detail.destination.itemsBeforeUpdate - {Array} Sortable Items before the move
     e.detail.destination.items - {Array} Sortable Items after the move
     */
@@ -182,7 +182,7 @@ sortable('.js-sortable, .js-second-sortable', {
 ```
 
 ### acceptFrom
-Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a space separated list of selectors or `false` to disabling accepting items. This is an alternative to [connectWith](#connectwith) and should not be used together.
+Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a space separated list of selectors or `false` to disabling accepting items. This is an alternative to the now **deprecated** [connectWith](#connectwith) and should not be used together.
 
 ``` javascript
 sortable('.sortable', {
