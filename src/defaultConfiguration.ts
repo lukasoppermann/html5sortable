@@ -13,6 +13,7 @@ export default {
   placeholderClass: 'sortable-placeholder',
   draggingClass: 'sortable-dragging',
   hoverClass: false,
+  containerClass: false,
   debounce: 0,
   throttleTime: 100,
   maxItems: 0,

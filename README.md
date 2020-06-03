@@ -145,6 +145,15 @@ sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
 });
 ```
 
+### sortenter 
+
+Fired when a dragitem enters a sortable container. 
+
+### sortleave
+
+Fired when a dragitem leaves a sortable container. 
+
+
 ## Options
 
 ### items
@@ -208,6 +217,15 @@ Use the `hoverClass` option to apply css classes to the hovered element rather t
 ``` javascript
 sortable('.sortable', {
   hoverClass: 'is-hovered is-hovered-class' // Defaults to false
+});
+```
+
+### containerClass
+Use `containerClass` option to apply a css Class to the container. The class is added when dragged item enters the container and removed when it leaves it (or is dropped).
+
+``` javascript
+sortable('.sortable', {
+  containerClass: 'container-hovered' // Defaults to false
 });
 ```
 
