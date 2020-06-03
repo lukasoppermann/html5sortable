@@ -6,7 +6,7 @@ import isInDom from '../src/isInDom'
 describe('Testing isInDom', () => {
   test('element is not in DOM', () => {
     // setup
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     // assert
     expect(isInDom(div)).toEqual(false)
   })
@@ -18,7 +18,7 @@ describe('Testing isInDom', () => {
 
   test('element is in DOM', () => {
     // setup
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     // assert
     expect(isInDom(div)).toEqual(false)
     // append div to dom

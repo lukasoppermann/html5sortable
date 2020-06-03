@@ -1,29 +1,29 @@
 /* global describe,test,expect */
 /* eslint-env jest */
-import elementHeight from '../src/elementHeight'
+import elementWidth from '../src/elementWidth'
 
 describe('Testing elementHeight', () => {
   test('no valid element', () => {
     // assert
-    expect(() => { elementHeight('') }).toThrow('You must provide a valid dom element')
+    expect(() => { elementWidth('') }).toThrow('You must provide a valid dom element')
   })
 
   test('element is not in DOM', () => {
     // setup
     const div = window.document.createElement('div')
-    div.style.height = '10px'
+    div.style.width = '10px'
     // assert
-    expect(elementHeight(div)).toEqual(10)
+    expect(elementWidth(div)).toEqual(10)
   })
 
   test('element is in DOM', () => {
     // setup
     const div = window.document.createElement('div')
-    div.style.height = '10px'
-    div.style.paddingTop = '5px'
-    div.style.paddingBottom = '7px'
+    div.style.width = '10px'
+    div.style.paddingLeft = '5px'
+    div.style.paddingRight = '7px'
     window.document.body.appendChild(div)
     // assert
-    expect(elementHeight(document.querySelector('div'))).toEqual(22)
+    expect(elementWidth(document.querySelector('div'))).toEqual(22)
   })
 })

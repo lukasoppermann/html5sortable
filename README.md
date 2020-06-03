@@ -1,5 +1,5 @@
 # HTML5Sortable
-[![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable) [![Greenkeeper badge](https://badges.greenkeeper.io/lukasoppermann/html5sortable.svg)](https://greenkeeper.io/) [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md) [![Code of Conduct](https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
+[![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md) [![Code of Conduct](https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
 
 > **Lightweight vanillajs micro-library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
@@ -138,7 +138,7 @@ sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
     Destination Container Data
     e.detail.destination.index - {Integer} Index of the element within Sortable Items Only
     e.detail.destination.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
-    e.detail.destination.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
+    e.detail.destination.container - {HTMLElement} Sortable Container that element is moved into (or copied into)
     e.detail.destination.itemsBeforeUpdate - {Array} Sortable Items before the move
     e.detail.destination.items - {Array} Sortable Items after the move
     */
@@ -182,7 +182,7 @@ sortable('.js-sortable, .js-second-sortable', {
 ```
 
 ### acceptFrom
-Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a space separated list of selectors or `false` to disabling accepting items. This is an alternative to [connectWith](#connectwith) and should not be used together.
+Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a space separated list of selectors or `false` to disabling accepting items. This is an alternative to the now **deprecated** [connectWith](#connectwith) and should not be used together.
 
 ``` javascript
 sortable('.sortable', {
@@ -225,6 +225,15 @@ Use the `copy` option to duplicate the element on drag. The original element wil
 ``` javascript
 sortable('.sortable', {
   copy: true // Defaults to false
+});
+```
+
+### orientation
+Use the `orientation` option to specify the orientation of your list and fix incorrect hover behaviour. Defaults to `'vertical'`.
+
+``` javascript
+sortable('.sortable', {
+  orientation: 'horizontal' // Defaults to 'vertical'
 });
 ```
 

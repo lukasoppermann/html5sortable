@@ -17,7 +17,7 @@ export default function (fn: Function, threshold: number = 250) {
   let lastEventTimestamp = null
 
   return (...args) => {
-    let now = Date.now()
+    const now = Date.now()
     if (lastEventTimestamp === null || now - lastEventTimestamp >= threshold) {
       lastEventTimestamp = now
       fn.apply(this, args)

@@ -11,7 +11,7 @@ import { addEventListener as _on, removeEventListener as _off } from './eventLis
 // export default (sortableContainer: sortable, enable: boolean) => {
 export default (sortableContainer: sortable, enable: boolean) => {
   if (typeof store(sortableContainer).getConfig('hoverClass') === 'string') {
-    let hoverClasses = store(sortableContainer).getConfig('hoverClass').split(' ')
+    const hoverClasses = store(sortableContainer).getConfig('hoverClass').split(' ')
     // add class on hover
     if (enable === true) {
       _on(sortableContainer, 'mousemove', _throttle((event) => {

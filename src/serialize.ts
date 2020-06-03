@@ -18,13 +18,13 @@ export default (sortableContainer: HTMLElement, customItemSerializer: Function =
     throw new Error('You need to provide a valid serializer for items and the container.')
   }
   // get options
-  let options = _data(sortableContainer, 'opts')
+  const options = _data(sortableContainer, 'opts')
 
-  let item: string|undefined = options.items
+  const item: string|undefined = options.items
 
   // serialize container
-  let items = filter(sortableContainer.children, item)
-  let serializedItems: serializedItem[] = items.map((item) => {
+  const items = filter(sortableContainer.children, item)
+  const serializedItems: serializedItem[] = items.map((item) => {
     return {
       parent: sortableContainer,
       node: item,
@@ -33,7 +33,7 @@ export default (sortableContainer: HTMLElement, customItemSerializer: Function =
     }
   })
   // serialize container
-  let container = {
+  const container = {
     node: sortableContainer,
     itemCount: serializedItems.length
   }

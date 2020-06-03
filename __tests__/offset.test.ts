@@ -20,7 +20,7 @@ describe('Testing offset', () => {
     Object.defineProperty(window, 'pageXOffset', { value: 7, writable: false })
     Object.defineProperty(window, 'pageYOffset', { value: 14, writable: false })
     // run function
-    let offsetResults: any = offset(elementMock)
+    const offsetResults: any = offset(elementMock)
     // Assertions
     expect(offsetResults.left).toBe(17)
     expect(offsetResults.right).toBe(27)
@@ -29,7 +29,7 @@ describe('Testing offset', () => {
   })
 
   test('offset of element that is not in the dom', () => {
-    let div = window.document.createElement('div')
+    const div = window.document.createElement('div')
     expect(() => { offset(div) }).toThrow('target element must be part of the dom')
   })
 })

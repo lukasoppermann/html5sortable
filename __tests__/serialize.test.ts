@@ -11,14 +11,14 @@ describe('Testing serialize', () => {
 
   test('serialize: sortableContainer is not a sortable', () => {
     // setup
-    let divIsNotASortable = window.document.createElement('div')
+    const divIsNotASortable = window.document.createElement('div')
     // assert
     expect(() => { serialize(divIsNotASortable) }).toThrow('You need to provide a sortableContainer to be serialized.')
   })
 
   test('serialize: element that is not part of the DOM', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    const isASortable = sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(serialize(isASortable)).toEqual(expect.objectContaining({
       items: expect.any(Array),
@@ -28,7 +28,7 @@ describe('Testing serialize', () => {
 
   test('serialize: empty sortableContainer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    const isASortable = sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(serialize(isASortable)).toEqual(expect.objectContaining({
       items: expect.arrayContaining([]),
@@ -41,12 +41,12 @@ describe('Testing serialize', () => {
 
   test('serialize: with elements', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {
+    const isASortable = sortable(window.document.createElement('div'), {
       items: 'div'
     })[0]
     isASortable.innerHTML = '<div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'
-    let itemOne = isASortable.querySelector('#itemOne')
-    let itemTwo = isASortable.querySelector('#itemTwo')
+    const itemOne = isASortable.querySelector('#itemOne')
+    const itemTwo = isASortable.querySelector('#itemTwo')
     // assert
     expect(serialize(isASortable)).toEqual(expect.objectContaining({
       items: expect.arrayContaining([
@@ -72,12 +72,12 @@ describe('Testing serialize', () => {
 
   test('serialize: with elements that are not items sortable', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {
+    const isASortable = sortable(window.document.createElement('div'), {
       items: 'div'
     })[0]
     isASortable.innerHTML = '<span>Title</span><div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'
-    let itemOne = isASortable.querySelector('#itemOne')
-    let itemTwo = isASortable.querySelector('#itemTwo')
+    const itemOne = isASortable.querySelector('#itemOne')
+    const itemTwo = isASortable.querySelector('#itemTwo')
     // assert
     expect(serialize(isASortable)).toEqual(expect.objectContaining({
       items: expect.arrayContaining([
@@ -103,21 +103,21 @@ describe('Testing serialize', () => {
 
   test('serialize: with invalid customItemSerializer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    const isASortable = sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(() => { serialize(isASortable, 'fake') }).toThrow('You need to provide a valid serializer for items and the container.')
   })
 
   test('serialize: with invalid customContainerSerializer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {})[0]
+    const isASortable = sortable(window.document.createElement('div'), {})[0]
     // assert
     expect(() => { serialize(isASortable, () => {}, 'fake') }).toThrow('You need to provide a valid serializer for items and the container.')
   })
 
   test('serialize: with custom serializer', () => {
     // setup
-    let isASortable = sortable(window.document.createElement('div'), {
+    const isASortable = sortable(window.document.createElement('div'), {
       items: 'div'
     })[0]
     isASortable.innerHTML = '<div id="itemOne">Item1</div><div id="itemTwo">Item2</div>'

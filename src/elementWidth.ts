@@ -1,6 +1,6 @@
 /* eslint-env browser */
 /**
- * Get height of an element including padding
+ * Get width of an element including padding
  * @param {HTMLElement} element an dom element
  */
 export default (element: HTMLElement) => {
@@ -10,7 +10,7 @@ export default (element: HTMLElement) => {
   // get calculated style of element
   const style = window.getComputedStyle(element)
   // pick applicable properties, convert to int and reduce by adding
-  return ['height', 'padding-top', 'padding-bottom']
+  return ['width', 'padding-left', 'padding-right']
     .map((key) => {
       const int = parseInt(style.getPropertyValue(key), 10)
       return isNaN(int) ? 0 : int
