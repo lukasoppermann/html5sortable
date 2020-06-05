@@ -7,6 +7,8 @@
 A fair **warning:** this repository is currently not being actively developed. It works pretty fine, but if you find any issues you will need to fix them yourself. I try to keep the dependencies up to date and will happily help you fix issues and merge PRs for bugfixes or new features. 
 
 ## Looking for Co-Maintainer
+[![Looking for Co-Maintainer](https://img.shields.io/badge/looking%20for-co%E2%80%93maintainer-red.svg?style=flat-square)](https://twitter.com/lukasoppermann)
+
 If you are interested in actively helping with maintaining & improving this project please send me a message via twitter [@lukasoppermann](https://twitter.com/lukasoppermann) or email oppermann.lukas@gmail.com with a short text of what you would like to do on the project. This may be something small like sorting issues and helping with questions and small bugs (if you have little time or are not that experienced) or something big like tackling big features.
 
 ## Features
