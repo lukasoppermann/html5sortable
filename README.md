@@ -187,7 +187,7 @@ sortable('.js-sortable, .js-second-sortable', {
 ```
 
 ### acceptFrom
-Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a space separated list of selectors or `false` to disabling accepting items. This is an alternative to the now **deprecated** [connectWith](#connectwith) and should not be used together.
+Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a comma separated list of selectors or `false` to disabling accepting items. This is an alternative to the now **deprecated** [connectWith](#connectwith) and should not be used together.
 
 ``` javascript
 sortable('.sortable', {
@@ -197,6 +197,14 @@ sortable('.sortable', {
 
 If you want to be able to move items between to sortables, the `acceptFrom` option must be present on both of them.
 
+***Note:*** if you use `acceptFrom` your current list will not be sortable anymore. So you always have to put the selector of your current list in the first place.
+
+```js
+sortable('.sortable', {
+   acceptFrom: '.sortable, .anotherSortable'
+});
+```
+In this example the current list (`.sortable`) stays sortable and accepts elements from `.anotherSortable`.
 ### placeholder
 Use the `placeholder` option to specify the markup of the placeholder:
 
