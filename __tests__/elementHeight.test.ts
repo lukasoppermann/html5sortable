@@ -22,8 +22,18 @@ describe('Testing elementHeight', () => {
     div.style.height = '10px'
     div.style.paddingTop = '5px'
     div.style.paddingBottom = '7px'
-    window.document.body.appendChild(div)
     // assert
-    expect(elementHeight(document.querySelector('div'))).toEqual(22)
+    expect(elementHeight(div)).toEqual(22)
+  })
+
+  test('element has box-sizing: border-box', () => {
+    // setup
+    const div = window.document.createElement('div')
+    div.style.boxSizing = 'border-box'
+    div.style.height = '20px'
+    div.style.paddingTop = '5px'
+    div.style.paddingBottom = '5px'
+    // assert
+    expect(elementHeight(div)).toEqual(20)
   })
 })
