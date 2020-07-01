@@ -1,6 +1,6 @@
 ![](https://repository-images.githubusercontent.com/275870366/15880680-ba44-11ea-888b-8211b9431f94)
 
-<h1 align="left"> HTML5Sortable </h1>
+<h1> HTML5Sortable </h1>
 
 [![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md) [![Code of Conduct](https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
 
@@ -191,20 +191,16 @@ Use the `acceptFrom` option to restrict which sortable's items will be accepted 
 
 ``` javascript
 sortable('.sortable', {
-  acceptFrom: '.selector,.anotherSortable' // Defaults to null
+  acceptFrom: '.sortable, .anotherSortable' // Defaults to null
 });
 ```
+
+***Note:*** Using `acceptFrom` also effects the sortable itself. This means, items will not be sortable within the list itself, if you do not include it in the `acceptFrom` option. 
+
+In the example the current list `.sortable` allows items within it to be sorted and accepts elements from `.anotherSortable`.
 
 If you want to be able to move items between to sortables, the `acceptFrom` option must be present on both of them.
 
-***Note:*** if you use `acceptFrom` your current list will not be sortable anymore. So you always have to put the selector of your current list in the first place.
-
-```js
-sortable('.sortable', {
-   acceptFrom: '.sortable, .anotherSortable'
-});
-```
-In this example the current list (`.sortable`) stays sortable and accepts elements from `.anotherSortable`.
 ### placeholder
 Use the `placeholder` option to specify the markup of the placeholder:
 
