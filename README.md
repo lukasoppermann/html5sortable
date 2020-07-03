@@ -95,11 +95,10 @@ You can find the **[examples online](https://lukasoppermann.github.io/html5sorta
       - [Helps browser optimisation](#helps-browser-optimisation)
     + [Polyfill](#polyfill)
   * [Known Issues](#known-issues)
+    
     + [Firefox](#firefox)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
-
+    
+      
 
 
 ## Usage
