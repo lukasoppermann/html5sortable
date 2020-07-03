@@ -1,5 +1,9 @@
 ![](https://repository-images.githubusercontent.com/275870366/15880680-ba44-11ea-888b-8211b9431f94)
 
+
+
+
+
 <h1> HTML5Sortable </h1>
 
 [![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md) [![Code of Conduct](https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
@@ -48,7 +52,53 @@ You can find the **[examples online](https://lukasoppermann.github.io/html5sorta
 
 # Docs
 
-[TOC]
+  * [Community maintained](#community-maintained)
+  * [Looking for Co-Maintainer](#looking-for-co-maintainer)
+  * [Features](#features)
+  * [Framework adapters](#framework-adapters)
+- [Installation](#installation)
+- [Examples](#examples)
+- [Docs](#docs)
+  * [Usage](#usage)
+  * [Styling](#styling)
+  * [Nesting](#nesting)
+  * [Events](#events)
+    + [sortstart](#sortstart)
+    + [sortstop](#sortstop)
+    + [sortupdate](#sortupdate)
+  * [Options](#options)
+    + [items](#items)
+    + [handle](#handle)
+    + [forcePlaceholderSize](#forceplaceholdersize)
+    + [connectWith ![deprecated](https://img.shields.io/badge/feature-deprecated-yellow.svg?longCache=true&style=flat-square)](#connectwith---deprecated--https---imgshieldsio-badge-feature-deprecated-yellowsvg-longcache-true-style-flat-square-)
+    + [acceptFrom](#acceptfrom)
+    + [placeholder](#placeholder)
+    + [hoverClass](#hoverclass)
+    + [maxItems](#maxitems)
+    + [copy](#copy)
+    + [orientation](#orientation)
+    + [itemSerializer](#itemserializer)
+    + [containerSerializer](#containerserializer)
+    + [customDragImage](#customdragimage)
+  * [Methods](#methods)
+    + [destroy](#destroy)
+    + [disable](#disable)
+    + [enable](#enable)
+    + [serialize](#serialize)
+    + [reload](#reload)
+  * [Sorting table rows](#sorting-table-rows)
+  * [Contributing](#contributing)
+  * [Polyfills: Facing towards the future instead of the past](#polyfills--facing-towards-the-future-instead-of-the-past)
+    + [Benefits](#benefits)
+      - [Small and fast package for modern browsers](#small-and-fast-package-for-modern-browsers)
+      - [Contribution friendly code base](#contribution-friendly-code-base)
+      - [Helps browser optimisation](#helps-browser-optimisation)
+    + [Polyfill](#polyfill)
+  * [Known Issues](#known-issues)
+    + [Firefox](#firefox)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 
 
