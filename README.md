@@ -10,15 +10,85 @@
 
 > **Lightweight vanillajs micro-library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
-## Community maintained
+
+
+# Table of Contents
+
+  * [Community maintained](#community-maintained)
+  * [Looking for Co-Maintainer](#looking-for-co-maintainer)
+  * [Features](#features)
+  * [Framework adapters](#framework-adapters)
+
+- [Installation](#installation)
+
+- [Examples](#examples)
+
+- [Docs](#docs)
+
+  * [Usage](#usage)
+
+  * [Styling](#styling)
+
+  * [Nesting](#nesting)
+
+  * [Events](#events)
+
+    + [sortstart](#sortstart)
+    + [sortstop](#sortstop)
+    + [sortupdate](#sortupdate)
+
+  * [Options](#options)
+
+    + [items](#items)
+    + [handle](#handle)
+    + [forcePlaceholderSize](#forceplaceholdersize)
+    + [connectWith ![deprecated](https://img.shields.io/badge/feature-deprecated-yellow.svg?longCache=true&style=flat-square)](#connectwith---deprecated--https---imgshieldsio-badge-feature-deprecated-yellowsvg-longcache-true-style-flat-square-)
+    + [acceptFrom](#acceptfrom)
+    + [placeholder](#placeholder)
+    + [hoverClass](#hoverclass)
+    + [maxItems](#maxitems)
+    + [copy](#copy)
+    + [orientation](#orientation)
+    + [itemSerializer](#itemserializer)
+    + [containerSerializer](#containerserializer)
+    + [customDragImage](#customdragimage)
+
+  * [Methods](#methods)
+
+    + [destroy](#destroy)
+    + [disable](#disable)
+    + [enable](#enable)
+    + [serialize](#serialize)
+    + [reload](#reload)
+
+  * [Sorting table rows](#sorting-table-rows)
+
+  * [Contributing](#contributing)
+
+  * [Polyfills: Facing towards the future instead of the past](#polyfills--facing-towards-the-future-instead-of-the-past)
+
+    + [Benefits](#benefits)
+      - [Small and fast package for modern browsers](#small-and-fast-package-for-modern-browsers)
+      - [Contribution friendly code base](#contribution-friendly-code-base)
+      - [Helps browser optimisation](#helps-browser-optimisation)
+    + [Polyfill](#polyfill)
+
+  * [Known Issues](#known-issues)
+
+    + [Firefox](#firefox)
+
+      
+
+# Community maintained
+
 A fair **warning:** this repository is currently not being actively developed. It works pretty fine, but if you find any issues you will need to fix them yourself. I try to keep the dependencies up to date and will happily help you fix issues and merge PRs for bugfixes or new features. 
 
-## Looking for Co-Maintainer
+# Looking for Co-Maintainer
 [![Looking for Co-Maintainer](https://img.shields.io/badge/looking%20for-co%E2%80%93maintainer-red.svg?style=flat-square)](https://twitter.com/lukasoppermann)
 
 If you are interested in actively helping with maintaining & improving this project please send me a message via twitter [@lukasoppermann](https://twitter.com/lukasoppermann) or email oppermann.lukas@gmail.com with a short text of what you would like to do on the project. This may be something small like sorting issues and helping with questions and small bugs (if you have little time or are not that experienced) or something big like tackling big features.
 
-## Features
+# Features
 * Only 2KB (minified and gzipped).
 * Built using native HTML5 drag and drop API. No dependencies.
 * Supports both list and grid style layouts.
@@ -27,7 +97,7 @@ If you are interested in actively helping with maintaining & improving this proj
 
 **Demo:** Check out the **[examples](http://lukasoppermann.github.io/html5sortable/index.html)**
 
-## Framework adapters
+# Framework adapters
 If you would like to add an adapter to the list, please [create an issue](https://github.com/lukasoppermann/html5sortable/issues) with the link to your adapter.
 - **Polymer:** https://github.com/trofrigo/polymer-html5sortable
 
@@ -51,54 +121,6 @@ Still using **bower**? `bower install https://github.com/lukasoppermann/html5sor
 You can find the **[examples online](https://lukasoppermann.github.io/html5sortable/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
 
 # Docs
-
-  * [Community maintained](#community-maintained)
-  * [Looking for Co-Maintainer](#looking-for-co-maintainer)
-  * [Features](#features)
-  * [Framework adapters](#framework-adapters)
-- [Installation](#installation)
-- [Examples](#examples)
-- [Docs](#docs)
-  * [Usage](#usage)
-  * [Styling](#styling)
-  * [Nesting](#nesting)
-  * [Events](#events)
-    + [sortstart](#sortstart)
-    + [sortstop](#sortstop)
-    + [sortupdate](#sortupdate)
-  * [Options](#options)
-    + [items](#items)
-    + [handle](#handle)
-    + [forcePlaceholderSize](#forceplaceholdersize)
-    + [connectWith ![deprecated](https://img.shields.io/badge/feature-deprecated-yellow.svg?longCache=true&style=flat-square)](#connectwith---deprecated--https---imgshieldsio-badge-feature-deprecated-yellowsvg-longcache-true-style-flat-square-)
-    + [acceptFrom](#acceptfrom)
-    + [placeholder](#placeholder)
-    + [hoverClass](#hoverclass)
-    + [maxItems](#maxitems)
-    + [copy](#copy)
-    + [orientation](#orientation)
-    + [itemSerializer](#itemserializer)
-    + [containerSerializer](#containerserializer)
-    + [customDragImage](#customdragimage)
-  * [Methods](#methods)
-    + [destroy](#destroy)
-    + [disable](#disable)
-    + [enable](#enable)
-    + [serialize](#serialize)
-    + [reload](#reload)
-  * [Sorting table rows](#sorting-table-rows)
-  * [Contributing](#contributing)
-  * [Polyfills: Facing towards the future instead of the past](#polyfills--facing-towards-the-future-instead-of-the-past)
-    + [Benefits](#benefits)
-      - [Small and fast package for modern browsers](#small-and-fast-package-for-modern-browsers)
-      - [Contribution friendly code base](#contribution-friendly-code-base)
-      - [Helps browser optimisation](#helps-browser-optimisation)
-    + [Polyfill](#polyfill)
-  * [Known Issues](#known-issues)
-    
-    + [Firefox](#firefox)
-    
-      
 
 
 ## Usage
