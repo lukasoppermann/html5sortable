@@ -61,12 +61,12 @@ const _removeItemEvents = function (items) {
   _off(items, 'mouseleave')
 }
 
-// remove container eventes 
-const _removeContainerEvents = () => {
-  if(originContainer) {
+// Remove container events
+const _removeContainerEvents = function () {
+  if (originContainer) {
     _off(originContainer, 'dragleave')
   }
-  if(previousContainer && (previousContainer !== originContainer)) {
+  if (previousContainer && (previousContainer !== originContainer)) {
     _off(previousContainer, 'dragleave')
   }
 }
@@ -362,8 +362,8 @@ export default function sortable (sortableElements, options: configuration|objec
         destinationItemsBeforeUpdate = _filter(sortableContainer.children, _data(sortableContainer, 'items'))
           .filter(item => item !== store(sortableElement).placeholder)
 
-        if(options.containerClass) {
-          sortableContainer.classList.add(options.containerClass)
+        if (options.dropTargetContainerClass) {
+          sortableContainer.classList.add(options.dropTargetContainerClass)
         }
         sortableContainer.dispatchEvent(new CustomEvent('sortenter', {
           detail: {
@@ -382,30 +382,27 @@ export default function sortable (sortableElements, options: configuration|objec
         }))
 
         _on(sortableContainer, 'dragleave', e => {
-          const outTarget =  e.releatedTarget || e.fromElement;
+          const outTarget = e.releatedTarget || e.fromElement
           if (!e.currentTarget.contains(outTarget)) {
-           if(options.containerClass) {
-              sortableContainer.classList.remove(options.containerClass)
+            if (options.dropTargetContainerClass) {
+              sortableContainer.classList.remove(options.dropTargetContainerClass)
             }
-             sortableContainer.dispatchEvent(new CustomEvent('sortleave', {
-                detail: {
-                  origin: {
-                    elementIndex: originElementIndex,
-                    index: originIndex,
-                    container: sortableContainer
-                  },
-                  item: dragging,
-                  originalTarget: target
-                }
-              }))
+            sortableContainer.dispatchEvent(new CustomEvent('sortleave', {
+              detail: {
+                origin: {
+                  elementIndex: originElementIndex,
+                  index: originIndex,
+                  container: sortableContainer
+                },
+                item: dragging,
+                originalTarget: target
+              }
+            }))
           }
-          
         })
       }
-
       previousContainer = sortableContainer
     })
-
 
     /*
      * Dragend Event - https://developer.mozilla.org/en-US/docs/Web/Events/dragend
@@ -502,11 +499,9 @@ export default function sortable (sortableElements, options: configuration|objec
         .filter(item => item !== placeholder))
       const destinationIndex = _index(dragging, destinationItems)
 
-
-      if(options.containerClass) {
-        destinationContainer.classList.remove(options.containerClass)
+      if (options.dropTargetContainerClass) {
+        destinationContainer.classList.remove(options.dropTargetContainerClass)
       }
-
 
       /*
        * When a list item changed container lists or index within a list

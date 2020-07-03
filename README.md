@@ -220,12 +220,12 @@ sortable('.sortable', {
 });
 ```
 
-### containerClass
-Use `containerClass` option to apply a css Class to the container. The class is added when dragged item enters the container and removed when it leaves it (or is dropped).
+### dropTargetContainerClass
+Use `dropTargetContainerClass` option to apply a css Class to the container. The class is added when dragged item enters the container and removed when it leaves it (or is dropped).
 
 ``` javascript
 sortable('.sortable', {
-  containerClass: 'container-hovered' // Defaults to false
+  dropTargetContainerClass: 'is-drop-target' // Defaults to false
 });
 ```
 
