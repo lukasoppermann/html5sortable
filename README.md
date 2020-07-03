@@ -46,7 +46,14 @@ Still using **bower**? `bower install https://github.com/lukasoppermann/html5sor
 # Examples
 You can find the **[examples online](https://lukasoppermann.github.io/html5sortable/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
 
-# Usage
+# Docs
+
+[TOC]
+
+
+
+## Usage
+
 Use `sortable` method to create a sortable list:
 
 ``` javascript
