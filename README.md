@@ -13,29 +13,23 @@
 
 
 # Table of Contents
-
   * [Community maintained](#community-maintained)
   * [Looking for Co-Maintainer](#looking-for-co-maintainer)
   * [Features](#features)
   * [Framework adapters](#framework-adapters)
-- [Installation](#installation)
-- [Examples](#examples)
-- [Docs](#docs)
-  * [Usage](#usage)
-  * [Styling](#styling)
-  * [Nesting](#nesting)
-  * [Events](#events)
-  * [Options](#options)
-  * [Methods](#methods)
-  * [Sorting table rows](#sorting-table-rows)
+  * [Installation](#installation)
+  * [Examples](#examples)
+  * [Docs](#docs)
+    * [Usage](#usage)
+    * [Styling](#styling)
+    * [Nesting](#nesting)
+    * [Events](#events)
+    * [Options](#options)
+    * [Methods](#methods)
+    * [Sorting table rows](#sorting-table-rows)
   * [Contributing](#contributing)
-  * [Polyfills: Facing towards the future instead of the past](#polyfills--facing-towards-the-future-instead-of-the-past)
-    + [Benefits](#benefits)
-    + [Polyfill](#polyfill)
+  * [Polyfills](#polyfills-facing-towards-the-future-instead-of-the-past)
   * [Known Issues](#known-issues)
-    
-  + [Firefox](#firefox)
-    
       
 
 ## Community maintained
