@@ -360,6 +360,8 @@ This version is maintained by [Lukas Oppermann](https://github.com/lukasopperman
 
 Contributions are always welcome. Please check out the [contribution guidelines](CONTRIBUTING.md) to make it fast & easy for us to merge your PR.
 
+**Issues:** If you create a [bug report](https://github.com/lukasoppermann/html5sortable/issues/new/choose), please make sure to include a [test case](https://codepen.io/pen/?template=GRoQRxo) showing the issue. The easiest way is to copy the [codepen template](https://codepen.io/pen/?template=GRoQRxo).
+
 ## Polyfills: Facing towards the future instead of the past
 This project is focusing on modern, evergreen browsers to deliver a fast and small package. While many projects try build features so that it runs in the oldest browser (looking at you IE9), we try to create a fast and pleasant development experience using the language capabilities that the current version of Javascript offers.
 
