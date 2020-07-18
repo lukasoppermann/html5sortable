@@ -1,12 +1,44 @@
-# HTML5Sortable
+![](https://repository-images.githubusercontent.com/275870366/15880680-ba44-11ea-888b-8211b9431f94)
+
+
+
+
+
+<h1> HTML5Sortable </h1>
+
 [![Build Status](https://img.shields.io/travis/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://travis-ci.org/lukasoppermann/html5sortable) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) [![Coverage Status](https://img.shields.io/coveralls/lukasoppermann/html5sortable/master.svg?style=flat-square)](https://coveralls.io/github/lukasoppermann/html5sortable) [![Known Vulnerabilities](https://snyk.io/test/github/lukasoppermann/html5sortable/badge.svg?style=flat-square)](https://snyk.io/test/github/lukasoppermann/html5sortable)  [![NPM](https://img.shields.io/npm/v/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![npm](https://img.shields.io/npm/dt/html5sortable.svg?style=flat-square)](https://www.npmjs.com/package/html5sortable) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md) [![Code of Conduct](https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
 
 > **Lightweight vanillajs micro-library for creating sortable lists and grids using native HTML5 drag and drop API.**
 
+
+
+# Table of Contents
+  * [Community maintained](#community-maintained)
+  * [Looking for Co-Maintainer](#looking-for-co-maintainer)
+  * [Features](#features)
+  * [Framework adapters](#framework-adapters)
+  * [Installation](#installation)
+  * [Examples](#examples)
+  * [Docs](#docs)
+    * [Usage](#usage)
+    * [Styling](#styling)
+    * [Nesting](#nesting)
+    * [Events](#events)
+    * [Options](#options)
+    * [Methods](#methods)
+    * [Sorting table rows](#sorting-table-rows)
+  * [Contributing](#contributing)
+  * [Polyfills](#polyfills-facing-towards-the-future-instead-of-the-past)
+  * [Known Issues](#known-issues)
+      
+
 ## Community maintained
+
 A fair **warning:** this repository is currently not being actively developed. It works pretty fine, but if you find any issues you will need to fix them yourself. I try to keep the dependencies up to date and will happily help you fix issues and merge PRs for bugfixes or new features. 
 
 ## Looking for Co-Maintainer
+[![Looking for Co-Maintainer](https://img.shields.io/badge/looking%20for-co%E2%80%93maintainer-red.svg?style=flat-square)](https://twitter.com/lukasoppermann)
+
 If you are interested in actively helping with maintaining & improving this project please send me a message via twitter [@lukasoppermann](https://twitter.com/lukasoppermann) or email oppermann.lukas@gmail.com with a short text of what you would like to do on the project. This may be something small like sorting issues and helping with questions and small bugs (if you have little time or are not that experienced) or something big like tackling big features.
 
 ## Features
@@ -22,7 +54,7 @@ If you are interested in actively helping with maintaining & improving this proj
 If you would like to add an adapter to the list, please [create an issue](https://github.com/lukasoppermann/html5sortable/issues) with the link to your adapter.
 - **Polymer:** https://github.com/trofrigo/polymer-html5sortable
 
-# Installation
+## Installation
 We recommend installing the package via npm.
 
 ```
@@ -38,17 +70,21 @@ Once you install the package using `npm` or [downloading the latest release](htt
 
 Still using **bower**? `bower install https://github.com/lukasoppermann/html5sortable.git`
 
-# Examples
+## Examples
 You can find the **[examples online](https://lukasoppermann.github.io/html5sortable/index.html)** or test locally. **Warning:** the online demo is just to show off the features and is most likely not up to date. Please study this readme file for the current way of implementing and using `html5sortable`.
 
-# Usage
+## Docs
+
+
+### Usage
+
 Use `sortable` method to create a sortable list:
 
 ``` javascript
 sortable('.sortable');
 ```
 
-## Styling
+### Styling
 
 Use `.sortable-placeholder` CSS selectors to change the styles of the placeholder. You may change the class by setting the `placeholderClass` option in the config object.
 
@@ -58,7 +94,7 @@ sortable('.sortable', {
 });
 ```
 
-## Nesting
+### Nesting
 You can nest sortables inside each other. However, take care to add a wrapper around the items, a sortable-item can **not** at the same time be a `sortable`.
 
 ```html
@@ -77,6 +113,7 @@ You can nest sortables inside each other. However, take care to add a wrapper ar
 NOTE: Events can be listened on any element from the group (when using `connectWith`), since the same event will be dispatched on all of them.
 
 ### sortstart
+
 Use `sortstart` event if you want to do something when sorting starts:
 
 ``` javascript
@@ -96,6 +133,7 @@ sortable('.sortable')[0].addEventListener('sortstart', function(e) {
 ```
 
 ### sortstop
+
 Use the `sortstop` event if you want to do something when sorting stops:
 
 ``` javascript
@@ -191,13 +229,17 @@ sortable('.js-sortable, .js-second-sortable', {
 ```
 
 ### acceptFrom
-Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a space separated list of selectors or `false` to disabling accepting items. This is an alternative to the now **deprecated** [connectWith](#connectwith) and should not be used together.
+Use the `acceptFrom` option to restrict which sortable's items will be accepted by this sortable. `acceptFrom` accepts a comma separated list of selectors or `false` to disabling accepting items. This is an alternative to the now **deprecated** [connectWith](#connectwith) and should not be used together.
 
 ``` javascript
 sortable('.sortable', {
-  acceptFrom: '.selector,.anotherSortable' // Defaults to null
+  acceptFrom: '.sortable, .anotherSortable' // Defaults to null
 });
 ```
+
+***Note:*** Using `acceptFrom` also effects the sortable itself. This means, items will not be sortable within the list itself, if you do not include it in the `acceptFrom` option. 
+
+In the example the current list `.sortable` allows items within it to be sorted and accepts elements from `.anotherSortable`.
 
 If you want to be able to move items between to sortables, the `acceptFrom` option must be present on both of them.
 
@@ -368,6 +410,8 @@ sortable('.sortable');
 This version is maintained by [Lukas Oppermann](https://github.com/lukasoppermann) and [many other contributors](../../contributors). Thanks for your help! :+1:
 
 Contributions are always welcome. Please check out the [contribution guidelines](CONTRIBUTING.md) to make it fast & easy for us to merge your PR.
+
+**Issues:** If you create a [bug report](https://github.com/lukasoppermann/html5sortable/issues/new/choose), please make sure to include a [test case](https://codepen.io/pen/?template=GRoQRxo) showing the issue. The easiest way is to copy the [codepen template](https://codepen.io/pen/?template=GRoQRxo).
 
 ## Polyfills: Facing towards the future instead of the past
 This project is focusing on modern, evergreen browsers to deliver a fast and small package. While many projects try build features so that it runs in the oldest browser (looking at you IE9), we try to create a fast and pleasant development experience using the language capabilities that the current version of Javascript offers.
