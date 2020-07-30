@@ -418,3 +418,5 @@ We recommend using the [Financial Times Polyfill Service](https://github.com/Fin
 ### Firefox
 - **Dragstart not working on buttons**  
 Dragstart event does not fire on `button` elements. This effectively disables drag and drop for button elements. See https://caniuse.com/#feat=dragndrop in the known issues section.
+- **Drag & Drop is not working on iOS**  
+But works in conjunction with [DragDropTouch](https://github.com/Bernardo-Castilho/dragdroptouch) [#522](https://github.com/lukasoppermann/html5sortable/issues/522).
