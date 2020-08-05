@@ -382,7 +382,9 @@ export default function sortable (sortableElements, options: configuration|objec
         }))
 
         _on(sortableContainer, 'dragleave', e => {
-          const outTarget = e.releatedTarget || e.fromElement
+          // TODO: rename outTarget to be more self-explanatory
+          // e.fromElement for very old browsers, similar to relatedTarget
+          const outTarget = e.relatedTarget || e.fromElement
           if (!e.currentTarget.contains(outTarget)) {
             if (options.dropTargetContainerClass) {
               sortableContainer.classList.remove(options.dropTargetContainerClass)
