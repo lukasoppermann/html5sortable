@@ -62,7 +62,7 @@ const _removeItemEvents = function (items) {
 }
 
 // Remove container events
-const _removeContainerEvents = function () {
+const _removeContainerEvents = function (originContainer, previousContainer) {
   if (originContainer) {
     _off(originContainer, 'dragleave')
   }
@@ -157,7 +157,7 @@ const _destroySortable = function (sortableElement) {
   _off(handles, 'mousedown')
   _removeItemEvents(items)
   _removeItemData(items)
-  _removeContainerEvents()
+  _removeContainerEvents(originContainer, previousContainer)
   // clear sortable flag
   sortableElement.isSortable = false
 }
@@ -660,6 +660,7 @@ sortable.__testing = {
   _data: _data,
   _removeItemEvents: _removeItemEvents,
   _removeItemData: _removeItemData,
-  _removeSortableData: _removeSortableData
+  _removeSortableData: _removeSortableData,
+  _removeContainerEvents: _removeContainerEvents
 }
 /* END.TESTS_ONLY */

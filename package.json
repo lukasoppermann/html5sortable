@@ -76,7 +76,7 @@
   },
   "scripts": {
     "jest": "jest",
-    "test": "jest && npm run standard",
+    "test": "jest --coverage && npm run standard",
     "coverage": "jest --coverage && npm run standard",
     "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
     "release": "sh make-release.sh",
