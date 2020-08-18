@@ -1,7 +1,7 @@
 /* eslint-env browser */
 import { addData as _data } from './data' // yuk, data really needs to be refactored
 import filter from './filter'
-import index from './index'
+import index from './getIndex'
 /**
  * Filter only wanted nodes
  * @param {HTMLElement} sortableContainer

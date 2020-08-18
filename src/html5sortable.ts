@@ -7,7 +7,7 @@ import { addEventListener as _on, removeEventListener as _off } from './eventLis
 import { addAttribute as _attr, removeAttribute as _removeAttr } from './attribute'
 import _offset from './offset'
 import _debounce from './debounce'
-import _index from './index'
+import _index from './getIndex'
 import isInDom from './isInDom'
 import { insertBefore as _before, insertAfter as _after } from './insertHtmlElements'
 import _serialize from './serialize'

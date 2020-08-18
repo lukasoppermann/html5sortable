@@ -1,7 +1,7 @@
 /* global describe,test,expect */
 /* eslint-env jest */
 
-import index from '../src/index'
+import index from '../src/getIndex'
 
 describe('Testing index', () => {
   test('element is undefined', () => {
