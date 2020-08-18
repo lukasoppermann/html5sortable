@@ -218,7 +218,7 @@ const _reloadSortable = function (sortableElement) {
   _data(sortableElement, '_disabled', 'false')
   // remove event handlers from items
   _removeItemEvents(items)
-  _removeContainerEvents()
+  _removeContainerEvents(originContainer, previousContainer)
   _off(handles, 'mousedown')
   // remove event handlers from sortable
   _off(sortableElement, 'dragover')
