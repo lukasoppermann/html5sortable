@@ -1,7 +1,7 @@
 /* eslint-env browser */
 import { addData as _data } from './data' // yuk, data really needs to be refactored
 import filter from './filter'
-import index from './getIndex'
+import getIndex from './getIndex'
 /**
  * Filter only wanted nodes
  * @param {HTMLElement} sortableContainer
@@ -29,7 +29,7 @@ export default (sortableContainer: HTMLElement, customItemSerializer: Function =
       parent: sortableContainer,
       node: item,
       html: item.outerHTML,
-      index: index(item, items)
+      index: getIndex(item, items)
     }
   })
   // serialize container

@@ -7,7 +7,7 @@ import { addEventListener as _on, removeEventListener as _off } from './eventLis
 import { addAttribute as _attr, removeAttribute as _removeAttr } from './attribute'
 import _offset from './offset'
 import _debounce from './debounce'
-import _index from './getIndex'
+import _getIndex from './getIndex'
 import isInDom from './isInDom'
 import { insertBefore as _before, insertAfter as _after } from './insertHtmlElements'
 import _serialize from './serialize'
@@ -325,7 +325,7 @@ export default function sortable (sortableElements, options: configuration|objec
       // grab values
       originItemsBeforeUpdate = _filter(sortableContainer.children, options.items)
       originIndex = originItemsBeforeUpdate.indexOf(dragItem)
-      originElementIndex = _index(dragItem, sortableContainer.children)
+      originElementIndex = _getIndex(dragItem, sortableContainer.children)
       originContainer = sortableContainer
 
       // add transparent clone or other ghost to cursor
@@ -497,9 +497,9 @@ export default function sortable (sortableElements, options: configuration|objec
       const destinationContainer = this.isSortable === true ? this : this.parentElement
       const destinationItems = _filter(destinationContainer.children, _data(destinationContainer, 'items'))
         .filter(item => item !== placeholder)
-      const destinationElementIndex = _index(dragging, Array.from(dragging.parentElement.children)
+      const destinationElementIndex = _getIndex(dragging, Array.from(dragging.parentElement.children)
         .filter(item => item !== placeholder))
-      const destinationIndex = _index(dragging, destinationItems)
+      const destinationIndex = _getIndex(dragging, destinationItems)
 
       if (options.dropTargetContainerClass) {
         destinationContainer.classList.remove(options.dropTargetContainerClass)
@@ -547,8 +547,8 @@ export default function sortable (sortableElements, options: configuration|objec
       if (Array.from(sortableElement.children).indexOf(element) > -1) {
         const thisHeight = _getElementHeight(element)
         const thisWidth = _getElementWidth(element)
-        const placeholderIndex = _index(store(sortableElement).placeholder, element.parentElement.children)
-        const thisIndex = _index(element, element.parentElement.children)
+        const placeholderIndex = _getIndex(store(sortableElement).placeholder, element.parentElement.children)
+        const thisIndex = _getIndex(element, element.parentElement.children)
         // Check if `element` is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
         if (thisHeight > draggingHeight || thisWidth > draggingWidth) {
           // Dead zone?
