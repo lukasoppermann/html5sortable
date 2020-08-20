@@ -2,7 +2,7 @@
 import store from './store'
 import filter from './filter'
 import throttle from './throttle'
-import { addEventListener as on, removeEventListener as off } from './eventListener'
+import { addEventListener, removeEventListener } from './eventListener'
 /**
  * enable or disable hoverClass on mouseenter/leave if container Items
  * @param {sortable} sortableContainer a valid sortableContainer
@@ -14,7 +14,7 @@ export default (sortableContainer: sortable, enable: boolean) => {
     const hoverClasses = store(sortableContainer).getConfig('hoverClass').split(' ')
     // add class on hover
     if (enable === true) {
-      on(sortableContainer, 'mousemove', throttle((event) => {
+      addEventListener(sortableContainer, 'mousemove', throttle((event) => {
         // check of no mouse button was pressed when mousemove started == no drag
         if (event.buttons === 0) {
           filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(item => {
@@ -27,15 +27,15 @@ export default (sortableContainer: sortable, enable: boolean) => {
         }
       }, store(sortableContainer).getConfig('throttleTime')))
       // remove class on leave
-      on(sortableContainer, 'mouseleave', () => {
+      addEventListener(sortableContainer, 'mouseleave', () => {
         filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(item => {
           item.classList.remove(...hoverClasses)
         })
       })
     // remove events
     } else {
-      off(sortableContainer, 'mousemove')
-      off(sortableContainer, 'mouseleave')
+      removeEventListener(sortableContainer, 'mousemove')
+      removeEventListener(sortableContainer, 'mouseleave')
     }
   }
 }
