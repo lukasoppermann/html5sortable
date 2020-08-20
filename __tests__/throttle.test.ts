@@ -1,11 +1,11 @@
 /* global describe,test,expect */
 /* eslint-env jest */
-import _throttle from '../src/throttle'
+import throttle from '../src/throttle'
 
 describe('Testing throttle', () => {
   test('throttle should not allow functions to be called multiple times within the timeframe', () => {
     let value = 0
-    const fn = _throttle(() => {
+    const fn = throttle(() => {
       value++
     })
     // call function twice immeditatly
@@ -17,7 +17,7 @@ describe('Testing throttle', () => {
 
   test('throttle should allow functions to be called multiple times after the timeframe', () => {
     let value = 0
-    const fn = _throttle(() => {
+    const fn = throttle(() => {
       value++
     }, 10)
     // call function twice immeditatly
@@ -31,11 +31,11 @@ describe('Testing throttle', () => {
 
   test('throttle should fail if no functin is provided', () => {
     // assert
-    expect(() => { _throttle('test', 10) }).toThrowError('You must provide a function as the first argument for throttle.')
+    expect(() => { throttle('test', 10) }).toThrowError('You must provide a function as the first argument for throttle.')
   })
 
   test('throttle should fail if threshold is not a number', () => {
     // assert
-    expect(() => { _throttle(() => { }, '10') }).toThrowError('You must provide a number as the second argument for throttle.')
+    expect(() => { throttle(() => { }, '10') }).toThrowError('You must provide a number as the second argument for throttle.')
   })
 })

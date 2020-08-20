@@ -14,7 +14,7 @@ describe('_removeItemEvents', () => {
     expect(typeof store(li).getData('eventdragover')).toBe('function')
     expect(typeof store(li).getData('eventdragenter')).toBe('function')
     // remove item events
-    sortable.__testing._removeItemEvents(li)
+    sortable.__testing.removeItemEvents(li)
     // assert
     expect(typeof store(li).getData('eventdragover')).toBe('undefined')
     expect(typeof store(li).getData('eventdragenter')).toBe('undefined')

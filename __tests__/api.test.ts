@@ -30,11 +30,11 @@ describe('Testing api', () => {
     })
 
     test('should have a data-opts object', () => {
-      expect(typeof sortable.__testing._data(ul, 'opts')).toBe('object')
+      expect(typeof sortable.__testing.data(ul, 'opts')).toBe('object')
     })
 
     test('should have correct options set on options object', () => {
-      const opts = sortable.__testing._data(ul, 'opts')
+      const opts = sortable.__testing.data(ul, 'opts')
       expect(opts.items).toEqual('li')
       expect(opts.placeholderClass).toEqual('test-placeholder')
       expect(opts.draggingClass).toEqual('test-dragging')
@@ -45,7 +45,7 @@ describe('Testing api', () => {
     })
 
     test('should have a data-items object', () => {
-      expect(typeof sortable.__testing._data(ul, 'items')).toBe('string')
+      expect(typeof sortable.__testing.data(ul, 'items')).toBe('string')
     })
 
     test('should have aria-grabbed attributes', () => {
@@ -83,7 +83,7 @@ describe('Testing api', () => {
     })
 
     test('should not have a data-opts object', () => {
-      expect(typeof sortable.__testing._data(ul, 'opts')).toBe('undefined')
+      expect(typeof sortable.__testing.data(ul, 'opts')).toBe('undefined')
     })
 
     test('should not have a aria-dropeffect attribute', () => {
@@ -91,7 +91,7 @@ describe('Testing api', () => {
     })
 
     test('should not have a data-items object', () => {
-      expect(sortable.__testing._data(ul, 'items')).not.toBeDefined()
+      expect(sortable.__testing.data(ul, 'items')).not.toBeDefined()
     })
 
     test('should not have an aria-grabbed attribute', () => {
@@ -117,13 +117,13 @@ describe('Testing api', () => {
     })
 
     test('should keep the options of the sortable', () => {
-      const opts = sortable.__testing._data(ul, 'opts')
+      const opts = sortable.__testing.data(ul, 'opts')
       expect(opts.items).toEqual('li:not(.disabled)')
       expect(opts.placeholderClass).toEqual('test-placeholder')
     })
 
     test('should keep items attribute of the sortable', () => {
-      const items = sortable.__testing._data(ul, 'items')
+      const items = sortable.__testing.data(ul, 'items')
       expect(items).toEqual('li:not(.disabled)')
     })
   })

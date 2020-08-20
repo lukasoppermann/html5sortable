@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import { addData as _data } from './data' // yuk, data really needs to be refactored
+import { addData as data } from './data' // yuk, data really needs to be refactored
 import filter from './filter'
 import getIndex from './getIndex'
 /**
@@ -18,7 +18,7 @@ export default (sortableContainer: HTMLElement, customItemSerializer: Function =
     throw new Error('You need to provide a valid serializer for items and the container.')
   }
   // get options
-  const options = _data(sortableContainer, 'opts')
+  const options = data(sortableContainer, 'opts')
 
   const item: string|undefined = options.items
 
