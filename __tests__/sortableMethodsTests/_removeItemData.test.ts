@@ -22,7 +22,7 @@ describe('_removeItemData', () => {
     sortable(ul, {
       items: 'li'
     })
-    sortable.__testing._removeItemData(li)
+    sortable.__testing.removeItemData(li)
     expect(li.getAttribute('role')).toBeNull()
     expect(li.getAttribute('draggable')).toBeNull()
     expect(li.getAttribute('aria-grabbed')).toBeNull()
