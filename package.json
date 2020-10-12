@@ -32,7 +32,6 @@
     "@types/jest": "^26.0.3",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
     "@typescript-eslint/parser": "^4.4.0",
-    "coveralls": "^3.1.0",
     "eslint": "^7.4.0",
     "jest": "^24.9.0",
     "rollup": "^2.18.2",
@@ -69,6 +68,7 @@
     }
   },
   "standard": {
+    "globals": ["HTMLElement", "configuration", "Event", "sortable", "offsetObject", "serializedItem", "Store"],
     "parser": "@typescript-eslint/parser",
     "plugins": [
       "@typescript-eslint"
@@ -82,7 +82,7 @@
     "release": "sh make-release.sh",
     "standard": "standard 'src/*.ts' '__tests__/*.ts' | snazzy",
     "github-build": "npm run cover && npm run standard",
-    "cover": "jest --colors --coverage --coverageReporters=text-lcov | coveralls",
+    "cover": "jest --coverage",
     "postversion": "npm run release",
     "tsc": "tsc ./src/*.ts --pretty --diagnostics --noEmit --watch"
   }
