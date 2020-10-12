@@ -1,0 +1,32 @@
+name: Build and test 
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env: 
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Build and test
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - run: npm install -g greenkeeper-lockfile@1
+    - run: greenkeeper-lockfile-update
+    - run: npm ci
+    - run: npm run github-build
+    - run: greenkeeper-lockfile-upload

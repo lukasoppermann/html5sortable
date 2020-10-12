@@ -81,7 +81,7 @@
     "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
     "release": "sh make-release.sh",
     "standard": "standard 'src/*.ts' '__tests__/*.ts' | snazzy",
-    "travis": "npm run cover && npm run standard",
+    "github-build": "npm run cover && npm run standard",
     "cover": "jest --colors --coverage --coverageReporters=text-lcov | coveralls",
     "postversion": "npm run release",
     "tsc": "tsc ./src/*.ts --pretty --diagnostics --noEmit --watch"
