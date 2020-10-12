@@ -24,6 +24,6 @@ jobs:
     - name: Build and test
       uses: actions/setup-node@v1
       with:
-        node-version: 12.x
+        node-version: 14.x
     - run: npm ci
     - run: npm run github-build
