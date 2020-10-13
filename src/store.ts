@@ -1,5 +1,7 @@
 /* eslint-env browser */
+/* eslint-disable no-use-before-define */
 export const stores: Map<HTMLElement, Store> = new Map()
+/* eslint-enable no-use-before-define */
 /**
  * Stores data & configurations per Sortable
  * @param {Object} config
