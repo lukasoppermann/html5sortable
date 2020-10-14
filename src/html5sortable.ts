@@ -129,7 +129,7 @@ function findSortable (element, event) {
  * @param {HTMLElement} element is that being dragged
  */
 function findDragElement (sortableElement, element) {
-  const options = data(sortableElement, 'opts')
+  const options = <configuration> data(sortableElement, 'opts')
   const items = filter(sortableElement.children, options.items)
   const itemlist = items.filter(function (ele) {
     return ele.contains(element) || (ele.shadowRoot && ele.shadowRoot.contains(element))
@@ -142,7 +142,7 @@ function findDragElement (sortableElement, element) {
  * @param {HTMLElement} sortableElement a single sortable
  */
 const destroySortable = function (sortableElement) {
-  const opts = data(sortableElement, 'opts') || {}
+  const opts = <configuration> data(sortableElement, 'opts') || {}
   const items = filter(sortableElement.children, opts.items)
   const handles = getHandles(items, opts.handle)
   // remove event handlers & data from sortable
@@ -166,7 +166,7 @@ const destroySortable = function (sortableElement) {
  * @param {HTMLElement} sortableElement a single sortable
  */
 const enableSortable = function (sortableElement) {
-  const opts = data(sortableElement, 'opts')
+  const opts = <configuration> data(sortableElement, 'opts')
   const items = filter(sortableElement.children, opts.items)
   const handles = getHandles(items, opts.handle)
   attr(sortableElement, 'aria-dropeffect', 'move')
@@ -198,7 +198,7 @@ const enableSortable = function (sortableElement) {
  * @param {HTMLElement} sortableElement a single sortable
  */
 const disableSortable = function (sortableElement) {
-  const opts = data(sortableElement, 'opts')
+  const opts = <configuration> data(sortableElement, 'opts')
   const items = filter(sortableElement.children, opts.items)
   const handles = getHandles(items, opts.handle)
   attr(sortableElement, 'aria-dropeffect', 'none')
