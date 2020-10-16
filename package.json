@@ -93,5 +93,6 @@
     "cover": "jest --coverage",
     "postversion": "npm run release",
     "tsc": "tsc ./src/*.ts --pretty --diagnostics --noEmit --watch"
-  }
+  },
+  "dependencies": {}
 }
