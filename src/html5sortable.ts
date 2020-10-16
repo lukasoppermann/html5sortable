@@ -172,26 +172,6 @@ const enableSortable = function (sortableElement) {
   attr(sortableElement, 'aria-dropeffect', 'move')
   data(sortableElement, '_disabled', 'false')
   attr(handles, 'draggable', 'true')
-  // @todo: remove this fix
-  // IE FIX for ghost
-  // can be disabled as it has the side effect that other events
-  // (e.g. click) will be ignored
-  if (opts.disableIEFix === false) {
-    const spanEl = (document || window.document).createElement('span')
-    if (typeof spanEl.dragDrop === 'function') {
-      on(handles, 'mousedown', function () {
-        if (items.indexOf(this) !== -1) {
-          this.dragDrop()
-        } else {
-          let parent = this.parentElement
-          while (items.indexOf(parent) === -1) {
-            parent = parent.parentElement
-          }
-          parent.dragDrop()
-        }
-      })
-    }
-  }
 }
 /**
  * Disable the sortable
