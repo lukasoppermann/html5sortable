@@ -68,7 +68,15 @@
     }
   },
   "standard": {
-    "globals": ["HTMLElement", "configuration", "Event", "sortable", "offsetObject", "serializedItem", "Store"],
+    "globals": [
+      "HTMLElement",
+      "configuration",
+      "Event",
+      "sortable",
+      "offsetObject",
+      "serializedItem",
+      "Store"
+    ],
     "parser": "@typescript-eslint/parser",
     "plugins": [
       "@typescript-eslint"

@@ -54,7 +54,9 @@ var sortable = (function () {
   });
 
   /* eslint-env browser */
+  /* eslint-disable no-use-before-define */
   var stores = new Map();
+  /* eslint-enable no-use-before-define */
   /**
    * Stores data & configurations per Sortable
    * @param {Object} config
