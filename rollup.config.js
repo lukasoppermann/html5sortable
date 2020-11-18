@@ -1,5 +1,5 @@
 import { uglify } from 'rollup-plugin-uglify'
-import typescript from 'rollup-plugin-typescript'
+import typescript from 'rollup-plugin-typescript2'
 import strip from 'rollup-plugin-strip-code'
 import pkg from './package.json'
 
