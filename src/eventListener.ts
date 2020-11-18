@@ -6,7 +6,7 @@ import store from './store'
  */
 function addEventListener (element: Array<HTMLElement>|HTMLElement, eventName:string, callback: () => void) {
   if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
+    for (let i = 0; i < element.length; ++i) {
       addEventListener(element[i], eventName, callback)
     }
     return
@@ -20,7 +20,7 @@ function addEventListener (element: Array<HTMLElement>|HTMLElement, eventName:st
  */
 function removeEventListener (element: Array<HTMLElement>|HTMLElement, eventName: string) {
   if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
+    for (let i = 0; i < element.length; ++i) {
       removeEventListener(element[i], eventName)
     }
     return

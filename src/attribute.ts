@@ -5,7 +5,7 @@
  */
 function addAttribute (element: Array<HTMLElement>|HTMLElement, attribute:string, value:string) {
   if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
+    for (let i = 0; i < element.length; ++i) {
       addAttribute(element[i], attribute, value)
     }
     return
@@ -18,7 +18,7 @@ function addAttribute (element: Array<HTMLElement>|HTMLElement, attribute:string
  */
 function removeAttribute (element: Array<HTMLElement>|HTMLElement, attribute:string) {
   if (element instanceof Array) {
-    for (var i = 0; i < element.length; ++i) {
+    for (let i = 0; i < element.length; ++i) {
       removeAttribute(element[i], attribute)
     }
     return
