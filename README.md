@@ -434,7 +434,8 @@ We recommend using the [Financial Times Polyfill Service](https://github.com/Fin
 ```
 
 ### Touch Support
-Touch support can be achined using  the [DragDropTouch](https://github.com/Bernardo-Castilho/dragdroptouch) polyfill. Just include that script before initalizing Sortable.
+Touch support can be achived by using the [DragDropTouch](https://github.com/Bernardo-Castilho/dragdroptouch) polyfill.
+The DragDropTouch polyfill must be included before html5sortable is initialized.
 
 ## Known Issues
 ### Firefox
