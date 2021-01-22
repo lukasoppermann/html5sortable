@@ -29,6 +29,7 @@
     * [Sorting table rows](#sorting-table-rows)
   * [Contributing](#contributing)
   * [Polyfills](#polyfills-facing-towards-the-future-instead-of-the-past)
+  * [Touch Support](#touch-support)
   * [Known Issues](#known-issues)
       
 
@@ -431,6 +432,10 @@ We recommend using the [Financial Times Polyfill Service](https://github.com/Fin
 ```
 <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 ```
+
+### Touch Support
+Touch support can be achieved by using the [DragDropTouch](https://github.com/Bernardo-Castilho/dragdroptouch) polyfill.
+The DragDropTouch polyfill must be included before html5sortable is initialized.
 
 ## Known Issues
 ### Firefox
