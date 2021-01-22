@@ -4,7 +4,7 @@ import store from './store'
  * @param {sortable} destination the container an item is move to
  * @param {sortable} dom node currently being dragged
  */
-export default (destination: sortable, draggable: node) => {
+export default (destination: sortable, dragging: node) => {
   // check if valid sortable
   if (destination.isSortable === true) {
     const acceptFrom = store(destination).getConfig('acceptFrom')
