@@ -27,7 +27,7 @@ export default (destination: sortable, dragging: node) => {
       return true
     }
     // check if lists are connected with connectWith
-    if (store(destination).getConfig('connectWith') !== undefined && store(destination).getConfig('connectWith') !== null) {
+    if ((store(destination).getConfig('connectWith') !== undefined && store(destination).getConfig('connectWith') !== null) && store(dragging.parentElement).getConfig('connectWith') !== undefined && store(dragging.parentElement).getConfig('connectWith') !== null) {
       return store(destination).getConfig('connectWith') === store(dragging.parentElement).getConfig('connectWith')
     }
   }
