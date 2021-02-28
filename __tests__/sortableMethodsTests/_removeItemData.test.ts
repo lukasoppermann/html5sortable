@@ -1,6 +1,7 @@
 /* global describe,test,expect */
 import { mockInnerHTML } from '../helpers'
 import sortable from '../../src/html5sortable'
+import store from '../../src/store'
 /* eslint-env jest */
 
 describe('_removeItemData', () => {
@@ -8,6 +9,9 @@ describe('_removeItemData', () => {
   beforeEach(() => {
     document.body.innerHTML = mockInnerHTML
     ul = document.body.querySelector('.sortable')
+    store(ul).config = {
+      hoverClass: 'hover-class'
+    }
     sortable(ul, 'destroy')
     // init sortable
     sortable(ul, null)

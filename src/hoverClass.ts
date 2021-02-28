@@ -8,7 +8,6 @@ import { addEventListener, removeEventListener } from './eventListener'
  * @param {sortable} sortableContainer a valid sortableContainer
  * @param {boolean} enable enable or disable event
  */
-// export default (sortableContainer: sortable, enable: boolean) => {
 export default (sortableContainer: sortable, enable: boolean) => {
   if (typeof store(sortableContainer).getConfig('hoverClass') === 'string') {
     const hoverClasses = store(sortableContainer).getConfig('hoverClass').split(' ')

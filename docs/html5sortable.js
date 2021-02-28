@@ -656,7 +656,6 @@ var sortable = (function () {
    * @param {sortable} sortableContainer a valid sortableContainer
    * @param {boolean} enable enable or disable event
    */
-  // export default (sortableContainer: sortable, enable: boolean) => {
   var enableHoverClass = (function (sortableContainer, enable) {
       if (typeof store(sortableContainer).getConfig('hoverClass') === 'string') {
           var hoverClasses_1 = store(sortableContainer).getConfig('hoverClass').split(' ');
@@ -823,6 +822,8 @@ var sortable = (function () {
       removeContainerEvents(originContainer, previousContainer);
       // clear sortable flag
       sortableElement.isSortable = false;
+      // disable adding hover class
+      enableHoverClass(sortableElement, false);
   };
   /**
    * Enable the sortable
@@ -869,6 +870,7 @@ var sortable = (function () {
       addData(sortableElement, '_disabled', 'true');
       addAttribute(handles, 'draggable', 'false');
       removeEventListener(handles, 'mousedown');
+      // enableHoverClass(sortableElement, false)
   };
   /**
    * Reload the sortable
