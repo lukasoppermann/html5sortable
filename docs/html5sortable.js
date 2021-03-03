@@ -1115,9 +1115,11 @@ var sortable = (function () {
                   // only elements in DOM
                   .filter(isInDom)[0];
               // attach element after placeholder
-              insertAfter(visiblePlaceholder, dragging);
-              // remove placeholder from dom
-              visiblePlaceholder.remove();
+              if (visiblePlaceholder && visiblePlaceholder.nextElementSibling != null) {
+                insertAfter(visiblePlaceholder, dragging);
+                // remove placeholder from dom
+                visiblePlaceholder.remove();
+              }
               /*
                * Fires Custom Event - 'sortstop'
                */
