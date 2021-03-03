@@ -807,6 +807,8 @@ var sortable = (function () {
       var opts = addData(sortableElement, 'opts') || {};
       var items = filter(sortableElement.children, opts.items);
       var handles = getHandles(items, opts.handle);
+      // disable adding hover class
+      enableHoverClass(sortableElement, false);
       // remove event handlers & data from sortable
       removeEventListener(sortableElement, 'dragover');
       removeEventListener(sortableElement, 'dragenter');
@@ -822,8 +824,6 @@ var sortable = (function () {
       removeContainerEvents(originContainer, previousContainer);
       // clear sortable flag
       sortableElement.isSortable = false;
-      // disable adding hover class
-      enableHoverClass(sortableElement, false);
   };
   /**
    * Enable the sortable
@@ -870,7 +870,7 @@ var sortable = (function () {
       addData(sortableElement, '_disabled', 'true');
       addAttribute(handles, 'draggable', 'false');
       removeEventListener(handles, 'mousedown');
-      // enableHoverClass(sortableElement, false)
+      enableHoverClass(sortableElement, false);
   };
   /**
    * Reload the sortable

@@ -146,7 +146,6 @@ const destroySortable = function (sortableElement) {
   const items = filter(sortableElement.children, opts.items)
   const handles = getHandles(items, opts.handle)
   // disable adding hover class
-  console.log(opts)
   enableHoverClass(sortableElement, false)
   // remove event handlers & data from sortable
   off(sortableElement, 'dragover')
