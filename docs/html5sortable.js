@@ -836,6 +836,8 @@ var sortable = (function () {
       addAttribute(sortableElement, 'aria-dropeffect', 'move');
       addData(sortableElement, '_disabled', 'false');
       addAttribute(handles, 'draggable', 'true');
+      // enable hover class
+      enableHoverClass(sortableElement, true);
       // @todo: remove this fix
       // IE FIX for ghost
       // can be disabled as it has the side effect that other events
@@ -961,8 +963,6 @@ var sortable = (function () {
           enableSortable(sortableElement);
           addAttribute(listItems, 'role', 'option');
           addAttribute(listItems, 'aria-grabbed', 'false');
-          // enable hover class
-          enableHoverClass(sortableElement, true);
           /*
            Handle drag events on draggable items
            Handle is set at the sortableElement level as it will bubble up
