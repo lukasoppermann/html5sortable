@@ -6,8 +6,7 @@
  *
  * Released under the MIT license.
  */
-var sortable = (function () {
-  'use strict';
+define(function () { 'use strict';
 
   /**
    * Get or set data on element
@@ -1296,4 +1295,4 @@ var sortable = (function () {
 
   return sortable;
 
-}());
+});
