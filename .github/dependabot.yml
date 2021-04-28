@@ -1,0 +1,61 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: rollup
+    versions:
+    - 2.38.1
+    - 2.39.0
+    - 2.39.1
+    - 2.41.3
+    - 2.41.4
+    - 2.41.5
+    - 2.42.0
+    - 2.42.1
+    - 2.42.2
+    - 2.42.3
+    - 2.42.4
+    - 2.43.0
+    - 2.43.1
+    - 2.44.0
+    - 2.45.0
+    - 2.45.1
+  - dependency-name: eslint
+    versions:
+    - 7.20.0
+    - 7.22.0
+    - 7.23.0
+    - 7.24.0
+  - dependency-name: y18n
+    versions:
+    - 4.0.2
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.15.1
+    - 4.15.2
+    - 4.16.0
+    - 4.18.0
+    - 4.19.0
+    - 4.20.0
+    - 4.21.0
+  - dependency-name: "@typescript-eslint/parser"
+    versions:
+    - 4.15.1
+    - 4.15.2
+    - 4.16.0
+    - 4.18.0
+    - 4.19.0
+    - 4.20.0
+    - 4.21.0
+  - dependency-name: "@types/jest"
+    versions:
+    - 26.0.21
+    - 26.0.22
+  - dependency-name: typescript
+    versions:
+    - 4.1.4
