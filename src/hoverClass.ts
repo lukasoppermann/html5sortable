@@ -17,10 +17,10 @@ export default (sortableContainer: sortable, enable: boolean) => {
         // check of no mouse button was pressed when mousemove started == no drag
         if (event.buttons === 0) {
           filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(item => {
-            if (item !== event.target) {
-              item.classList.remove(...hoverClasses)
-            } else {
+            if (item === event.target || item.contains(event.target)) {
               item.classList.add(...hoverClasses)
+            } else {
+              item.classList.remove(...hoverClasses)
             }
           })
         }
