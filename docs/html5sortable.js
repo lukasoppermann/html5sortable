@@ -666,11 +666,11 @@ var sortable = (function () {
                   if (event.buttons === 0) {
                       filter(sortableContainer.children, store(sortableContainer).getConfig('items')).forEach(function (item) {
                           var _a, _b;
-                          if (item !== event.target) {
-                              (_a = item.classList).remove.apply(_a, hoverClasses_1);
+                          if (item === event.target || item.contains(event.target)) {
+                              (_a = item.classList).add.apply(_a, hoverClasses_1);
                           }
                           else {
-                              (_b = item.classList).add.apply(_b, hoverClasses_1);
+                              (_b = item.classList).remove.apply(_b, hoverClasses_1);
                           }
                       });
                   }
@@ -1115,11 +1115,9 @@ var sortable = (function () {
                   // only elements in DOM
                   .filter(isInDom)[0];
               // attach element after placeholder
-              if (visiblePlaceholder && visiblePlaceholder.nextElementSibling != null) {
-                insertAfter(visiblePlaceholder, dragging);
-                // remove placeholder from dom
-                visiblePlaceholder.remove();
-              }
+              insertAfter(visiblePlaceholder, dragging);
+              // remove placeholder from dom
+              visiblePlaceholder.remove();
               /*
                * Fires Custom Event - 'sortstop'
                */

@@ -29,7 +29,7 @@
     "url": "http://github.com/lukasoppermann/html5sortable/issues"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.3",
+    "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
     "@typescript-eslint/parser": "^4.4.0",
     "eslint": "^7.4.0",
