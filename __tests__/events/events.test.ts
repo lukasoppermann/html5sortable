@@ -173,6 +173,59 @@ describe('Testing events', () => {
     expect(event.dataTransfer.dropEffect).toBe(undefined)
   })
 
+  test('should correctly drop item in place without placeholder', () => {
+    jest.useFakeTimers()
+
+    const placeholder = document.createElement('DIV')
+    sortable(ul, {
+      items: 'li',
+      copy: true,
+      acceptFrom: false,
+      placeholderClass: 'test-placeholder'
+    })
+
+    sortable(ul2, {
+      items: 'li',
+      acceptFrom: 'ul',
+      placeholder,
+      placeholderClass: 'test-placeholder2'
+    })
+
+    let childcount = ul.children.length
+
+    let event = new CustomEvent('dragstart')
+    event.dataTransfer = dataTransferObj
+    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    ul.dispatchEvent(event)
+
+    event = new CustomEvent('dragover')
+    event.dataTransfer = dataTransferObj
+    fifthLi.dispatchEvent(event)
+    jest.advanceTimersByTime(1)
+    expect(getIndex(placeholder, ul2.children)).not.toEqual(-1)
+    expect(ul.children.length).toEqual(childcount + 1)
+
+    event = new CustomEvent('drop')
+    ul2.dispatchEvent(event)
+    expect(ul.children.length).toEqual(childcount)
+
+    event = new CustomEvent('dragstart')
+    event.dataTransfer = dataTransferObj
+    Object.defineProperty(event, 'target', {value: li, enumerable: true})
+    ul.dispatchEvent(event)
+
+    event = new CustomEvent('dragover')
+    event.dataTransfer = dataTransferObj
+    ul2.dispatchEvent(event)
+    jest.advanceTimersByTime(1)
+    expect(getIndex(placeholder, ul2.children)).toEqual(-1)
+    expect(ul.children.length).toEqual(childcount + 1)
+
+    event = new CustomEvent('drop')
+    ul2.dispatchEvent(event)
+    expect(ul.children.length).toEqual(childcount + 1)
+  })
+
   test.skip('should correctly place moved item into correct index', () => {
     sortable(ul, {
       items: 'li',

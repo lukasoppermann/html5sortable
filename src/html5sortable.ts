@@ -475,11 +475,16 @@ export default function sortable (sortableElements, options: configuration|objec
         .filter(placeholder => placeholder instanceof HTMLElement)
         // only elements in DOM
         .filter(isInDom)[0]
-      // attach element after placeholder
-      after(visiblePlaceholder, dragging)
-      // remove placeholder from dom
-      visiblePlaceholder.remove()
-
+      if (visiblePlaceholder) {
+        // attach element after placeholder
+        after(visiblePlaceholder, dragging)
+        // remove placeholder from dom
+        visiblePlaceholder.remove()
+      } else {
+        // set the dropped value to 'false' to delete copied dragging at the time of 'dragend'
+        data(dragging, 'dropped', 'false')
+        return
+      }
       /*
        * Fires Custom Event - 'sortstop'
        */
