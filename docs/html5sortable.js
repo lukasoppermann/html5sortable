@@ -1114,10 +1114,17 @@ var sortable = (function () {
                   .filter(function (placeholder) { return placeholder instanceof HTMLElement; })
                   // only elements in DOM
                   .filter(isInDom)[0];
-              // attach element after placeholder
-              insertAfter(visiblePlaceholder, dragging);
-              // remove placeholder from dom
-              visiblePlaceholder.remove();
+              if (visiblePlaceholder) {
+                  // attach element after placeholder
+                  insertAfter(visiblePlaceholder, dragging);
+                  // remove placeholder from dom
+                  visiblePlaceholder.remove();
+              }
+              else {
+                  // set the dropped value to 'false' to delete copied dragging at the time of 'dragend'
+                  addData(dragging, 'dropped', 'false');
+                  return;
+              }
               /*
                * Fires Custom Event - 'sortstop'
                */
