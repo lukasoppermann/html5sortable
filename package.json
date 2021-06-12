@@ -72,6 +72,11 @@
       }
     }
   },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+  },
   "standard": {
     "globals": [
       "HTMLElement",
