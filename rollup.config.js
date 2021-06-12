@@ -4,7 +4,7 @@ import strip from 'rollup-plugin-strip-code'
 import pkg from './package.json'
 
 let dir = `${pkg.dest}/`
-let banner = `/*
+const banner = `/*
  * HTML5Sortable package
  * https://github.com/lukasoppermann/html5sortable
  *
