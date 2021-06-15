@@ -50,7 +50,7 @@
 							<div class="px2 muted">
 								forcePlaceholderSize: true,<br />
 								placeholderClass: 'ph-class', <br />
-								hoverClass: 'bg-maroon yellow' <br />
+								hoverClass: 'bg-maroon yellow', <br />
 							</div>
 							<div>});</div>
 						</code>
@@ -63,7 +63,6 @@
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 3</li>
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 4</li>
 						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 5</li>
-						<li class="p1 mb1 navy bg-yellow" style="position: relative; z-index: 10">Item 6</li>
 					</ul>
           <button class="ml4 js-serialize-button button navy bg-yellow">Serialize</button>
 					<script type="text/javascript">
@@ -424,6 +423,7 @@
 				<code class="mb0">
 					<div>sortable('.o-sortable', {</div>
 					<div class="px2 muted">copy:true // default to false</div>
+					<div class="px2 muted">maxItems: 2</div>
 					<div>});</div>
 				</code>
 			</div>
@@ -452,9 +452,10 @@
 		  placeholderClass: 'mb1 bg-navy border border-yellow',
 		});
 		sortable('.js-sortable-copy-target', {
-		forcePlaceholderSize: true,
+			forcePlaceholderSize: true,
 			acceptFrom: '.js-sortable-copy,.js-sortable-copy-target',
-		placeholderClass: 'mb1 border border-maroon',
+			placeholderClass: 'mb1 border border-maroon',
+			maxItems: 2
 	  });
 		sortable('.js-grid', {
 					forcePlaceholderSize: true,
