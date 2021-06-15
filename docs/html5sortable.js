@@ -1269,7 +1269,7 @@ var sortable = (function () {
                   return;
               }
               var options = addData(sortableElement, 'opts');
-              if (parseInt(options.maxItems) && filter(sortableElement.children, addData(sortableElement, 'items')).length >= parseInt(options.maxItems) && dragging.parentElement !== sortableElement) {
+              if (parseInt(options.maxItems) && filter(sortableElement.children, addData(sortableElement, 'items')).length > parseInt(options.maxItems) && dragging.parentElement !== sortableElement) {
                   return;
               }
               e.preventDefault();
