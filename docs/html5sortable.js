@@ -1071,8 +1071,6 @@ var sortable = (function () {
               if (dragging.getAttribute('aria-copied') === 'true' && addData(dragging, 'dropped') !== 'true') {
                   dragging.remove();
               }
-              dragging.style.display = dragging.oldDisplay;
-              delete dragging.oldDisplay;
               var visiblePlaceholder = Array.from(stores.values()).map(function (data) { return data.placeholder; })
                   .filter(function (placeholder) { return placeholder instanceof HTMLElement; })
                   .filter(isInDom)[0];
@@ -1115,10 +1113,10 @@ var sortable = (function () {
                   // only elements in DOM
                   .filter(isInDom)[0];
               if (visiblePlaceholder) {
-                  // attach element after placeholder
-                  insertAfter(visiblePlaceholder, dragging);
-                  // remove placeholder from dom
-                  visiblePlaceholder.remove();
+                  visiblePlaceholder.replaceWith(dragging);
+                  // to avoid flickering restoring element display immediately after replacing placeholder
+                  dragging.style.display = dragging.oldDisplay;
+                  delete dragging.oldDisplay;
               }
               else {
                   // set the dropped value to 'false' to delete copied dragging at the time of 'dragend'
