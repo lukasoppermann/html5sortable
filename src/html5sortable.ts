@@ -426,9 +426,6 @@ export default function sortable (sortableElements, options: configuration|objec
         dragging.remove()
       }
 
-      dragging.style.display = dragging.oldDisplay
-      delete dragging.oldDisplay
-
       const visiblePlaceholder = Array.from(stores.values()).map(data => data.placeholder)
         .filter(placeholder => placeholder instanceof HTMLElement)
         .filter(isInDom)[0]
@@ -476,10 +473,10 @@ export default function sortable (sortableElements, options: configuration|objec
         // only elements in DOM
         .filter(isInDom)[0]
       if (visiblePlaceholder) {
-        // attach element after placeholder
-        after(visiblePlaceholder, dragging)
-        // remove placeholder from dom
-        visiblePlaceholder.remove()
+        visiblePlaceholder.replaceWith(dragging)
+        // to avoid flickering restoring element display immediately after replacing placeholder
+        dragging.style.display = dragging.oldDisplay
+        delete dragging.oldDisplay
       } else {
         // set the dropped value to 'false' to delete copied dragging at the time of 'dragend'
         data(dragging, 'dropped', 'false')
