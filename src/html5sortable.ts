@@ -425,7 +425,10 @@ export default function sortable (sortableElements, options: configuration|objec
       if (dragging.getAttribute('aria-copied') === 'true' && data(dragging, 'dropped') !== 'true') {
         dragging.remove()
       }
-
+      if (dragging.oldDisplay !== undefined) {
+        dragging.oldDisplay = dragging.style.display
+        delete dragging.oldDisplay
+      }
       const visiblePlaceholder = Array.from(stores.values()).map(data => data.placeholder)
         .filter(placeholder => placeholder instanceof HTMLElement)
         .filter(isInDom)[0]
@@ -475,8 +478,10 @@ export default function sortable (sortableElements, options: configuration|objec
       if (visiblePlaceholder) {
         visiblePlaceholder.replaceWith(dragging)
         // to avoid flickering restoring element display immediately after replacing placeholder
-        dragging.style.display = dragging.oldDisplay
-        delete dragging.oldDisplay
+        if (dragging.oldDisplay !== undefined) {
+          dragging.oldDisplay = dragging.style.display
+          delete dragging.oldDisplay
+        }
       } else {
         // set the dropped value to 'false' to delete copied dragging at the time of 'dragend'
         data(dragging, 'dropped', 'false')
