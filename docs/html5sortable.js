@@ -1072,7 +1072,7 @@ var sortable = (function () {
                   dragging.remove();
               }
               if (dragging.oldDisplay !== undefined) {
-                  dragging.oldDisplay = dragging.style.display;
+                  dragging.style.display = dragging.oldDisplay;
                   delete dragging.oldDisplay;
               }
               var visiblePlaceholder = Array.from(stores.values()).map(function (data) { return data.placeholder; })
@@ -1120,7 +1120,7 @@ var sortable = (function () {
                   visiblePlaceholder.replaceWith(dragging);
                   // to avoid flickering restoring element display immediately after replacing placeholder
                   if (dragging.oldDisplay !== undefined) {
-                      dragging.oldDisplay = dragging.style.display;
+                      dragging.style.display = dragging.oldDisplay;
                       delete dragging.oldDisplay;
                   }
               }
