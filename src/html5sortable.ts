@@ -421,6 +421,7 @@ export default function sortable (sortableElements, options: configuration|objec
 
       dragging.classList.remove(options.draggingClass)
       attr(dragging, 'aria-grabbed', 'false')
+      dragging.style.display = ""
 
       if (dragging.getAttribute('aria-copied') === 'true' && data(dragging, 'dropped') !== 'true') {
         dragging.remove()
