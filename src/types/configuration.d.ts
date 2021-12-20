@@ -1,7 +1,8 @@
 interface configuration {
   items?: string,
   handle?: string,
-  forcePlaceholderSize?:boolean;
+  forcePlaceholderSize?: boolean,
+  keepCssClass?: Array<string>,
   connectWith?: string,
   acceptFrom?: void,
   placeholder?: void,
@@ -12,9 +13,9 @@ interface configuration {
   copy?: boolean,
   itemSerializer?: (serializedItem: serializedItem, sortableContainer: HTMLElement) => serializedItem,
   containerSerializer?: (serializedContainer: object) => object,
-  customDragImage?:void,
+  customDragImage?: void,
   disableIEFix?: boolean,
   debounce?: number,
   throttleTime?: number,
-  orientation?: 'vertical'|'horizontal'
+  orientation?: 'vertical' | 'horizontal'
 }
