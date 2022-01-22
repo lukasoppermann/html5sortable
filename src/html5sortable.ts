@@ -636,7 +636,7 @@ export default function sortable (sortableElements, options: configuration|objec
         return
       }
       const options = data(sortableElement, 'opts')
-      if (parseInt(options.maxItems) && filter(sortableElement.children, data(sortableElement, 'items')).length > parseInt(options.maxItems) && dragging.parentElement !== sortableElement) {
+      if (parseInt(options.maxItems) && filter(sortableElement.children, data(sortableElement, 'items')).length >= parseInt(options.maxItems) && dragging.parentElement !== sortableElement) {
         return
       }
       e.preventDefault()
