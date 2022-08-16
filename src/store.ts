@@ -1,12 +1,13 @@
 /* eslint-env browser */
 /* eslint-disable no-use-before-define */
+import { Store as StoreInterface } from './types/store'
 export const stores: Map<HTMLElement, Store> = new Map()
 /* eslint-enable no-use-before-define */
 /**
  * Stores data & configurations per Sortable
  * @param {Object} config
  */
-export class Store implements Store {
+export class Store implements StoreInterface {
   private _config: Map<string, any> = new Map() // eslint-disable-line no-undef
   private _placeholder?: HTMLElement = undefined // eslint-disable-line no-undef
   private _data: Map<string, any> = new Map() // eslint-disable-line no-undef
@@ -83,7 +84,7 @@ export class Store implements Store {
    * @param {HTMLElement} placeholder
    * @return {void}
    */
-  set placeholder (placeholder: HTMLElement): void {
+  set placeholder (placeholder: HTMLElement) {
     if (!(placeholder instanceof HTMLElement) && placeholder !== null) {
       throw new Error('A placeholder must be an html element or null.')
     }

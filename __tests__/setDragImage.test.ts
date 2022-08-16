@@ -29,9 +29,9 @@ describe('Testing setDragImage', () => {
         },
         setDragImage: (element, posX, posY) => {
           this.dragItem = { // eslint-disable-line no-this-before-super
-            element: element,
-            posX: posX,
-            posY: posY
+            element,
+            posX,
+            posY
           }
         }
       }
@@ -86,15 +86,15 @@ describe('Testing setDragImage', () => {
   test('Invalid customDragImage function', () => {
     const event = new DragEvent('dragstart')
     // execute & assert
-    expect(() => { setDragImage(event, element, () => { return { element: element } }) }).toThrowError('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')
-    expect(() => { setDragImage(event, element, () => { return { element: element, posX: 10 } }) }).toThrowError('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')
-    expect(() => { setDragImage(event, element, () => { return { element: element, posY: 10, posX: 'hello' } }) }).toThrowError('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')
+    expect(() => { setDragImage(event, element, () => { return { element } }) }).toThrowError('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')
+    expect(() => { setDragImage(event, element, () => { return { element, posX: 10 } }) }).toThrowError('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')
+    expect(() => { setDragImage(event, element, () => { return { element, posY: 10, posX: 'hello' } }) }).toThrowError('The customDragImage function you provided must return and object with the properties element[string], posX[integer], posY[integer].')
   })
 
   test('Valid customDragImage Function', () => {
     const event = new DragEvent('dragstart')
     const mockCustomDragImageFn = jest.fn().mockName('mockCustomDragImageFn').mockReturnValue({
-      element: element,
+      element,
       posX: 111,
       posY: 222
     })
