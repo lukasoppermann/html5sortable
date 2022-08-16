@@ -667,10 +667,10 @@ sortable.disable = function (sortableElement) {
 /* START.TESTS_ONLY */
 sortable.__testing = {
   // add internal methods here for testing purposes
-  data: data,
-  removeItemEvents: removeItemEvents,
-  removeItemData: removeItemData,
-  removeSortableData: removeSortableData,
-  removeContainerEvents: removeContainerEvents
+  data,
+  removeItemEvents,
+  removeItemData,
+  removeSortableData,
+  removeContainerEvents
 }
 /* END.TESTS_ONLY */
