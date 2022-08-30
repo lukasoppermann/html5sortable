@@ -62,15 +62,13 @@ const removeItemEvents = function (items) {
 }
 
 /**
- * 
+ *
  * remove Store map values
- * @param {Array|NodeList} items 
+ * @param {Array|NodeList} items
  */
-const removeStoreData = function (element) {
-  if (element instanceof Array) {
-    for (let i = 0; i < element.length; ++i) {
-      stores.delete(element[i])
-    }
+const removeStoreData = function (items) {
+  if (items instanceof Array) {
+    items.forEach(element => stores.delete(element))
   }
 }
 
@@ -171,9 +169,9 @@ const destroySortable = function (sortableElement) {
   // remove event handlers & data from items
   off(handles, 'mousedown')
   removeItemEvents(items)
-  removeStoreData(items);
-  removeStoreData([sortableElement]);
   removeItemData(items)
+  removeStoreData(items)
+  removeStoreData([sortableElement])
   removeContainerEvents(originContainer, previousContainer)
   // clear sortable flag
   sortableElement.isSortable = false
@@ -682,10 +680,10 @@ sortable.disable = function (sortableElement) {
 /* START.TESTS_ONLY */
 sortable.__testing = {
   // add internal methods here for testing purposes
-  data: data,
-  removeItemEvents: removeItemEvents,
-  removeItemData: removeItemData,
-  removeSortableData: removeSortableData,
-  removeContainerEvents: removeContainerEvents
+  data,
+  removeItemEvents,
+  removeItemData,
+  removeSortableData,
+  removeContainerEvents
 }
 /* END.TESTS_ONLY */
