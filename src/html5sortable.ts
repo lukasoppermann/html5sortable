@@ -61,6 +61,17 @@ const removeItemEvents = function (items) {
   off(items, 'mouseleave')
 }
 
+/**
+ *
+ * remove Store map values
+ * @param {Array|NodeList} items
+ */
+const removeStoreData = function (items) {
+  if (items instanceof Array) {
+    items.forEach(element => stores.delete(element))
+  }
+}
+
 // Remove container events
 const removeContainerEvents = function (originContainer, previousContainer) {
   if (originContainer) {
@@ -159,6 +170,8 @@ const destroySortable = function (sortableElement) {
   off(handles, 'mousedown')
   removeItemEvents(items)
   removeItemData(items)
+  removeStoreData(items)
+  removeStoreData([sortableElement])
   removeContainerEvents(originContainer, previousContainer)
   // clear sortable flag
   sortableElement.isSortable = false
