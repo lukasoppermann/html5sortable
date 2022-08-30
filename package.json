@@ -98,7 +98,7 @@
     "jest": "jest",
     "test": "jest --coverage && npm run standard",
     "coverage": "jest --coverage && npm run standard",
-    "build": "rollup -c && cp $npm_package_main docs/html5sortable.js",
+    "build": "rollup -c && cp dist/html5sortable.js docs/html5sortable.js",
     "release": "sh make-release.sh",
     "standard": "standard 'src/*.ts' '__tests__/*.ts' | snazzy",
     "github-build": "npm run cover && npm run standard",
