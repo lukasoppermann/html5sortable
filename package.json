@@ -36,7 +36,7 @@
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.4.0",
     "jest": "^24.9.0",
-    "rollup": "^2.52.3",
+    "rollup": "^3.15.0",
     "rollup-plugin-strip-code": "^0.2.7",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.4",
