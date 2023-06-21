@@ -1122,6 +1122,10 @@ define(function () { 'use strict';
                       dragging.style.display = dragging.oldDisplay;
                       delete dragging.oldDisplay;
                   }
+                  // We need to reset placeholder if any css class were added.
+                  options.keepCssClass.forEach(function (className) {
+                      store(sortableElement).placeholder.classList.remove(className);
+                  });
               }
               else {
                   // set the dropped value to 'false' to delete copied dragging at the time of 'dragend'
@@ -1188,6 +1192,13 @@ define(function () { 'use strict';
                   store(sortableElement).placeholder.style.height = draggingHeight + 'px';
                   store(sortableElement).placeholder.style.width = draggingWidth + 'px';
               }
+              // Keep some CSS class fo the dragged element, to keep style.
+              // Usefull if sortable elements have different dimensions according class.
+              options.keepCssClass.forEach(function (className) {
+                  if (element.classList.contains(className)) {
+                      store(sortableElement).placeholder.classList.add(className);
+                  }
+              });
               // if element the draggedItem is dragged onto is within the array of all elements in list
               // (not only items, but also disabled, etc.)
               if (Array.from(sortableElement.children).indexOf(element) > -1) {
