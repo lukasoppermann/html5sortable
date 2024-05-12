@@ -22,7 +22,7 @@ const defaultDragImage = (draggedElement: HTMLElement, elementOffset: offsetObje
  * @param {Function} customDragImage - function to create a custom dragImage
  * @return void
  */
-export default (event: DragEvent, draggedElement: HTMLElement, customDragImage: Function): void => {
+export default (event: DragEvent, draggedElement: HTMLElement, customDragImage: Function | NodeList): void => {
   // check if event is provided
   if (!(event instanceof Event)) {
     throw new Error('setDragImage requires a DragEvent as the first argument.')
@@ -35,8 +35,28 @@ export default (event: DragEvent, draggedElement: HTMLElement, customDragImage: 
   if (!customDragImage) {
     customDragImage = defaultDragImage
   }
-  // check if setDragImage method is available
-  if (event.dataTransfer && event.dataTransfer.setDragImage) {
+  // set default function if none is provided
+  if (typeof customDragImage === 'object') {
+    const dragImages = Array.from(customDragImage as NodeList).map(node => node as HTMLElement)
+    // use first element
+    const selectedDragImage = dragImages[0]
+
+    if (selectedDragImage) {
+      const elementOffset = offset(selectedDragImage)
+      const dragImage = {
+        element: selectedDragImage,
+        posX: event.pageX - elementOffset.left,
+        posY: event.pageY - elementOffset.top
+      }
+      // set the drag image on the event
+      event.dataTransfer.effectAllowed = 'copyMove'
+      event.dataTransfer.setData('text/plain', getEventTarget(event).id)
+      event.dataTransfer.setDragImage(dragImage.element, event.offsetX, event.offsetY)
+    } else {
+      throw new Error('The NodeList provided does not contain any valid elements.')
+    }
+  } else if (event.dataTransfer && event.dataTransfer.setDragImage) {
+    // check if setDragImage method is available
     // get the elements offset
     const elementOffset = offset(draggedElement)
     // get the dragImage

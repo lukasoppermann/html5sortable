@@ -345,7 +345,13 @@ export default function sortable (sortableElements, options: configuration|objec
       originContainer = sortableContainer
 
       // add transparent clone or other ghost to cursor
-      setDragImage(e, dragItem, options.customDragImage)
+      let dragImage: Function | NodeList = null
+      if (typeof options.customDragImage === 'string') {
+        dragImage = document.querySelectorAll(options.customDragImage)
+      } else if (options.customDragImage === 'function') {
+        dragImage = options.customDragImage as Function
+      }
+      setDragImage(e, dragItem, dragImage)
       // cache selsection & add attr for dragging
       draggingHeight = getElementHeight(dragItem)
       draggingWidth = getElementWidth(dragItem)
