@@ -117,4 +117,21 @@ describe('Testing setDragImage', () => {
     // third argument in call
     expect(mockCustomDragImageFn.mock.calls[0][2]).toBe(event)
   })
+  test('Valid customDragImage Selector', () => {
+    const event = new DragEvent('dragstart')
+    const customDragImage = document.querySelectorAll('.custom-drag-img-string')
+    customDragImage[0].getClientRects = () => [{ left: 20, right: 40, top: 20, bottom: 40 }]
+
+    // Execute
+    setDragImage(event, element, customDragImage)
+
+    // Verify effectAllowed and data set correctly
+    expect(event.dataTransfer.effectAllowed).toEqual('copyMove')
+    expect(event.data).toEqual('text/plain')
+  })
+  test('Invalid customDragImage Selector', () => {
+    const event = new DragEvent('dragstart')
+    const customDragImage = document.querySelectorAll('.non-exist-selector')
+    expect(() => { setDragImage(event, element, customDragImage) }).toThrowError('The NodeList provided does not contain any valid elements.')
+  })
 })
