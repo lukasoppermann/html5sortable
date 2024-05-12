@@ -24,7 +24,7 @@ If you are just starting out with github, you are very welcome to submit small P
   */
   ```
 
-- **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
+- **Document any change in behavior** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
 
 - **Do NOT commit the dist folder** – Please do not commit anything in the `dist` directory, those files will be updated once a release is created.
 
