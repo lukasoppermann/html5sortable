@@ -326,8 +326,9 @@ sortable('.sortable', {
 ```
 
 ### customDragImage
-You can provide a function as a `customDragImage` property on the options object which will be used to create the item and position of the drag image (the half transparent item you see when dragging an element).
+You can provide a function or a selector string as the `customDragImage` property on the options object which will be used to create the item and position of the drag image (the half-transparent item you see when dragging an element).
 
+#### Using a Function
 The function gets three parameters, the dragged element, an offset object with the offset values for the offset of the item and the `dragstart` event. The function **MUST** return an object with an `element` property with an html element as well as a `posX` and `posY` property with has the x and y offset for the dragImage.
 
 ``` javascript
@@ -340,8 +341,19 @@ sortable('.sortable', {
     }
   }
 });
+```
 
-// elementOffset object that is received in the customDragImage function
+#### Using a Selector
+Alternatively, you can specify a selector string as `customDragImage`. When using a selector, the first element matched by the selector will be used as the drag image. Note that if no elements match the selector, the default drag behavior will be used.
+```javascript
+sortable('.sortable', {
+  customDragImage: '.custom-drag-image-selector'
+});
+```
+
+##### ElementOffset Object Details
+The elementOffset object provided to the custom drag image function includes the following properties, which represent the position of the element relative to the viewport, adjusted for any scrolling:
+```javascript
 {
   left: rect.left + window.scrollX,
   right: rect.right + window.scrollX,
