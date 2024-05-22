@@ -119,19 +119,20 @@ describe('Testing setDragImage', () => {
   })
   test('Valid customDragImage Selector', () => {
     const event = new DragEvent('dragstart')
-    const customDragImage = document.querySelectorAll('.custom-drag-img-string')
-    customDragImage[0].getClientRects = () => [{ left: 20, right: 40, top: 20, bottom: 40 }]
-
+    const customDragImage = document.querySelector('.custom-drag-img-string')
+    customDragImage.getClientRects = () => [{ left: 20, right: 40, top: 20, bottom: 40 }]
     // Execute
     setDragImage(event, element, customDragImage)
-
     // Verify effectAllowed and data set correctly
     expect(event.dataTransfer.effectAllowed).toEqual('copyMove')
     expect(event.data).toEqual('text/plain')
   })
   test('Invalid customDragImage Selector', () => {
     const event = new DragEvent('dragstart')
-    const customDragImage = document.querySelectorAll('.non-exist-selector')
-    expect(() => { setDragImage(event, element, customDragImage) }).toThrowError('The NodeList provided does not contain any valid elements.')
+    const customDragImage = document.querySelector('.non-exist-selector')
+    setDragImage(event, element, customDragImage)
+    // assert
+    expect(event.dataTransfer.effectAllowed).toEqual('copyMove')
+    expect(event.data).toEqual('text/plain')
   })
 })
