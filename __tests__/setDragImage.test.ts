@@ -117,4 +117,22 @@ describe('Testing setDragImage', () => {
     // third argument in call
     expect(mockCustomDragImageFn.mock.calls[0][2]).toBe(event)
   })
+  test('Valid customDragImage Selector', () => {
+    const event = new DragEvent('dragstart')
+    const customDragImage = document.querySelector('.custom-drag-img-string')
+    customDragImage.getClientRects = () => [{ left: 20, right: 40, top: 20, bottom: 40 }]
+    // Execute
+    setDragImage(event, element, customDragImage)
+    // Verify effectAllowed and data set correctly
+    expect(event.dataTransfer.effectAllowed).toEqual('copyMove')
+    expect(event.data).toEqual('text/plain')
+  })
+  test('Invalid customDragImage Selector', () => {
+    const event = new DragEvent('dragstart')
+    const customDragImage = document.querySelector('.non-exist-selector')
+    setDragImage(event, element, customDragImage)
+    // assert
+    expect(event.dataTransfer.effectAllowed).toEqual('copyMove')
+    expect(event.data).toEqual('text/plain')
+  })
 })

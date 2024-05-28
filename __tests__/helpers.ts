@@ -15,4 +15,6 @@ export const mockInnerHTML: string = `
     item 3
   </li>
 </ul>
-<ul class="second-sortable all-sortables"></ul>`
+<ul class="second-sortable all-sortables"></ul>
+<div class="custom-drag-img-string"></div>
+`
