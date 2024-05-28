@@ -8,7 +8,7 @@
     "dist/*.js"
   ],
   "dest": "dist",
-  "version": "0.13.3",
+  "version": "0.14.0",
   "license": "MIT",
   "description": "VanillaJS sortable lists and grids using native HTML5 drag and drop API.",
   "author": {
