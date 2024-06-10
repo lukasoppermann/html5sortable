@@ -1,7 +1,10 @@
 ![html5sortable1](https://user-images.githubusercontent.com/42062381/90550349-1f023500-e190-11ea-9db0-f6d5ba5412a7.png)
 
 
+## Community maintained
 
+> [!WARNING]
+> A fair **warning:** this repository is currently not being actively developed. It works pretty fine, but if you find any issues you will need to fix them yourself. I try to keep the dependencies up to date and will happily help you fix issues and merge PRs for bugfixes or new features. 
 
 
 <h1> HTML5Sortable </h1>
@@ -32,10 +35,6 @@
   * [Touch Support](#touch-support)
   * [Known Issues](#known-issues)
       
-
-## Community maintained
-
-A fair **warning:** this repository is currently not being actively developed. It works pretty fine, but if you find any issues you will need to fix them yourself. I try to keep the dependencies up to date and will happily help you fix issues and merge PRs for bugfixes or new features. 
 
 ## Looking for Co-Maintainer
 [![Looking for Co-Maintainer](https://img.shields.io/badge/looking%20for-co%E2%80%93maintainer-red.svg?style=flat-square)](https://twitter.com/lukasoppermann)
